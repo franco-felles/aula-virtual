@@ -50,10 +50,10 @@
      evaluaciones.html?ec=ec1u1     -> el alumno busca su nombre y abre su doc
      evaluaciones.html              -> lista de las EC disponibles
 
-   Columnas del CSV (la primera fila son los encabezados; da igual
+   Columnas del CSV (encabezados en la primera fila, o en las primeras 6 si hay una fila de título; da igual
    mayúsculas/tildes y que separes con coma o punto y coma):
      NOMBRE   (obligatoria)  también vale ALUMNO / APELLIDOS Y NOMBRES
-     LINK     (obligatoria)  el enlace a su documento
+     LINK     (obligatoria)  el enlace a su documento (también ENLACE / URL)
      CODIGO   (opcional)     si existe, se pide como contraseña
      GRUPO    (opcional)     se muestra como etiqueta
      MAQUINA  (opcional)     también se puede buscar por máquina
@@ -78,7 +78,7 @@ const etiquetaEC = (num, u) => `Evaluación continua ${num} · Unidad ${u}`;
 /** Parser CSV: comillas, BOM, y separador coma o punto y coma (autodetectado). */
 function parseCSV(texto) {
   texto = texto.replace(/^\uFEFF/, "");
-  const primera = texto.split(/\r?\n/, 1)[0] || "";
+  const primera = texto.split(/\r?\n/).slice(0, 6).join("\n");
   const sep = (primera.match(/;/g) || []).length > (primera.match(/,/g) || []).length ? ";" : ",";
   const filas = []; let fila = [], campo = "", q = false;
   for (let i = 0; i < texto.length; i++) {
@@ -104,16 +104,19 @@ function parseCSV(texto) {
 /** CSV -> [{nombre, link, codigo, grupo, maquina}] */
 function leerAlumnos(texto) {
   const filas = parseCSV(texto);
-  if (filas.length < 2) return [];
-  const cab = filas[0].map(norm);
-  const col = (...nombres) => cab.findIndex(h => nombres.includes(h));
-  const iN = col("nombre", "alumno", "alumnos", "apellidos y nombres", "apellidos y nombre");
-  const iL = col("link", "enlace", "url");
+  const NOMBRES = ["nombre", "alumno", "alumnos", "apellidos y nombres", "apellidos y nombre"];
+  const LINKS = ["link", "enlace", "url"];
+  // la fila de encabezados puede no ser la primera (p. ej. una fila con el título de la hoja)
+  const h = filas.slice(0, 6).findIndex(f => f.map(norm).some(x => NOMBRES.includes(x)) && f.map(norm).some(x => LINKS.includes(x)));
+  if (h < 0) { console.warn("[ec] El CSV necesita encabezados NOMBRE (o ALUMNO) y LINK (o ENLACE)."); return []; }
+  const cab = filas[h].map(norm);
+  const col = (...nombres) => cab.findIndex(x => nombres.includes(x));
+  const iN = col(...NOMBRES);
+  const iL = col(...LINKS);
   const iC = col("codigo", "codigo de alumno", "clave", "password", "contrasena");
   const iG = col("grupo");
   const iM = col("maquina", "pc");
-  if (iN < 0 || iL < 0) { console.warn("[ec] El CSV necesita las columnas NOMBRE y LINK."); return []; }
-  return filas.slice(1).map(f => ({
+  return filas.slice(h + 1).map(f => ({
     nombre: (f[iN] || "").trim(),
     link:   (f[iL] || "").trim(),
     codigo: iC >= 0 ? (f[iC] || "").trim() : "",
