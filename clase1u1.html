@@ -36,77 +36,205 @@ aside{width:320px;display:flex;flex-direction:column;gap:10px;min-height:0;overf
 <body>
 <header>
   <h1>🖥️ Anatomía de la computadora</h1>
-  <p>Arrastra para girar · rueda o pellizco para acercar · pasa el cursor para ver el nombre · haz clic para “desconectar” la pieza</p>
+  <p>Clase 1: La PC y sus partes • Arrastra para girar · rueda o pellizco para acercar · haz clic para seleccionar</p>
 </header>
 <main>
   <div id="c"><div id="tip"></div></div>
   <aside>
     <div class="card">
       <img id="pi" alt="">
-      <h2 id="nm">Explora el “cuerpo” de la PC</h2>
+      <h2 id="nm">Explora los componentes</h2>
       <span id="an"></span>
-      <p id="ds">Cada componente cumple una función parecida a la de un órgano. Selecciona uno: se desconectará del equipo para que lo veas mejor.</p>
+      <p id="ds">Selecciona un componente para ver su función principal y las etiquetas correspondientes a la clase introductoria.</p>
       <ul id="tp"></ul>
-      <button id="rs">↩ Volver a armar la PC</button>
+      <button id="rs">↩ Restablecer vista</button>
     </div>
     <div class="card"><div class="btns" id="btns"></div></div>
   </aside>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-const IMG={"cpu": "data:image/webp;base64,...", "gpu": "data:image/webp;base64,...", "psu": "data:image/webp;base64,...", "mb": "data:image/webp;base64,...", "cooler": "data:image/webp;base64,...", "case": "data:image/webp;base64,...", "ram": "data:image/webp;base64,...", "ssd": "data:image/webp;base64,..."};
+const IMG = {
+  "cpu": "",
+  "gpu": "",
+  "psu": "",
+  "mb": "",
+  "cooler": "",
+  "case": "",
+  "ram": "",
+  "ssd": ""
+};
 
-// Etiquetas y metadatos de las partes de la computadora vistas en clase
+// Datos actualizados con las etiquetas de la Clase 1 sobre la PC y sus partes
 const DATA = {
   "cpu": {
     name: "Procesador (CPU)",
     ann: "Unidad Central de Procesamiento",
-    desc: "Considerado el cerebro de la computadora, interpreta las instrucciones y procesa los datos de los programas.",
-    tags: ["Hardware", "Procesamiento", "Unidad Central", "Componente Principal"]
+    desc: "El cerebro de la computadora; procesa los datos, ejecuta todas las instrucciones y hace que los programas funcionen.",
+    tags: ["Clase 1", "Hardware", "Procesamiento", "Componente Principal"]
   },
   "gpu": {
     name: "Tarjeta Gráfica (GPU)",
     ann: "Procesador Gráfico",
-    desc: "Encargada de procesar y renderizar imágenes, video y gráficos complejos para mostrarlos en pantalla.",
-    tags: ["Hardware", "Gráficos", "Renderizado", "Expansión"]
+    desc: "Unidad de procesamiento especializado en la creación y renderizado de gráficos, imágenes, videos y modelos 3D.",
+    tags: ["Clase 1", "Hardware", "Gráficos", "Renderizado"]
   },
   "mb": {
     name: "Placa Base (Motherboard)",
     ann: "Tarjeta Madre",
-    desc: "Circuito principal que conecta y comunica todos los componentes y periféricos de la computadora.",
-    tags: ["Hardware", "Circuitería", "Conectividad", "Base"]
+    desc: "Tarjeta principal donde se conectan todos los componentes, sirviendo como autopista para que el procesador, la memoria y el almacenamiento se comuniquen entre sí.",
+    tags: ["Clase 1", "Hardware", "Circuitería", "Conectividad"]
   },
   "psu": {
     name: "Fuente de Poder (PSU)",
     ann: "Unidad de Alimentación",
-    desc: "Convierte la corriente alterna de la red eléctrica en corriente continua de baja tensión para alimentar los componentes.",
-    tags: ["Hardware", "Energía", "Electricidad", "Alimentación"]
+    desc: "Convierte la energía eléctrica de la red en la corriente adecuada y distribuye la energía a cada parte de la PC.",
+    tags: ["Clase 1", "Hardware", "Energía", "Alimentación"]
   },
   "ram": {
     name: "Memoria RAM",
     ann: "Memoria de Acceso Aleatorio",
-    desc: "Almacena temporalmente los datos de los programas que se están ejecutando en el momento. Es volátil.",
-    tags: ["Hardware", "Memoria Volátil", "Velocidad", "Temporal"]
+    desc: "Memoria temporal que guarda los programas y archivos que usas en ese momento para poder acceder a ellos rápidamente.",
+    tags: ["Clase 1", "Hardware", "Memoria Volátil", "Temporal"]
   },
   "ssd": {
     name: "Almacenamiento (SSD)",
     ann: "Unidad de Estado Sólido",
-    desc: "Guarda de forma permanente el sistema operativo, los archivos y las aplicaciones del usuario.",
-    tags: ["Hardware", "Almacenamiento", "Datos", "Permanente"]
+    desc: "Guarda toda la información de forma permanente; aquí se instala el sistema operativo, las aplicaciones, fotos y videos.",
+    tags: ["Clase 1", "Hardware", "Almacenamiento", "Permanente"]
   },
   "cooler": {
-    name: "Sistema de Refrigeración (Cooler)",
+    name: "Sistema de Refrigeración",
     ann: "Disipador y Ventilador",
-    desc: "Mantiene la temperatura óptima del procesador y del gabinete extrayendo el calor generado.",
-    tags: ["Hardware", "Refrigeración", "Temperatura", "Ventilación"]
+    desc: "Mantiene la temperatura óptima de los componentes internos extrayendo el calor generado durante su funcionamiento.",
+    tags: ["Clase 1", "Hardware", "Refrigeración", "Temperatura"]
   },
   "case": {
     name: "Gabinete (Case)",
     ann: "Chasis o Torre",
     desc: "Estructura física que protege, organiza y soporta todos los componentes internos de la computadora.",
-    tags: ["Hardware", "Chasis", "Protección", "Estructura"]
+    tags: ["Clase 1", "Hardware", "Chasis", "Estructura"]
   }
 };
+
+// Configuración básica de Three.js para la escena 3D y su interacción
+const container = document.getElementById('c');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf1f4fb);
+
+const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+camera.position.set(6, 4, 6);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(container.clientWidth, container.clientHeight);
+container.appendChild(renderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+scene.add(ambientLight);
+
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(10, 20, 15);
+scene.add(dirLight);
+
+// Construcción esquemática de la PC en 3D
+const group = new THREE.Group();
+
+const matCase = new THREE.MeshLambertMaterial({ color: 0x334155, transparent: true, opacity: 0.3 });
+const caseMesh = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 3), matCase);
+group.add(caseMesh);
+
+const partsData = [
+  { id: 'mb', color: 0x1e3a8a, size: [2.2, 2.8, 0.1], pos: [0, 0, -0.5] },
+  { id: 'cpu', color: 0x94a3b8, size: [0.6, 0.6, 0.1], pos: [0, 0.2, -0.4] },
+  { id: 'cooler', color: 0x0284c7, size: [0.9, 0.9, 0.6], pos: [0, 0.2, 0.1] },
+  { id: 'ram', color: 0x16a34a, size: [0.2, 0.8, 0.1], pos: [0.7, 0.2, -0.4] },
+  { id: 'gpu', color: 0x475569, size: [1.8, 0.8, 0.3], pos: [0, -0.6, 0.2] },
+  { id: 'ssd', color: 0xd97706, size: [0.8, 0.5, 0.1], pos: [-0.6, -1.2, -0.4] },
+  { id: 'psu', color: 0x1e293b, size: [1.2, 0.8, 1.5], pos: [0, -1.4, -0.8] }
+];
+
+const meshes = {};
+partsData.forEach(p => {
+  const mesh = new THREE.Mesh(
+    new THREE.BoxGeometry(...p.size),
+    new THREE.MeshLambertMaterial({ color: p.color })
+  );
+  mesh.position.set(...p.pos);
+  mesh.userData = { id: p.id };
+  group.add(mesh);
+  meshes[p.id] = mesh;
+});
+
+scene.add(group);
+
+// Control de interfaz y selección
+const titleEl = document.getElementById('nm');
+const annEl = document.getElementById('an');
+const descEl = document.getElementById('ds');
+const tagsEl = document.getElementById('tp');
+const btnsContainer = document.getElementById('btns');
+const rsBtn = document.getElementById('rs');
+
+function selectPart(id) {
+  const info = DATA[id];
+  if (!info) return;
+  titleEl.textContent = info.name;
+  annEl.textContent = info.ann;
+  annEl.style.display = 'inline-block';
+  descEl.textContent = info.desc;
+  
+  tagsEl.innerHTML = '';
+  info.tags.forEach(t => {
+    const li = document.createElement('li');
+    li.textContent = t;
+    tagsEl.appendChild(li);
+  });
+  rsBtn.style.display = 'block';
+}
+
+// Crear botones dinámicos en el panel lateral
+Object.keys(DATA).forEach(id => {
+  if(id === 'case') return;
+  const btn = document.createElement('button');
+  btn.textContent = DATA[id].name.split(' ')[0];
+  btn.onclick = () => selectPart(id);
+  btnsContainer.appendChild(btn);
+});
+
+rsBtn.onclick = () => {
+  titleEl.textContent = "Explora los componentes";
+  annEl.style.display = 'none';
+  descEl.textContent = "Selecciona un componente para ver su función principal y las etiquetas correspondientes a la clase introductoria.";
+  tagsEl.innerHTML = '';
+  rsBtn.style.display = 'none';
+};
+
+// Rotación interactiva con mouse/touch
+let isDragging = false;
+let prevMousePos = { x: 0, y: 0 };
+
+container.onmousedown = (e) => { isDragging = true; prevMousePos = { x: e.clientX, y: e.clientY }; };
+window.onmouseup = () => { isDragging = false; };
+window.onmousemove = (e) => {
+  if (!isDragging) return;
+  const deltaX = e.clientX - prevMousePos.x;
+  const deltaY = e.clientY - prevMousePos.y;
+  group.rotation.y += deltaX * 0.008;
+  group.rotation.x += deltaY * 0.008;
+  prevMousePos = { x: e.clientX, y: e.clientY };
+};
+
+window.onresize = () => {
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+};
+
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+animate();
 </script>
 </body>
 </html>
