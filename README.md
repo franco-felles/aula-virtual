@@ -6,7 +6,9 @@ Portal sencillo para que los alumnos entren a las clases y evaluaciones de *Herr
 
 - `clases.js` → lista de archivos publicados (lo único que editas al subir algo).
 - `index.html` → el portal. Lee cada archivo de la lista, interpreta su **nombre** y sus **etiquetas `<meta>`**, y arma las tarjetas por unidad.
-- `claseXuY.html` / `ecXuY.html` → cada clase o evaluación.
+- `claseXuY.html` → cada clase.
+- `evaluaciones.html` → único HTML de las evaluaciones continuas; lee la carpeta `eecc/`.
+- `eecc/ecXuY.csv` → datos de los alumnos de cada evaluación continua.
 
 ## Estándar de nombres
 
@@ -14,11 +16,9 @@ Portal sencillo para que los alumnos entren a las clases y evaluaciones de *Herr
 |---|---|---|
 | `clase1u1.html` | Clase 1 · Unidad 1 | azul |
 | `clase4u2.html` | Clase 4 · Unidad 2 | azul |
-| `ec1u1.html` | Evaluación continua 1 · Unidad 1 | **verde** |
 
-Regla: `clase` o `ec` + número de clase/evaluación + `u` + número de unidad. Todo en minúsculas, sin espacios ni guiones. Hoy el portal muestra las unidades 1 y 2.
+Regla: `clase` + número + `u` + número de unidad. Todo en minúsculas, sin espacios ni guiones. Hoy el portal muestra las unidades 1 y 2.
 
-Para agregar otro tipo (por ejemplo `ef` = examen final) hay una sola tabla `TIPOS` al inicio del script de `index.html`.
 
 ## Estándar de etiquetas dentro de cada HTML
 
@@ -55,3 +55,25 @@ python3 -m http.server 8000
 ```
 
 y abre `http://localhost:8000`.
+
+## Evaluaciones continuas (carpeta `eecc/`)
+
+Ya no se registran en `clases.js`. Para publicar una:
+
+1. Sube `eecc/ec1u1.csv` (o `ec2u2.csv`, etc.: `ec` + número + `u` + unidad).
+2. Listo: aparece sola una tarjeta **verde** "Evaluación continua 1 · Unidad 1" en el portal.
+
+`index.html` carga `evaluaciones.html?detectar=1` en un iframe invisible; este revisa `eecc/` y le avisa al portal qué CSV existen. Busca hasta `MAX_EC` (6) evaluaciones por unidad; si necesitas más, cambia esa constante en `evaluaciones.html`.
+
+Columnas del CSV (primera fila = encabezados; coma o punto y coma):
+
+| Columna | Obligatoria | Uso |
+|---|---|---|
+| `NOMBRE` | Sí | Lo que busca el alumno |
+| `LINK` | Sí | Su documento |
+| `CODIGO` | No | Si existe, se pide como contraseña |
+| `GRUPO` / `MAQUINA` | No | Etiqueta / búsqueda extra |
+
+Ver `eecc/ejemplo_formato.csv` (no se detecta por no llamarse `ec#u#`).
+
+⚠️ El CSV es público: quien conozca su URL puede leer nombres, códigos y links. El código solo evita curiosos, no es seguridad real.

@@ -81,18 +81,18 @@
   <script src="clases.js"></script>
   <script>
     /* ==========================================================
-       ESTÁNDAR DE NOMBRES:  <tipo><número>u<unidad>.html
+       CLASES:  clase<n>u<u>.html (se listan en clases.js)
          clase1u1.html -> "Clase 1 · Unidad 1"
-         ec1u1.html    -> "Evaluación continua 1 · Unidad 1" (verde)
-       Para agregar otro tipo (p. ej. "ef"), añade una línea aquí
-       y, si quieres otro color, una regla .t-<clase> en el CSS.
+       EVALUACIONES CONTINUAS: ya NO van en clases.js. Las detecta
+       evaluaciones.html leyendo la carpeta eecc/ (ec1u1.csv, ec2u2.csv...)
+       y le avisa a este portal con postMessage -> tarjeta verde.
        ========================================================== */
     const TIPOS = {
       clase: { nombre: "Clase",               css: "t-clase", orden: 1 },
       ec:    { nombre: "Evaluación continua", css: "t-ec",    orden: 2 }
     };
     const UNIDADES = [1, 2];
-    const NOMBRE_RE = /^(clase|ec)(\d+)u(\d+)\.html$/i;
+    const NOMBRE_RE = /^(clase)(\d+)u(\d+)\.html$/i;
 
     /** "clase4u2.html" -> { tipo, num, unidad, etiqueta } | null */
     function parseNombre(file) {
@@ -130,6 +130,13 @@
 
     function crearTarjeta(item) {
       const card = el("article", "session-card " + item.tipo.css);
+      if (item.ec) {
+        card.appendChild(el("h3", "", item.etiqueta));
+        const a = el("a", "btn", "Ingresar");
+        a.href = item.file;
+        card.appendChild(a);
+        return card;
+      }
       const top = el("div");
       const tags = el("div", "tags");
       tags.appendChild(el("span", "tag", item.etiqueta));
@@ -172,20 +179,13 @@
       }
     }
 
-    async function loadPortal() {
+    let itemsClases = [];
+    let itemsEC = [];
+
+    function render() {
       const cont = document.getElementById("contenido");
-
-      if (!Array.isArray(window.AULA_FILES)) {
-        cont.replaceChildren(el("p", "aviso",
-          "No se pudo cargar la lista de clases (clases.js). Avisa a tu docente."));
-        console.error("[aula] window.AULA_FILES no existe: revisa que clases.js no tenga errores (¿falta una coma?).");
-        return;
-      }
-
-      const files = [...new Set(window.AULA_FILES)];
-      const items = (await Promise.all(files.map(cargarItem))).filter(Boolean);
-      items.sort((a, b) => a.tipo.orden - b.tipo.orden || a.num - b.num);
-
+      const items = [...itemsClases, ...itemsEC]
+        .sort((a, b) => a.tipo.orden - b.tipo.orden || a.num - b.num);
       cont.replaceChildren();
       for (const u of UNIDADES) {
         cont.appendChild(el("h2", "unit-title", "Unidad " + u));
@@ -199,6 +199,44 @@
         }
         cont.appendChild(grid);
       }
+    }
+
+    /* ---- Evaluaciones continuas: las detecta evaluaciones.html (carpeta eecc/) ---- */
+    function iniciarDetectorEC() {
+      window.addEventListener("message", ev => {
+        if (ev.origin !== location.origin) return;
+        const d = ev.data;
+        if (!d || d.tipo !== "aula-ec" || !Array.isArray(d.lista)) return;
+        itemsEC = d.lista
+          .filter(x => UNIDADES.includes(x.unidad))
+          .map(x => ({
+            ec: true, tipo: TIPOS.ec, num: x.num, unidad: x.unidad,
+            etiqueta: `Evaluación continua ${x.num} · Unidad ${x.unidad}`,
+            file: "evaluaciones.html?ec=" + encodeURIComponent(x.id)
+          }));
+        render();
+      });
+      const f = document.createElement("iframe");
+      f.src = "evaluaciones.html?detectar=1";
+      f.hidden = true;
+      f.title = "detector de evaluaciones";
+      document.body.appendChild(f);
+    }
+
+    async function loadPortal() {
+      const cont = document.getElementById("contenido");
+
+      if (!Array.isArray(window.AULA_FILES)) {
+        cont.replaceChildren(el("p", "aviso",
+          "No se pudo cargar la lista de clases (clases.js). Avisa a tu docente."));
+        console.error("[aula] window.AULA_FILES no existe: revisa que clases.js no tenga errores (¿falta una coma?).");
+        return;
+      }
+
+      const files = [...new Set(window.AULA_FILES)];
+      itemsClases = (await Promise.all(files.map(cargarItem))).filter(Boolean);
+      render();
+      iniciarDetectorEC();
     }
 
     loadPortal();
