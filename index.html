@@ -8,6 +8,8 @@
     :root {
       --bg: #f4f6fb; --card: #ffffff; --ink: #1d2433;
       --muted: #6b7385; --accent: #2f5bea; --accent-d: #2447bd; --line: #e1e5ee;
+      --tag-bg: #eef2ff;
+      --ec: #1b7f3b; --ec-d: #14632d; --ec-bg: #e3f4e8;
     }
     * { box-sizing: border-box; }
     body {
@@ -19,35 +21,48 @@
     header { margin-bottom: 28px; }
     h1 { font-size: 1.8rem; margin: 0 0 6px; }
     .sub { color: var(--muted); margin: 0; font-size: 1rem; }
-    
+
     h2.unit-title {
       font-size: 1.2rem; margin: 32px 0 16px; color: var(--accent-d);
       border-bottom: 2px solid var(--line); padding-bottom: 6px;
     }
-    
+
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-    
+
     .session-card {
-      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
-      padding: 20px; box-shadow: 0 2px 8px rgba(20,30,60,.05);
+      --c: var(--accent); --c-d: var(--accent-d); --c-bg: var(--tag-bg);
+      background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--c);
+      border-radius: 14px; padding: 20px; box-shadow: 0 2px 8px rgba(20,30,60,.05);
       display: flex; flex-direction: column; justify-content: space-between;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     .session-card:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(20,30,60,.08); }
-    
+
+    /* Evaluación continua: verde */
+    .session-card.t-ec { --c: var(--ec); --c-d: var(--ec-d); --c-bg: var(--ec-bg); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
     .tag {
-      align-self: flex-start; font-size: 0.75rem; background: #eef2ff;
-      color: var(--accent-d); border-radius: 6px; padding: 3px 8px; font-weight: 700; margin-bottom: 12px;
+      font-size: 0.75rem; background: var(--c-bg); color: var(--c-d);
+      border-radius: 6px; padding: 3px 8px; font-weight: 700;
+    }
+    .lock {
+      font-size: 0.75rem; background: #f1f2f6; color: var(--muted);
+      border-radius: 6px; padding: 3px 8px; font-weight: 600;
     }
     .session-card h3 { font-size: 1.1rem; margin: 0 0 8px; }
     .session-card p { font-size: 0.88rem; color: var(--muted); margin: 0 0 16px; line-height: 1.4; }
     .btn {
-      display: block; text-align: center; background: var(--accent); color: #fff;
+      display: block; text-align: center; background: var(--c); color: #fff;
       text-decoration: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
       transition: background 0.15s ease;
     }
-    .btn:hover { background: var(--accent-d); }
+    .btn:hover { background: var(--c-d); }
     .empty-msg { color: var(--muted); font-size: 0.9rem; font-style: italic; }
+    .aviso {
+      background: #fdecea; color: #8a1c1c; border: 1px solid #f5c2be;
+      border-radius: 10px; padding: 12px 14px; font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -57,67 +72,133 @@
       <p class="sub">Selecciona tu sesión o evaluación continua disponible para acceder a tu documento.</p>
     </header>
 
-    <!-- UNIDAD 1 -->
-    <h2 class="unit-title">Unidad 1</h2>
-    <section class="grid" id="grid-u1">
-      <p class="empty-msg">Cargando contenidos de la Unidad 1...</p>
-    </section>
-
-    <!-- UNIDAD 2 -->
-    <h2 class="unit-title">Unidad 2</h2>
-    <section class="grid" id="grid-u2">
-      <p class="empty-msg">Cargando contenidos de la Unidad 2...</p>
-    </section>
+    <div id="contenido">
+      <p class="empty-msg">Cargando contenidos...</p>
+    </div>
   </main>
 
-  <!-- Cargamos el archivo independiente de clases -->
+  <!-- Lista de archivos publicados (la editas en clases.js) -->
   <script src="clases.js"></script>
   <script>
+    /* ==========================================================
+       ESTÁNDAR DE NOMBRES:  <tipo><número>u<unidad>.html
+         clase1u1.html -> "Clase 1 · Unidad 1"
+         ec1u1.html    -> "Evaluación continua 1 · Unidad 1" (verde)
+       Para agregar otro tipo (p. ej. "ef"), añade una línea aquí
+       y, si quieres otro color, una regla .t-<clase> en el CSS.
+       ========================================================== */
+    const TIPOS = {
+      clase: { nombre: "Clase",               css: "t-clase", orden: 1 },
+      ec:    { nombre: "Evaluación continua", css: "t-ec",    orden: 2 }
+    };
+    const UNIDADES = [1, 2];
+    const NOMBRE_RE = /^(clase|ec)(\d+)u(\d+)\.html$/i;
+
+    /** "clase4u2.html" -> { tipo, num, unidad, etiqueta } | null */
+    function parseNombre(file) {
+      const m = NOMBRE_RE.exec(file);
+      if (!m) return null;
+      const tipo = TIPOS[m[1].toLowerCase()];
+      const num = Number(m[2]);
+      const unidad = Number(m[3]);
+      return { tipo, num, unidad, etiqueta: `${tipo.nombre} ${num} · Unidad ${unidad}` };
+    }
+
+    /** Descarga solo hasta </head> (las clases pesan cientos de KB por sus imágenes). */
+    async function leerCabecera(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      if (!res.body || !res.body.getReader) return res.text();
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let txt = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        txt += dec.decode(value, { stream: true });
+        if (/<\/head>/i.test(txt)) { reader.cancel(); break; }
+      }
+      return txt;
+    }
+
+    function el(tag, cls, text) {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    }
+
+    function crearTarjeta(item) {
+      const card = el("article", "session-card " + item.tipo.css);
+      const top = el("div");
+      const tags = el("div", "tags");
+      tags.appendChild(el("span", "tag", item.etiqueta));
+      if (item.locked) tags.appendChild(el("span", "lock", "🔒 Con código de alumno"));
+      top.appendChild(tags);
+      top.appendChild(el("h3", "", item.title));
+      if (item.desc) top.appendChild(el("p", "", item.desc));
+      const a = el("a", "btn", "Ingresar");
+      a.href = item.file;
+      card.append(top, a);
+      return card;
+    }
+
+    async function cargarItem(file) {
+      const info = parseNombre(file);
+      if (!info) {
+        console.warn(`[aula] "${file}" no cumple el estándar (clase#u#.html / ec#u#.html). Se omite.`);
+        return null;
+      }
+      if (!UNIDADES.includes(info.unidad)) {
+        console.warn(`[aula] "${file}": la unidad ${info.unidad} no está en UNIDADES. Se omite.`);
+        return null;
+      }
+      try {
+        const doc = new DOMParser().parseFromString(await leerCabecera(file), "text/html");
+        const meta = n => doc.querySelector(`meta[name="${n}"]`)?.getAttribute("content")?.trim() || "";
+        const title = meta("session-title");
+        const desc = meta("session-desc");
+        if (!title) console.warn(`[aula] "${file}" no tiene <meta name="session-title">.`);
+        if (!desc) console.warn(`[aula] "${file}" no tiene <meta name="session-desc">.`);
+        return {
+          file, ...info,
+          title: title || info.etiqueta,
+          desc,
+          locked: meta("session-access").toLowerCase() === "locked"
+        };
+      } catch (err) {
+        console.warn(`[aula] No se pudo leer "${file}":`, err.message);
+        return null;
+      }
+    }
+
     async function loadPortal() {
-      const gridU1 = document.getElementById("grid-u1");
-      const gridU2 = document.getElementById("grid-u2");
+      const cont = document.getElementById("contenido");
 
-      const files = window.AULA_FILES || [];
-      let itemsU1 = [];
-      let itemsU2 = [];
-
-      for (const file of files) {
-        try {
-          const response = await fetch(file);
-          if (!response.ok) continue;
-
-          const htmlText = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlText, "text/html");
-
-          const tag = doc.querySelector('meta[name="session-tag"]')?.getAttribute("content") || "Contenido";
-          const title = doc.querySelector('meta[name="session-title"]')?.getAttribute("content") || file;
-          const desc = doc.querySelector('meta[name="session-desc"]')?.getAttribute("content") || "Acceso al documento interactivo.";
-
-          const cardHTML = `
-            <article class="session-card">
-              <div>
-                <span class="tag">${tag}</span>
-                <h3>${title}</h3>
-                <p>${desc}</p>
-              </div>
-              <a href="${file}" class="btn">Ingresar</a>
-            </article>
-          `;
-
-          const lowerFile = file.toLowerCase();
-          if (lowerFile.includes("u1")) {
-            itemsU1.push(cardHTML);
-          } else if (lowerFile.includes("u2")) {
-            itemsU2.push(cardHTML);
-          }
-        } catch (err) {
-          console.error("Error al procesar:", file);
-        }
+      if (!Array.isArray(window.AULA_FILES)) {
+        cont.replaceChildren(el("p", "aviso",
+          "No se pudo cargar la lista de clases (clases.js). Avisa a tu docente."));
+        console.error("[aula] window.AULA_FILES no existe: revisa que clases.js no tenga errores (¿falta una coma?).");
+        return;
       }
 
-      gridU1.innerHTML = itemsU1.length > 0 ? itemsU1.join("") : `<p class="empty-msg">No hay contenido disponible en la Unidad 1 por el momento.</p>`;
-      gridU2.innerHTML = itemsU2.length > 0 ? itemsU2.join("") : `<p class="empty-msg">No hay contenido disponible en la Unidad 2 por el momento.</p>`;
+      const files = [...new Set(window.AULA_FILES)];
+      const items = (await Promise.all(files.map(cargarItem))).filter(Boolean);
+      items.sort((a, b) => a.tipo.orden - b.tipo.orden || a.num - b.num);
+
+      cont.replaceChildren();
+      for (const u of UNIDADES) {
+        cont.appendChild(el("h2", "unit-title", "Unidad " + u));
+        const grid = el("section", "grid");
+        const delaUnidad = items.filter(i => i.unidad === u);
+        if (delaUnidad.length) {
+          delaUnidad.forEach(i => grid.appendChild(crearTarjeta(i)));
+        } else {
+          grid.appendChild(el("p", "empty-msg",
+            `No hay contenido disponible en la Unidad ${u} por el momento.`));
+        }
+        cont.appendChild(grid);
+      }
     }
 
     loadPortal();
