@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aula Virtual - Herramientas Informáticas</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --ink: #1d2433;
+      --muted: #6b7385;
+      --accent: #2f5bea;
+      --accent-d: #2447bd;
+      --line: #e1e5ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 32px 16px;
+      display: flex;
+      justify-content: center;
+    }
+    main { width: 100%; max-width: 800px; }
+    header { margin-bottom: 28px; }
+    h1 { font-size: 1.8rem; margin: 0 0 6px; }
+    .sub { color: var(--muted); margin: 0; font-size: 1rem; }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    
+    .session-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(20,30,60,.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .session-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(20,30,60,.08);
+    }
+    .tag {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      background: #eef2ff;
+      color: var(--accent-d);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .session-card h2 {
+      font-size: 1.1rem;
+      margin: 0 0 8px;
+    }
+    .session-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin: 0 0 16px;
+      line-height: 1.4;
+    }
+    .btn {
+      display: block;
+      text-align: center;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.15s ease;
+    }
+    .btn:hover { background: var(--accent-d); }
+    .btn.disabled {
+      background: #cbd5e1;
+      color: #64748b;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Herramientas Informáticas</h1>
+      <p class="sub">Selecciona la sesión correspondiente e ingresa con tu código de alumno para acceder a tu documento.</p>
+    </header>
+
+    <section class="grid">
+      <!-- Tarjeta Sesión 1 -->
+      <article class="session-card">
+        <div>
+          <span class="tag">Sesión 1</span>
+          <h2>Introducción a la Asignatura</h2>
+          <p>Conceptos básicos y metodología del curso.</p>
+        </div>
+        <a href="sesion1/desbloqueo.html" class="btn">Ingresar a Sesión 1</a>
+      </article>
+
+      <!-- Tarjeta Sesión 2 -->
+      <article class="session-card">
+        <div>
+          <span class="tag">Sesión 2</span>
+          <h2>Herramientas Digitales</h2>
+          <p>Acceso a documentos interactivos y ejercicios prácticos.</p>
+        </div>
+        <a href="sesion2/desbloqueo.html" class="btn">Ingresar a Sesión 2</a>
+      </article>
+
+      <!-- Tarjeta Sesión 3 (Ejemplo de clase próxima) -->
+      <article class="session-card">
+        <div>
+          <span class="tag">Sesión 3</span>
+          <h2>Próxima Clase</h2>
+          <p>Disponible la próxima semana.</p>
+        </div>
+        <a href="#" class="btn disabled">Próximamente</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
