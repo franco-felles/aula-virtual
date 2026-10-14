@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anatomía de la computadora en 3D</title>
+<style>
+:root{--bg:#f1f4fb;--fg:#15203b;--mut:#55627f;--card:#ffffff;--bd:#d3daec;--ac:#2f63e0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff}}
+:root[data-theme="dark"]{--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box}
+body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
+header{padding:12px 16px 6px}
+h1{margin:0;font-size:1.2rem}
+header p{margin:2px 0 0;color:var(--mut);font-size:.85rem}
+main{flex:1;min-height:0;display:flex;gap:12px;padding:8px 16px 16px}
+#c{flex:1;min-width:0;position:relative;border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--card);touch-action:none;cursor:grab}
+#c canvas{display:block;width:100%;height:100%}
+#tip{position:absolute;pointer-events:none;background:var(--ac);color:#fff;padding:4px 10px;border-radius:8px;font-size:.85rem;font-weight:600;white-space:nowrap;transform:translate(14px,-34px);display:none}
+aside{width:320px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+#pi{display:none;width:100%;height:160px;object-fit:contain;background:#fff;border-radius:10px;margin-bottom:10px}
+#nm{margin:0 0 4px;font-size:1.1rem}
+#an{display:none;background:var(--ac);color:#fff;border-radius:99px;padding:2px 10px;font-size:.78rem;margin-bottom:8px}
+#ds{margin:0;font-size:.92rem;line-height:1.45}
+#tp{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 0;padding:0;list-style:none}
+#tp li{font-size:.75rem;border:1px solid var(--ac);color:var(--ac);border-radius:99px;padding:2px 9px}
+#rs{display:none;margin-top:12px;font:inherit;font-size:.82rem;padding:6px 12px;border-radius:99px;border:1px solid var(--ac);background:transparent;color:var(--ac);cursor:pointer}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font:inherit;font-size:.8rem;padding:6px 10px;border-radius:99px;border:1px solid var(--bd);background:var(--bg);color:var(--fg);cursor:pointer}
+.btns button.on,.btns button:hover{border-color:var(--ac);color:var(--ac)}
+@media (max-width:760px){main{flex-direction:column}#c{flex:none;height:55vh}aside{width:auto;overflow:visible}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🖥️ Anatomía de la computadora</h1>
+  <p>Arrastra para girar · rueda o pellizco para acercar · pasa el cursor para ver el nombre · haz clic para “desconectar” la pieza</p>
+</header>
+<main>
+  <div id="c"><div id="tip"></div></div>
+  <aside>
+    <div class="card">
+      <img id="pi" alt="">
+      <h2 id="nm">Explora el “cuerpo” de la PC</h2>
+      <span id="an"></span>
+      <p id="ds">Cada componente cumple una función parecida a la de un órgano. Selecciona uno: se desconectará del equipo para que lo veas mejor.</p>
+      <ul id="tp"></ul>
+      <button id="rs">↩ Volver a armar la PC</button>
+    </div>
+    <div class="card"><div class="btns" id="btns"></div></div>
+  </aside>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const IMG={"cpu": "data:image/webp;base64,...", "gpu": "data:image/webp;base64,...", "psu": "data:image/webp;base64,...", "mb": "data:image/webp;base64,...", "cooler": "data:image/webp;base64,...", "case": "data:image/webp;base64,...", "ram": "data:image/webp;base64,...", "ssd": "data:image/webp;base64,..."};
+
+// Etiquetas y metadatos de las partes de la computadora vistas en clase
+const DATA = {
+  "cpu": {
+    name: "Procesador (CPU)",
+    ann: "Unidad Central de Procesamiento",
+    desc: "Considerado el cerebro de la computadora, interpreta las instrucciones y procesa los datos de los programas.",
+    tags: ["Hardware", "Procesamiento", "Unidad Central", "Componente Principal"]
+  },
+  "gpu": {
+    name: "Tarjeta Gráfica (GPU)",
+    ann: "Procesador Gráfico",
+    desc: "Encargada de procesar y renderizar imágenes, video y gráficos complejos para mostrarlos en pantalla.",
+    tags: ["Hardware", "Gráficos", "Renderizado", "Expansión"]
+  },
+  "mb": {
+    name: "Placa Base (Motherboard)",
+    ann: "Tarjeta Madre",
+    desc: "Circuito principal que conecta y comunica todos los componentes y periféricos de la computadora.",
+    tags: ["Hardware", "Circuitería", "Conectividad", "Base"]
+  },
+  "psu": {
+    name: "Fuente de Poder (PSU)",
+    ann: "Unidad de Alimentación",
+    desc: "Convierte la corriente alterna de la red eléctrica en corriente continua de baja tensión para alimentar los componentes.",
+    tags: ["Hardware", "Energía", "Electricidad", "Alimentación"]
+  },
+  "ram": {
+    name: "Memoria RAM",
+    ann: "Memoria de Acceso Aleatorio",
+    desc: "Almacena temporalmente los datos de los programas que se están ejecutando en el momento. Es volátil.",
+    tags: ["Hardware", "Memoria Volátil", "Velocidad", "Temporal"]
+  },
+  "ssd": {
+    name: "Almacenamiento (SSD)",
+    ann: "Unidad de Estado Sólido",
+    desc: "Guarda de forma permanente el sistema operativo, los archivos y las aplicaciones del usuario.",
+    tags: ["Hardware", "Almacenamiento", "Datos", "Permanente"]
+  },
+  "cooler": {
+    name: "Sistema de Refrigeración (Cooler)",
+    ann: "Disipador y Ventilador",
+    desc: "Mantiene la temperatura óptima del procesador y del gabinete extrayendo el calor generado.",
+    tags: ["Hardware", "Refrigeración", "Temperatura", "Ventilación"]
+  },
+  "case": {
+    name: "Gabinete (Case)",
+    ann: "Chasis o Torre",
+    desc: "Estructura física que protege, organiza y soporta todos los componentes internos de la computadora.",
+    tags: ["Hardware", "Chasis", "Protección", "Estructura"]
+  }
+};
+</script>
+</body>
+</html>
