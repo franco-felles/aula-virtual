@@ -14,4 +14,5 @@
 window.AULA_FILES = [
   "clase1u1.html",
   "clase2u1.html",
+  "clase4u1.html"
 ];
