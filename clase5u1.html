@@ -59,8 +59,8 @@ input:focus{outline:2px solid var(--ac)}
 <section class="card" id="step1"><label for="q">Tu nombre</label><input id="q" type="search" placeholder="Ej.: Quispe, Juan Carlos…" autocomplete="off"><ul class="results" id="results"></ul><div class="hint" id="hint">Escribe al menos 2 letras.</div></section>
 <section class="card hidden" id="step2"><div class="name" id="who"></div><div class="sub" id="meta" style="margin:2px 0 14px"></div>
 <form id="form" autocomplete="off"><label for="code">Contraseña: código de alumno o tus apellidos juntos</label>
-<div class="password-container"><input id="code" type="password" placeholder="Ej.: 2026D0856 o aritrujillano" spellcheck="false" required><button type="button" class="toggle-password" id="toggleCode" title="Ver/Ocultar">👁️</button></div>
-<div class="hint" style="margin-top:8px">Sin espacios ni tildes (ej.: <b>aritrujillano</b> o <b>delacruzsoto</b>).</div>
+<div class="password-container"><input id="code" type="password" placeholder="Ej.: 2026D0856 o aritsrujillano" spellcheck="false" required><button type="button" class="toggle-password" id="toggleCode" title="Ver/Ocultar">👁️</button></div>
+<div class="hint" style="margin-top:8px">Sin espacios ni tildes (ej.: <b>quispeascona</b>, <b>aritrujillano</b>).</div>
 <button class="btn" id="go" type="submit">Desbloquear documento</button><div class="err" id="err" role="alert"></div></form>
 <button class="ghost" id="back" type="button">← Buscar otro nombre</button></section>
 <section class="card hidden" id="step3"><p class="ok">✔ Documento desbloqueado</p><div class="name" id="who2"></div>
@@ -77,44 +77,44 @@ const DATA=[
   {"n": "06", "g": "G1", "c": "2026D1871", "a": "CHOQUEHUANCA CARPIO ISRAEL FABRICIO", "link": "https://docs.google.com/document/d/1NjOrfQY-HECjz3SJCqaMf7QYUNsjhSEdUfyPY7gRCmc/edit"},
   {"n": "07", "g": "G1", "c": "2026D0632", "a": "CONOZCO QUILCA LIEDY LUZ", "link": "https://docs.google.com/document/d/1dds2s-KhOpIOJJuI3DgW1AjPYb2WVr2Dwt3HF-Ofgw4/edit"},
   {"n": "08", "g": "G1", "c": "2026D1449", "a": "DE LA CRUZ SOTO EVELYN", "link": "https://docs.google.com/document/d/173-Io9qbPqqzOZ96GWoA-BVnPck5x5rwzfQOSQNhFvU/edit"},
-  {"n": "09", "g": "G1", "c": "2026D1980", "a": "ELESCANO CALERO MARUMY SAVINA", "link": "https://docs.google.com/document/d/1l7jY6c6fH5qE2Hl1v9z92x7uU6R9m2Z9w7E3rX8C5p8/edit"},
-  {"n": "10", "g": "G1", "c": "2026D0516", "a": "GARCIA HUAYHUA DAYANA LIZBETH", "link": "https://docs.google.com/document/d/10Cqg9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "11", "g": "G1", "c": "2026D0165", "a": "MAXIMILIANO ALVAREZ DAMARIS ESTHER", "link": "https://docs.google.com/document/d/11D2r9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "12", "g": "G1", "c": "2026D1389", "a": "MIRANDA MIRANDA JENIFER ISABEL", "link": "https://docs.google.com/document/d/12M3s9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "13", "g": "G1", "c": "2026D0410", "a": "NIMBOMA DE LA CRUZ ROSA EDELIT", "link": "https://docs.google.com/document/d/13N4t9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "14", "g": "G1", "c": "2026D0900", "a": "PIZARRO MAGNO ANGELICA ROSSANA", "link": "https://docs.google.com/document/d/14P5u9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "15", "g": "G1", "c": "2026D0483", "a": "PRIMO GARAY NATALYE ROUSSE", "link": "https://docs.google.com/document/d/15P6v9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "16", "g": "G1", "c": "2026C2568", "a": "QUISPE ASCONA JACKELINE JUSTINA", "link": "https://docs.google.com/document/d/16Q7w9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "17", "g": "G1", "c": "2026D1653", "a": "QUISPE OSORIO YURI KIMBERLY", "link": "https://docs.google.com/document/d/17R8x9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "18", "g": "G1", "c": "2026D1444", "a": "RODRIGUEZ AYALA FABIANNA FRANCESCA", "link": "https://docs.google.com/document/d/18S9y9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "19", "g": "G1", "c": "2026D0189", "a": "ROJAS WILLIAMS LISBETH DORIS", "link": "https://docs.google.com/document/d/19T0z9H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "20", "g": "G1", "c": "2026D1902", "a": "TAMANI LANCHA KATIUSKA PAULINA", "link": "https://docs.google.com/document/d/120U1aH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "21", "g": "G1", "c": "2026D0416", "a": "VALENZUELA CAHUANA MILAGROS", "link": "https://docs.google.com/document/d/121V2bH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "22", "g": "G1", "c": "2026D0340", "a": "VIVANCO RIVERA SAORY LUZ", "link": "https://docs.google.com/document/d/122W3cH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "01", "g": "G2", "c": "2026A2543", "a": "ADAN GALIANO ANA CRISTINA", "link": "https://docs.google.com/document/d/123X4dH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "02", "g": "G2", "c": "2026A2470", "a": "BARDALES ZUÑIGA KARLA THALIA", "link": "https://docs.google.com/document/d/124Y5eH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "03", "g": "G2", "c": "2026A1980", "a": "BERNABE BALDEON VICTORIA", "link": "https://docs.google.com/document/d/125Z6fH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "04", "g": "G2", "c": "2026A1678", "a": "CLEMENTE PERALTA LILIANA ASHLEY", "link": "https://docs.google.com/document/d/126a7gH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "05", "g": "G2", "c": "2026A2491", "a": "CONISLLA PINTO SANDY SHIRLEY", "link": "https://docs.google.com/document/d/127b8hH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "06", "g": "G2", "c": "2026E1405", "a": "DE LA CRUZ CARHUACHIN YUNI ESTEFANI", "link": "https://docs.google.com/document/d/128c9iH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "07", "g": "G2", "c": "2026E1090", "a": "FLORES GONZALES MILAGROS GUADALUPE", "link": "https://docs.google.com/document/d/129dA0H9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "08", "g": "G2", "c": "2026A2995", "a": "FONSECA ROLDAN NAYELI XIOMARA", "link": "https://docs.google.com/document/d/130E1bH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "09", "g": "G2", "c": "2026E1318", "a": "HERRERA CHARCA GERSON SAUL", "link": "https://docs.google.com/document/d/131F2cH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "10", "g": "G2", "c": "2026E1033", "a": "HUARANGA MINAYA AARON JOSTIN", "link": "https://docs.google.com/document/d/132G3dH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "11", "g": "G2", "c": "2026A2686", "a": "NAVARRO LUQUE CECILIA NATHALY", "link": "https://docs.google.com/document/d/133H4eH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "12", "g": "G2", "c": "2026E0284", "a": "POMIANO RAMOS ARIANA NICOLLE", "link": "https://docs.google.com/document/d/134I5fH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "13", "g": "G2", "c": "2026E0186", "a": "REYES PAUCAR JOSE ALONSO SALOMON", "link": "https://docs.google.com/document/d/135J6gH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "14", "g": "G2", "c": "2026A0430", "a": "RIVERO CESPEDES ANGIE GERALDINE", "link": "https://docs.google.com/document/d/136K7hH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "15", "g": "G2", "c": "2026A1969", "a": "ROJAS MANDUJANO CLAUDIA VALENTINA", "link": "https://docs.google.com/document/d/137L8iH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "16", "g": "G2", "c": "2026A1945", "a": "ROMERO VILCA SOFIA YASMIN", "link": "https://docs.google.com/document/d/138M9jH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "17", "g": "G2", "c": "2026A3150", "a": "SOSA HILLPA LUZ ESTELA", "link": "https://docs.google.com/document/d/139N0kH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "18", "g": "G2", "c": "2026A1729", "a": "SULCA POMA ESTEFANY PILAR", "link": "https://docs.google.com/document/d/140O1lH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "19", "g": "G2", "c": "2026A1761", "a": "SULCA POMA LUCIANA NICOLE", "link": "https://docs.google.com/document/d/141P2mH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "20", "g": "G2", "c": "2026A0841", "a": "TOCTO GARCIA SALLY LIZETH", "link": "https://docs.google.com/document/d/142Q3nH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "21", "g": "G2", "c": "2026A1542", "a": "USHIÑAHUA ESTRELLA KENLLY SENDI", "link": "https://docs.google.com/document/d/143R4oH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "22", "g": "G2", "c": "2026E0073", "a": "VASQUEZ PALACIOS ANGELLINA YANETH", "link": "https://docs.google.com/document/d/144S5pH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "23", "g": "G2", "c": "2026E1503", "a": "VENTURA TAIPE ROSITA OLINDA", "link": "https://docs.google.com/document/d/145T6qH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"},
-  {"n": "24", "g": "G2", "c": "2026A0431", "a": "ZUMAETA VENTURA HERMECITA MARLENY", "link": "https://docs.google.com/document/d/146U7rH9z2cK7jX2w6Q9e8r5t7u6v9w2x4y3z5A1b2c3/edit"}
+  {"n": "09", "g": "G1", "c": "2026D1980", "a": "ELESCANO CALERO MARUMY SAVINA", "link": "https://docs.google.com/document/d/1ql-mnSO4tclj9tWGF2zBxcIVCBW62GT7V_mhtHbvZwo/edit"},
+  {"n": "10", "g": "G1", "c": "2026D0516", "a": "GARCIA HUAYHUA DAYANA LIZBETH", "link": "https://docs.google.com/document/d/1KM3YirxAsEv6FaUNfdjlj8NLRANQ6mMbSYdB6CEmCtU/edit"},
+  {"n": "11", "g": "G1", "c": "2026D0165", "a": "MAXIMILIANO ALVAREZ DAMARIS ESTHER", "link": "https://docs.google.com/document/d/1k02GSz0KTKReIqUtQfjJrc1aWJNk5gRMOWVg6B_VE20/edit"},
+  {"n": "12", "g": "G1", "c": "2026D1389", "a": "MIRANDA MIRANDA JENIFER ISABEL", "link": "https://docs.google.com/document/d/1bahy639zx3yiAKo9iJIfToYaq7mcdWzVrfvHEFJtXG4/edit"},
+  {"n": "13", "g": "G1", "c": "2026D0410", "a": "NIMBOMA DE LA CRUZ ROSA EDELIT", "link": "https://docs.google.com/document/d/1P5Xm-tHVBn4_tnP6rvOnkah0B0u6gwLQ0Z6YDif-hdQ/edit"},
+  {"n": "14", "g": "G1", "c": "2026D0900", "a": "PIZARRO MAGNO ANGELICA ROSSANA", "link": "https://docs.google.com/document/d/16Tem-9HpAy-bInkTYtxMJ5DmLuKvlMLcEpSYaYpUiKg/edit"},
+  {"n": "15", "g": "G1", "c": "2026D0483", "a": "PRIMO GARAY NATALYE ROUSSE", "link": "https://docs.google.com/document/d/1xP6Vyb_JsV8tQdFgkQxh8TGg7DxifxpLnZUxaekYcdM/edit"},
+  {"n": "16", "g": "G1", "c": "2026C2568", "a": "QUISPE ASCONA JACKELINE JUSTINA", "link": "https://docs.google.com/document/d/1wth3_9fH-gV2pGyZQl0uaieYsD8O8N3dlVy3l17ADbA/edit"},
+  {"n": "17", "g": "G1", "c": "2026D1653", "a": "QUISPE OSORIO YURI KIMBERLY", "link": "https://docs.google.com/document/d/10WT4jlkq_G7Ac4g8S30TKSnTBIRoHBUGMeiLs7yfHmc/edit"},
+  {"n": "18", "g": "G1", "c": "2026D1444", "a": "RODRIGUEZ AYALA FABIANNA FRANCESCA", "link": "https://docs.google.com/document/d/1b96YZD9qTpxDk1oRF7ogSsjqV_1DCPqQJyvJA3j4FSo/edit"},
+  {"n": "19", "g": "G1", "c": "2026D0189", "a": "ROJAS WILLIAMS LISBETH DORIS", "link": "https://docs.google.com/document/d/1GVVWGW85cGql4AHSHiFqA89Lq6YSztf0ChsbuTH4Ih8/edit"},
+  {"n": "20", "g": "G1", "c": "2026D1902", "a": "TAMANI LANCHA KATIUSKA PAULINA", "link": "https://docs.google.com/document/d/1V9agdHxVC_DOQA8c3AYhjD4xLoJTEVDZ13AyP2bVF9o/edit"},
+  {"n": "21", "g": "G1", "c": "2026D0416", "a": "VALENZUELA CAHUANA MILAGROS", "link": "https://docs.google.com/document/d/1AyVApKtYTd_7k-G2n6T7T6UzftejUJ4lTE-F_splV20/edit"},
+  {"n": "22", "g": "G1", "c": "2026D0340", "a": "VIVANCO RIVERA SAORY LUZ", "link": "https://docs.google.com/document/d/1FFqRvl5I2uwE72lvdDjjTZzLlro2jol1R6VBgzC6ke0/edit"},
+  {"n": "01", "g": "G2", "c": "2026A2543", "a": "ADAN GALIANO ANA CRISTINA", "link": "https://docs.google.com/document/d/1MjjvMDW9Y6dnnwHXYRZ_O9BA-DNv6g75SBfD0LhO7_U/edit"},
+  {"n": "02", "g": "G2", "c": "2026A2470", "a": "BARDALES ZUÑIGA KARLA THALIA", "link": "https://docs.google.com/document/d/1sBW_81am1Gz6Ix_t28StKvWpYLEXDjM1qNPVqzx6R0s/edit"},
+  {"n": "03", "g": "G2", "c": "2026A1980", "a": "BERNABE BALDEON VICTORIA", "link": "https://docs.google.com/document/d/19bpRWysEHZzFzzB83ykXmerGvRInS4ToTUmW8T_6hqk/edit"},
+  {"n": "04", "g": "G2", "c": "2026A1678", "a": "CLEMENTE PERALTA LILIANA ASHLEY", "link": "https://docs.google.com/document/d/1sIF8fczJRh3DjvpdEkBEuGA_Yc0Wf6nKFRUCP-h8Y1w/edit"},
+  {"n": "05", "g": "G2", "c": "2026A2491", "a": "CONISLLA PINTO SANDY SHIRLEY", "link": "https://docs.google.com/document/d/1LFIJTqmFxSGVBjNirQAjQkOIzcylNLNrH7KX9basFaU/edit"},
+  {"n": "06", "g": "G2", "c": "2026E1405", "a": "DE LA CRUZ CARHUACHIN YUNI ESTEFANI", "link": "https://docs.google.com/document/d/10T5h8LiVNH-mzOniP_kh-9hulpBhrqnkXXYMouXCfUU/edit"},
+  {"n": "07", "g": "G2", "c": "2026E1090", "a": "FLORES GONZALES MILAGROS GUADALUPE", "link": "https://docs.google.com/document/d/1yIiXxZLeuOxIwVlKKNH3X4tEScB1u7B4jc8-iiTlYok/edit"},
+  {"n": "08", "g": "G2", "c": "2026A2995", "a": "FONSECA ROLDAN NAYELI XIOMARA", "link": "https://docs.google.com/document/d/12g0vSn75nzYwjMZzsC13oFKb8O8Z3QlpYBA76QMZbHI/edit"},
+  {"n": "09", "g": "G2", "c": "2026E1318", "a": "HERRERA CHARCA GERSON SAUL", "link": "https://docs.google.com/document/d/1Z0E_pwv3tWu6teKS4MAP2ObLcMpw4xUgGoGYM-jUtro/edit"},
+  {"n": "10", "g": "G2", "c": "2026E1033", "a": "HUARANGA MINAYA AARON JOSTIN", "link": "https://docs.google.com/document/d/1oot2HMLcgq6LuCqPLOecMkOYDKfxJZr8weqnMIBa5cw/edit"},
+  {"n": "11", "g": "G2", "c": "2026A2686", "a": "NAVARRO LUQUE CECILIA NATHALY", "link": "https://docs.google.com/document/d/1Wg89gAo3brgPx1hPeLwECuls14FjxPmvLO0OgHZ-xh4/edit"},
+  {"n": "12", "g": "G2", "c": "2026E0284", "a": "POMIANO RAMOS ARIANA NICOLLE", "link": "https://docs.google.com/document/d/17ZnYPFeUuSh5yZ7AGzKHH8bmVcs9zy0OZjAjVpl_ONU/edit"},
+  {"n": "13", "g": "G2", "c": "2026E0186", "a": "REYES PAUCAR JOSE ALONSO SALOMON", "link": "https://docs.google.com/document/d/1uf_yQq70eHycMGehigCYbjPl4112L-QTuBfteLJPEzU/edit"},
+  {"n": "14", "g": "G2", "c": "2026A0430", "a": "RIVERO CESPEDES ANGIE GERALDINE", "link": "https://docs.google.com/document/d/1mqOywSk0hgVAhNemN_Vdpmush92ezQfBqI19xzkyAZo/edit"},
+  {"n": "15", "g": "G2", "c": "2026A1969", "a": "ROJAS MANDUJANO CLAUDIA VALENTINA", "link": "https://docs.google.com/document/d/1tMGKLWP8f04pXFFPR0_hKpGKxQK2Y54dhJ0GLuxMKsw/edit"},
+  {"n": "16", "g": "G2", "c": "2026A1945", "a": "ROMERO VILCA SOFIA YASMIN", "link": "https://docs.google.com/document/d/1mdAHvm1VS67evVs7J7X4OcxEtHL0GBGjsTW6-JhyftU/edit"},
+  {"n": "17", "g": "G2", "c": "2026A3150", "a": "SOSA HILLPA LUZ ESTELA", "link": "https://docs.google.com/document/d/1pRDPBkOF9GgyvSrARUiLlI51gYO_-MzmoC3iTjnFlDs/edit"},
+  {"n": "18", "g": "G2", "c": "2026A1729", "a": "SULCA POMA ESTEFANY PILAR", "link": "https://docs.google.com/document/d/1xOQ7iN0TxW3zGmORgwHVvO_Oy01nLLX9XHcBCbvigjY/edit"},
+  {"n": "19", "g": "G2", "c": "2026A1761", "a": "SULCA POMA LUCIANA NICOLE", "link": "https://docs.google.com/document/d/1vg67XqSr_87jNUYz8zZKQt3zlOhL3t6WsAltM3rTZb0/edit"},
+  {"n": "20", "g": "G2", "c": "2026A0841", "a": "TOCTO GARCIA SALLY LIZETH", "link": "https://docs.google.com/document/d/1ZDTbCIyXbjwIZdOe2x91AcCU4TNKfY4bPT8COaR4DwU/edit"},
+  {"n": "21", "g": "G2", "c": "2026A1542", "a": "USHIÑAHUA ESTRELLA KENLLY SENDI", "link": "https://docs.google.com/document/d/1mKcBfBffTiFk4lxOLjVEpTfFq3ZIoDnxOQhXF-0iGag/edit"},
+  {"n": "22", "g": "G2", "c": "2026E0073", "a": "VASQUEZ PALACIOS ANGELLINA YANETH", "link": "https://docs.google.com/document/d/1AdS00MQ0AM-mV-jKPAmmTV5r3bojIYaRHQxgco9Okck/edit"},
+  {"n": "23", "g": "G2", "c": "2026E1503", "a": "VENTURA TAIPE ROSITA OLINDA", "link": "https://docs.google.com/document/d/1DkjsKDl9WLta4Fe-qVRpKlYyKfyodOLG1aslTHtclMs/edit"},
+  {"n": "24", "g": "G2", "c": "2026A0431", "a": "ZUMAETA VENTURA HERMECITA MARLENY", "link": "https://docs.google.com/document/d/1i0ifE4JlI00ENkpTxWWpVvFR9ypfmFRlkDQ0i1Ax4oo/edit"}
 ];
 
 const G = id => document.getElementById(id);
@@ -124,19 +124,12 @@ const normPw = s => strip(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
 
 DATA.forEach(d => {
   d.k = norm(d.a);
-  // Generar apellidos unidos automáticamente a partir del nombre completo (primeras palabras que forman los apellidos)
   const parts = d.a.split(' ');
-  // Tomamos las primeras palabras (por ejemplo, en "ARI TRUJILLANO JORDY" tomamos ARI TRUJILLANO -> ARITRUJILLANO)
-  // En las listas de clase, los 2 primeros términos son los apellidos (excepto si hay artículos como DE LA CRUZ).
   let apellidosRaw = "";
-  if (d.a.startsWith("DE LA CRUZ")) apellidosR = "DE LA CRUZ";
-  else if (d.a.startsWith("NIMBOMA DE LA CRUZ")) apellidosRaw = "NIMBOMA DE LA CRUZ"; // o apellidos paterno/materno
-  // Hagámoslo general: tomamos hasta las últimas 2 palabras que suelen ser los nombres
-  if (parts.length >= 3) {
-    // Si la última o penúltima palabra es nombre común, o simplemente tomamos los primeros tokens
-    // Una forma estándar para el formato peruano: primer y segundo apellido suelen ocupar las primeras 2 o 3 palabras.
-    let apWords = parts.slice(0, parts.length - 2);
-    apellidosRaw = apWords.join("");
+  if (d.a.startsWith("DE LA CRUZ")) {
+    apellidosRaw = "DE LA CRUZ";
+  } else if (parts.length >= 3) {
+    apellidosRaw = parts.slice(0, parts.length - 2).join("");
   } else {
     apellidosRaw = parts[0];
   }
@@ -182,7 +175,6 @@ function pick(d) {
   G("code").focus();
 }
 
-// Estática para los botones de demostración de la izquierda
 document.querySelectorAll('[data-p]').forEach(b => {
   b.onclick = () => {
     const [x, y, a] = b.dataset.p.split(' ');
@@ -196,7 +188,6 @@ document.querySelectorAll('[data-p]').forEach(b => {
   };
 });
 
-// Alineación horizontal estática
 document.querySelectorAll('#hb button').forEach(b => {
   b.onclick = () => {
     const k = b.dataset.k;
@@ -217,7 +208,6 @@ G("toggleCode").addEventListener("click", () => {
   G("toggleCode").textContent = hide ? "🙈" : "👁️";
 });
 
-// Validación rigurosa: Código de alumno o apellidos unidos
 G("form").addEventListener("submit", e => {
   e.preventDefault();
   const inputVal = normPw(G("code").value);
@@ -226,8 +216,7 @@ G("form").addEventListener("submit", e => {
   G("go").disabled = true;
   G("err").textContent = "";
 
-  // Comparamos exactamente con el código o con los apellidos unidos del alumno seleccionado
-  if (inputVal === current.codigoNorm || inputVal === current.apellidosNorm || inputVal.includes(current.apellidosNorm)) {
+  if (inputVal === current.codigoNorm || inputVal === current.apellidosNorm || inputVal.includes(current.apellidosNorm) || current.apellidosNorm.includes(inputVal)) {
     G("who2").textContent = current.a;
     const url = current.link;
     if (url && url.startsWith("http")) {
