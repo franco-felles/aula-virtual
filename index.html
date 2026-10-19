@@ -1,125 +1,98 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Aula Virtual - Herramientas Informáticas</title>
-  <style>
-    :root {
-      --bg: #f4f6fb; --card: #ffffff; --ink: #1d2433;
-      --muted: #6b7385; --accent: #2f5bea; --accent-d: #2447bd; --line: #e1e5ee;
-      --tag-bg: #eef2ff;
-      --ec: #1b7f3b; --ec-d: #14632d; --ec-bg: #e3f4e8;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg); color: var(--ink); min-height: 100vh;
-      padding: 32px 16px; display: flex; justify-content: center;
-    }
-    main { width: 100%; max-width: 900px; }
-    header { margin-bottom: 28px; }
-    h1 { font-size: 1.8rem; margin: 0 0 6px; }
-    .sub { color: var(--muted); margin: 0; font-size: 1rem; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aula Virtual · Herramientas Informáticas</title>
+<!-- Sin sesión iniciada, esta página te manda a acceso.html -->
+<script src="access/access.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="access/favicon.png">
+<link rel="apple-touch-icon" href="access/icono.png">
+<link rel="stylesheet" href="access/estilo.css">
+<style>
+  .hero { margin-bottom: 8px; }
+  .unidad { margin-top: 38px; }
+  .unidad-h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 4px; }
+  .unidad-h h2 { font-size: 1.35rem; letter-spacing: -.01em; margin: 0; }
+  .unidad-h .linea { flex: 1; border-top: 1px solid var(--line); transform: translateY(-4px); }
+  .sub-h { font-family: var(--mono); font-size: .72rem; color: var(--mut); text-transform: uppercase; letter-spacing: .6px; margin: 20px 0 10px; }
 
-    h2.unit-title {
-      font-size: 1.2rem; margin: 32px 0 16px; color: var(--accent-d);
-      border-bottom: 2px solid var(--line); padding-bottom: 6px;
-    }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  a.sesion {
+    --acc: var(--moss); --acc-d: var(--moss-d); --acc-bg: var(--moss-bg);
+    position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 22px;
+    text-decoration: none; color: var(--ink);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px;
+    overflow: hidden; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  a.sesion.ec { --acc: var(--amber); --acc-d: var(--amber-d); --acc-bg: var(--amber-bg); }
+  a.sesion::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--acc); }
+  a.sesion:hover { transform: translateY(-3px); border-color: var(--acc); box-shadow: 0 12px 28px rgba(16, 35, 28, .10); }
+  a.sesion:focus-visible { outline: 3px solid rgba(53, 81, 63, .3); outline-offset: 2px; }
+  .s-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .s-tipo { font-family: var(--mono); font-size: .68rem; font-weight: 600; letter-spacing: .6px; color: var(--acc-d); background: var(--acc-bg); border-radius: 6px; padding: 3px 8px; }
+  .s-id { font-family: var(--mono); font-size: .7rem; color: var(--mut); }
+  .s-num { font-family: var(--mono); font-size: 2.4rem; font-weight: 600; line-height: 1; letter-spacing: -.03em; }
+  .s-num small { display: block; font-family: var(--sans); font-size: .85rem; font-weight: 500; letter-spacing: 0; color: var(--ink-2); margin-top: 6px; }
+  .s-go { display: flex; align-items: center; justify-content: space-between; font-size: .85rem; font-weight: 600; color: var(--acc-d); }
+  .s-go svg { width: 18px; height: 18px; transition: transform .18s; }
+  a.sesion:hover .s-go svg { transform: translateX(4px); }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-
-    .session-card {
-      --c: var(--accent); --c-d: var(--accent-d); --c-bg: var(--tag-bg);
-      background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--c);
-      border-radius: 14px; padding: 20px; box-shadow: 0 2px 8px rgba(20,30,60,.05);
-      display: flex; flex-direction: column; justify-content: space-between;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .session-card:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(20,30,60,.08); }
-
-    /* Evaluación continua: verde */
-    .session-card.t-ec { --c: var(--ec); --c-d: var(--ec-d); --c-bg: var(--ec-bg); }
-
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-    .tag {
-      font-size: 0.75rem; background: var(--c-bg); color: var(--c-d);
-      border-radius: 6px; padding: 3px 8px; font-weight: 700;
-    }
-    .lock {
-      font-size: 0.75rem; background: #f1f2f6; color: var(--muted);
-      border-radius: 6px; padding: 3px 8px; font-weight: 600;
-    }
-    .session-card h3 { font-size: 1.1rem; margin: 0 0 8px; }
-    .session-card p { font-size: 0.88rem; color: var(--muted); margin: 0 0 16px; line-height: 1.4; }
-    .btn {
-      display: block; text-align: center; background: var(--c); color: #fff;
-      text-decoration: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
-      transition: background 0.15s ease;
-    }
-    .btn:hover { background: var(--c-d); }
-    .empty-msg { color: var(--muted); font-size: 0.9rem; font-style: italic; }
-    .aviso {
-      background: #fdecea; color: #8a1c1c; border: 1px solid #f5c2be;
-      border-radius: 10px; padding: 12px 14px; font-size: 0.9rem;
-    }
-  </style>
+  a.sesion.off { cursor: not-allowed; background: transparent; border-style: dashed; }
+  a.sesion.off:hover { transform: none; box-shadow: none; border-color: var(--line); }
+  a.sesion.off::before { background: var(--line); }
+  a.sesion.off .s-num, a.sesion.off .s-tipo { opacity: .55; }
+  a.sesion.off .s-go { color: var(--mut); font-weight: 500; }
+  a.sesion.abierta .s-go { color: var(--moss); }
+  .skeleton { height: 150px; border-radius: 14px; background: linear-gradient(100deg, #ece8dc 30%, #f6f4ee 50%, #ece8dc 70%); background-size: 200% 100%; animation: brillo 1.2s linear infinite; }
+  @keyframes brillo { to { background-position: -200% 0; } }
+</style>
 </head>
 <body>
-  <main>
-    <header>
-      <h1>Herramientas Informáticas</h1>
-      <p class="sub">Selecciona tu sesión o evaluación continua disponible para acceder a tu documento.</p>
-    </header>
-
-    <div id="contenido">
-      <p class="empty-msg">Cargando contenidos...</p>
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="plate">
+        <span class="plate-mark"><img src="access/icono.png" alt=""></span>
+        <span class="plate-txt"><b>Aula Virtual</b><small>Herramientas Informáticas</small></span>
+      </div>
+      <div class="who-chip">
+        <i class="dot"></i><span id="quien"></span>
+        <button class="btn ghost sm" id="salir" type="button">Salir</button>
+      </div>
     </div>
-  </main>
+  </header>
 
-  <!-- Lista de archivos publicados (la editas en clases.js) -->
-  <script src="clases.js"></script>
+  <main class="wrap">
+    <section class="hero anim">
+      <p class="eyebrow" id="saludoRol">Portal</p>
+      <h1 class="titulo" id="saludo">Hola</h1>
+      <p class="lede" id="lede">Elige tu clase o evaluación para ir directo a tu documento.</p>
+    </section>
+    <div id="contenido"><div class="grid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>
+  </main>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
   <script>
     /* ==========================================================
-       CLASES:  clase<n>u<u>.html (se listan en clases.js)
-         clase1u1.html -> "Clase 1 · Unidad 1"
-       EVALUACIONES CONTINUAS: ya NO van en clases.js. Las detecta
-       evaluaciones.html leyendo la carpeta eecc/ (ec1u1.csv, ec2u2.csv...)
-       y le avisa a este portal con postMessage -> tarjeta verde.
+       PORTAL: crea un botón por cada sesión que exista. No hay lista que mantener.
+
+       Para publicar algo nuevo solo sube el CSV con el nombre correcto:
+         clases/class#u#.csv     -> clase # de la unidad #     (class4u1.csv, class2u2.csv ...)
+         eecc/ec#u#.csv          -> evaluación continua        (ec1u1.csv, ec2u1.csv ...)
+       El botón aparece solo. Al presionarlo:
+         alumno  -> su documento se abre en una PESTAÑA NUEVA (el portal sigue abierto)
+                    y aparece una notificación en pantalla
+         docente -> abre access/sesion.html?s=<sesión> con la lista de alumnos y enlaces
+       (clases/class1u1.html es la única clase que es una página: no lleva CSV.)
+
+       Búsqueda automática: por cada unidad y tipo se prueban los números 1, 2, 3...
+       y se detiene tras HUECOS números seguidos que no existen.
        ========================================================== */
-    const TIPOS = {
-      clase: { nombre: "Clase",               css: "t-clase", orden: 1 },
-      ec:    { nombre: "Evaluación continua", css: "t-ec",    orden: 2 }
-    };
-    const UNIDADES = [1, 2];
-    const NOMBRE_RE = /^(clase)(\d+)u(\d+)\.html$/i;
+    const UNIDADES = [1, 2, 3, 4];   // cuántas unidades se buscan
+    const HUECOS = 3;                // se tolera faltar hasta 3 números seguidos (class5 sin class6, class7 y class8 => fin)
+    const TOPE = 40;                 // límite de seguridad por unidad y tipo
 
-    /** "clase4u2.html" -> { tipo, num, unidad, etiqueta } | null */
-    function parseNombre(file) {
-      const m = NOMBRE_RE.exec(file);
-      if (!m) return null;
-      const tipo = TIPOS[m[1].toLowerCase()];
-      const num = Number(m[2]);
-      const unidad = Number(m[3]);
-      return { tipo, num, unidad, etiqueta: `${tipo.nombre} ${num} · Unidad ${unidad}` };
-    }
-
-    /** Descarga solo hasta </head> (las clases pesan cientos de KB por sus imágenes). */
-    async function leerCabecera(url) {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      if (!res.body || !res.body.getReader) return res.text();
-      const reader = res.body.getReader();
-      const dec = new TextDecoder();
-      let txt = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        txt += dec.decode(value, { stream: true });
-        if (/<\/head>/i.test(txt)) { reader.cancel(); break; }
-      }
-      return txt;
-    }
+    const ICONO_FLECHA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
     function el(tag, cls, text) {
       const n = document.createElement(tag);
@@ -128,118 +101,139 @@
       return n;
     }
 
-    function crearTarjeta(item) {
-      const card = el("article", "session-card " + item.tipo.css);
-      if (item.ec) {
-        card.appendChild(el("h3", "", item.etiqueta));
-        const a = el("a", "btn", "Ingresar");
-        a.href = item.file;
-        card.appendChild(a);
-        return card;
-      }
-      const top = el("div");
-      const tags = el("div", "tags");
-      tags.appendChild(el("span", "tag", item.etiqueta));
-      if (item.locked) tags.appendChild(el("span", "lock", "🔒 Con código de alumno"));
-      top.appendChild(tags);
-      top.appendChild(el("h3", "", item.title));
-      if (item.desc) top.appendChild(el("p", "", item.desc));
-      const a = el("a", "btn", "Ingresar");
-      a.href = item.file;
-      card.append(top, a);
-      return card;
+    async function existe(info) {
+      const [csv, html] = await Promise.all([
+        Acceso.textoCSV(info.carpeta + info.id + ".csv"),
+        info.tipo === "class" ? Acceso.existeHTML(info.id) : false
+      ]);
+      if (!csv && !html) return null;
+      info.csv = csv; info.html = !!html;       // se guarda el CSV para saber cuál es el enlace de este alumno
+      return info;
     }
 
-    async function cargarItem(file) {
-      const info = parseNombre(file);
-      if (!info) {
-        console.warn(`[aula] "${file}" no cumple el estándar (clase#u#.html / ec#u#.html). Se omite.`);
-        return null;
+    async function sondear(tipo, unidad) {
+      const halladas = [];
+      let falta = 0;
+      for (let n = 1; n <= TOPE && falta < HUECOS; n++) {
+        const info = Acceso.idSesion(`${tipo}${n}u${unidad}`);
+        const hallada = await existe(info);
+        if (hallada) { halladas.push(hallada); falta = 0; } else falta++;
       }
-      if (!UNIDADES.includes(info.unidad)) {
-        console.warn(`[aula] "${file}": la unidad ${info.unidad} no está en UNIDADES. Se omite.`);
-        return null;
-      }
-      try {
-        const doc = new DOMParser().parseFromString(await leerCabecera(file), "text/html");
-        const meta = n => doc.querySelector(`meta[name="${n}"]`)?.getAttribute("content")?.trim() || "";
-        const title = meta("session-title");
-        const desc = meta("session-desc");
-        if (!title) console.warn(`[aula] "${file}" no tiene <meta name="session-title">.`);
-        if (!desc) console.warn(`[aula] "${file}" no tiene <meta name="session-desc">.`);
-        return {
-          file, ...info,
-          title: title || info.etiqueta,
-          desc,
-          locked: meta("session-access").toLowerCase() === "locked"
-        };
-      } catch (err) {
-        console.warn(`[aula] No se pudo leer "${file}":`, err.message);
-        return null;
-      }
+      return halladas;
     }
 
-    let itemsClases = [];
-    let itemsEC = [];
-
-    function render() {
-      const cont = document.getElementById("contenido");
-      const items = [...itemsClases, ...itemsEC]
-        .sort((a, b) => a.tipo.orden - b.tipo.orden || a.num - b.num);
-      cont.replaceChildren();
-      for (const u of UNIDADES) {
-        cont.appendChild(el("h2", "unit-title", "Unidad " + u));
-        const grid = el("section", "grid");
-        const delaUnidad = items.filter(i => i.unidad === u);
-        if (delaUnidad.length) {
-          delaUnidad.forEach(i => grid.appendChild(crearTarjeta(i)));
-        } else {
-          grid.appendChild(el("p", "empty-msg",
-            `No hay contenido disponible en la Unidad ${u} por el momento.`));
-        }
-        cont.appendChild(grid);
-      }
+    async function detectar() {
+      const tareas = [];
+      for (const u of UNIDADES) for (const tipo of ["class", "ec"]) tareas.push(sondear(tipo, u));
+      return (await Promise.all(tareas)).flat();
     }
 
-    /* ---- Evaluaciones continuas: las detecta evaluaciones.html (carpeta eecc/) ---- */
-    function iniciarDetectorEC() {
-      window.addEventListener("message", ev => {
-        if (ev.origin !== location.origin) return;
-        const d = ev.data;
-        if (!d || d.tipo !== "aula-ec" || !Array.isArray(d.lista)) return;
-        itemsEC = d.lista
-          .filter(x => UNIDADES.includes(x.unidad))
-          .map(x => ({
-            ec: true, tipo: TIPOS.ec, num: x.num, unidad: x.unidad,
-            etiqueta: `Evaluación continua ${x.num} · Unidad ${x.unidad}`,
-            file: "evaluaciones.html?ec=" + encodeURIComponent(x.id)
-          }));
-        render();
-      });
-      const f = document.createElement("iframe");
-      f.src = "evaluaciones.html?detectar=1";
-      f.hidden = true;
-      f.title = "detector de evaluaciones";
-      document.body.appendChild(f);
-    }
-
-    async function loadPortal() {
-      const cont = document.getElementById("contenido");
-
-      if (!Array.isArray(window.AULA_FILES)) {
-        cont.replaceChildren(el("p", "aviso",
-          "No se pudo cargar la lista de clases (clases.js). Avisa a tu docente."));
-        console.error("[aula] window.AULA_FILES no existe: revisa que clases.js no tenga errores (¿falta una coma?).");
+    /* Para el alumno: busca SU enlace en el CSV de la sesión. Define info.href y info.estado */
+    function resolver(info, s) {
+      info.estado = "ok";
+      if (s.rol === "docente") { info.href = "access/sesion.html?s=" + encodeURIComponent(info.id); info.interno = true; return; }
+      if (!info.csv) {                                            // clase de contenido (class1u1.html)
+        if (info.html) { info.href = `clases/${info.id}.html`; info.interno = true; info.nueva = true; } else info.estado = "nd";
         return;
       }
+      const t = Acceso.leerTabla(info.csv);
+      if (t.titulo && Acceso.norm(t.titulo) !== info.id) { info.estado = "titulo"; return; }
+      const fila = Acceso.buscarFila(t.filas, s.codigo);
+      if (!fila) info.estado = "no-registrado";
+      else if (!/^https?:\/\//i.test(fila.link)) info.estado = "sin-enlace";
+      else info.href = fila.link;
+    }
+    const TEXTO_ESTADO = {
+      "sin-enlace": "Aún no disponible",
+      "no-registrado": "No figuras aquí",
+      "titulo": "Archivo con error",
+      "nd": "Aún no disponible"
+    };
 
-      const files = [...new Set(window.AULA_FILES)];
-      itemsClases = (await Promise.all(files.map(cargarItem))).filter(Boolean);
-      render();
-      iniciarDetectorEC();
+    function toast(titulo, texto, tipo) {
+      const t = el("div", "toast" + (tipo ? " " + tipo : ""));
+      const ico = el("span", "t-ico");
+      ico.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+      const cuerpo = el("div"); cuerpo.append(el("b", "", titulo), el("p", "", texto));
+      const x = el("button", "t-x", "×"); x.type = "button"; x.setAttribute("aria-label", "Cerrar");
+      const quitar = () => { t.classList.add("sale"); setTimeout(() => t.remove(), 300); };
+      x.onclick = quitar;
+      t.append(ico, cuerpo, x);
+      const caja = document.getElementById("toasts");
+      while (caja.children.length >= 3) caja.firstChild.remove();
+      caja.appendChild(t);
+      setTimeout(quitar, 6000);
     }
 
-    loadPortal();
+    function tarjeta(info) {
+      const off = info.estado !== "ok";
+      const a = el("a", "sesion" + (info.tipo === "ec" ? " ec" : "") + (off ? " off" : ""));
+      const top = el("div", "s-top");
+      top.append(el("span", "s-tipo", info.tipo === "ec" ? "EVALUACIÓN" : "CLASE"), el("span", "s-id", info.id));
+      const num = el("div", "s-num", String(info.num).padStart(2, "0"));
+      num.appendChild(el("small", "", info.nombre));
+      const go = el("div", "s-go");
+      const lbl = el("span", "", off ? TEXTO_ESTADO[info.estado] : (info.nueva ? "Abrir clase" : info.interno ? "Ingresar" : "Abrir mi documento"));
+      go.append(lbl);
+      if (!off) go.insertAdjacentHTML("beforeend", ICONO_FLECHA);
+      a.append(top, num, go);
+      if (off) { a.setAttribute("aria-disabled", "true"); a.addEventListener("click", e => e.preventDefault()); return a; }
+      a.href = info.href;
+      if (!info.interno || info.nueva) {
+        // alumno: pestaña nueva; el portal queda abierto + notificación.
+        // Los enlaces externos llevan noopener; la página interna (class1u1) no, para que herede la sesión.
+        a.target = "_blank"; if (!info.interno) a.rel = "noopener noreferrer";
+        a.addEventListener("click", e => {
+          // window.open (sin noopener) hace que la pestaña nueva herede la sesión; <a target=_blank> no
+          if (info.nueva) { e.preventDefault(); window.open(info.href, "_blank"); }
+          a.classList.add("abierta");
+          lbl.textContent = "Abierto · volver a abrir";
+          toast(info.nueva ? "Abriendo la clase" : "Abriendo tu documento", `${info.etiqueta} se abre en una pestaña nueva. Esta página sigue aquí por si quieres abrir otra.`);
+        });
+      }
+      return a;
+    }
+
+    function seccion(titulo, lista) {
+      const frag = document.createDocumentFragment();
+      if (!lista.length) return frag;
+      frag.appendChild(el("div", "sub-h", titulo));
+      const grid = el("div", "grid");
+      lista.forEach(s => grid.appendChild(tarjeta(s)));
+      frag.appendChild(grid);
+      return frag;
+    }
+
+    async function cargarPortal() {
+      const s = (await Acceso.listo) && Acceso.sesion();
+      const docente = s.rol === "docente";
+      document.getElementById("quien").textContent = s.nombre;
+      document.getElementById("salir").onclick = Acceso.salir;
+      document.getElementById("saludoRol").textContent = docente ? "Modo docente" : (s.grupo ? "Grupo " + s.grupo : "Portal");
+      document.getElementById("saludo").textContent = docente
+        ? "Hola, " + s.nombre.split(/\s+/)[0]
+        : "Tus clases y evaluaciones";
+      document.getElementById("lede").textContent = docente
+        ? "Elige una clase o evaluación para ver a tus alumnos y sus enlaces."
+        : "Elige tu clase o evaluación: tu documento se abre en una pestaña nueva y este portal sigue aquí.";
+
+      const cont = document.getElementById("contenido");
+      const sesiones = await detectar();
+      sesiones.forEach(x => resolver(x, s));
+      cont.replaceChildren();
+      const ordenadas = sesiones.sort((a, b) => a.unidad - b.unidad || a.num - b.num);
+      const unidades = [...new Set(ordenadas.map(x => x.unidad))];
+      if (!unidades.length) { cont.appendChild(el("p", "vacio", "Aún no hay clases ni evaluaciones disponibles.")); return; }
+      for (const u of unidades) {
+        const bloque = el("section", "unidad anim");
+        const h = el("div", "unidad-h"); h.append(el("h2", "", "Unidad " + u), el("span", "linea"));
+        bloque.appendChild(h);
+        bloque.appendChild(seccion("Clases", ordenadas.filter(x => x.unidad === u && x.tipo === "class")));
+        bloque.appendChild(seccion("Evaluaciones continuas", ordenadas.filter(x => x.unidad === u && x.tipo === "ec")));
+        cont.appendChild(bloque);
+      }
+    }
+    cargarPortal();
   </script>
 </body>
 </html>

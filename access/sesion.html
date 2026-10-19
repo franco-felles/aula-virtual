@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sesión · Aula Virtual</title>
+<!-- ÚNICA página de sesión. Recibe ?s=class4u1 | ec1u1 y según quién entró:
+       alumno  -> lo manda directo a SU enlace del CSV de esa sesión
+       docente -> muestra todos los alumnos de ese CSV con su enlace
+     No hay que crear un HTML por clase: basta subir el CSV. -->
+<script src="access.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="icono.png">
+<link rel="stylesheet" href="estilo.css">
+<style>
+  .volver { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); text-decoration: none; font-size: .85rem; font-weight: 600; margin-bottom: 18px; }
+  .volver:hover { color: var(--acc-d); }
+  .volver svg { width: 16px; height: 16px; }
+
+  .cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .cab .eyebrow { color: var(--acc-d); }
+  .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat { font-family: var(--mono); font-size: .75rem; color: var(--ink-2); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  .stat b { color: var(--acc-d); font-size: 1rem; margin-right: 4px; }
+
+  .tools { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
+  .buscar { position: relative; flex: 1 1 260px; }
+  .buscar input { width: 100%; padding: 13px 14px 13px 42px; font-size: .95rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); outline: none; transition: border-color .15s, box-shadow .15s; }
+  .buscar input:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(53, 81, 63, .14); }
+  body.ec .buscar input:focus { box-shadow: 0 0 0 3px rgba(179, 117, 44, .18); }
+  .buscar svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--mut); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chips button { font-size: .8rem; font-weight: 600; font-family: var(--mono); background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; transition: all .15s; }
+  .chips button:hover { border-color: var(--acc); }
+  .chips button.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+  .grupo { display: flex; align-items: baseline; gap: 10px; margin: 28px 0 10px; font-size: 1.05rem; }
+  .grupo small { font-family: var(--mono); font-size: .72rem; color: var(--mut); font-weight: 400; }
+  .grupo::after { content: ""; flex: 1; border-top: 1px solid var(--line); transform: translateY(-4px); }
+  .alumnos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+
+  a.alumno {
+    display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px;
+    transition: border-color .15s, background .15s, transform .15s;
+  }
+  a.alumno:hover { border-color: var(--acc); background: var(--acc-bg); transform: translateY(-1px); }
+  a.alumno .n { flex: none; min-width: 34px; text-align: center; font-family: var(--mono); font-size: .75rem; font-weight: 700; color: var(--paper); background: var(--ink); border-radius: 8px; padding: 6px 0; }
+  a.alumno:hover .n { background: var(--acc); }
+  a.alumno .t { min-width: 0; flex: 1; }
+  a.alumno .nom { display: block; font-size: .85rem; font-weight: 600; line-height: 1.25; }
+  a.alumno .cod { display: block; font-family: var(--mono); font-size: .68rem; color: var(--mut); margin-top: 1px; }
+  a.alumno .go { flex: none; width: 16px; height: 16px; color: var(--mut); }
+  a.alumno:hover .go { color: var(--acc-d); }
+  a.alumno.sin { opacity: .55; pointer-events: none; border-style: dashed; background: transparent; }
+  a.alumno.sin .n { background: var(--mut); }
+
+  /* alumno: redirigiendo */
+  .centrado { min-height: 60vh; display: grid; place-items: center; text-align: center; }
+  .tarjeta { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 32px 28px; max-width: 420px; width: 100%; box-shadow: 0 14px 40px rgba(16, 35, 28, .07); }
+  .tarjeta h1 { font-size: 1.3rem; margin: 14px 0 6px; letter-spacing: -.01em; }
+  .tarjeta p { color: var(--ink-2); margin: 0 0 4px; font-size: .92rem; }
+  .tarjeta .btn { margin-top: 18px; }
+  .spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--acc); animation: giro .8s linear infinite; margin: 0 auto; }
+  @keyframes giro { to { transform: rotate(360deg); } }
+  .icono-aviso { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; margin: 0 auto; background: var(--amber-bg); color: var(--amber-d); }
+  .icono-aviso svg { width: 24px; height: 24px; }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-in">
+      <a class="plate" id="inicio" href="../index.html">
+        <span class="plate-mark"><img src="icono.png" alt=""></span>
+        <span class="plate-txt"><b>Aula Virtual</b><small>Herramientas Informáticas</small></span>
+      </a>
+      <div class="who-chip">
+        <i class="dot"></i><span id="quien"></span>
+        <button class="btn ghost sm" id="salir" type="button">Salir</button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap" id="app"></main>
+
+<script>
+const app = document.getElementById("app");
+const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+const enlaceValido = u => /^https?:\/\//i.test(u || "");
+const ICO = {
+  volver: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  lupa:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>',
+  salto:  '<svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>',
+  alerta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
+};
+
+function volverLink() {
+  const a = el("a", "volver"); a.href = Acceso.url("index.html"); a.innerHTML = ICO.volver + " Volver al inicio"; return a;
+}
+
+/* ---------- mensaje (sin acceso / no disponible) ---------- */
+function aviso(titulo, texto) {
+  const c = el("div", "centrado anim"), t = el("div", "tarjeta");
+  const ic = el("div", "icono-aviso"); ic.innerHTML = ICO.alerta;
+  const a = el("a", "btn", "Volver al inicio"); a.href = Acceso.url("index.html");
+  t.append(ic, el("h1", "", titulo), el("p", "", texto), a);
+  c.appendChild(t); app.replaceChildren(c);
+}
+
+/* ---------- ALUMNO: directo a su enlace ---------- */
+function vistaAlumno(info, r) {
+  const link = r.fila.link;
+  if (!enlaceValido(link)) {
+    aviso(info.etiqueta, "Tu documento aún no está disponible. Avisa a tu docente.");
+    return;
+  }
+  const c = el("div", "centrado anim"), t = el("div", "tarjeta");
+  const a = el("a", "btn block", "Abrir mi documento"); a.href = link;
+  t.append(el("div", "spin"), el("h1", "", "Abriendo tu documento…"), el("p", "", info.etiqueta), a);
+  c.appendChild(t); app.replaceChildren(c);
+  location.replace(link);              // replace: al volver atrás regresa al portal, no a esta página
+}
+
+/* ---------- DOCENTE: lista de alumnos y enlaces de esa sesión ---------- */
+function vistaDocente(info, datos) {
+  const alumnos = datos.filas.filter(f => f.nombre);
+  const conLink = alumnos.filter(a => enlaceValido(a.link)).length;
+
+  app.replaceChildren(volverLink());
+  const cab = el("div", "cab anim"), izq = el("div");
+  izq.append(el("p", "eyebrow", (info.tipo === "ec" ? "Evaluación continua" : "Clase") + " · vista docente"),
+             el("h1", "titulo", info.etiqueta),
+             el("p", "lede", "Presiona un alumno para abrir su documento en una pestaña nueva."));
+  const stats = el("div", "stats");
+  const s1 = el("div", "stat"); s1.append(el("b", "", String(alumnos.length)), "alumnos");
+  const s2 = el("div", "stat"); s2.append(el("b", "", String(conLink)), "con enlace");
+  stats.append(s1, s2);
+  cab.append(izq, stats);
+  app.appendChild(cab);
+
+  const grupos = [...new Set(alumnos.map(a => a.grupo || "Sin grupo"))].sort();
+  let filtro = "todos";
+
+  const tools = el("div", "tools anim");
+  const bus = el("div", "buscar"); bus.innerHTML = ICO.lupa;
+  const q = el("input"); q.type = "search"; q.placeholder = "Buscar por nombre o código…"; q.autocomplete = "off";
+  bus.appendChild(q);
+  const chips = el("div", "chips");
+  tools.append(bus, chips);
+  const lista = el("div");
+  app.append(tools, lista);
+
+  function pintarChips() {
+    chips.replaceChildren();
+    [["todos", "Todos", alumnos.length], ...grupos.map(g => [g, g, alumnos.filter(a => (a.grupo || "Sin grupo") === g).length])]
+      .forEach(([k, txt, n]) => {
+        const b = el("button", k === filtro ? "on" : "", `${txt} · ${n}`); b.type = "button";
+        b.onclick = () => { filtro = k; pintarChips(); pintar(); };
+        chips.appendChild(b);
+      });
+  }
+
+  function pintar() {
+    lista.replaceChildren();
+    const palabras = Acceso.norm(q.value).split(/\s+/).filter(Boolean);
+    let total = 0;
+    for (const g of grupos) {
+      if (filtro !== "todos" && filtro !== g) continue;
+      const hits = alumnos.filter(a => (a.grupo || "Sin grupo") === g &&
+        palabras.every(w => Acceso.norm(a.nombre + " " + a.codigo).includes(w)));
+      if (!hits.length) continue;
+      total += hits.length;
+      const h = el("h2", "grupo", "Grupo " + g.replace(/^G/i, "")); h.appendChild(el("small", "", `${hits.length} alumno${hits.length === 1 ? "" : "s"}`));
+      const grid = el("div", "alumnos");
+      hits.forEach(a => {
+        const x = el("a", "alumno");
+        const ok = enlaceValido(a.link);
+        if (ok) { x.href = a.link; x.target = "_blank"; x.rel = "noopener noreferrer"; }
+        else { x.classList.add("sin"); x.title = "Sin enlace disponible"; }
+        const t = el("span", "t");
+        t.append(el("span", "nom", a.nombre), el("span", "cod", ok ? a.codigo : a.codigo + " · sin enlace"));
+        x.append(el("span", "n", a.n || "·"), t);
+        if (ok) x.insertAdjacentHTML("beforeend", ICO.salto);
+        grid.appendChild(x);
+      });
+      lista.append(h, grid);
+    }
+    if (!total) lista.appendChild(el("p", "vacio", "Ningún alumno coincide con la búsqueda."));
+  }
+
+  q.addEventListener("input", pintar);
+  pintarChips(); pintar(); q.focus();
+}
+
+/* ---------- arranque ---------- */
+(async () => {
+  await Acceso.listo;                                   // sesión confirmada (si no, ya redirigió al login)
+  const s = Acceso.sesion();
+  document.getElementById("quien").textContent = s.nombre;
+  document.getElementById("salir").onclick = Acceso.salir;
+
+  const id = new URLSearchParams(location.search).get("s");
+  const info = Acceso.idSesion(id);
+  if (!info) { aviso("Sesión no válida", "El enlace no corresponde a ninguna clase ni evaluación."); return; }
+  document.title = info.etiqueta + " · Aula Virtual";
+  if (info.tipo === "ec") document.body.classList.add("ec");
+
+  const r = await Acceso.verificar(info.id);
+  if (!r.ok) { aviso(info.etiqueta, Acceso.MENSAJES[r.motivo] || "No tienes acceso a esta sesión."); return; }
+
+  if (!r.hayCSV) {                                      // sin CSV: solo existe si es una página de contenido (class1u1.html)
+    if (info.tipo === "class" && await Acceso.existeHTML(info.id)) { location.replace(Acceso.url(`clases/${info.id}.html`)); return; }
+    aviso(info.etiqueta, "Esta sesión aún no está disponible."); return;
+  }
+  if (r.sesion.rol === "docente") vistaDocente(info, r.datos);
+  else vistaAlumno(info, r);
+})();
+</script>
+</body>
+</html>

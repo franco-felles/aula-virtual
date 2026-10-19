@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ingresar · Aula Virtual</title>
+<link rel="icon" type="image/png" href="access/favicon.png">
+<link rel="apple-touch-icon" href="access/icono.png">
+<link rel="stylesheet" href="access/estilo.css">
+<style>
+  body { background: var(--panel); }
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100vh; }
+
+  /* ---------- lado del formulario ---------- */
+  .lado { display: flex; flex-direction: column; padding: 32px clamp(24px, 6vw, 72px); }
+  .marca { display: flex; align-items: center; gap: 12px; }
+  .marca .plate-mark { width: 40px; height: 40px; }
+  .marca b { font-family: var(--mono); font-size: 1.05rem; }
+  .marca small { display: block; font-family: var(--mono); font-size: .68rem; color: var(--moss); line-height: 1.2; }
+
+  .centro { flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; max-width: 400px; margin: 0 auto; padding: 36px 0; }
+  .centro h1 { font-size: clamp(1.7rem, 3.2vw, 2.15rem); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 8px; }
+  .centro .lede { margin-bottom: 30px; font-size: .95rem; }
+
+  ul.results { list-style: none; margin: -6px 0 0; padding: 0; max-height: 252px; overflow: auto; }
+  ul.results li { margin-bottom: 6px; }
+  ul.results button {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left;
+    background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px;
+    font-size: .88rem; transition: border-color .15s, background .15s;
+  }
+  ul.results button:hover, ul.results button:focus-visible { border-color: var(--moss); background: var(--moss-bg); outline: none; }
+  .tag { flex: none; font-family: var(--mono); font-size: .7rem; font-weight: 600; border: 1px solid var(--ink); border-radius: 6px; padding: 2px 8px; }
+  .tag.doc { background: var(--amber); border-color: var(--amber); color: #fff; }
+  .hint { color: var(--mut); font-size: .82rem; margin: 8px 2px 0; min-height: 1.3em; }
+
+  .elegido { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--moss-bg); border: 1px solid #cfdccb; border-radius: 10px; padding: 12px 14px; margin-bottom: 24px; }
+  .elegido .n { font-weight: 600; font-size: .92rem; line-height: 1.3; }
+  .elegido .m { font-family: var(--mono); font-size: .72rem; color: var(--moss); }
+  .elegido button { flex: none; background: none; border: 0; color: var(--moss-d); font-size: .8rem; text-decoration: underline; padding: 4px; }
+  .err { color: var(--err); font-size: .86rem; min-height: 1.3em; margin: 10px 2px 0; }
+
+  .o { display: flex; align-items: center; gap: 12px; color: var(--mut); font-size: .78rem; margin: 26px 0 14px; }
+  .o::before, .o::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+
+  .activa { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 26px; }
+  .activa .n { font-weight: 600; margin-bottom: 10px; }
+  .activa .btn + .btn { margin-top: 8px; }
+
+  .pie { font-size: .82rem; color: var(--mut); }
+
+  /* ---------- lado de la ilustración ---------- */
+  .arte { position: relative; overflow: hidden; background: #fff; display: grid; place-items: center; padding: 24px; }
+  .arte img { width: 100%; height: 100%; max-height: 100vh; object-fit: contain; display: block; animation: sube .6s ease both; }
+
+  @media (max-width: 860px) {
+    .split { grid-template-columns: 1fr; }
+    .arte { order: -1; height: 230px; padding: 8px; border-bottom: 1px solid var(--line); }
+    .lado { padding-top: 24px; }
+    .centro { padding: 28px 0 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="split">
+
+  <!-- ============ formulario ============ -->
+  <section class="lado">
+    <div class="marca">
+      <span class="plate-mark"><img src="access/icono.png" alt=""></span>
+      <div><b>Aula Virtual</b><small>Herramientas Informáticas</small></div>
+    </div>
+
+    <div class="centro">
+      <p class="eyebrow">Bienvenido</p>
+      <h1>Ingresa a tu aula</h1>
+      <p class="lede">Busca tu nombre y escribe tu código de alumno para llegar directo a tu documento.</p>
+
+      <!-- sesión ya iniciada en este equipo -->
+      <section class="activa hidden" id="activa">
+        <div class="hint" style="margin:0 0 2px">Ya iniciaste sesión como</div>
+        <div class="n" id="activaNombre"></div>
+        <button class="btn block" id="continuar" type="button">Continuar</button>
+        <button class="btn block ghost" id="cambiar" type="button">Ingresar con otro nombre</button>
+      </section>
+
+      <!-- paso 1: buscar nombre -->
+      <section id="step1">
+        <div class="field">
+          <label for="q">Tu nombre</label>
+          <input id="q" type="search" placeholder="Ej.: Quispe, Juan Carlos…" autocomplete="off" autofocus disabled>
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></span>
+        </div>
+        <ul class="results" id="results"></ul>
+        <div class="hint" id="hint">Cargando lista…</div>
+      </section>
+
+      <!-- paso 2: código -->
+      <section id="step2" class="hidden">
+        <div class="elegido">
+          <div><div class="n" id="who"></div><div class="m" id="meta"></div></div>
+          <button id="back" type="button">Cambiar</button>
+        </div>
+        <form id="form" autocomplete="off">
+          <div class="field">
+            <label for="code" id="codeLabel">Código de alumno</label>
+            <input id="code" type="password" placeholder="Ej.: 2026D0000" autocapitalize="characters" spellcheck="false" required>
+            <button type="button" class="ico" id="eye" title="Ver u ocultar" aria-label="Ver u ocultar el código">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <button class="btn block" id="go" type="submit">Ingresar</button>
+          <div class="err" id="err" role="alert"></div>
+        </form>
+      </section>
+
+      <div class="o" id="oDoc">o ingresa como</div>
+      <button class="btn block ghost" type="button" id="soyDocente">Acceso docente</button>
+    </div>
+
+    <div class="pie">¿Problemas para ingresar? Avisa a tu docente.</div>
+  </section>
+
+  <!-- ============ ilustración ============ -->
+  <aside class="arte" aria-hidden="true">
+    <img src="access/login.jpg" alt="">
+  </aside>
+</div>
+
+<script src="access/access.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const norm = Acceso.norm;
+let personas = [], elegida = null;
+
+const show = id => ["step1", "step2"].forEach(s => $(s).classList.toggle("hidden", s !== id));
+const etiqueta = p => p.rol === "docente" ? "Profesor · " + p.nombre : p.nombre;
+
+function buscar() {
+  const ul = $("results"); ul.replaceChildren();
+  const t = norm($("q").value);
+  if (t.length < 2) { $("hint").textContent = "Escribe al menos 2 letras."; return; }
+  const palabras = t.split(/\s+/);
+  const hits = personas.filter(p => {
+    const base = norm(etiqueta(p) + (p.rol === "docente" ? " docente profesor" : ""));
+    return palabras.every(w => base.includes(w));
+  }).slice(0, 30);
+  $("hint").textContent = hits.length ? "" : "No se encontró ese nombre. Revisa la escritura.";
+  hits.forEach(p => {
+    const li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button";
+    const n = document.createElement("span"); n.textContent = etiqueta(p); b.appendChild(n);
+    const tag = document.createElement("span");
+    tag.className = "tag" + (p.rol === "docente" ? " doc" : "");
+    tag.textContent = p.rol === "docente" ? "DOCENTE" : p.grupo;
+    if (tag.textContent) b.appendChild(tag);
+    b.onclick = () => elegir(p);
+    li.appendChild(b); ul.appendChild(li);
+  });
+}
+
+function elegir(p) {
+  elegida = p;
+  $("who").textContent = etiqueta(p);
+  $("meta").textContent = p.rol === "docente" ? "ACCESO DOCENTE" : (p.grupo ? "GRUPO " + p.grupo : "");
+  $("codeLabel").textContent = p.rol === "docente" ? "Clave de docente" : "Código de alumno";
+  $("code").placeholder = p.rol === "docente" ? "Tu clave" : "Ej.: 2026D0000";
+  $("code").value = ""; $("err").textContent = "";
+  show("step2"); $("code").focus();
+}
+
+async function cargar() {
+  const previa = Acceso.sesion();
+  if (previa) {
+    $("activaNombre").textContent = previa.nombre;
+    $("activa").classList.remove("hidden");
+    $("continuar").onclick = () => location.replace(Acceso.destinoTrasLogin());
+    $("cambiar").onclick = () => { sessionStorage.clear(); $("activa").classList.add("hidden"); $("q").focus(); };
+  }
+  const lista = await Acceso.cargarAccess();
+  if (!lista || !lista.length) {
+    $("hint").replaceChildren();
+    const av = document.createElement("div"); av.className = "aviso";
+    av.textContent = "No se pudo leer la lista de acceso (access/access.csv). Avisa a tu docente.";
+    $("step1").appendChild(av);
+    return;
+  }
+  personas = lista;
+  $("q").disabled = false; $("q").focus();
+  $("hint").textContent = "Escribe al menos 2 letras.";
+}
+
+$("q").addEventListener("input", buscar);
+$("eye").addEventListener("click", () => {
+  $("code").type = $("code").type === "password" ? "text" : "password";
+});
+$("back").onclick = () => { elegida = null; show("step1"); $("q").focus(); };
+$("soyDocente").onclick = () => { const d = personas.find(p => p.rol === "docente"); if (d) elegir(d); };
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!elegida) return;
+  $("go").disabled = true; $("err").textContent = "";
+  try {
+    if (await Acceso.validar(elegida, $("code").value)) {
+      Acceso.iniciar(elegida);
+      location.replace(Acceso.destinoTrasLogin());
+      return;
+    }
+    $("err").textContent = "Código incorrecto. Revísalo e inténtalo de nuevo.";
+    $("code").select();
+  } finally { $("go").disabled = false; }
+});
+
+cargar();
+</script>
+</body>
+</html>

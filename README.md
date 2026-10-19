@@ -1,79 +1,66 @@
 # aula-virtual
 
-Portal sencillo para que los alumnos entren a las clases y evaluaciones de *Herramientas Informáticas*. Algunos documentos son abiertos y otros están bloqueados con el código de alumno.
+Portal de *Herramientas Informáticas*. Cada persona entra con su código; el portal arma **solo** los botones de clases y evaluaciones según los CSV que existan. Para publicar algo nuevo **solo se sube un CSV** con el nombre correcto.
+
+## Estructura
+
+```
+index.html             portal (crea los botones solos). Sin sesión te manda al login
+acceso.html            login
+access/
+  access.csv           quién puede entrar (alumnos + docente)
+  access.js            validación, sesión y guardia de páginas
+  estilo.css           diseño compartido
+  icono.png / favicon.png / login.jpg   logo, icono de pestaña e ilustración del login
+  sesion.html          ÚNICA página de sesión (ver abajo)
+clases/
+  class1u1.html        única clase que es página (modelo 3D de la PC); no lleva CSV
+  class2u1.csv         código + enlace de cada alumno en esa clase
+  class4u1.csv
+  class5u1.csv
+eecc/
+  ec1u1.csv            evaluación continua (mismo formato que los CSV de clase)
+```
+
+## Nomenclatura
+
+| Tipo | Nombre | Carpeta | Ejemplo |
+|---|---|---|---|
+| Clase | `class#u#` (clase # de la unidad #) | `clases/` | `class4u1.csv`, `class2u2.csv` |
+| Evaluación continua | `ec#u#` | `eecc/` | `ec1u1.csv`, `ec2u1.csv` |
+
+La **primera fila** del CSV repite el nombre de la sesión (`class4u1`) y debe coincidir con el nombre del archivo. Segunda fila (encabezados): `N_ORDEN,GRUPO,CODIGO,ALUMNO,ENLACE`. Si el enlace no empieza con `http` (ej. `NO_DISPONIBLE`) se avisa que el documento aún no está disponible.
+
+`access.csv`: `ROL,GRUPO,CODIGO,NOMBRE` (ROL = `alumno` o `docente`).
 
 ## Cómo funciona
 
-- `clases.js` → lista de archivos publicados (lo único que editas al subir algo).
-- `index.html` → el portal. Lee cada archivo de la lista, interpreta su **nombre** y sus **etiquetas `<meta>`**, y arma las tarjetas por unidad.
-- `claseXuY.html` → cada clase.
-- `evaluaciones.html` → único HTML de las evaluaciones continuas; lee la carpeta `eecc/`.
-- `eecc/ecXuY.csv` → datos de los alumnos de cada evaluación continua.
+1. El alumno busca su nombre, escribe su código y entra. El código queda como llave **solo en esa pestaña** (`sessionStorage`; en el laboratorio las PC se comparten). Hay botón **Salir**.
+2. El portal detecta los CSV de `clases/` y `eecc/` y crea un botón por cada uno (agrupados por unidad).
+3. **Alumno**: el portal busca su código en cada CSV y convierte cada botón en un enlace a **su documento**. Al presionarlo, el documento se abre en una **pestaña nueva**, el portal sigue abierto y aparece una **notificación** en pantalla. Si no tiene enlace o no figura en ese CSV, el botón sale deshabilitado ("Aún no disponible" / "No figuras aquí").
+   **Docente**: el botón abre `access/sesion.html?s=<sesión>`:
+   - ve la lista de todos los alumnos de esa clase/evaluación con su enlace (buscador y filtro por grupo; cada nombre abre su documento en pestaña nueva).
 
-## Estándar de nombres
+`sesion.html` es el único modelo: sirve para cualquier clase o evaluación, no hay que crear HTML por sesión. (Si un alumno entra a `sesion.html?s=...` directamente, lo redirige a su enlace.)
 
-| Archivo | Se muestra como | Color |
-|---|---|---|
-| `clase1u1.html` | Clase 1 · Unidad 1 | azul |
-| `clase4u2.html` | Clase 4 · Unidad 2 | azul |
+Imágenes: `access/icono.png` (logo de las cabeceras), `access/favicon.png` (icono de pestaña) y `access/login.jpg` (ilustración del login). Se cambian reemplazando el archivo.
 
-Regla: `clase` + número + `u` + número de unidad. Todo en minúsculas, sin espacios ni guiones. Hoy el portal muestra las unidades 1 y 2.
+## Agregar cosas
 
+| Quiero… | Hago |
+|---|---|
+| Publicar una clase | Subo `clases/class6u1.csv`. El botón aparece solo. |
+| Publicar una EC | Subo `eecc/ec2u1.csv` |
+| Clase de otra unidad | `class1u2.csv` |
+| Agregar/quitar un alumno | Edito `access/access.csv` (y los CSV de cada sesión) |
+| Cambiar mi clave de docente | Última fila de `access/access.csv` (`docente`, columna CODIGO) |
 
-## Estándar de etiquetas dentro de cada HTML
+Búsqueda automática (en `index.html`): se prueban las unidades de `UNIDADES = [1,2,3,4]` y, en cada una, los números 1, 2, 3… hasta que falten 3 seguidos (`HUECOS`). Si en la consola (F12) ves errores 404, son normales: el portal prueba nombres que aún no existen.
 
-Se colocan dentro del `<head>`. El portal deja de descargar cada archivo al llegar a `</head>`, así que conviene mantener el `<head>` liviano (lo pesado, como imágenes en base64, va en el `<body>`):
+## ⚠️ Seguridad
 
-```html
-<meta name="session-title" content="Título corto de la clase">
-<meta name="session-desc" content="Una o dos líneas que explican de qué trata.">
-<meta name="session-access" content="locked">   <!-- opcional -->
-```
-
-| Etiqueta | Obligatoria | Qué hace |
-|---|---|---|
-| `session-title` | Sí | Título de la tarjeta |
-| `session-desc` | Sí | Descripción de la tarjeta |
-| `session-access` | No | `locked` si el documento pide código de alumno (muestra 🔒). Si falta, se considera abierto. |
-
-La etiqueta ("Clase 2 · Unidad 1", etc.) **ya no se escribe a mano**: sale del nombre del archivo, así nunca se desincroniza.
-
-## Para subir una clase nueva
-
-1. Nombra el archivo con el estándar (`clase3u1.html`).
-2. Agrega las etiquetas `session-title` y `session-desc` en su `<head>`.
-3. Agrega el nombre en `clases.js` (**con coma al final**).
-
-Si un archivo no cumple el estándar o no se puede leer, el portal lo omite y deja un aviso en la consola del navegador (F12).
+Es un sitio estático: **todos los CSV son públicos** para quien conozca su dirección (nombres, códigos y enlaces, incluida la clave del docente). El login evita curiosos, no es seguridad real. Para ocultar la clave del docente, ejecuta en la consola `await Acceso.hash("tu clave")` y pega el resultado (`sha256:...`) en `access.csv`. Si los documentos de Google están como "cualquiera con el enlace: editor", quien consiga un CSV puede abrirlos.
 
 ## Probar en local
 
-`index.html` usa `fetch`, que no funciona abriendo el archivo con doble clic. Desde la carpeta del proyecto:
-
-```
-python3 -m http.server 8000
-```
-
-y abre `http://localhost:8000`.
-
-## Evaluaciones continuas (carpeta `eecc/`)
-
-Ya no se registran en `clases.js`. Para publicar una:
-
-1. Sube `eecc/ec1u1.csv` (o `ec2u2.csv`, etc.: `ec` + número + `u` + unidad).
-2. Listo: aparece sola una tarjeta **verde** "Evaluación continua 1 · Unidad 1" en el portal.
-
-`index.html` carga `evaluaciones.html?detectar=1` en un iframe invisible; este revisa `eecc/` y le avisa al portal qué CSV existen. Busca hasta `MAX_EC` (6) evaluaciones por unidad; si necesitas más, cambia esa constante en `evaluaciones.html`.
-
-Columnas del CSV (primera fila = encabezados; coma o punto y coma):
-
-| Columna | Obligatoria | Uso |
-|---|---|---|
-| `NOMBRE` | Sí | Lo que busca el alumno |
-| `LINK` | Sí | Su documento |
-| `CODIGO` | No | Si existe, se pide como contraseña |
-| `GRUPO` / `MAQUINA` | No | Etiqueta / búsqueda extra |
-
-Ver `eecc/ejemplo_formato.csv` (no se detecta por no llamarse `ec#u#`).
-
-⚠️ El CSV es público: quien conozca su URL puede leer nombres, códigos y links. El código solo evita curiosos, no es seguridad real.
+`fetch` no funciona con doble clic. Desde la carpeta del proyecto: `python3 -m http.server 8000` y abre `http://localhost:8000`.
