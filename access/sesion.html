@@ -208,7 +208,7 @@ function vistaDocente(info, datos) {
   if (!r.ok) { aviso(info.etiqueta, Acceso.MENSAJES[r.motivo] || "No tienes acceso a esta sesión."); return; }
 
   if (!r.hayCSV) {                                      // sin CSV: solo existe si es una página de contenido (class1u1.html)
-    if (info.tipo === "class" && await Acceso.existeHTML(info.id)) { location.replace(Acceso.url(`clases/${info.id}.html`)); return; }
+    if ((info.tipo === "class" || info.tipo === "reu") && await Acceso.existeHTML(info.id)) { location.replace(Acceso.url(`${info.carpeta}${info.id}.html`)); return; }
     aviso(info.etiqueta, "Esta sesión aún no está disponible."); return;
   }
   if (r.sesion.rol === "docente") vistaDocente(info, r.datos);

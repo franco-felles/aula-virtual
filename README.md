@@ -20,6 +20,8 @@ clases/
   class5u1.csv
 eecc/
   ec1u1.csv            evaluación continua (mismo formato que los CSV de clase)
+review/
+  reu1u1.html          repaso de la unidad 1 (página; no lleva CSV)
 ```
 
 ## Nomenclatura
@@ -28,6 +30,7 @@ eecc/
 |---|---|---|---|
 | Clase | `class#u#` (clase # de la unidad #) | `clases/` | `class4u1.csv`, `class2u2.csv` |
 | Evaluación continua | `ec#u#` | `eecc/` | `ec1u1.csv`, `ec2u1.csv` |
+| Repaso | `reu#u#` (repaso # de la unidad #) | `review/` | `reu1u1.html`, `reu2u1.html` |
 
 La **primera fila** del CSV repite el nombre de la sesión (`class4u1`) y debe coincidir con el nombre del archivo. Segunda fila (encabezados): `N_ORDEN,GRUPO,CODIGO,ALUMNO,ENLACE`. Si el enlace no empieza con `http` (ej. `NO_DISPONIBLE`) se avisa que el documento aún no está disponible.
 
@@ -51,6 +54,7 @@ Imágenes: `access/icono.png` (logo de las cabeceras), `access/favicon.png` (ico
 |---|---|
 | Publicar una clase | Subo `clases/class6u1.csv`. El botón aparece solo. |
 | Publicar una EC | Subo `eecc/ec2u1.csv` |
+| Publicar un repaso | Subo `review/reu2u1.html` (copia de `reu1u1.html`; cambia `data-sesion="reu2u1"`) |
 | Clase de otra unidad | `class1u2.csv` |
 | Agregar/quitar un alumno | Edito `access/access.csv` (y los CSV de cada sesión) |
 | Cambiar mi clave de docente | Última fila de `access/access.csv` (`docente`, columna CODIGO) |

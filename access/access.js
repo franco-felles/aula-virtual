@@ -111,20 +111,21 @@
     } catch { return null; }
   }
   async function existeHTML(id) {
-    try { return (await fetch(url(`clases/${id}.html`), { method: "HEAD", cache: "no-store" })).ok; }
+    const info = idSesion(id); if (!info) return false;
+    try { return (await fetch(url(`${info.carpeta}${info.id}.html`), { method: "HEAD", cache: "no-store" })).ok; }
     catch { return false; }
   }
 
   /* ---------- nombres de sesión ---------- */
-  /** "class4u1" -> Clase 4 · Unidad 1 | "ec1u2" -> Evaluación continua 1 · Unidad 2 | otra cosa -> null */
+  /** "class4u1" -> Clase 4 · Unidad 1 | "reu1u1" -> Repaso 1 · Unidad 1 | "ec1u2" -> Evaluación continua 1 · Unidad 2 | otra cosa -> null */
   function idSesion(id) {
-    const m = /^(class|ec)(\d+)u(\d+)$/i.exec(String(id || "").trim());
+    const m = /^(class|ec|reu)(\d+)u(\d+)$/i.exec(String(id || "").trim());
     if (!m) return null;
     const tipo = m[1].toLowerCase(), num = Number(m[2]), unidad = Number(m[3]);
-    const nombre = (tipo === "class" ? "Clase " : "Evaluación continua ") + num;
+    const nombre = ({ class: "Clase ", ec: "Evaluación continua ", reu: "Repaso " })[tipo] + num;
     return {
       id: String(id).trim().toLowerCase(), tipo, num, unidad,
-      carpeta: tipo === "class" ? "clases/" : "eecc/",
+      carpeta: ({ class: "clases/", ec: "eecc/", reu: "review/" })[tipo],
       nombre, etiqueta: `${nombre} · Unidad ${unidad}`
     };
   }

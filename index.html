@@ -79,6 +79,7 @@
        Para publicar algo nuevo solo sube el CSV con el nombre correcto:
          clases/class#u#.csv     -> clase # de la unidad #     (class4u1.csv, class2u2.csv ...)
          eecc/ec#u#.csv          -> evaluación continua        (ec1u1.csv, ec2u1.csv ...)
+         review/reu#u#.html      -> repaso (página)            (reu1u1.html, reu2u1.html ...)
        El botón aparece solo. Al presionarlo:
          alumno  -> su documento se abre en una PESTAÑA NUEVA (el portal sigue abierto)
                     y aparece una notificación en pantalla
@@ -104,7 +105,7 @@
     async function existe(info) {
       const [csv, html] = await Promise.all([
         Acceso.textoCSV(info.carpeta + info.id + ".csv"),
-        info.tipo === "class" ? Acceso.existeHTML(info.id) : false
+        info.tipo !== "ec" ? Acceso.existeHTML(info.id) : false
       ]);
       if (!csv && !html) return null;
       info.csv = csv; info.html = !!html;       // se guarda el CSV para saber cuál es el enlace de este alumno
@@ -124,7 +125,7 @@
 
     async function detectar() {
       const tareas = [];
-      for (const u of UNIDADES) for (const tipo of ["class", "ec"]) tareas.push(sondear(tipo, u));
+      for (const u of UNIDADES) for (const tipo of ["class", "ec", "reu"]) tareas.push(sondear(tipo, u));
       return (await Promise.all(tareas)).flat();
     }
 
@@ -133,7 +134,7 @@
       info.estado = "ok";
       if (s.rol === "docente") { info.href = "access/sesion.html?s=" + encodeURIComponent(info.id); info.interno = true; return; }
       if (!info.csv) {                                            // clase de contenido (class1u1.html)
-        if (info.html) { info.href = `clases/${info.id}.html`; info.interno = true; info.nueva = true; } else info.estado = "nd";
+        if (info.html) { info.href = info.carpeta + info.id + ".html"; info.interno = true; info.nueva = true; } else info.estado = "nd";
         return;
       }
       const t = Acceso.leerTabla(info.csv);
@@ -169,11 +170,11 @@
       const off = info.estado !== "ok";
       const a = el("a", "sesion" + (info.tipo === "ec" ? " ec" : "") + (off ? " off" : ""));
       const top = el("div", "s-top");
-      top.append(el("span", "s-tipo", info.tipo === "ec" ? "EVALUACIÓN" : "CLASE"), el("span", "s-id", info.id));
+      top.append(el("span", "s-tipo", ({ ec: "EVALUACIÓN", reu: "REPASO", class: "CLASE" })[info.tipo]), el("span", "s-id", info.id));
       const num = el("div", "s-num", String(info.num).padStart(2, "0"));
       num.appendChild(el("small", "", info.nombre));
       const go = el("div", "s-go");
-      const lbl = el("span", "", off ? TEXTO_ESTADO[info.estado] : (info.nueva ? "Abrir clase" : info.interno ? "Ingresar" : "Abrir mi documento"));
+      const lbl = el("span", "", off ? TEXTO_ESTADO[info.estado] : (info.nueva ? (info.tipo === "reu" ? "Abrir repaso" : "Abrir clase") : info.interno ? "Ingresar" : "Abrir mi documento"));
       go.append(lbl);
       if (!off) go.insertAdjacentHTML("beforeend", ICONO_FLECHA);
       a.append(top, num, go);
@@ -188,7 +189,7 @@
           if (info.nueva) { e.preventDefault(); window.open(info.href, "_blank"); }
           a.classList.add("abierta");
           lbl.textContent = "Abierto · volver a abrir";
-          toast(info.nueva ? "Abriendo la clase" : "Abriendo tu documento", `${info.etiqueta} se abre en una pestaña nueva. Esta página sigue aquí por si quieres abrir otra.`);
+          toast(info.nueva ? (info.tipo === "reu" ? "Abriendo el repaso" : "Abriendo la clase") : "Abriendo tu documento", `${info.etiqueta} se abre en una pestaña nueva. Esta página sigue aquí por si quieres abrir otra.`);
         });
       }
       return a;
@@ -230,6 +231,7 @@
         bloque.appendChild(h);
         bloque.appendChild(seccion("Clases", ordenadas.filter(x => x.unidad === u && x.tipo === "class")));
         bloque.appendChild(seccion("Evaluaciones continuas", ordenadas.filter(x => x.unidad === u && x.tipo === "ec")));
+        bloque.appendChild(seccion("Repasos", ordenadas.filter(x => x.unidad === u && x.tipo === "reu")));
         cont.appendChild(bloque);
       }
     }
