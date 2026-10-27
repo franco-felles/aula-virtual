@@ -109,7 +109,19 @@
       ]);
       if (!csv && !html) return null;
       info.csv = csv; info.html = !!html;       // se guarda el CSV para saber cuál es el enlace de este alumno
+      info.material = csv && info.tipo === "class" ? await existeMaterial(info) : false;   // ¿hay material/material_u#_c#.html?
       return info;
+    }
+
+    /* Convención: clase 2 de la unidad 2 (class2u2)  ->  material/material_u2_c2.html */
+    const rutaMaterial = info => `material/material_u${info.unidad}_c${info.num}.html`;
+
+    /* ¿Existe el material de esta clase? (se descartan respuestas que no son HTML) */
+    async function existeMaterial(info) {
+      try {
+        const r = await fetch(Acceso.url(rutaMaterial(info)), { method: "HEAD", cache: "no-store" });
+        return r.ok && (r.headers.get("content-type") || "").includes("text/html");
+      } catch { return false; }
     }
 
     async function sondear(tipo, unidad) {
@@ -143,6 +155,14 @@
       if (!fila) info.estado = "no-registrado";
       else if (!/^https?:\/\//i.test(fila.link)) info.estado = "sin-enlace";
       else info.href = fila.link;
+
+      // Si hay material/material_u#_c#.html, el alumno pasa primero por ahí (el material lee su enlace del CSV).
+      // Se abre con window.open (ver tarjeta) para que la pestaña nueva herede la sesión.
+      if (info.material && info.estado !== "no-registrado" && info.estado !== "titulo") {
+        info.estado = "ok";
+        info.href = rutaMaterial(info);
+        info.interno = true; info.nueva = true; info.esMaterial = true;
+      }
     }
     const TEXTO_ESTADO = {
       "sin-enlace": "Aún no disponible",
@@ -174,7 +194,7 @@
       const num = el("div", "s-num", String(info.num).padStart(2, "0"));
       num.appendChild(el("small", "", info.nombre));
       const go = el("div", "s-go");
-      const lbl = el("span", "", off ? TEXTO_ESTADO[info.estado] : (info.nueva ? (info.tipo === "reu" ? "Abrir repaso" : "Abrir clase") : info.interno ? "Ingresar" : "Abrir mi documento"));
+      const lbl = el("span", "", off ? TEXTO_ESTADO[info.estado] : (info.esMaterial ? "Ver material" : info.nueva ? (info.tipo === "reu" ? "Abrir repaso" : "Abrir clase") : info.interno ? "Ingresar" : "Abrir mi documento"));
       go.append(lbl);
       if (!off) go.insertAdjacentHTML("beforeend", ICONO_FLECHA);
       a.append(top, num, go);
@@ -189,7 +209,7 @@
           if (info.nueva) { e.preventDefault(); window.open(info.href, "_blank"); }
           a.classList.add("abierta");
           lbl.textContent = "Abierto · volver a abrir";
-          toast(info.nueva ? (info.tipo === "reu" ? "Abriendo el repaso" : "Abriendo la clase") : "Abriendo tu documento", `${info.etiqueta} se abre en una pestaña nueva. Esta página sigue aquí por si quieres abrir otra.`);
+          toast(info.esMaterial ? "Abriendo el material" : info.nueva ? (info.tipo === "reu" ? "Abriendo el repaso" : "Abriendo la clase") : "Abriendo tu documento", `${info.etiqueta} se abre en una pestaña nueva. Esta página sigue aquí por si quieres abrir otra.`);
         });
       }
       return a;

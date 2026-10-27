@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Funciones en hojas de cálculo · Diapositivas</title>
+<script src="../access/access.js" data-proteger data-sin-barra></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);--bg:#f3f5fa;--card:#fff;--tx:#1d2330;--mut:#5b6475;--bd:#d3d8e4;--ok:#1e8e4e;--ko:#c62828;--acc:#2f6fdb;--hl:#fff3a0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1c212c;--tx:#eef0f5;--mut:#a3abbb;--bd:#363d4d;--ok:#5ad08a;--ko:#ff7b7b;--acc:#7aa5ff;--hl:#5c5200}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.stage{max-width:980px;margin:0 auto;padding:56px 14px 96px}
+.slide{display:none}.slide.on{display:block;animation:in .35s}
+@keyframes in{from{opacity:0;transform:translateX(20px)}}
+h1{font-size:clamp(1.3rem,4vw,1.9rem);margin:0 0 4px}
+.mut{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:12px 0}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:8px 12px;margin:2px}
+button:hover:not(:disabled){border-color:var(--acc)}button:disabled{opacity:.4;cursor:not-allowed}
+button.sel{background:var(--acc);color:#fff;border-color:var(--acc)}
+.mono{font-family:ui-monospace,Consolas,monospace}
+/* sheets button */
+#sh{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;z-index:20;width:44px;height:44px;padding:6px;border-radius:50%;box-shadow:0 2px 8px #0003}
+#sh svg{width:100%;height:100%}
+#sh[disabled]{filter:grayscale(.7)}
+#docAviso{background:color-mix(in srgb,var(--ko) 12%,var(--card));border:1px solid var(--ko);color:var(--tx);border-radius:10px;padding:10px 14px;margin:0 0 12px;max-width:calc(100% - 60px)}
+#docAviso a{color:var(--acc);font-weight:700}
+.goDoc{display:block;width:100%;max-width:420px;margin:8px auto 0;padding:16px 20px;font-size:1.15rem;font-weight:700;background:var(--ok);color:#fff;border-color:var(--ok);border-radius:12px}
+.goDoc:hover:not(:disabled){filter:brightness(1.1);border-color:var(--ok)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .goDoc{color:#0b2a17}}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:8px 16px;border-radius:20px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
+#toast.on{opacity:1}
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:8px;justify-content:center;align-items:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--bd);z-index:10}
+.dot{width:12px;height:12px;border-radius:50%;padding:0;background:var(--bd)}.dot.on{background:var(--acc)}
+/* slide 1 */
+.big{display:flex;justify-content:center;gap:2px;border:4px solid var(--tx);border-radius:12px;padding:14px 10px 10px;margin:14px auto;width:fit-content;max-width:100%;overflow-x:auto;background:var(--card)}
+.pt{display:flex;flex-direction:column;align-items:center}
+.pt b{font-size:clamp(1.5rem,8vw,4rem);font-weight:500;line-height:1.1}
+.ar{font-size:clamp(1.2rem,5vw,2.4rem);color:#e53935;line-height:1}
+.num{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;font-weight:700;font-style:normal;color:#fff;flex:none}
+.n0,.n1{background:var(--tx);color:var(--bg)}.n2{background:#e0b000;color:#222}.n3{background:#1e9e55}.n4{background:#2f6fdb}.n5{background:#7b52ab}
+.t2{color:#e0b000}.t3{color:#1e9e55}.t4{color:#2f6fdb}.t5{color:#7b52ab}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;padding:6px;border-radius:8px;border:2px solid var(--bd)}
+.row input{flex:1;min-width:0;font:inherit;padding:8px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx)}
+.row.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+/* formula bar */
+.fb{position:relative;font:1.15rem/28px ui-monospace,Consolas,monospace}
+.fb .ov,.fb input{width:100%;height:48px;padding:8px 10px;border:2px solid var(--acc);border-radius:8px;font:inherit;margin:0}
+.fb .ov{white-space:pre;overflow:hidden;background:var(--card)}
+.fb input{position:absolute;inset:0;background:transparent;color:transparent;caret-color:var(--tx);border-color:transparent;outline:none}
+.fb:focus-within .ov{box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent)}
+.res{font-size:1.25rem;font-weight:700;margin:8px 0;min-height:1.6em}.ok{color:var(--ok)}.ko{color:var(--ko)}
+.grid{border-collapse:collapse;margin:8px 0}
+.grid th{background:var(--bg);border:1px solid var(--bd);padding:4px 12px;font-weight:600}
+.grid td{border:1px solid var(--bd);padding:0;min-width:74px;height:34px;text-align:right;transition:background .3s}
+.grid td.stat{padding:0 10px}
+.grid input{width:100%;border:0;padding:6px;text-align:right;background:transparent;color:var(--tx);font:inherit}
+.grid td.scan{background:var(--hl)!important;outline:3px solid #fb8c00;outline-offset:-3px}
+.grid td.done{background:color-mix(in srgb,var(--ok) 20%,transparent)}
+.two{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.bub{display:inline-block;min-width:80px;text-align:center;font-size:2rem;font-weight:800;color:var(--acc);border:3px solid var(--acc);border-radius:12px;padding:4px 16px;visibility:hidden}
+.bub.pop{visibility:visible;animation:pop .5s}
+@keyframes pop{0%{transform:scale(.3)}70%{transform:scale(1.2)}}
+#bar3{min-height:48px;border:2px solid var(--acc);border-radius:8px;padding:8px 10px;font:1.15rem/28px ui-monospace,Consolas,monospace;background:var(--card)}
+#st3{min-height:3em;margin:8px 0;font-weight:600}
+.rt{padding:6px 0}.rt.ok::before{content:"✅ "}.rt:not(.ok)::before{content:"⬜ "}
+</style></head><body>
+<button id="sh" disabled aria-label="Ir a mi documento" title="Comprobando tu código…"><svg viewBox="0 0 24 24"><path d="M5 2h9l5 5v15H5z" fill="#188038"/><path d="M14 2v5h5z" fill="#0b5d2a"/><path d="M8 11h8v8H8z" fill="#fff"/><path d="M8 13.7h8M8 16.3h8M10.7 11v8" stroke="#188038" stroke-width="1"/></svg></button>
+<div id="toast"></div>
+<div class="stage">
+<div id="docAviso" role="alert" hidden></div>
+
+<section class="slide on">
+<h1>1 · Partes de una función</h1>
+<p class="mut">Mira las flechas y escribe <b>qué representa</b> cada número. Al completar las 6, pasamos a la siguiente diapositiva.</p>
+<div class="big mono">
+<div class="pt"><b>=</b><span class="ar">↑</span><i class="num n0">0</i></div>
+<div class="pt"><b>Función</b><span class="ar">↑</span><i class="num n1">1</i></div>
+<div class="pt"><b class="t2">(</b><span class="ar">↑</span><i class="num n2">2</i></div>
+<div class="pt"><b class="t3">X</b><span class="ar">↑</span><i class="num n3">3</i></div>
+<div class="pt"><b class="t4">;</b><span class="ar">↑</span><i class="num n4">4</i></div>
+<div class="pt"><b class="t3">Y</b><span class="ar">↑</span><i class="num n3">3</i></div>
+<div class="pt"><b class="t5">)</b><span class="ar">↑</span><i class="num n5">5</i></div>
+</div>
+<div id="rows"></div>
+<div class="res" id="r1"></div>
+<button id="skip" class="mut">Saltar ▶</button>
+</section>
+
+<section class="slide">
+<h1>2 · Operaciones sin funciones</h1>
+<p class="mut">Escribe <b>=</b> y usa las direcciones de las celdas. Cada una se <b>pinta de un color</b> en la fórmula y en la hoja.</p>
+<div class="card">
+<table class="grid" id="g2"></table>
+<div id="c2"></div>
+<div class="fb"><div class="ov" id="o2"></div><input id="i2" value="=A2+B3" autocomplete="off" spellcheck="false" aria-label="Operación"></div>
+<div class="res" id="rs2"></div>
+<div class="rt" id="rt2"><b>Reto:</b> saca el promedio de A1, A2 y A3 <u>sin usar funciones</u>.</div>
+</div>
+</section>
+
+<section class="slide">
+<h1>3 · Funciones de hoy</h1>
+<p class="mut">Elige una función y mira cómo trabaja con el rango <b class="mono">A1:A6</b>.</p>
+<div id="tabs"></div>
+<div class="card two">
+<table class="grid" id="g3"></table>
+<div>
+<p id="d3" style="margin-top:0"></p>
+<div id="bar3"></div>
+<div id="st3"></div>
+<span class="bub" id="r3"></span> <button id="rp">🔁 Repetir</button>
+</div></div>
+</section>
+
+<section class="slide">
+<h1>4 · ¡Ahora tú!</h1>
+<p class="mut">Cambia los datos (texto, números o deja celdas vacías) y prueba las funciones. Usa <b>;</b> para separar y <b>:</b> para un rango.</p>
+<div class="card">
+<table class="grid" id="g4"></table>
+<div id="c4"></div>
+<div class="fb"><div class="ov" id="o4"></div><input id="i4" value="=CONTARA(A1:A6)" autocomplete="off" spellcheck="false" aria-label="Función"></div>
+<div class="res" id="rs4"></div>
+</div>
+<div class="card" style="text-align:center">
+<p class="mut" style="margin:0">Cuando termines de practicar, continúa con tu actividad.</p>
+<button id="goDoc" class="goDoc" disabled>📄 Ir a mi documento →</button>
+</div>
+</section>
+</div>
+
+<nav><button id="pv">◀ Anterior</button><span id="dots"></span><button id="nx">Siguiente ▶</button></nav>
+
+<script>
+const $=id=>document.getElementById(id),Q=(s,e=document)=>[...e.querySelectorAll(s)];
+const COL=['#e53935','#1e88e5','#43a047','#fb8c00','#8e24aa','#00acc1'];
+const parse=v=>{v=String(v??'').trim();return v===''?null:isNaN(v)?v:+v};
+const nums=a=>a.flat(9).filter(v=>typeof v==='number');
+const F={SUMA:(...a)=>nums(a).reduce((x,y)=>x+y,0),
+PROMEDIO:(...a)=>{a=nums(a);return a.reduce((x,y)=>x+y,0)/a.length},
+MAX:(...a)=>{a=nums(a);return a.length?Math.max(...a):0},
+MIN:(...a)=>{a=nums(a);return a.length?Math.min(...a):0},
+CONTAR:(...a)=>nums(a).length,
+CONTARA:(...a)=>a.flat(9).filter(v=>v!==null&&v!=='').length};
+const cells=r=>{const[a,b]=r.toUpperCase().split(':');if(!b)return[a];const o=[];for(let c=a.charCodeAt(0);c<=b.charCodeAt(0);c++)for(let k=+a.slice(1);k<=+b.slice(1);k++)o.push(String.fromCharCode(c)+k);return o};
+const refs=t=>t.toUpperCase().match(/[A-Z]\d+(:[A-Z]\d+)?/g)||[];
+function calc(t,d){t=t.trim();if(t[0]!=='=')return{err:'Falta el = al inicio: sin él la celda solo guarda texto'};
+let s=t.slice(1).toUpperCase().replace(/\s/g,'');if(!s)return{err:'Escribe algo después del ='};
+if(!/^[0-9A-Z+\-*\/().;:]*$/.test(s))return{err:'Hay un carácter no válido'};
+const nm=s.replace(/[A-Z]+\d+(:[A-Z]+\d+)?/g,'').match(/[A-Z]+/g)||[],bad=nm.find(n=>!F[n]);
+if(bad)return{err:'Función no reconocida: '+bad};
+if((s.match(/\(/g)||[]).length!==(s.match(/\)/g)||[]).length)return{err:'Falta abrir o cerrar un paréntesis'};
+const raw=nm.length>0,G=k=>raw?(d[k]??null):(+d[k]||0),R=(a,b)=>cells(a+':'+b).map(k=>d[k]??null);
+const code=s.replace(/;/g,',').replace(/([A-Z]\d+):([A-Z]\d+)|([A-Z]\d+)/g,(m,a,b,c)=>c?`G("${c}")`:`R("${a}","${b}")`);
+try{const v=new Function('G','R',...Object.keys(F),'return '+code)(G,R,...Object.values(F));
+if(typeof v!=='number'||isNaN(v))return{err:'#ERROR: revisa la fórmula'};
+if(!isFinite(v))return{err:'#DIV/0! No se puede dividir entre cero'};
+return{v:Math.round(v*10000)/10000,fn:raw}}catch(e){return{err:'#ERROR: revisa la fórmula'}}}
+const show=(el,r)=>{el.className='res '+(r.err?'ko':'');el.textContent=r.err?'⚠️ '+r.err:'Resultado: '+r.v};
+function grid(el,d,cols,rows,edit){let h='<tr><th></th>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>';
+for(let r=1;r<=rows;r++)h+='<tr><th>'+r+'</th>'+cols.map(c=>`<td data-k="${c+r}"${edit?'':' class="stat"'}>${edit?`<input data-k="${c+r}" value="${d[c+r]??''}" aria-label="${c+r}">`:(d[c+r]??'')}</td>`).join('')+'</tr>';
+el.innerHTML=h;if(edit)el.oninput=e=>{d[e.target.dataset.k]=parse(e.target.value)}}
+function mk(i,o,g,r,d,chk){const I=$(i),O=$(o),R=$(r),G=$(g);
+const up=()=>{const t=I.value,rf=[...new Set(refs(t))],m={};rf.forEach((x,j)=>m[x]=COL[j%6]);
+O.innerHTML=t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/[A-Za-z]\d+(:[A-Za-z]\d+)?/g,x=>`<span style="color:${m[x.toUpperCase()]};font-weight:700">${x}</span>`);
+Q('td',G).forEach(td=>{td.style.background='';td.style.outline=''});
+rf.forEach(x=>cells(x).forEach(k=>{const td=Q('td[data-k="'+k+'"]',G)[0];if(td){td.style.background=m[x]+'44';td.style.outline='3px solid '+m[x];td.style.outlineOffset='-3px'}}));
+const res=calc(t,d);show(R,res);chk&&chk(res,t)};
+I.oninput=up;G.addEventListener('input',up);up()}
+function chips(el,list,i){$(el).innerHTML=list.map(x=>`<button class="mono">${x}</button>`).join('');Q('button',$(el)).forEach(b=>b.onclick=()=>{$(i).value=b.textContent;$(i).dispatchEvent(new Event('input'))})}
+
+/* slide 1 */
+const P=[['0',/igual|simbolo|signo|inicia|empieza|operaci|funci|texto/,'¿Con qué símbolo empieza siempre?'],
+['1',/etiqueta|nombre|llama/,'Es el nombre de la función'],
+['2',/apertura|abre|abrir|apert/,'Es el primer paréntesis'],
+['3',/argument|dato|celda|rango|valor/,'Lo que va dentro del paréntesis'],
+['4',/separ|coma/,'Divide un argumento del otro'],
+['5',/cierre|cierra|cerrar|fin/,'Es el último paréntesis']];
+let unlocked=false,okSet=new Set();
+$('rows').innerHTML=P.map(p=>`<div class="row" id="rw${p[0]}"><i class="num n${p[0]}">${p[0]}</i><input id="in${p[0]}" placeholder="¿Qué representa?" autocomplete="off"><button title="Pista" data-h="${p[0]}">💡</button></div>`).join('');
+P.forEach(p=>{const n=p[0],I=$('in'+n);
+I.oninput=()=>{const v=I.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+if(p[1].test(v)){okSet.add(n);$('rw'+n).classList.add('ok')}else{okSet.delete(n);$('rw'+n).classList.remove('ok')}
+if(okSet.size===6&&!unlocked){unlocked=true;$('r1').className='res ok';$('r1').textContent='🎉 ¡Excelente! Pasamos a la siguiente…';setTimeout(()=>{if(cur===0)go(1)},1600)}go(cur)};
+Q('[data-h="'+n+'"]')[0].onclick=()=>{I.placeholder='💡 '+p[2]}});
+$('skip').onclick=()=>{unlocked=true;go(1)};
+
+/* slide 2 */
+const d2={A1:12,A2:8,A3:15,B1:3,B2:7,B3:9,C1:10,C2:4,C3:6};
+grid($('g2'),d2,['A','B','C'],3,true);chips('c2',['=A2+B3','=A1*B1-C1','=(A1+A2+A3)/3'],'i2');
+mk('i2','o2','g2','rs2',d2,(r,t)=>{const ex=(d2.A1+d2.A2+d2.A3)/3,okk=r.v!==undefined&&!r.fn&&Math.abs(r.v-Math.round(ex*10000)/10000)<.001&&!/[A-Z]{2,}\(/i.test(t);
+$('rt2').className='rt'+(okk?' ok':'')});
+
+/* slide 3 */
+const ex={A1:12,A2:8,A3:'Ana',A4:null,A5:15,A6:5};
+const FD={SUMA:'Suma todos los números del rango.',PROMEDIO:'Suma los números y divide entre cuántos hay.',MAX:'Devuelve el número mayor.',MIN:'Devuelve el número menor.',CONTAR:'Cuenta las celdas que tienen números.',CONTARA:'Cuenta las celdas que no están vacías (números o texto).'};
+let run=0,cur3='SUMA';const sl=ms=>new Promise(r=>setTimeout(r,ms));
+$('tabs').innerHTML=Object.keys(F).map(n=>`<button data-n="${n}">${n}</button>`).join('');
+Q('#tabs button').forEach(b=>b.onclick=()=>{cur3=b.dataset.n;play()});
+async function play(){const id=++run,n=cur3;
+Q('#tabs button').forEach(b=>b.classList.toggle('sel',b.dataset.n===n));
+$('d3').textContent=FD[n];grid($('g3'),ex,['A'],6,false);$('bar3').textContent='';$('st3').textContent='';$('r3').className='bub';
+for(const ch of '='+n+'(A1:A6)'){if(id!==run)return;$('bar3').textContent+=ch;await sl(70)}
+let acc=null,sum=0,cnt=0;
+for(let r=1;r<=6;r++){if(id!==run)return;const k='A'+r,v=ex[k],td=Q('td[data-k="'+k+'"]',$('g3'))[0],emp=v===null,isN=typeof v==='number';td.classList.add('scan');let m;
+if(n==='CONTARA'){if(!emp){cnt++;m=`${k} tiene «${v}» → cuenta · total = ${cnt}`}else m=`${k} está vacía → no cuenta`}
+else if(!isN)m=`${k} ${emp?'está vacía':'es texto («'+v+'»)'} → se ignora`;
+else{sum+=v;cnt++;acc=acc===null?v:n==='MAX'?Math.max(acc,v):n==='MIN'?Math.min(acc,v):acc;
+m=`${k} = ${v} → `+({SUMA:'suma = '+sum,PROMEDIO:`suma = ${sum} · cantidad = ${cnt}`,MAX:'mayor hasta ahora = '+acc,MIN:'menor hasta ahora = '+acc,CONTAR:'cantidad = '+cnt})[n]}
+$('st3').textContent=m;await sl(950);td.classList.remove('scan');td.classList.add('done')}
+if(id!==run)return;const v=F[n](Object.values(ex));$('r3').textContent=Math.round(v*100)/100;$('r3').className='bub pop'}
+$('rp').onclick=play;
+
+/* slide 4 */
+const d4={...ex,B1:3,B2:7,B3:9,B4:4,B5:6,B6:2};
+grid($('g4'),d4,['A','B'],6,true);chips('c4',['=SUMA(A1:B6)','=PROMEDIO(B1:B6)','=MAX(A1:B6)','=MIN(B1:B6)','=CONTAR(A1:A6)','=CONTARA(A1:A6)'],'i4');
+mk('i4','o4','g4','rs4',d4);
+
+/* navegación */
+let cur=0;const S=Q('.slide');
+$('dots').innerHTML=S.map((_,i)=>`<button class="dot" aria-label="Diapositiva ${i+1}" data-i="${i}"></button>`).join('');
+Q('.dot').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(i===0||unlocked)go(i)});
+function go(n){n=Math.max(0,Math.min(S.length-1,n));if(n!==cur){cur=n}
+S.forEach((s,i)=>s.classList.toggle('on',i===n));Q('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));
+$('pv').disabled=n===0;$('nx').disabled=n===S.length-1||(n===0&&!unlocked);
+if(n===2)play();else run++;window.scrollTo(0,0)}
+$('pv').onclick=()=>go(cur-1);$('nx').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key==='ArrowRight'&&!$('nx').disabled)go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+go(0);
+/* ===== Acceso a "mi documento" =====
+   El nombre de este archivo da la sesión:  material_u2_c2.html  ->  class2u2
+   (unidad 2, clase 2). Se lee clases/class2u2.csv y se busca la fila por CODIGO. */
+(async()=>{
+const btns=[$('sh'),$('goDoc')],av=$('docAviso');
+const f=(location.pathname.split('/').pop()||'').replace(/\.html?$/i,'').toLowerCase();
+const m=/^material_u(\d+)_c(\d+)$/.exec(f),idClase=m?`class${m[2]}u${m[1]}`:f;
+const fallo=t=>{btns.forEach(b=>{b.disabled=true;b.title=t});
+av.hidden=false;av.textContent='⚠️ '+t+' ';const a=document.createElement('a');a.href='../acceso.html';a.textContent='Volver al acceso';av.appendChild(a)};
+const ok=(t,fn)=>btns.forEach(b=>{b.disabled=false;b.title=t;b.onclick=fn});
+try{
+await Acceso.listo;
+const s=Acceso.sesion();
+if(!s)return fallo('No se encontró tu código.');
+if(s.rol==='docente')return ok('Ver alumnos y enlaces',()=>{location.href=Acceso.url('access/sesion.html?s='+encodeURIComponent(idClase))});
+const datos=await Acceso.cargarSesion(idClase);
+if(!datos)return fallo('No se pudo abrir la lista de esta clase.');
+const fila=Acceso.buscarFila(datos.filas,s.codigo);
+if(!fila)return fallo('Tu código no figura en esta clase.');
+if(!/^https?:\/\//i.test(fila.link))return fallo('Tu documento aún no está disponible.');
+ok('Ir a mi documento',()=>window.open(fila.link,'_blank','noopener'));
+}catch(e){fallo('No se pudo verificar tu código.')}
+})();
+</script></body></html>
