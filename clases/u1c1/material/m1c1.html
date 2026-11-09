@@ -7,58 +7,113 @@
 <!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
 <meta name="material-titulo" content="Partes de la computadora">
 <meta name="material-tipo" content="interactivo">
-<meta name="material-descripcion" content="Explora en 3D los componentes de la computadora y descubre qué función cumple cada uno.">
+<meta name="material-descripcion" content="Explora en 3D los componentes y periféricos de la computadora, pruébalos con tu teclado y mouse, y ponte a prueba con un quiz.">
 <script src="../../../conexion/aula.js" data-proteger></script>
 
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
 <title>Anatomía de la computadora en 3D</title>
 <style>
-:root{--bg:#f1f4fb;--fg:#15203b;--mut:#55627f;--card:#ffffff;--bd:#d3daec;--ac:#2f63e0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff}}
-:root[data-theme="dark"]{--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff}
+:root{--bg:#f1f4fb;--fg:#15203b;--mut:#55627f;--card:#ffffff;--bd:#d3daec;--ac:#2f63e0;--in:#15803d;--out:#c2410c;--es:#7e22ce;--ok:#15803d;--tyfg:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff;--in:#4ade80;--out:#fb923c;--es:#c084fc;--ok:#4ade80;--tyfg:#0e1424}}
+:root[data-theme="dark"]{--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff;--in:#4ade80;--out:#fb923c;--es:#c084fc;--ok:#4ade80;--tyfg:#0e1424}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
 *{box-sizing:border-box}
 body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
-header{padding:12px 16px 6px}
+header{padding:12px 16px 6px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
 h1{margin:0;font-size:1.2rem}
 header p{margin:2px 0 0;color:var(--mut);font-size:.85rem}
+.views{display:flex;gap:6px}
 main{flex:1;min-height:0;display:flex;gap:12px;padding:8px 16px 16px}
 #c{flex:1;min-width:0;position:relative;border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--card);touch-action:none;cursor:grab}
 #c canvas{display:block;width:100%;height:100%}
 #tip{position:absolute;pointer-events:none;background:var(--ac);color:#fff;padding:4px 10px;border-radius:8px;font-size:.85rem;font-weight:600;white-space:nowrap;transform:translate(14px,-34px);display:none}
-aside{width:320px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto}
+#msg{position:absolute;left:50%;top:12px;transform:translate(-50%,-10px);opacity:0;transition:opacity .25s,transform .25s;background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:99px;font-size:.88rem;font-weight:600;pointer-events:none;max-width:calc(100% - 24px);text-align:center}
+#msg.show{opacity:1;transform:translate(-50%,0)}
+#msg.ok{background:#15803d;color:#fff}#msg.bad{background:#dc2626;color:#fff}
+aside{width:330px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
 #pi{display:none;width:100%;height:160px;object-fit:contain;background:#fff;border-radius:10px;margin-bottom:10px}
 #nm{margin:0 0 4px;font-size:1.1rem}
 #an{display:none;background:var(--ac);color:#fff;border-radius:99px;padding:2px 10px;font-size:.78rem;margin-bottom:8px}
+.ty{display:none;color:var(--tyfg);border-radius:99px;padding:2px 10px;font-size:.78rem;font-weight:600;margin:0 0 8px 4px}
+.ty.entrada{background:var(--in)}.ty.salida{background:var(--out)}.ty.es{background:var(--es)}
 #ds{margin:0;font-size:.92rem;line-height:1.45}
+#us{display:none;margin:10px 0 0;font-size:.85rem;line-height:1.4;background:var(--bg);border-radius:10px;padding:8px 10px}
 #tp{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 0;padding:0;list-style:none}
 #tp li{font-size:.75rem;border:1px solid var(--ac);color:var(--ac);border-radius:99px;padding:2px 9px}
 #tp li.cl{background:var(--ac);color:#fff}
+#acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+#acts:empty{display:none}
+#acts button,.big button{font:inherit;font-size:.85rem;font-weight:600;padding:8px 12px;border-radius:99px;border:0;background:var(--ac);color:#fff;cursor:pointer}
+#acts button:hover,.big button:hover{filter:brightness(1.1)}
 #rs{display:none;margin-top:12px;font:inherit;font-size:.82rem;padding:6px 12px;border-radius:99px;border:1px solid var(--ac);background:transparent;color:var(--ac);cursor:pointer}
 .btns{display:flex;flex-wrap:wrap;gap:6px}
-.btns button{font:inherit;font-size:.8rem;padding:6px 10px;border-radius:99px;border:1px solid var(--bd);background:var(--bg);color:var(--fg);cursor:pointer}
-.btns button.on,.btns button:hover{border-color:var(--ac);color:var(--ac)}
+.btns button,.views button,#quiz .qb button{font:inherit;font-size:.8rem;padding:6px 10px;border-radius:99px;border:1px solid var(--bd);background:var(--bg);color:var(--fg);cursor:pointer}
+.btns button.on,.btns button:hover,.views button.on,.views button:hover{border-color:var(--ac);color:var(--ac)}
+.btns button[data-t]::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.btns button[data-t=entrada]::before{background:var(--in)}.btns button[data-t=salida]::before{background:var(--out)}.btns button[data-t=es]::before{background:var(--es)}
+.btns button.seen::after{content:" ✓";color:var(--ok);font-weight:700}
+.btns.dis{opacity:.35;pointer-events:none}
+.sec{margin:14px 0 6px;font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+.sec:first-child{margin-top:0}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:.72rem;color:var(--mut);margin-top:8px}
+.legend b{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.prog{font-size:.8rem;color:var(--mut)}
+.bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden;margin:6px 0 0}
+.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .4s}
+.big{display:flex;flex-wrap:wrap;gap:6px}
+.big button{flex:1 1 140px}
+#quiz{display:none;border:2px solid var(--ac)}
+#qh{font-size:.8rem;color:var(--mut);display:flex;justify-content:space-between}
+#qq{font-size:1.05rem;line-height:1.4;margin:8px 0}
+#qf{min-height:1.3em;font-size:.88rem;line-height:1.4;margin:0 0 10px}
+#qf.ok{color:var(--ok)}#qf.bad{color:#dc2626}
+#quiz .qb{display:flex;gap:6px;flex-wrap:wrap}
 @media (max-width:760px){main{flex-direction:column}#c{flex:none;height:55vh}aside{width:auto;overflow:visible}}
 </style>
 </head>
 <body>
 <header>
-  <h1>🖥️ Anatomía de la computadora</h1>
-  <p>Clase 1: La PC y sus partes • Arrastra para girar · rueda o pellizco para acercar · pasa el cursor para ver el nombre · haz clic para “desconectar” la pieza</p>
+  <div>
+    <h1>🖥️ Anatomía de la computadora</h1>
+    <p>Clase 1: La PC y sus partes • Arrastra para girar · rueda o pellizco para acercar · clic en una pieza para verla · ⌨️ ¡escribe con tu teclado!</p>
+  </div>
+  <div class="views" id="views">
+    <button data-v="todo" class="on">🖥️ Escritorio completo</button>
+    <button data-v="int">🔧 Interior del gabinete</button>
+  </div>
 </header>
 <main>
-  <div id="c"><div id="tip"></div></div>
+  <div id="c"><div id="tip"></div><div id="msg" role="status" aria-live="polite"></div></div>
   <aside>
-    <div class="card">
+    <div class="card" id="quiz">
+      <div id="qh"><span id="qn"></span><span id="qs"></span></div>
+      <p id="qq"></p>
+      <p id="qf"></p>
+      <div class="qb" id="qb"></div>
+    </div>
+    <div class="card" id="info">
       <img id="pi" alt="">
       <h2 id="nm">Explora el “cuerpo” de la PC</h2>
-      <span id="an"></span>
+      <span id="an"></span><span id="ty" class="ty"></span>
       <p id="ds">Cada componente cumple una función parecida a la de un órgano. Selecciona uno: se desconectará del equipo para que lo veas mejor.</p>
+      <p id="us"></p>
+      <div id="acts"></div>
       <ul id="tp"></ul>
       <button id="rs">↩ Volver a armar la PC</button>
     </div>
-    <div class="card"><div class="btns" id="btns"></div></div>
+    <div class="card">
+      <div class="prog"><span id="pt"></span><div class="bar"><i id="pb"></i></div></div>
+      <h3 class="sec">Dentro del gabinete</h3>
+      <div class="btns" id="bi"></div>
+      <h3 class="sec">Periféricos</h3>
+      <div class="btns" id="bp"></div>
+      <div class="legend"><span><b style="background:var(--in)"></b>Entrada</span><span><b style="background:var(--out)"></b>Salida</span><span><b style="background:var(--es)"></b>Entrada y salida</span></div>
+    </div>
+    <div class="card">
+      <h3 class="sec">Actividades</h3>
+      <div class="big"><button id="flowb">⚡ ¿Cómo viaja la información?</button><button id="qzb">🎯 Ponte a prueba</button></div>
+    </div>
   </aside>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -73,7 +128,15 @@ const INFO={
  gpu:["Tarjeta gráfica (GPU)","👁️ Ojos y corteza visual","Procesa las imágenes, videos y juegos que vemos en el monitor. Tiene su propio ventilador porque se calienta mucho.",["Integrada (dentro del CPU)","Dedicada (tarjeta aparte)"]],
  psu:["Fuente de poder (PSU)","❤️ Corazón","Convierte la corriente de la pared en la energía que necesita cada componente y la “bombea” por los cables a todos.",["Se mide en watts (W)","ATX"]],
  ssd:["Unidad SSD (Solid State Drive)","⚡ Memoria a largo plazo (rápida)","Guarda los datos en chips de memoria flash, sin partes móviles: es muy rápida, silenciosa y resistente a golpes. SSD y HDD no son marcas ni tamaños: son siglas de dos tecnologías distintas para la misma función (almacenar). Lo que cambia es cómo lo hacen.",["SATA 2.5″","M.2 SATA","M.2 NVMe (la más rápida)"]],
- hdd:["Disco duro (HDD – Hard Disk Drive)","📚 Memoria a largo plazo (archivo)","Guarda los datos en platos magnéticos que giran y un cabezal que los lee: más barato por GB, pero más lento, ruidoso y sensible a golpes. Igual que el SSD, “HDD” nombra una tecnología, no un tamaño ni una marca.",["3.5″ (PC de escritorio)","2.5″ (laptops)","Conector SATA"]]
+ hdd:["Disco duro (HDD – Hard Disk Drive)","📚 Memoria a largo plazo (archivo)","Guarda los datos en platos magnéticos que giran y un cabezal que los lee: más barato por GB, pero más lento, ruidoso y sensible a golpes. Igual que el SSD, “HDD” nombra una tecnología, no un tamaño ni una marca.",["3.5″ (PC de escritorio)","2.5″ (laptops)","Conector SATA"]],
+ // ===== Periféricos =====
+ mon:["Monitor","🙂 Rostro: muestra lo que pasa adentro","Es la pantalla donde vemos textos, imágenes y videos. Recibe la imagen desde la tarjeta gráfica por un cable HDMI, DisplayPort o VGA.",["LCD / LED","Tamaño en pulgadas","HDMI · DisplayPort · VGA"]],
+ kb:["Teclado","✋ Tacto: siente lo que tocas","Permite escribir letras y números y dar órdenes a la computadora. Cada tecla envía un código distinto que el procesador interpreta.",["Distribución QWERTY","USB o inalámbrico","Atajos: Ctrl + C / Ctrl + V"]],
+ mouse:["Mouse (ratón)","👆 Dedo que señala","Mueve el puntero por la pantalla para señalar, hacer clic, arrastrar y desplazarse con la rueda.",["Óptico / láser","Clic izquierdo · derecho · rueda","USB o inalámbrico"]],
+ spk:["Parlantes","🗣️ Voz","Convierten las señales eléctricas de la computadora en sonido: música, voces y avisos del sistema.",["Conector 3.5 mm o USB","También: auriculares"]],
+ cam:["Cámara web (webcam)","👀 Ojos y oídos hacia afuera","Captura imagen y, con su micrófono, también sonido. Se usa para videollamadas, clases virtuales y fotos.",["Micrófono integrado","Resolución: 720p / 1080p","USB"]],
+ prn:["Impresora","✍️ Escribir a mano en papel","Pasa a papel los documentos e imágenes de la pantalla. Las multifuncionales además escanean, por eso pueden ser de entrada y salida.",["Tinta / láser","Multifuncional = también escanea","USB o Wi-Fi"]],
+ usb:["Memoria USB (pendrive)","🎒 Mochila: lleva y trae información","Guarda archivos para llevarlos de una computadora a otra. La PC lee de ella (entrada) y escribe en ella (salida).",["Capacidad en GB","Puerto USB","Almacenamiento portátil"]]
 };
 
 // ===== Etiquetas de la Clase 1 (para tu main) =====
@@ -86,20 +149,42 @@ const CLASE={
  gpu:["Clase 1","Hardware","Gráficos","Renderizado"],
  psu:["Clase 1","Hardware","Energía","Alimentación"],
  ssd:["Clase 1","Hardware","Almacenamiento","Permanente"],
- hdd:["Clase 1","Hardware","Almacenamiento","Magnético"]
+ hdd:["Clase 1","Hardware","Almacenamiento","Magnético"],
+ mon:["Clase 1","Periférico","Salida","Visualización"],
+ kb:["Clase 1","Periférico","Entrada","Escritura"],
+ mouse:["Clase 1","Periférico","Entrada","Señalar"],
+ spk:["Clase 1","Periférico","Salida","Audio"],
+ cam:["Clase 1","Periférico","Entrada","Video"],
+ prn:["Clase 1","Periférico","Salida","Impresión"],
+ usb:["Clase 1","Periférico","Entrada/Salida","Almacenamiento portátil"]
 };
+// Tipo de periférico y cómo se usa
+const TIPO={mon:'salida',kb:'entrada',mouse:'entrada',spk:'salida',cam:'entrada',prn:'salida',usb:'es'};
+const TIPO_TXT={entrada:'⬇️ Entrada: envía datos a la PC',salida:'⬆️ Salida: muestra resultados',es:'↕️ Entrada y salida'};
+const USO={
+ mon:'Ubícalo a la altura de los ojos y a un brazo de distancia. Prueba a encenderlo y apagarlo.',
+ kb:'Escribe con tu teclado real: las teclas 3D se hunden y el texto aparece en el monitor. <b>Backspace</b> borra y <b>Enter</b> salta de línea.',
+ mouse:'Haz clic izquierdo, clic derecho o gira la rueda sobre la escena 3D: el mouse virtual copia lo que hace el tuyo.',
+ spk:'Presiona “Probar sonido” (sube el volumen de tu equipo).',
+ cam:'Puedes encender tu cámara real: la imagen aparece en el monitor 3D. No se graba ni se envía nada.',
+ prn:'Escribe algo con el teclado y después presiona “Imprimir”.',
+ usb:'Presiona “Copiar archivo” y mira el progreso en el monitor.'
+};
+const INT=Object.keys(INFO).filter(k=>!TIPO[k]),PER=Object.keys(TIPO),ORDER=INT.concat(PER);
 // DATA: mismo formato de tu versión anterior ({name, ann, desc, tags}) generado desde INFO
 const DATA={};
-Object.keys(INFO).forEach(k=>{DATA[k]={name:INFO[k][0],ann:INFO[k][1],desc:INFO[k][2],tags:CLASE[k].slice(),extra:INFO[k][3]}});
+Object.keys(INFO).forEach(k=>{DATA[k]={name:INFO[k][0],ann:INFO[k][1],desc:INFO[k][2],tags:CLASE[k].slice(),extra:INFO[k][3],tipo:TIPO[k]||'interno'}});
 window.INFO=INFO;window.CLASE=CLASE;window.DATA=DATA;
-const OUT={case:[0,0,-1.6],mb:[0,0,1.6],cpu:[0,.3,2.6],cooler:[0,.4,2.8],ram:[0,0,2.6],gpu:[0,.2,2.6],psu:[0,.6,2.6],ssd:[0,0,2.6],hdd:[0,0,2.6]};
-const AWAY=new THREE.Vector3(0,1.6,3.4),ZERO=new THREE.Vector3(),V={ram:1.2};
+const OUT={case:[0,0,-1.6],mb:[0,0,1.6],cpu:[0,.3,2.6],cooler:[0,.4,2.8],ram:[0,0,2.6],gpu:[0,.2,2.6],psu:[0,.6,2.6],ssd:[0,0,2.6],hdd:[0,0,2.6],
+ mon:[0,.3,1],kb:[0,.5,.6],mouse:[0,.4,.5],spk:[0,.3,.8],cam:[0,.5,.8],prn:[0,.3,.8],usb:[0,.6,.6]};
+const AWAY=new THREE.Vector3(0,1.6,3.4),ZERO=new THREE.Vector3();
+const V={ram:1.2,mon:0,kb:0,mouse:.25,spk:0,cam:0,prn:.35,usb:.7},VP={kb:.75,mouse:.7,usb:1.1},R={mon:10,kb:7,mouse:5,spk:13,cam:5,prn:9,usb:5.5};
 const wrap=document.getElementById('c'),tip=document.getElementById('tip');
 const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 wrap.appendChild(renderer.domElement);
 const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(40,1,.1,100);
+const camera=new THREE.PerspectiveCamera(40,1,.1,200);
 scene.add(new THREE.HemisphereLight(0xffffff,0x556677,.95));
 const dl=new THREE.DirectionalLight(0xffffff,.8);dl.position.set(4,6,8);scene.add(dl);
 const root=new THREE.Group();scene.add(root);
@@ -155,54 +240,274 @@ B(g,.5,.3,.06,0x111111,-1.6,-2.1,.83);B(g,.18,.1,.04,0xe5484d,-1.6,-2.35,.83);L(
 g=P('ssd');B(g,.5,.72,.09,0x15151a,1.88,-.45,-.7);L(g,'SSD',.38,.3,1.88,-.4,-.653,'#111','#e5484d');B(g,.2,.1,.09,0x9a9ea8,1.88,-.04,-.7);
 // HDD
 g=P('hdd');B(g,.5,.72,.2,0xb5bac4,1.88,1.0,-.7,{metalness:.6});L(g,'HDD 1TB',.4,.4,1.88,1.0,-.598,'#eee','#222');B(g,.2,.08,.2,0xd8b45a,1.88,1.4,-.7);
-const c3=new THREE.Vector3();
+// ===================== ESCRITORIO Y PERIFÉRICOS =====================
+const DY=-2.93; // superficie del escritorio
+const desk=new THREE.Mesh(new THREE.BoxGeometry(20,.2,7.5),M(0x8a6a4a,{metalness:0,roughness:.85}));desk.position.set(-1.8,DY-.1,.6);root.add(desk);
+function cap(m,ch){const c=document.createElement('canvas');c.width=c.height=64;const q=c.getContext('2d');q.fillStyle='#3a3e48';q.fillRect(0,0,64,64);q.fillStyle='#e8ecf7';q.font='bold 34px sans-serif';q.textAlign='center';q.textBaseline='middle';q.fillText(ch,32,35);
+ const p=new THREE.Mesh(new THREE.PlaneGeometry(.2,.2),M(0xffffff,{map:new THREE.CanvasTexture(c),metalness:0,roughness:.7}));p.rotation.x=-Math.PI/2;p.position.y=.036;m.add(p)}
+// Monitor (la pantalla es un canvas que dibujamos en vivo)
+g=P('mon');
+B(g,1.5,.08,1,0x1a1d24,-6.3,DY+.04,-.25);B(g,.3,1.5,.16,0x1a1d24,-6.3,DY+.8,-.55);B(g,4.4,2.7,.16,0x111318,-6.3,-.6,-.4);
+const scrC=document.createElement('canvas');scrC.width=512;scrC.height=290;
+const scrTex=new THREE.CanvasTexture(scrC);
+const screen=new THREE.Mesh(new THREE.PlaneGeometry(4.1,2.32),new THREE.MeshBasicMaterial({map:scrTex}));screen.position.set(-6.3,-.55,-.318);g.add(screen);
+const monLed=B(g,.07,.07,.02,0x3ddc84,-4.35,-1.84,-.31);
+// Cámara web
+g=P('cam');B(g,.8,.26,.26,0x22252c,-6.3,.9,-.38);C(g,.09,.04,0x0a0a12,-6.3,.9,-.24);T(g,.11,.02,0x555a66,-6.3,.9,-.24);
+const camLed=B(g,.05,.05,.02,0x444444,-6.0,.9,-.245);
+for(let i=0;i<3;i++)B(g,.03,.03,.02,0x0a0a0a,-6.62+i*.06,.9,-.245);
+// Parlantes
+g=P('spk');const cones=[];
+[-9.2,-3.4].forEach(x=>{B(g,.9,1.6,.9,0x1d2027,x,DY+.8,-.25);
+ cones.push(C(g,.3,.05,0x34373f,x,DY+.55,.22),C(g,.13,.05,0x34373f,x,DY+1.2,.22));T(g,.32,.03,0x555a66,x,DY+.55,.22)});
+cones.forEach(c=>c.userData.z=c.position.z);
+// Teclado (cada tecla es una pieza para poder "hundirla")
+g=P('kb');B(g,3.5,.12,1.4,0x23262e,-6.3,DY+.06,2.0);
+const KEYS={};
+["1234567890","QWERTYUIOP","ASDFGHJKLÑ","ZXCVBNM,."].forEach((r,ri)=>[...r].forEach((ch,i)=>{
+ const m=B(g,.25,.07,.24,0x3a3e48,-6.3-(r.length-1)*.15+i*.3+ri*.06,DY+.15,1.47+ri*.28);m.userData.y=m.position.y;cap(m,ch);KEYS[ch]=m}));
+KEYS[' ']=B(g,1.6,.07,.22,0x3a3e48,-6.3,DY+.15,2.56);KEYS[' '].userData.y=DY+.15;
+// Mouse
+g=P('mouse');B(g,1.3,.02,1.4,0x2b3a6b,-3.7,DY+.01,2.1,{metalness:0,roughness:.9});
+const mBody=new THREE.Mesh(new THREE.SphereGeometry(.3,24,16),M(0x2a2d35));mBody.scale.set(1,.42,1.5);mBody.position.set(-3.7,DY,2.1);g.add(mBody);
+const mBtn={L:B(g,.13,.03,.28,0x3a3e48,-3.775,DY+.11,1.86),R:B(g,.13,.03,.28,0x3a3e48,-3.625,DY+.11,1.86)};
+mBtn.L.userData.y=mBtn.R.userData.y=DY+.11;
+const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.04,16),M(0x8a90a0));wheel.rotation.z=Math.PI/2;wheel.position.set(-3.7,DY+.14,1.88);g.add(wheel);
+// Impresora (el papel sale con lo que escribiste)
+g=P('prn');B(g,2.6,1.1,1.9,0xdfe2e8,4.7,DY+.55,-.2,{metalness:.1});
+B(g,2.1,.05,1.0,0xbfc4cc,4.7,DY+1.12,-.55);B(g,1.9,.1,.02,0x2a2d34,4.7,DY+.75,.755);B(g,.6,.2,.04,0x2a2d34,5.6,DY+.95,.75);
+const prnLed=B(g,.06,.06,.02,0x3ddc84,5.82,DY+.95,.775);
+const papC=document.createElement('canvas');papC.width=320;papC.height=240;const papTex=new THREE.CanvasTexture(papC);
+const paper=new THREE.Mesh(new THREE.PlaneGeometry(1.6,1.2),M(0xffffff,{map:papTex,metalness:0,roughness:.9}));paper.rotation.x=-Math.PI/2;paper.position.set(4.7,DY+.75,0);paper.userData.z=0;g.add(paper);
+// Pendrive conectado arriba del gabinete
+g=P('usb');B(g,.3,.06,.16,0x0b0c10,1.5,2.82,.6);B(g,.18,.22,.08,0xc9ccd6,1.5,2.9,.6,{metalness:.8});B(g,.26,.65,.12,0x2f63e0,1.5,3.33,.6);
+const usbLed=B(g,.06,.06,.02,0x333333,1.5,3.5,.67);L(g,'USB',.22,.1,1.5,3.2,.661,'#2f63e0','#ffffff');
+// Cables hacia la parte trasera del gabinete
+const cables=[];
+function cable(k,pts){const cv=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)));const m=new THREE.Mesh(new THREE.TubeGeometry(cv,48,.035,6),M(0x16181d,{roughness:.8,metalness:0,transparent:true}));root.add(m);cables.push({k,m,o:1})}
+cable('mon',[[-6.3,-2.2,-.6],[-6.2,DY+.03,-1.1],[-3.2,DY+.03,-1.7],[-1.9,-1.5,-1.5],[-1.8,1.0,-1.45]]);
+cable('cam',[[-6.3,.9,-.52],[-6.6,-.6,-.55],[-6.0,DY+.03,-1.2],[-3.0,DY+.03,-1.85],[-1.7,1.2,-1.45]]);
+cable('kb',[[-6.3,DY+.06,1.3],[-4.8,DY+.03,.6],[-2.8,DY+.03,-1.6],[-1.6,.7,-1.45]]);
+cable('mouse',[[-3.7,DY+.03,1.62],[-3.1,DY+.03,.5],[-2.5,DY+.03,-1.6],[-1.6,.5,-1.45]]);
+cable('spk',[[-3.4,-2.3,-.72],[-2.9,DY+.03,-1.5],[-1.8,.3,-1.45]]);
+cable('spk',[[-9.2,-2.3,-.72],[-7.5,DY+.03,-1.3],[-4.5,DY+.03,-1.3],[-3.4,-2.6,-.72]]);
+cable('prn',[[4.7,-2.4,-1.17],[3.6,DY+.03,-1.7],[1.2,DY+.03,-1.7],[-1.6,.6,-1.45]]);
+
 Object.values(groups).forEach(gr=>{gr.userData.c=new THREE.Box3().setFromObject(gr).getCenter(new THREE.Vector3());
  gr.traverse(o=>{if(o.material)o.material.transparent=true;if(o.isMesh){o.userData.key=gr.userData.key;pick.push(o)}})});
-// Cámara y estado
-let th=.55,ph=1.35,rad=12,tr=12,vt=null,hover=null,sel=null,off={};
-const target=new THREE.Vector3(),tg=new THREE.Vector3();
+
+// ===================== CÁMARA Y ESTADO =====================
+const $=id=>document.getElementById(id);
+const HOME_T=new THREE.Vector3(-1.6,-.6,.4);
+let view='todo';
+function homeR(){const a=camera.aspect||1.6;return Math.min(40,Math.max(15,24/a+6))}
+function base(){return view==='int'?{t:ZERO,r:12,th:.55,ph:1.35}:{t:HOME_T,r:homeR(),th:.3,ph:1.2}}
+let th=.3,ph=1.2,rad=20,tr=20,vt=null,vp=null,hover=null,sel=null,off={},quiz=null,flow=null,lastAct=performance.now();
+const target=HOME_T.clone(),tg=HOME_T.clone();
 function cam(){camera.position.set(target.x+rad*Math.sin(ph)*Math.sin(th),target.y+rad*Math.cos(ph),target.z+rad*Math.sin(ph)*Math.cos(th));camera.lookAt(target)}
-function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(!sel&&view==='todo')tr=homeR()}
 addEventListener('resize',resize);
 const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
 function at(e){const r=wrap.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(mouse,camera);const h=ray.intersectObjects(pick)[0];return h?h.object.userData.key:null}
-function glow(k,on){if(groups[k])groups[k].traverse(o=>{if(o.isMesh)o.material.emissive.setHex(on?0x2a55ff:0)})}
-function setHover(k,e){if(k===hover&&!e)return;if(hover&&hover!==sel)glow(hover,false);hover=k;if(k)glow(k,true);
- if(k&&e){const r=wrap.getBoundingClientRect();tip.style.display='block';tip.style.left=(e.clientX-r.left)+'px';tip.style.top=(e.clientY-r.top)+'px';tip.textContent=INFO[k][0]}else tip.style.display='none';
+function glow(k,on,col){if(groups[k])groups[k].traverse(o=>{if(o.isMesh&&o.material.emissive)o.material.emissive.setHex(on?(col||0x2a55ff):0)})}
+function setHover(k,e){if(quiz&&quiz.lock)return;if(k===hover&&!e)return;if(hover&&hover!==sel)glow(hover,false);hover=k;if(k)glow(k,true);
+ if(k&&e&&!quiz){const r=wrap.getBoundingClientRect();tip.style.display='block';tip.style.left=(e.clientX-r.left)+'px';tip.style.top=(e.clientY-r.top)+'px';tip.textContent=INFO[k][0]}else tip.style.display='none';
  wrap.style.cursor=k?'pointer':'grab'}
-const $=id=>document.getElementById(id);
+let toastT;function toast(t,cls){const m=$('msg');m.textContent=t;m.className='show '+(cls||'');clearTimeout(toastT);toastT=setTimeout(()=>m.className='',2800)}
+// "Hundir" una tecla o botón del mouse
+function press(m,d){if(!m)return;clearTimeout(m.userData.to);m.position.y=m.userData.y-d;m.material.emissive.setHex(0x3ddc84);
+ m.userData.to=setTimeout(()=>{m.position.y=m.userData.y;const k=m.userData.key;m.material.emissive.setHex(k&&(k===sel||k===hover)?0x2a55ff:0)},170)}
+
+// ===================== PROGRESO =====================
+const SEEN_KEY='m1c1-vistos';let seen=new Set();
+try{seen=new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]').filter(k=>INFO[k]))}catch(e){}
+function updProg(){$('pt').textContent='Exploraste '+seen.size+' de '+ORDER.length+' partes';$('pb').style.width=(seen.size/ORDER.length*100)+'%';
+ document.querySelectorAll('#bi button,#bp button').forEach(b=>b.classList.toggle('seen',seen.has(b.dataset.k)))}
+function markSeen(k){if(seen.has(k))return;seen.add(k);try{localStorage.setItem(SEEN_KEY,JSON.stringify([...seen]))}catch(e){}
+ updProg();if(seen.size===ORDER.length)setTimeout(()=>toast('🏆 ¡Exploraste todas las partes! Ahora ponte a prueba 🎯','ok'),600)}
+
+// ===================== SELECCIÓN =====================
 function select(k){
- if(sel)glow(sel,false);sel=k;off={};tg.copy(ZERO);tr=12;vt=null;
- document.querySelectorAll('.btns button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
- if(!k){$('pi').style.display=$('an').style.display=$('rs').style.display='none';$('tp').innerHTML='';
+ if(flow)endFlow();
+ if(sel)glow(sel,false);sel=k;off={};const b=base();tg.copy(b.t);tr=b.r;vt=null;vp=null;
+ document.querySelectorAll('#bi button,#bp button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));
+ $('acts').innerHTML='';$('rs').textContent=TIPO[k]?'↩ Volver a conectar':'↩ Volver a armar la PC';
+ if(!k){['pi','an','rs','ty','us'].forEach(i=>$(i).style.display='none');$('tp').innerHTML='';
   $('nm').textContent='Explora el “cuerpo” de la PC';$('ds').textContent='Cada componente cumple una función parecida a la de un órgano. Selecciona uno: se desconectará del equipo para que lo veas mejor.';return}
  off[k]=new THREE.Vector3(...OUT[k]);if(k==='cpu')off.cooler=AWAY;
- tg.copy(groups[k].userData.c).add(off[k]);tr=8;if(V[k]!==undefined)vt=V[k];glow(k,true);
- $('pi').src=IMG[k];$('pi').style.display='block';$('nm').textContent=INFO[k][0];
+ tg.copy(groups[k].userData.c).add(off[k]);tr=R[k]||8;if(V[k]!==undefined)vt=V[k];if(VP[k]!==undefined)vp=VP[k];glow(k,true);
+ if(IMG[k]){$('pi').src=IMG[k];$('pi').style.display='block'}else $('pi').style.display='none';
+ $('nm').textContent=INFO[k][0];
  $('an').style.display='inline-block';$('an').textContent=INFO[k][1];$('ds').textContent=INFO[k][2];
- $('tp').innerHTML=INFO[k][3].map(t=>'<li>'+t+'</li>').join('')+CLASE[k].map(t=>'<li class="cl">'+t+'</li>').join('');$('rs').style.display='inline-block'}
-$('rs').onclick=()=>select(null);
+ if(TIPO[k]){$('ty').className='ty '+TIPO[k];$('ty').textContent=TIPO_TXT[TIPO[k]];$('ty').style.display='inline-block'}else $('ty').style.display='none';
+ if(USO[k]){$('us').innerHTML='<b>💡 Cómo se usa:</b> '+USO[k];$('us').style.display='block'}else $('us').style.display='none';
+ $('tp').innerHTML=INFO[k][3].map(t=>'<li>'+t+'</li>').join('')+CLASE[k].map(t=>'<li class="cl">'+t+'</li>').join('');$('rs').style.display='inline-block';
+ renderActs(k);markSeen(k)}
+$('rs').onclick=()=>flow?stopFlow():select(null);
+
+// ===================== PANTALLA DEL MONITOR =====================
+const scr={on:true,txt:'',mode:'text',copy:0,done:0,video:null,blink:true};
+function restoreMode(){scr.mode=scr.video?'video':'text'}
+function wrapLines(q,txt,maxW){const out=[];txt.split('\n').forEach(par=>{let line='';for(const ch of par){if(q.measureText(line+ch).width>maxW){out.push(line);line=ch}else line+=ch}out.push(line)});return out}
+function drawScr(){const q=scrC.getContext('2d'),W=512,H=290;
+ if(!scr.on){q.fillStyle='#050608';q.fillRect(0,0,W,H);scrTex.needsUpdate=true;return}
+ if(scr.mode==='video'&&scr.video&&scr.video.readyState>=2){const v=scr.video,s=Math.max(W/v.videoWidth,H/v.videoHeight),w=v.videoWidth*s,h=v.videoHeight*s;
+  q.save();q.translate(W,0);q.scale(-1,1);q.drawImage(v,(W-w)/2,(H-h)/2,w,h);q.restore();
+  q.fillStyle='rgba(0,0,0,.45)';q.fillRect(10,10,96,26);q.fillStyle='#e5484d';q.beginPath();q.arc(24,23,6,0,7);q.fill();q.fillStyle='#fff';q.font='bold 14px sans-serif';q.fillText('EN VIVO',36,28);scrTex.needsUpdate=true;return}
+ const gr=q.createLinearGradient(0,0,W,H);gr.addColorStop(0,'#2f63e0');gr.addColorStop(1,'#6b3fd1');q.fillStyle=gr;q.fillRect(0,0,W,H);
+ q.fillStyle='rgba(0,0,0,.35)';q.fillRect(0,H-26,W,26);q.fillStyle='#fff';q.font='13px sans-serif';q.textAlign='left';q.fillText('⊞  Inicio',10,H-9);
+ const d=new Date();q.textAlign='right';q.fillText(d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'),W-10,H-9);q.textAlign='left';
+ q.fillStyle='#fff';q.fillRect(30,18,W-60,H-62);q.fillStyle='#e8ecf7';q.fillRect(30,18,W-60,24);q.fillStyle='#15203b';q.font='bold 13px sans-serif';q.fillText('📝 Bloc de notas',40,35);
+ q.font='20px monospace';
+ if(!scr.txt){q.fillStyle='#9aa6c4';q.fillText('Escribe con tu teclado…',48,72);if(scr.blink){q.fillStyle='#15203b';q.fillRect(44,55,2,22)}}
+ else{const lines=wrapLines(q,scr.txt,W-90).slice(-7);q.fillStyle='#15203b';lines.forEach((l,i)=>q.fillText(l,44,72+i*25));
+  if(scr.blink)q.fillRect(46+q.measureText(lines[lines.length-1]).width,55+(lines.length-1)*25,2,22)}
+ if(scr.mode==='copy'){q.fillStyle='rgba(0,0,0,.35)';q.fillRect(0,0,W,H);q.fillStyle='#fff';q.fillRect(96,92,320,104);q.fillStyle='#15203b';q.font='bold 15px sans-serif';
+  q.fillText(scr.copy<1?'Copiando “tarea.docx” al pendrive…':'✔ Archivo copiado al pendrive',112,122);
+  q.fillStyle='#d3daec';q.fillRect(112,140,288,16);q.fillStyle=scr.copy<1?'#2f63e0':'#15803d';q.fillRect(112,140,288*scr.copy,16);
+  q.fillStyle='#55627f';q.font='13px sans-serif';q.fillText(Math.round(scr.copy*100)+' %  ·  PC → USB (salida)',112,178)}
+ scrTex.needsUpdate=true}
+setInterval(()=>{scr.blink=!scr.blink;if(scr.mode==='text')drawScr()},530);
+
+// ===================== ACCIONES DE CADA PERIFÉRICO =====================
+let actx,spkT=-9e9,paperT=0;
+function playSound(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume();const t0=actx.currentTime;
+ [523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=actx.createOscillator(),gn=actx.createGain(),s=t0+i*.18;o.type='triangle';o.frequency.value=f;
+  gn.gain.setValueAtTime(0,s);gn.gain.linearRampToValueAtTime(.25,s+.02);gn.gain.exponentialRampToValueAtTime(.001,s+.35);o.connect(gn).connect(actx.destination);o.start(s);o.stop(s+.4)});
+ spkT=performance.now();toast('🔊 Do – Mi – Sol – Do')}catch(e){toast('Tu navegador no permite reproducir sonido.','bad')}}
+function printPaper(){const q=papC.getContext('2d');q.fillStyle='#fff';q.fillRect(0,0,320,240);q.fillStyle='#15203b';q.font='bold 16px sans-serif';q.fillText('Mi documento',16,28);
+ q.fillStyle='#d3daec';q.fillRect(16,36,288,2);q.fillStyle='#222';q.font='15px monospace';
+ const t=scr.txt.trim()||'¡Hola! (Escribe algo con el teclado antes de imprimir.)';wrapLines(q,t,288).slice(0,10).forEach((l,i)=>q.fillText(l,16,60+i*19));
+ papTex.needsUpdate=true;paperT=performance.now();toast(scr.txt.trim()?'🖨️ Imprimiendo lo que escribiste…':'🖨️ Imprimiendo… (escribe algo y vuelve a imprimir)')}
+async function toggleCam(b){
+ if(scr.video){scr.video.srcObject.getTracks().forEach(t=>t.stop());scr.video=null;restoreMode();camLed.material.color.setHex(0x444444);b.textContent='📷 Encender mi cámara';drawScr();return}
+ try{const st=await navigator.mediaDevices.getUserMedia({video:{width:640,height:360},audio:false});const v=document.createElement('video');v.muted=true;v.playsInline=true;v.srcObject=st;await v.play();
+  scr.video=v;scr.mode='video';scr.on=true;monLed.material.color.setHex(0x3ddc84);camLed.material.color.setHex(0xe5484d);b.textContent='⏹ Apagar cámara';toast('📷 ¡Mira el monitor 3D!','ok')}
+ catch(err){toast('No se pudo usar la cámara (sin permiso o no hay cámara).','bad')}}
+function copyUsb(){if(scr.mode==='copy')return;scr.on=true;monLed.material.color.setHex(0x3ddc84);scr.mode='copy';scr.copy=0;scr.done=0}
+function renderActs(k){const a=$('acts');a.innerHTML='';const add=(t,f)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>f(b);a.appendChild(b)};
+ if(k==='mon')add(scr.on?'⏻ Apagar monitor':'⏻ Encender monitor',b=>{scr.on=!scr.on;monLed.material.color.setHex(scr.on?0x3ddc84:0xe5484d);b.textContent=scr.on?'⏻ Apagar monitor':'⏻ Encender monitor';drawScr()});
+ if(k==='kb')add('🧹 Borrar pantalla',()=>{scr.txt='';drawScr()});
+ if(k==='spk')add('🔊 Probar sonido',playSound);
+ if(k==='prn')add('🖨️ Imprimir',printPaper);
+ if(k==='cam')add(scr.video?'⏹ Apagar cámara':'📷 Encender mi cámara',toggleCam);
+ if(k==='usb')add('💾 Copiar archivo al pendrive',copyUsb)}
+
+// ===================== TECLADO REAL → TECLADO 3D → MONITOR =====================
+let typedOnce=false;
+addEventListener('keydown',e=>{lastAct=performance.now();
+ if(e.ctrlKey||e.metaKey||e.altKey)return;
+ if(e.key==='Escape'){if(quiz)endQuiz();else if(flow)stopFlow();else select(null);return}
+ if((e.key==='ArrowRight'||e.key==='ArrowLeft')&&!quiz){const n=ORDER.length,s=e.key==='ArrowRight'?1:-1,i=ORDER.indexOf(sel);select(ORDER[i<0?(s>0?0:n-1):(i+s+n)%n]);e.preventDefault();return}
+ const ae=document.activeElement;if(ae&&ae.tagName==='BUTTON'&&(e.key===' '||e.key==='Enter'))return; // deja usar botones con teclado
+ if(e.key.length===1){press(KEYS[e.key.toUpperCase()],.04);if(scr.txt.length<400)scr.txt+=e.key;if(e.key===' ')e.preventDefault()}
+ else if(e.key==='Backspace')scr.txt=scr.txt.slice(0,-1);
+ else if(e.key==='Enter')scr.txt+='\n';
+ else return;
+ scr.blink=true;if(scr.mode==='text')drawScr();
+ if(!typedOnce){typedOnce=true;if(!sel&&!quiz&&!flow)toast('⌨️ ¡Lo que escribes aparece en el monitor 3D!')}});
+// los clics con mouse no dejan el foco en el botón (así la barra espaciadora escribe)
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&e.detail>0)b.blur()});
+
+// ===================== VIAJE DE LA INFORMACIÓN =====================
+const FLOW=[
+ ['kb','⌨️ ENTRADA','Presionas una tecla. El teclado convierte ese toque en una señal eléctrica.'],
+ ['mb','🔌 Viaja','La señal entra por el cable USB a la placa madre, que la lleva por sus “caminos” (buses).'],
+ ['cpu','🧠 Procesa','El procesador interpreta qué tecla fue y decide qué hacer con ella.'],
+ ['ram','💭 Recuerda','El texto que estás escribiendo se guarda por ahora en la RAM.'],
+ ['gpu','🎨 Dibuja','La tarjeta gráfica convierte la letra en una imagen hecha de píxeles.'],
+ ['mon','🖥️ SALIDA','El monitor te muestra la letra. ¡Entrada → proceso → salida!'],
+ ['ssd','💾 Guarda','Si guardas el archivo, pasa al SSD/HDD y no se pierde al apagar la PC.']];
+const STEP=2600;
+const orb=new THREE.Mesh(new THREE.SphereGeometry(.16,16,12),new THREE.MeshBasicMaterial({color:0xffd84a,depthTest:false,transparent:true}));orb.renderOrder=999;
+const halo=new THREE.Mesh(new THREE.SphereGeometry(.34,16,12),new THREE.MeshBasicMaterial({color:0xffd84a,depthTest:false,transparent:true,opacity:.3}));halo.renderOrder=998;orb.add(halo);orb.visible=false;scene.add(orb);
+function showStep(i){const [k,t,d]=FLOW[i];glow(k,true,0xffa500);$('an').textContent=t+' · paso '+(i+1)+' de '+FLOW.length;$('ds').textContent=d;
+ if(k==='kb')press(KEYS.A,.04);if(k==='mon'){scr.txt+='A';if(scr.mode==='text')drawScr()}}
+function startFlow(){if(quiz)endQuiz();select(null);if(view!=='todo')setView('todo');
+ flow={i:0,t0:performance.now()};orb.visible=true;orb.position.copy(groups.kb.userData.c);
+ $('nm').textContent='⚡ El viaje de una tecla';$('an').style.display='inline-block';$('rs').textContent='■ Detener';$('rs').style.display='inline-block';showStep(0)}
+function endFlow(){if(!flow)return;glow(FLOW[flow.i][0],false);flow=null;orb.visible=false}
+function stopFlow(done){endFlow();select(null);if(done===true)toast('✅ Así viaja la información: Entrada → Proceso → Salida','ok')}
+$('flowb').onclick=startFlow;
+
+// ===================== QUIZ =====================
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function makeQuiz(){const ks=shuffle(ORDER.slice()),qs=[];
+ ks.slice(0,3).forEach(k=>qs.push({t:'Haz clic en: <b>'+INFO[k][0]+'</b>',ok:x=>x===k,ans:k}));
+ ks.slice(3,6).forEach(k=>qs.push({t:'¿Qué parte funciona como <b>'+INFO[k][1]+'</b>?',ok:x=>x===k,ans:k}));
+ qs.push({t:'Haz clic en un dispositivo de <b>ENTRADA</b> (envía datos a la PC).',ok:x=>TIPO[x]==='entrada',ans:'kb',ej:1});
+ qs.push({t:'Haz clic en un dispositivo de <b>SALIDA</b> (muestra resultados).',ok:x=>TIPO[x]==='salida',ans:'mon',ej:1});
+ qs.push({t:'¿Qué periférico es de <b>entrada y salida</b> a la vez?',ok:x=>x==='usb',ans:'usb'});
+ qs.push({t:'¿Dónde quedan guardados tus archivos <b>aunque apagues</b> la PC?',ok:x=>x==='ssd'||x==='hdd',ans:'ssd',ej:1});
+ return shuffle(qs)}
+function startQuiz(){if(flow)endFlow();select(null);setView('todo');quiz={qs:makeQuiz(),i:0,score:0,lock:false};
+ $('quiz').style.display='block';$('info').style.display='none';$('bi').classList.add('dis');$('bp').classList.add('dis');showQ();$('quiz').scrollIntoView({block:'nearest'})}
+function showQ(){const n=quiz.qs.length;$('qf').textContent='';$('qf').className='';$('qb').innerHTML='';
+ if(quiz.i>=n){const s=quiz.score;$('qn').textContent='Resultado';$('qs').textContent='';
+  $('qq').innerHTML='Obtuviste <b>'+s+' de '+n+'</b><br>'+(s>=9?'🏆 ¡Excelente! Dominas las partes de la PC.':s>=6?'👍 ¡Muy bien! Repasa las que fallaste.':'📚 Explora otra vez las piezas y vuelve a intentarlo.');
+  qBtn('🔁 Otra vez',startQuiz);qBtn('Salir',endQuiz);return}
+ $('qn').textContent='Pregunta '+(quiz.i+1)+' de '+n;$('qs').textContent='⭐ '+quiz.score;$('qq').innerHTML=quiz.qs[quiz.i].t+'<br><small style="color:var(--mut)">Haz clic en la pieza dentro de la escena 3D.</small>';qBtn('Salir',endQuiz)}
+function qBtn(t,f){const b=document.createElement('button');b.textContent=t;b.onclick=f;$('qb').appendChild(b)}
+function answer(k){if(!quiz||quiz.lock||quiz.i>=quiz.qs.length)return;quiz.lock=true;tip.style.display='none';const q=quiz.qs[quiz.i];
+ if(hover)glow(hover,false);
+ if(q.ok(k)){quiz.score++;glow(k,true,0x22c55e);$('qf').className='ok';$('qf').textContent='✅ ¡Correcto! Es '+INFO[k][0]+'.';toast('✅ ¡Correcto!','ok')}
+ else{glow(k,true,0xe5484d);glow(q.ans,true,0x22c55e);$('qf').className='bad';$('qf').textContent='❌ Esa es '+INFO[k][0]+'. '+(q.ej?'Un ejemplo correcto: ':'La respuesta era: ')+INFO[q.ans][0]+' (en verde).';toast('❌ Casi…','bad')}
+ $('qs').textContent='⭐ '+quiz.score;
+ setTimeout(()=>{if(!quiz)return;glow(k,false);glow(q.ans,false);quiz.i++;quiz.lock=false;hover=null;showQ()},q.ok(k)?1300:2400)}
+function endQuiz(){quiz=null;$('quiz').style.display='none';$('info').style.display='block';$('bi').classList.remove('dis');$('bp').classList.remove('dis');ORDER.forEach(k=>glow(k,false));select(null)}
+$('qzb').onclick=startQuiz;
+
+// ===================== VISTAS =====================
+function setView(v){view=v;document.querySelectorAll('#views button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+ if(!sel){const b=base();tg.copy(b.t);tr=b.r;vt=b.th;vp=b.ph}}
+document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>{if(quiz&&b.dataset.v==='int')return;if(sel)select(null);setView(b.dataset.v)});
+
+// ===================== CONTROLES DE PUNTERO =====================
 let drag=null;
-wrap.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,m:0};wrap.setPointerCapture(e.pointerId)});
+wrap.addEventListener('contextmenu',e=>e.preventDefault());
+wrap.addEventListener('pointerdown',e=>{lastAct=performance.now();drag={x:e.clientX,y:e.clientY,m:0};wrap.setPointerCapture(e.pointerId);
+ if(e.pointerType==='mouse'){if(e.button===0)press(mBtn.L,.015);if(e.button===2)press(mBtn.R,.015)}});
 wrap.addEventListener('pointermove',e=>{
- if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.m+=Math.abs(dx)+Math.abs(dy);drag.x=e.clientX;drag.y=e.clientY;if(drag.m>6){vt=null;th-=dx*.008;ph=Math.min(2.6,Math.max(.5,ph-dy*.008));tip.style.display='none';return}}
+ if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.m+=Math.abs(dx)+Math.abs(dy);drag.x=e.clientX;drag.y=e.clientY;if(drag.m>6){vt=vp=null;lastAct=performance.now();th-=dx*.008;ph=Math.min(2.6,Math.max(.5,ph-dy*.008));tip.style.display='none';return}}
  setHover(at(e),e)});
-wrap.addEventListener('pointerup',e=>{if(drag&&drag.m<6){const k=at(e);if(k!==sel)select(k)}drag=null});
+wrap.addEventListener('pointerup',e=>{if(drag&&drag.m<6){const k=at(e);if(quiz){if(k)answer(k)}else if(k!==sel)select(k)}drag=null});
 wrap.addEventListener('pointerleave',()=>{if(!drag)setHover(null)});
-wrap.addEventListener('wheel',e=>{e.preventDefault();tr=Math.min(20,Math.max(5,tr+e.deltaY*.01))},{passive:false});
+wrap.addEventListener('wheel',e=>{e.preventDefault();lastAct=performance.now();tr=Math.min(42,Math.max(4,tr+e.deltaY*.01));wheel.rotation.x+=e.deltaY*.01},{passive:false});
 const pts=new Map();let pd=0;
 wrap.addEventListener('pointerdown',e=>pts.set(e.pointerId,e));
-wrap.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e);if(pts.size===2){const [a,b]=[...pts.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(pd)tr=Math.min(20,Math.max(5,tr-(d-pd)*.03));pd=d}});
+wrap.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e);if(pts.size===2){const [a,b]=[...pts.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(pd)tr=Math.min(42,Math.max(4,tr-(d-pd)*.03));pd=d}});
 ['pointerup','pointercancel'].forEach(t=>wrap.addEventListener(t,e=>{pts.delete(e.pointerId);pd=0}));
-const bx=$('btns');
-Object.keys(INFO).forEach(k=>{const b=document.createElement('button');b.textContent=INFO[k][0].split(' (')[0];b.dataset.k=k;
- b.onclick=()=>select(k===sel?null:k);b.onmouseenter=()=>glow(k,true);b.onmouseleave=()=>{if(sel!==k)glow(k,false)};bx.appendChild(b)});
+
+// ===================== BOTONES DE PIEZAS =====================
+function mkBtn(k,box){const b=document.createElement('button');b.textContent=INFO[k][0].split(' (')[0];b.dataset.k=k;if(TIPO[k])b.dataset.t=TIPO[k];
+ b.onclick=()=>select(k===sel?null:k);b.onmouseenter=()=>glow(k,true);b.onmouseleave=()=>{if(sel!==k)glow(k,false)};box.appendChild(b)}
+INT.forEach(k=>mkBtn(k,$('bi')));PER.forEach(k=>mkBtn(k,$('bp')));
+updProg();
+
+// ===================== ANIMACIÓN =====================
 function fade(gr,v){gr.userData.o=v;gr.traverse(o=>{if(o.material){o.material.opacity=v;o.material.depthWrite=v>.99}})}
-function loop(){requestAnimationFrame(loop);
- for(const k in groups){const gr=groups[k];gr.position.lerp(off[k]||ZERO,.12);const t=(sel&&k!==sel)?.15:1,d=t-gr.userData.o;if(Math.abs(d)>.001)fade(gr,Math.abs(d)<.02?t:gr.userData.o+d*.15)}
- target.lerp(tg,.1);rad+=(tr-rad)*.1;if(vt!==null){th+=(vt-th)*.08;if(Math.abs(vt-th)<.01)vt=null}
- spin.forEach(f=>f.rotation.z+=.06);cam();renderer.render(scene,camera)}
-resize();loop();
+let last=performance.now();
+function loop(){requestAnimationFrame(loop);const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;
+ for(const k in groups){const gr=groups[k];gr.position.lerp(off[k]||ZERO,.12);
+  const t=sel?(k===sel?1:.15):(view==='int'&&TIPO[k]?.18:1),d=t-gr.userData.o;if(Math.abs(d)>.001)fade(gr,Math.abs(d)<.02?t:gr.userData.o+d*.15)}
+ cables.forEach(c=>{const t=sel?(c.k===sel?1:.12):(view==='int'?.18:1),d=t-c.o;if(Math.abs(d)>.001){c.o=Math.abs(d)<.02?t:c.o+d*.15;c.m.material.opacity=c.o;c.m.material.depthWrite=c.o>.99}});
+ target.lerp(tg,.1);rad+=(tr-rad)*.1;
+ if(vt!==null){th+=(vt-th)*.08;if(Math.abs(vt-th)<.01)vt=null}
+ if(vp!==null){ph+=(vp-ph)*.08;if(Math.abs(vp-ph)<.01)vp=null}
+ if(!sel&&!flow&&!quiz&&vt===null&&now-lastAct>9000)th+=dt*.12; // gira solo si nadie la toca
+ spin.forEach(f=>f.rotation.z+=.06);
+ const sp=now-spkT;cones.forEach(c=>c.position.z=c.userData.z+(sp<1500?Math.sin(now*.09)*.035*(1-sp/1500):0));
+ if(paperT){const p=Math.min(1,(now-paperT)/2400);paper.position.z=paper.userData.z+1.15*(1-Math.pow(1-p,3));prnLed.material.color.setHex(p<1&&(now/200|0)%2?0xffb020:0x3ddc84)}
+ if(scr.mode==='copy'){scr.copy=Math.min(1,scr.copy+dt*.4);usbLed.material.color.setHex(scr.copy<1?((now/120|0)%2?0x3ddc84:0x222222):0x3ddc84);
+  if(scr.copy>=1){scr.done=scr.done||now;if(now-scr.done>1500){restoreMode();usbLed.material.color.setHex(0x333333)}}drawScr()}
+ if(scr.mode==='video')drawScr();
+ if(flow){const e=now-flow.t0,i=Math.floor(e/STEP);
+  if(i>=FLOW.length){if(e>FLOW.length*STEP+600)stopFlow(true)}
+  else{if(i!==flow.i){glow(FLOW[flow.i][0],false);flow.i=i;showStep(i)}
+   const p=Math.min(1,(e-i*STEP)/1000),a=groups[FLOW[Math.max(0,i-1)][0]].userData.c,b=groups[FLOW[i][0]].userData.c;
+   orb.position.lerpVectors(a,b,p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2);halo.scale.setScalar(1+.25*Math.sin(now*.01))}}
+ cam();renderer.render(scene,camera)}
+drawScr();resize();rad=tr=homeR();loop();
 </script>
 </body>
 </html>
