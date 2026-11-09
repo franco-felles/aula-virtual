@@ -1,0 +1,23 @@
+# Regenera conexion/materiales.json cuando cambia algo en clases/ o eecc/ (por ejemplo, si subes un material desde la web de GitHub).
+name: materiales
+on:
+  push:
+    paths: ["clases/**", "eecc/**", "sistema/manifiesto.js"]
+permissions:
+  contents: write
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node sistema/manifiesto.js
+      - run: |
+          if ! git diff --quiet conexion/materiales.json; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@users.noreply.github.com"
+            git add conexion/materiales.json
+            git commit -m "Actualizar índice de materiales"
+            git push
+          fi

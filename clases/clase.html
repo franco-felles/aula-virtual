@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clase · Aula Virtual</title>
+<!-- ÚNICA página de carpeta para clases y EC:  clases/clase.html?id=u1c1   o   ?id=ec1u1
+     Secciones: mi documento (copia de la semilla) · material de clase (clases/<id>/material/*.html, eecc/<id>/material/*.html
+     y archivos de la carpeta de Drive) · enlaces (pestaña Enlaces del Panel) · quizzes vinculados. -->
+<script src="../conexion/aula.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="../conexion/img/favicon.png">
+<link rel="stylesheet" href="../conexion/estilo.css">
+<style>
+  :root { --ev: #5b4bb0; --ev-d: #3d2f86; --ev-bg: #efecfa; }
+  .volver { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); text-decoration: none; font-size: .85rem; font-weight: 600; margin-bottom: 18px; }
+  .volver:hover { color: var(--acc-d); }
+  .cab-clase { border-left: 4px solid var(--acc); padding-left: 16px; margin-bottom: 8px; }
+  .carp { margin-top: 30px; }
+  .carp-h { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+  .carp-h .ico { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; background: var(--acc-bg); color: var(--acc-d); flex: none; }
+  .carp-h .ico svg { width: 19px; height: 19px; }
+  .carp-h h2 { font-size: 1.1rem; margin: 0; }
+  .carp-h .cuenta { font-family: var(--mono); font-size: .72rem; color: var(--mut); }
+  .carp-h .linea { flex: 1; border-top: 1px solid var(--line); }
+  .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+
+  a.item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; transition: border-color .15s, transform .15s, box-shadow .15s; }
+  a.item:hover { border-color: var(--acc); transform: translateY(-2px); box-shadow: 0 10px 22px rgba(16,35,28,.08); }
+  a.item .ti { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; flex: none; font-size: 1.15rem; background: var(--paper); border: 1px solid var(--line); }
+  a.item .tx { min-width: 0; flex: 1; }
+  a.item b { display: block; font-size: .9rem; line-height: 1.3; }
+  a.item small { display: block; font-family: var(--mono); font-size: .68rem; color: var(--mut); margin-top: 2px; text-transform: uppercase; letter-spacing: .4px; }
+  a.item .desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: .78rem; color: var(--ink-2); margin-top: 4px; line-height: 1.35; }
+  a.item.abierto { border-color: var(--moss); background: var(--moss-bg); }
+
+  .midoc { display: flex; flex-wrap: wrap; gap: 12px; }
+  a.doc-grande { flex: 1 1 280px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: #fff; background: var(--acc); border-radius: 14px; padding: 18px 20px; transition: filter .15s, transform .15s; }
+  a.doc-grande:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  a.doc-grande .ti { font-size: 1.6rem; }
+  a.doc-grande b { display: block; font-size: 1rem; }
+  a.doc-grande small { display: block; font-size: .78rem; opacity: .85; }
+  .sin-doc { flex: 1 1 280px; border: 1px dashed var(--line); border-radius: 14px; padding: 16px 18px; color: var(--mut); font-size: .9rem; }
+
+  .tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .tools input { flex: 1 1 240px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--ink); }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .seg button { border: 0; background: var(--panel); padding: 9px 14px; font-size: .82rem; color: var(--ink-2); }
+  .seg button.on { background: var(--ink); color: var(--paper); }
+  table.lista { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .86rem; }
+  .lista th, .lista td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  .lista th { font-family: var(--mono); font-size: .7rem; color: var(--mut); text-transform: uppercase; background: var(--paper); }
+  .lista td.n { font-family: var(--mono); color: var(--mut); width: 64px; }
+  .lista a { color: var(--moss-d); font-weight: 600; }
+  .lista .falta { color: var(--mut); font-style: italic; }
+  .tabla-wrap { overflow-x: auto; }
+  .nota-doc { font-size: .84rem; color: var(--ink-2); margin: 8px 0 0; }
+</style>
+</head>
+<body>
+  <header class="topbar"><div class="topbar-in">
+    <a class="plate" href="../index.html"><span class="plate-mark"><img src="../conexion/img/icono.png" alt=""></span>
+      <span class="plate-txt"><b>Aula Virtual</b><small>Herramientas Informáticas</small></span></a>
+    <div class="who-chip"><i class="dot"></i><span id="quien"></span><button class="btn ghost sm" id="salir" type="button">Salir</button></div>
+  </div></header>
+
+  <main class="wrap">
+    <a class="volver" href="../index.html">← Todas las clases</a>
+    <section class="cab-clase anim">
+      <p class="eyebrow" id="eyebrow">Cargando…</p>
+      <h1 class="titulo" id="titulo"></h1>
+    </section>
+    <div id="contenido"></div>
+  </main>
+
+<script>
+const { el } = Aula;
+const $ = id => document.getElementById(id);
+const id = (new URLSearchParams(location.search).get("id") || "").toLowerCase();
+
+const SVG = {
+  doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>',
+  file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
+  quiz: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>',
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>'
+};
+const EMOJI = { interactivo: "🧩", juego: "🎮", presentacion: "📊", lectura: "📖", practica: "✍️", documento: "📄", hoja: "📗", encuesta: "📝",
+                pdf: "📕", video: "🎬", imagen: "🖼️", archivo: "📎", enlace: "🔗", web: "🌐", quiz: "✅" };
+const NOMBRE_TIPO = { interactivo: "Interactivo", juego: "Juego", presentacion: "Presentación", lectura: "Lectura", practica: "Práctica",
+                      documento: "Documento", hoja: "Hoja de cálculo", encuesta: "Encuesta", pdf: "PDF", video: "Video", imagen: "Imagen",
+                      archivo: "Archivo", enlace: "Enlace", web: "Sitio web", quiz: "Evaluación virtual" };
+
+function carpeta(icono, titulo, nodos, cuenta) {
+  const s = el("section", "carp anim");
+  const h = el("div", "carp-h");
+  const i = el("span", "ico"); i.innerHTML = SVG[icono];
+  h.append(i, el("h2", "", titulo));
+  if (cuenta !== undefined) h.append(el("span", "cuenta", String(cuenta)));
+  h.append(el("span", "linea"));
+  s.appendChild(h);
+  [].concat(nodos).forEach(n => s.appendChild(n));
+  return s;
+}
+
+function item({ titulo, tipo, url, interna, descripcion }) {
+  const a = el("a", "item");
+  a.href = interna ? Aula.url(url) : url;
+  const ti = el("span", "ti", EMOJI[tipo] || "📎");
+  const tx = el("span", "tx"); tx.append(el("b", "", titulo), el("small", "", NOMBRE_TIPO[tipo] || tipo));
+  if (descripcion) { tx.append(el("span", "desc", descripcion)); a.title = descripcion; }
+  a.append(ti, tx);
+  a.addEventListener("click", e => {
+    if (interna) { e.preventDefault(); Aula.abrirInterna(url); }
+    a.classList.add("abierto");
+  });
+  if (!interna) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+  return a;
+}
+
+function grid(lista) { const g = el("div", "items"); lista.forEach(x => g.appendChild(item(x))); return g; }
+
+/* ---------- mi documento (alumno) ---------- */
+function miDocumento(docs, esEC) {
+  const box = el("div", "midoc");
+  const varios = docs.length > 1;
+  docs.forEach(d => {
+    const archivos = d.archivos || (d.url ? [{ titulo: "", tipo: "documento", url: d.url }] : []);
+    if (archivos.length) {
+      archivos.forEach(f => {
+        const a = el("a", "doc-grande"); a.href = f.url; a.target = "_blank"; a.rel = "noopener noreferrer";
+        const titulo = archivos.length > 1 || (f.titulo && f.titulo !== "Mi documento") ? f.titulo : (esEC ? "Abrir mi evaluación" : "Abrir mi documento");
+        const t = el("span", "tx"); t.append(el("b", "", titulo),
+          el("small", "", (varios ? Aula.nombreBonito(d.nombre) + " · " : "") + (NOMBRE_TIPO[f.tipo] || "Documento") + " · " + d.grupo + "-" + String(d.n).padStart(2, "0")));
+        a.append(el("span", "ti", EMOJI[f.tipo] || "📄"), t);
+        a.addEventListener("click", () => Aula.toast("Abriendo tu documento", "Se abre en una pestaña nueva. Esta página sigue aquí."));
+        box.appendChild(a);
+      });
+    } else {
+      box.appendChild(el("div", "sin-doc", Aula.nombreBonito(d.nombre) + ": aún no tienes documento en esta clase. Si tu docente lo indica, avísale."));
+    }
+  });
+  return box;
+}
+
+/* ---------- documentos de todos (docente) ---------- */
+function listaDocente(docs) {
+  const wrap = el("div");
+  const grupos = [...new Set(docs.map(d => d.grupo))].sort();
+  let filtroG = "", q = "";
+  const tools = el("div", "tools");
+  const inp = el("input"); inp.type = "search"; inp.placeholder = "Buscar alumno…";
+  const seg = el("div", "seg");
+  ["Todos"].concat(grupos).forEach((g, i) => {
+    const b = el("button", i ? "" : "on", g); b.type = "button";
+    b.onclick = () => { seg.querySelectorAll("button").forEach(x => x.classList.remove("on")); b.classList.add("on"); filtroG = i ? g : ""; pintar(); };
+    seg.appendChild(b);
+  });
+  tools.append(inp, seg);
+  const tw = el("div", "tabla-wrap");
+  wrap.append(tools, tw);
+  inp.oninput = () => { q = Aula.norm(inp.value); pintar(); };
+  function pintar() {
+    const t = el("table", "lista");
+    t.innerHTML = "<thead><tr><th>N°</th><th>Alumno</th><th>PC</th><th>Documento</th></tr></thead>";
+    const tb = el("tbody");
+    docs.filter(d => (!filtroG || d.grupo === filtroG) && (!q || Aula.norm(d.nombre + " " + d.codigo).includes(q)))
+      .sort((a, b) => (a.grupo + String(a.n).padStart(3, "0")).localeCompare(b.grupo + String(b.n).padStart(3, "0")))
+      .forEach(d => {
+        const tr = el("tr");
+        tr.append(el("td", "n", d.grupo + "-" + String(d.n || "").padStart(2, "0")), el("td", "", Aula.nombreBonito(d.nombre)), el("td", "n", d.pc ? "PC " + d.pc : "—"));
+        const td = el("td");
+        const archivos = d.archivos || (d.url ? [{ titulo: "Abrir", url: d.url }] : []);
+        archivos.forEach((f, k) => {
+          const a = el("a", "", (archivos.length > 1 ? f.titulo : "Abrir") + " ↗"); a.href = f.url; a.target = "_blank"; a.rel = "noopener";
+          if (k) td.append(" · "); td.appendChild(a);
+        });
+        if (!archivos.length) td.appendChild(el("span", "falta", "sin copia"));
+        tr.appendChild(td); tb.appendChild(tr);
+      });
+    t.appendChild(tb); tw.replaceChildren(t);
+  }
+  pintar();
+  const faltan = docs.filter(d => !d.url).length;
+  if (faltan) wrap.appendChild(el("p", "nota-doc", `${faltan} alumno(s) sin copia. Si la clase tiene semilla, usa en el Panel: Aula → Generar copias.`));
+  return wrap;
+}
+
+async function manifiesto() {
+  try { const r = await fetch(Aula.url("conexion/materiales.json"), { cache: "no-store" }); return r.ok ? await r.json() : {}; }
+  catch { return {}; }
+}
+
+(async () => {
+  const s = await Aula.listo;
+  const docente = s.rol === "docente";
+  $("quien").textContent = Aula.quien(s);
+  $("salir").onclick = () => Aula.salir();
+  const cont = $("contenido");
+  if (!id) { cont.appendChild(el("div", "aviso", "Falta indicar la clase.")); return; }
+
+  // Muestra al instante lo último cargado o precargado desde el portal, y luego lo fresco
+  const pMan = manifiesto();
+  // Alumno: pinta YA con los datos públicos (datos.json) y luego completa lo personal (su documento) con el Panel
+  let real = false;
+  if (!docente) Promise.all([Aula.publico(), pMan]).then(([p, man]) => {
+    const c = p && p.clases.find(x => x.id === Aula.idNorm(id));
+    if (!c || real) return;
+    const grupos = (s.alumnos || []).map(a => a.grupo);
+    pintarClase({ provisional: true, clase: c, materiales: p.materiales[c.id] || [], docs: [], haySemilla: c.conCopias,
+      enlaces: (p.enlaces[c.id] || []).filter(e => !e.para || e.para === "Todos" || grupos.includes(e.para)),
+      quizzes: p.quizzes.filter(q => q.clase === c.id).map(q => Object.assign({}, q, { rendidos: undefined })) }, man, docente);
+  });
+  try { await Aula.apiRapida("clase", { id }, async r => { real = true; pintarClase(r, await pMan, docente); }); }
+  catch (ex) { $("eyebrow").textContent = ""; cont.replaceChildren(el("div", "aviso", ex.message)); }
+})();
+
+function pintarClase(r, man, docente) {
+  const cont = $("contenido");
+  cont.replaceChildren();
+  const c = r.clase, esEC = c.tipo === "EC";
+  if (esEC) document.body.classList.add("ec");
+  $("eyebrow").textContent = `Unidad ${c.unidad} · ` + (esEC ? "Evaluación continua " + c.n : "Clase " + c.n) + (docente && !c.publicada ? " · NO PUBLICADA" : "");
+  $("titulo").textContent = c.tema || (esEC ? "Evaluación continua " + c.n : "Clase " + c.n);
+  document.title = $("titulo").textContent + " · Aula Virtual";
+
+  // 1. Mi documento / documentos de los alumnos
+  if (docente) cont.appendChild(carpeta("users", "Documentos de los alumnos", listaDocente(r.docs), r.docs.filter(d => d.url).length + "/" + r.docs.length));
+  else if (r.provisional && r.haySemilla) cont.appendChild(carpeta("doc", esEC ? "Mi evaluación" : "Mi documento", el("p", "vacio", "Buscando tu documento…")));
+  else if (r.haySemilla || r.docs.some(d => d.url)) cont.appendChild(carpeta("doc", esEC ? "Mi evaluación" : "Mi documento", miDocumento(r.docs, esEC)));
+
+  // 2. Material de clase: HTML del repo (material/m#…) y luego los archivos de la carpeta de Drive
+  // (el replace tolera "u1c01" = "u1c1")
+  const material = (man[c.id.replace(/([a-z])0+(\d)/g, "$1$2")] || [])
+    .map(f => ({ titulo: f.titulo, tipo: f.tipo, descripcion: f.descripcion, url: f.ruta, interna: true }))
+    .concat(r.materiales);
+  if (material.length) cont.appendChild(carpeta("play", "Material de clase", grid(material), material.length));
+
+  // 3. Enlaces (pestaña Enlaces del Panel)
+  if (r.enlaces.length) cont.appendChild(carpeta("link", "Enlaces", grid(r.enlaces.map(e => ({ ...e, titulo: e.titulo + (docente && e.para !== "Todos" ? " · solo " + e.para : "") }))), r.enlaces.length));
+
+  // 4. Quizzes asignados a esta clase / EC (se crean en Mis quizzes)
+  const nAl = (Aula.sesion().alumnos || []).length;
+  const estadoQuiz = q => {
+    if (docente) return q.oculto ? " · oculto" : !q.abierto ? " · cerrado" : " · abierto";
+    const hecho = nAl && (q.rendidos || []).length >= nAl;
+    return hecho ? " · ✓ rendido" : !q.abierto ? " · cerrado" : "";
+  };
+  if (r.quizzes.length) cont.appendChild(carpeta("quiz", esEC ? "Evaluación virtual" : "Quiz de la clase", grid(r.quizzes.map(q => ({
+    titulo: q.titulo + estadoQuiz(q), tipo: "quiz", url: "eecc/quiz.html?id=" + q.id, interna: true,
+    descripcion: q.npreg + " preguntas" + (q.repetir ? " · puedes repetirlo" : "")
+  }))), r.quizzes.length));
+
+  if (!cont.children.length) cont.appendChild(el("p", "vacio", docente
+    ? "Esta carpeta está vacía. Agrega una semilla o archivos en su carpeta de Drive, enlaces en el Panel o material en " + (esEC ? "eecc/" : "clases/") + c.id + "/material/."
+    : "Esta clase aún no tiene materiales."));
+}
+</script>
+</body>
+</html>

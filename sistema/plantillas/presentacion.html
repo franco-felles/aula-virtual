@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- ============================================================
+     PLANTILLA DE PRESENTACIÓN (reemplaza al PPT)
+     1. Copia este archivo a la carpeta material de la clase, por ejemplo:
+          clases/u1c2/material/m2c2.html   (material 2 de la clase 2)
+     2. Cambia la FICHA (lo que ve el alumno en la carpeta de la clase).
+     3. Cada <section class="diapo"> es una diapositiva. Copia y pega las que necesites.
+     Navegación: flechas ← →, clic en los botones o deslizar en celular. Tecla F = pantalla completa.
+     ============================================================ -->
+<meta name="material-titulo" content="Título de la presentación">
+<meta name="material-tipo" content="presentacion">
+<meta name="material-descripcion" content="Una línea que explique de qué trata.">
+<title>Título de la presentación</title>
+<script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #7c7763; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); }
+  .escena { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px 16px 72px; }
+  .diapo { display: none; width: min(1100px, 100%); aspect-ratio: 16 / 9; max-height: calc(100vh - 100px); background: var(--paper);
+           border-radius: 18px; padding: clamp(20px, 5vw, 64px); overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+  .diapo.on { display: flex; flex-direction: column; justify-content: center; animation: entra .35s ease both; }
+  @keyframes entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .diapo h1 { font-size: clamp(1.8rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 14px; }
+  .diapo h2 { font-size: clamp(1.4rem, 3.4vw, 2.3rem); margin: 0 0 18px; }
+  .diapo p, .diapo li { font-size: clamp(1rem, 2.1vw, 1.35rem); line-height: 1.5; }
+  .diapo ul { margin: 0; padding-left: 1.2em; } .diapo li + li { margin-top: 8px; }
+  .eti { font-family: "IBM Plex Mono", monospace; font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; color: var(--moss); margin: 0 0 10px; }
+  .portada { background: var(--moss); color: #fff; } .portada .eti { color: #cfe3d3; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
+  .dos img { width: 100%; border-radius: 12px; }
+  .nota { background: #fbf1e2; border-left: 5px solid var(--amber); padding: 12px 16px; border-radius: 8px; }
+  @media (max-width: 700px) { .dos { grid-template-columns: 1fr; } .diapo { aspect-ratio: auto; min-height: 60vh; } }
+  .control { position: fixed; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); color: #f6f4ee; font: 600 .85rem "IBM Plex Mono", monospace; }
+  .control button { background: rgba(246,244,238,.14); color: #f6f4ee; border: 0; border-radius: 10px; padding: 9px 16px; font: inherit; cursor: pointer; }
+  .control button:hover { background: rgba(246,244,238,.28); }
+  .control button:disabled { opacity: .35; cursor: default; }
+  .barra { position: fixed; left: 0; top: 0; height: 4px; background: var(--amber); transition: width .3s; }
+</style>
+</head>
+<body>
+<div class="barra" id="barra"></div>
+<main class="escena">
+
+  <section class="diapo portada">
+    <p class="eti">Herramientas Informáticas · Clase 2</p>
+    <h1>Título de la presentación</h1>
+    <p>Subtítulo o pregunta que abre la clase.</p>
+  </section>
+
+  <section class="diapo">
+    <p class="eti">Idea principal</p>
+    <h2>Una diapositiva con lista</h2>
+    <ul>
+      <li>Primer punto, corto y claro.</li>
+      <li>Segundo punto.</li>
+      <li>Tercer punto.</li>
+    </ul>
+  </section>
+
+  <section class="diapo">
+    <p class="eti">Ejemplo</p>
+    <div class="dos">
+      <div>
+        <h2>Texto + imagen</h2>
+        <p>Las imágenes van en <code>material/recursos/</code> de la misma clase.</p>
+      </div>
+      <img src="recursos/ejemplo.png" alt="Descripción de la imagen" onerror="this.style.display='none'">
+    </div>
+  </section>
+
+  <section class="diapo">
+    <h2>Para recordar</h2>
+    <p class="nota">Un recuadro destacado para la idea que no deben olvidar.</p>
+  </section>
+
+</main>
+<nav class="control">
+  <button id="ant" type="button">← Anterior</button>
+  <span id="pos"></span>
+  <button id="sig" type="button">Siguiente →</button>
+  <button id="full" type="button" title="Pantalla completa (F)">⛶</button>
+</nav>
+<script>
+const D = [...document.querySelectorAll(".diapo")];
+let i = Math.max(0, Math.min(D.length - 1, Number(location.hash.slice(1)) - 1 || 0));
+function ir(n) {
+  i = Math.max(0, Math.min(D.length - 1, n));
+  D.forEach((d, k) => d.classList.toggle("on", k === i));
+  document.getElementById("pos").textContent = (i + 1) + " / " + D.length;
+  document.getElementById("ant").disabled = i === 0;
+  document.getElementById("sig").disabled = i === D.length - 1;
+  document.getElementById("barra").style.width = ((i + 1) / D.length * 100) + "%";
+  history.replaceState(null, "", "#" + (i + 1));
+}
+document.getElementById("ant").onclick = () => ir(i - 1);
+document.getElementById("sig").onclick = () => ir(i + 1);
+document.getElementById("full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+addEventListener("keydown", e => {
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); ir(i + 1); }
+  if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); ir(i - 1); }
+  if (e.key.toLowerCase() === "f") document.getElementById("full").click();
+});
+let x0 = null;
+addEventListener("touchstart", e => x0 = e.touches[0].clientX, { passive: true });
+addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) ir(i + (dx < 0 ? 1 : -1)); x0 = null; });
+ir(i);
+</script>
+</body>
+</html>

@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mis quizzes · Aula Virtual</title>
+<!-- Solo docente. Crear, editar, ocultar/abrir/cerrar y eliminar quizzes. Se guardan en el Panel (pestaña "Quiz").
+     Cada quiz es una EC virtual (EC1–EC3 de una unidad) o un quiz de clase; aparece dentro de esa carpeta. -->
+<script src="../conexion/aula.js" data-docente data-sin-barra></script>
+<link rel="icon" type="image/png" href="../conexion/img/favicon.png">
+<link rel="stylesheet" href="../conexion/estilo.css">
+<style>
+  body { --acc: #5b4bb0; --acc-d: #3d2f86; --acc-bg: #efecfa; }
+  .btn.lg { padding: 14px 22px; font-size: 1rem; border-radius: 12px; }
+  .btn.peligro { background: var(--panel); color: var(--err); border-color: #efc3bf; }
+  .btn.peligro:hover { background: var(--err); color: #fff; border-color: var(--err); }
+  .btn.morado { background: var(--acc); border-color: var(--acc); }
+  .btn.morado:hover { background: var(--acc-d); border-color: var(--acc-d); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .hint { color: var(--mut); font-size: .82rem; margin: 6px 0 0; }
+
+  /* ---------- lista ---------- */
+  .seccion { display: flex; align-items: baseline; gap: 10px; margin: 28px 0 12px; font-size: 1.05rem; }
+  .seccion small { font-family: var(--mono); font-size: .75rem; color: var(--mut); font-weight: 500; }
+  .seccion::after { content: ""; flex: 1; border-top: 1px solid var(--line); transform: translateY(-4px); }
+  .qz { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--acc); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; display: grid; grid-template-columns: 1fr auto; gap: 12px 18px; align-items: center; }
+  .qz.ec { border-left-color: var(--amber); }
+  .qz.es-oculto { border-left-style: dashed; background: #fbfaf6; }
+  .qz .info { min-width: 0; }
+  .qz .tit { display: block; font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-family: var(--mono); font-size: .7rem; font-weight: 600; border-radius: 6px; padding: 3px 8px; background: var(--paper); border: 1px solid var(--line); color: var(--ink-2); }
+  .chip.dest { background: var(--acc-bg); border-color: transparent; color: var(--acc-d); }
+  .qz.ec .chip.dest { background: var(--amber-bg); color: var(--amber-d); }
+  .chip.warn { background: var(--err-bg); border-color: #efc3bf; color: var(--err); }
+  .qz .acciones { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; border-top: 1px dashed var(--line); padding-top: 12px; }
+  .qz .acciones .sep { flex: 1; }
+  @media (max-width: 640px) { .qz { grid-template-columns: 1fr; } }
+
+  /* control de 3 estados: Oculto · Cerrado · Abierto */
+  .seg { display: inline-flex; background: var(--paper); border: 1px solid var(--line); border-radius: 11px; padding: 3px; gap: 2px; }
+  .seg button { border: 0; background: transparent; color: var(--ink-2); font: inherit; font-size: .82rem; font-weight: 600; padding: 8px 13px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+  .seg button:hover { background: #ebe7da; }
+  .seg button.on { background: var(--ink); color: var(--paper); }
+  .seg button.on.abierto { background: var(--moss); }
+  .seg button.on.oculto { background: var(--mut); }
+  .seg.grande button { padding: 11px 18px; font-size: .92rem; }
+  .seg:has(button:disabled) { opacity: .6; }
+
+  /* ---------- editor ---------- */
+  .ed-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .ed-top h1 { margin: 0; flex: 1; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .card > h2 { font-size: .78rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .6px; color: var(--mut); margin: 0 0 14px; font-weight: 600; }
+  .tipos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .tipos { grid-template-columns: 1fr; } }
+  .tipo { text-align: left; border: 2px solid var(--line); background: var(--panel); border-radius: 14px; padding: 16px; cursor: pointer; font: inherit; color: var(--ink); display: flex; gap: 12px; align-items: flex-start; transition: border-color .15s, background .15s; }
+  .tipo:hover { border-color: var(--acc); }
+  .tipo .em { font-size: 1.6rem; line-height: 1; }
+  .tipo b { display: block; font-size: 1rem; margin-bottom: 2px; }
+  .tipo small { color: var(--mut); font-size: .82rem; }
+  .tipo.on { border-color: var(--acc); background: var(--acc-bg); }
+  .tipo.ec.on { border-color: var(--amber); background: var(--amber-bg); }
+  .destino { margin-top: 16px; display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-end; }
+  .destino .grupo-d { display: flex; flex-direction: column; gap: 6px; }
+  .destino .grupo-d > span { font-family: var(--mono); font-size: .72rem; color: var(--mut); }
+  .destino select { min-width: 280px; max-width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); font: inherit; }
+  .donde { margin-top: 12px; font-size: .86rem; color: var(--ink-2); }
+  .donde.warn { color: var(--err); }
+  .datos { display: grid; grid-template-columns: 1fr 210px; gap: 14px; }
+  .datos .field { margin-bottom: 6px; }
+  .datos .field input { padding-right: 16px; }
+  @media (max-width: 600px) { .datos { grid-template-columns: 1fr; } }
+  .opciones { display: grid; gap: 4px; margin-top: 14px; }
+  .opc { display: flex; align-items: center; gap: 14px; padding: 12px 4px; border-top: 1px solid var(--line); cursor: pointer; }
+  .opc .txt { flex: 1; }
+  .opc b { display: block; font-size: .95rem; }
+  .opc small { color: var(--mut); font-size: .8rem; }
+  .sw { width: 46px; height: 26px; appearance: none; background: var(--line); border-radius: 999px; position: relative; cursor: pointer; transition: background .15s; margin: 0; flex: none; }
+  .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: left .15s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .sw:checked { background: var(--moss); }
+  .sw:checked::after { left: 23px; }
+
+  .preg { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; }
+  .preg-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .preg-top .num { font-family: var(--mono); font-weight: 700; color: var(--acc-d); background: var(--acc-bg); border-radius: 8px; padding: 3px 9px; }
+  .preg-top input.tema { flex: 1; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: .82rem; background: var(--paper); color: var(--ink); }
+  .icon-btn { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; width: 34px; height: 34px; display: grid; place-items: center; color: var(--ink-2); font-size: .9rem; cursor: pointer; }
+  .icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .icon-btn.x:hover { border-color: var(--err); color: var(--err); }
+  .preg textarea { width: 100%; min-height: 64px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; resize: vertical; background: var(--panel); color: var(--ink); }
+  .alt { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .alt input[type=radio] { width: 20px; height: 20px; accent-color: var(--moss); flex: none; }
+  .alt .let { font-family: var(--mono); font-weight: 600; width: 18px; color: var(--mut); }
+  .alt input[type=text] { flex: 1; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--ink); }
+  .alt.ok input[type=text] { border-color: var(--moss); background: var(--moss-bg); }
+  .preg .pie { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: .78rem; color: var(--mut); }
+  .importar { background: var(--panel); border: 2px dashed var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 16px; transition: border-color .15s, background .15s; }
+  .importar.encima { border-color: var(--acc); background: var(--acc-bg); }
+  .importar .fila-imp { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .importar .fila-imp .hint { flex: 1 1 220px; margin: 0; }
+  .importar details { margin-top: 12px; }
+  .importar summary { cursor: pointer; font-weight: 600; font-size: .86rem; color: var(--ink-2); }
+  .avisos-imp { margin-top: 12px; background: var(--amber-bg); border: 1px solid #ecd3a8; border-radius: 10px; padding: 10px 14px; font-size: .82rem; color: #7a4d10; }
+  .avisos-imp ul { margin: 6px 0 0; padding-left: 18px; }
+  .preg-top input.pts { width: 74px; flex: none; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; font-size: .82rem; font-family: var(--mono); background: var(--panel); color: var(--ink); text-align: right; }
+  .preg-top input.pts.fijo { border-color: var(--acc); background: var(--acc-bg); font-weight: 700; }
+  .preg-top .pts-lab { font-family: var(--mono); font-size: .72rem; color: var(--mut); }
+  .puntos-box { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--moss-bg); border: 1px solid #cfdccb; color: var(--moss-d); border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; font-size: .88rem; }
+  .puntos-box.mal { background: var(--err-bg); border-color: #efc3bf; color: var(--err); }
+  .puntos-box b { font-family: var(--mono); font-size: 1.05rem; }
+  .puntos-box span { flex: 1 1 260px; }
+  .pts-chip { font-family: var(--mono); font-size: .78rem; font-weight: 700; border-radius: 8px; padding: 6px 10px; background: var(--moss-bg); color: var(--moss-d); }
+  .pts-chip.mal { background: var(--err-bg); color: var(--err); }
+  .importar textarea { width: 100%; min-height: 120px; margin: 10px 0; padding: 10px; border: 1px solid var(--line); border-radius: 9px; font-family: var(--mono); font-size: .78rem; background: var(--panel); color: var(--ink); }
+  .barra-guardar { position: sticky; bottom: 0; z-index: 5; background: rgba(246,244,238,.96); backdrop-filter: blur(6px); border-top: 1px solid var(--line); padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+  .barra-guardar .estado { flex: 1; min-width: 120px; font-size: .84rem; color: var(--mut); }
+
+  /* ---------- ventana de confirmación ---------- */
+  dialog.conf { border: 0; border-radius: 16px; padding: 24px; max-width: 440px; width: calc(100vw - 32px); box-shadow: 0 24px 60px rgba(16,35,28,.3); background: var(--panel); color: var(--ink); }
+  dialog.conf::backdrop { background: rgba(16,35,28,.45); }
+  dialog.conf h3 { margin: 0 0 8px; font-size: 1.15rem; }
+  dialog.conf p { margin: 0 0 12px; color: var(--ink-2); font-size: .92rem; }
+  dialog.conf label { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; margin: 6px 0 14px; cursor: pointer; }
+  dialog.conf label input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--err); }
+  dialog.conf .bts { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 8px; }
+</style>
+</head>
+<body>
+  <header class="topbar"><div class="topbar-in">
+    <a class="plate" href="../index.html"><span class="plate-mark"><img src="../conexion/img/icono.png" alt=""></span>
+      <span class="plate-txt"><b>Aula Virtual</b><small>Herramientas Informáticas</small></span></a>
+    <div class="who-chip"><i class="dot"></i><span id="quien"></span><button class="btn ghost sm" id="salir" type="button">Salir</button></div>
+  </div></header>
+  <main class="wrap" id="app"><p class="vacio">Cargando…</p></main>
+
+<script>
+const { el } = Aula;
+const app = document.getElementById("app");
+const ICO = {
+  atras: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  basura: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>'
+};
+const boton = (texto, cls, ico) => { const b = el("button", "btn " + (cls || "")); b.type = "button"; if (ico) b.innerHTML = ICO[ico]; b.append(texto); return b; };
+let clases = [], sucio = false;
+window.addEventListener("beforeunload", e => { if (sucio) { e.preventDefault(); e.returnValue = ""; } });
+const olvidar = () => Aula.olvidar("quizLista", "portal", "clase");   // tras cambiar algo, que el inicio y las clases lo vean ya
+
+/* ---------- destino: EC virtual (ec1u1) o quiz de clase (u1c2) ---------- */
+const reEC = /^ec(\d+)(?:u(\d+))?$/;
+function destino(id) {
+  if (!id) return { tipo: "suelto", texto: "Sin clase · sale en el inicio" };
+  const m = reEC.exec(id), cl = clases.find(c => c.id === id);
+  const aviso = !cl ? "Esa carpeta aún no existe en el Panel" : !cl.publicada ? "La carpeta no está publicada: los alumnos no la ven" : "";
+  if (m) return { tipo: "ec", n: +m[1], u: m[2] ? +m[2] : null, texto: "EC virtual " + m[1] + (m[2] ? " · Unidad " + m[2] : ""), aviso };
+  return { tipo: "clase", texto: cl ? `U${cl.unidad} · Clase ${cl.n}` + (cl.tema ? " — " + cl.tema : "") : id.toUpperCase(), aviso };
+}
+const estadoDe = q => q.oculto ? "oculto" : q.abierto ? "abierto" : "cerrado";
+const ESTADOS = [
+  ["oculto", "Oculto", "Los alumnos no lo ven."],
+  ["cerrado", "Cerrado", "Lo ven, pero no pueden rendirlo (sí ven su nota)."],
+  ["abierto", "Abierto", "Pueden rendirlo ahora."]
+];
+function segEstado(valor, alCambiar, grande) {
+  const seg = el("div", "seg" + (grande ? " grande" : ""));
+  ESTADOS.forEach(([k, txt, tip]) => {
+    const b = el("button", k + (k === valor ? " on" : ""), txt); b.type = "button"; b.title = tip;
+    b.onclick = async () => {
+      if (b.classList.contains("on")) return;
+      const antes = seg.querySelector(".on");
+      seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+      const okCambio = await alCambiar(k);
+      if (okCambio === false) seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === antes));
+    };
+    seg.appendChild(b);
+  });
+  seg.bloquear = v => seg.querySelectorAll("button").forEach(x => x.disabled = v);
+  return seg;
+}
+
+/* ---------- ventana de confirmación ---------- */
+function confirmar({ titulo, texto, ok = "Aceptar", peligro, casilla, marcada }) {
+  return new Promise(res => {
+    const d = el("dialog", "conf");
+    d.append(el("h3", "", titulo)); if (texto) d.append(el("p", "", texto));
+    let chk = null;
+    if (casilla) { const l = el("label"); chk = el("input"); chk.type = "checkbox"; chk.checked = !!marcada; l.append(chk, casilla); d.append(l); }
+    const bts = el("div", "bts");
+    const no = boton("Cancelar", "ghost lg"), si = boton(ok, (peligro ? "peligro" : "") + " lg", peligro ? "basura" : null);
+    if (peligro) { si.style.background = "var(--err)"; si.style.color = "#fff"; si.style.borderColor = "var(--err)"; }
+    bts.append(no, si); d.append(bts);
+    const fin = v => { d.close(); d.remove(); res(v); };
+    no.onclick = () => fin(null); si.onclick = () => fin({ marcado: chk ? chk.checked : false });
+    d.addEventListener("cancel", e => { e.preventDefault(); fin(null); });
+    document.body.appendChild(d); d.showModal(); no.focus();
+  });
+}
+
+async function eliminar(q) {
+  const r = await confirmar({
+    titulo: `¿Eliminar «${q.titulo}»?`, peligro: true, ok: "Eliminar quiz",
+    texto: "Se borra el quiz y sus preguntas. No se puede deshacer.",
+    casilla: q.rindieron ? `Borrar también las ${q.rindieron} nota(s) guardadas (si no, quedan en la pestaña Resultados del Panel).` : null
+  });
+  if (!r) return false;
+  try {
+    await Aula.api("quizBorrar", { id: q.id, conResultados: r.marcado });
+    olvidar(); Aula.toast("Quiz eliminado", q.titulo);
+    return true;
+  } catch (ex) { Aula.toast("No se pudo eliminar", ex.message, "warn"); return false; }
+}
+
+/* ======================= LISTA ======================= */
+async function vistaLista() {
+  sucio = false; app.oninput = null;
+  history.replaceState(null, "", location.pathname);
+  app.replaceChildren(el("p", "vacio", "Cargando…"));
+  try { await Aula.apiRapida("quizLista", {}, pintarLista); }
+  catch (ex) { app.replaceChildren(el("div", "aviso", ex.message)); }
+}
+
+function pintarLista(r) {
+  if (/editar=/.test(location.search)) return;          // ya se pasó al editor mientras llegaba lo fresco
+  clases = r.clases;
+  const volver = el("a", "btn ghost", ""); volver.innerHTML = ICO.atras; volver.append("Inicio"); volver.href = Aula.url("index.html");
+  volver.style.marginBottom = "18px";
+  const cab = el("div", "cab"), izq = el("div");
+  izq.append(el("p", "eyebrow", "Docente"), el("h1", "titulo", "Mis quizzes"),
+    el("p", "lede", "Cada quiz es una EC virtual o un quiz de clase, y aparece dentro de esa carpeta. Cámbiale el estado aquí mismo: Oculto, Cerrado o Abierto."));
+  const nuevo = boton("+ Nuevo quiz", "morado lg"); nuevo.onclick = () => vistaEditor(null);
+  cab.append(izq, nuevo);
+  app.replaceChildren(volver, cab);
+  if (!r.quizzes.length) { app.appendChild(el("p", "vacio", "Aún no tienes quizzes. Crea el primero.")); return; }
+
+  const grupos = { ec: [], clase: [], suelto: [] };
+  r.quizzes.forEach(q => grupos[destino(q.clase).tipo].push(q));
+  [["ec", "EC virtuales"], ["clase", "Quizzes de clase"], ["suelto", "Sin clase asignada"]].forEach(([k, nombre]) => {
+    const lista = grupos[k].sort((a, b) => String(a.clase).localeCompare(String(b.clase), "es", { numeric: true }) || a.titulo.localeCompare(b.titulo));
+    if (!lista.length) return;
+    const h = el("h2", "seccion", nombre); h.append(" ", el("small", "", String(lista.length))); app.appendChild(h);
+    lista.forEach(q => app.appendChild(filaQuiz(q)));
+  });
+}
+
+function filaQuiz(q) {
+  const d = destino(q.clase);
+  const fila = el("div", "qz" + (d.tipo === "ec" ? " ec" : "") + (q.oculto ? " es-oculto" : ""));
+  const info = el("div", "info"), chips = el("div", "chips");
+  chips.append(el("span", "chip dest", d.texto), el("span", "chip", `${q.npreg} preg.` + (q.mostrar ? ` · ${q.mostrar} al azar` : "")),
+    el("span", "chip", q.rindieron + " rindieron"));
+  if (q.repetir) chips.append(el("span", "chip", "↻ repetible"));
+  chips.append(el("span", "chip", q.puntaje ? "ve su nota" : "no ve su nota"));
+  if (q.errores) chips.append(el("span", "chip", "ve sus errores"));
+  if (q.penalizar !== false) chips.append(el("span", "chip", "−1 por salir"));
+  if (d.aviso && !q.oculto) chips.append(el("span", "chip warn", "⚠ " + d.aviso));
+  info.append(el("span", "tit", q.titulo), chips);
+
+  const seg = segEstado(estadoDe(q), async k => {
+    seg.bloquear(true);
+    try {
+      const r = await Aula.api("quizOpciones", { id: q.id, opciones: { oculto: k === "oculto", abierto: k === "abierto" } });
+      Object.assign(q, r.quiz); fila.classList.toggle("es-oculto", q.oculto); olvidar();
+      Aula.toast(ESTADOS.find(e => e[0] === k)[1], ESTADOS.find(e => e[0] === k)[2]);
+      return true;
+    } catch (ex) { Aula.toast("No se pudo cambiar", ex.message, "warn"); return false; }
+    finally { seg.bloquear(false); }
+  });
+
+  const acc = el("div", "acciones");
+  const ed = boton("Editar", "ghost"); ed.onclick = () => vistaEditor(q.id);
+  const rs = el("a", "btn ghost", "Resultados"); rs.href = Aula.url("eecc/quiz.html?id=" + q.id);
+  const bo = boton("Eliminar", "peligro", "basura");
+  bo.onclick = async () => { if (await eliminar(q)) { fila.remove(); vistaLista(); } };
+  acc.append(ed, rs, el("span", "sep"), bo);
+  fila.append(info, seg, acc);
+  return fila;
+}
+
+/* ======================= EDITOR ======================= */
+const vacia = () => ({ tema: "", texto: "", alts: ["", "", "", ""], correcta: -1 });
+
+/* ---------- IMPORTAR (.txt) ----------
+   Formato pensado para escribirse a mano en el Bloc de notas (ver PLANTILLA). También acepta el CSV del quiz antiguo. */
+const PLANTILLA = `# ============ PLANTILLA DE QUIZ · Aula Virtual ============
+# Las líneas que empiezan con # se ignoran (son instrucciones).
+#
+# · Cada pregunta empieza con un número:   1.   o   1)
+# · Cada alternativa empieza con una letra:  a)  b)  c)  d)  e)   (de 2 a 5)
+# · Marca la correcta con un * al final.
+# · Puntos (opcional), al final de la pregunta:  [2]   o   [1.5 pts]
+#   Las preguntas sin puntos se reparten solas lo que falta para 20.
+# · TEMA: agrupa las preguntas que siguen (opcional).
+# · TITULO y MOSTRAR (cuántas recibe cada alumno) son opcionales.
+#   Guarda el archivo como .txt y súbelo en «Mis quizzes».
+
+TITULO: Repaso de Word
+MOSTRAR: 10
+
+TEMA: Atajos de teclado
+1. ¿Qué atajo guarda un documento en Word (español)?
+a) Ctrl + G *
+b) Ctrl + P
+c) Ctrl + S
+
+2. ¿Qué hace Ctrl + Z? [3]
+a) Copiar
+b) Deshacer *
+c) Cerrar el programa
+
+TEMA: Formato
+3. ¿En qué pestaña está el botón Negrita?
+a) Insertar
+b) Inicio *
+c) Vista
+d) Diseño
+`;
+
+/** Lee el formato TXT. Devuelve { titulo, mostrar, preguntas, avisos }. */
+function leerTxt(texto) {
+  const out = { titulo: "", mostrar: null, preguntas: [], avisos: [] };
+  const reQ = /^(?:pregunta\s*)?(\d{1,3})\s*[.):\-]\s*(.+)$/i;
+  const reA = /^(\*)?\s*([a-h])\s*[.)\-]\s*(.+)$/i;
+  const rePts = [/\s*\[\s*(\d+(?:[.,]\d+)?)\s*(?:pts?|ptos?|puntos?)?\.?\s*\]\s*$/i, /\s*\(\s*(\d+(?:[.,]\d+)?)\s*(?:pts?|ptos?|puntos?)\.?\s*\)\s*$/i];
+  const reOk = /\s*(\*|✓|✔|\(correcta\))\s*$/i;
+  let tema = "", act = null;
+  const sacarPuntos = t => { for (const re of rePts) { const p = re.exec(t); if (p) return [t.slice(0, p.index).trim(), parseFloat(p[1].replace(",", "."))]; } return [t, null]; };
+  const cerrar = () => {
+    if (!act) return;
+    const n = out.preguntas.length + 1, donde = `Pregunta ${n} (línea ${act.linea})`;
+    if (act.alts.length < 2) { out.avisos.push(`${donde}: tiene ${act.alts.length} alternativa(s); necesita al menos 2.`); while (act.alts.length < 2) act.alts.push(""); }
+    if (act.marcadas === 0) out.avisos.push(`${donde}: no tiene la correcta marcada con *.`);
+    if (act.marcadas > 1) out.avisos.push(`${donde}: tiene ${act.marcadas} correctas; se tomó la primera.`);
+    out.preguntas.push({ tema: act.tema, texto: act.texto, alts: act.alts, correcta: act.correcta, puntos: act.puntos });
+    act = null;
+  };
+  texto.replace(/^﻿/, "").split(/\r?\n/).forEach((raw, i) => {
+    const l = raw.trim(), nl = i + 1; let m;
+    if (!l || /^(#|\/\/)/.test(l)) return;
+    if ((m = /^t[ií]tulo\s*:\s*(.*)$/i.exec(l))) { out.titulo = m[1].trim(); return; }
+    if ((m = /^(?:mostrar|preguntas por alumno)\s*:\s*(\d+)/i.exec(l))) { out.mostrar = Number(m[1]); return; }
+    if ((m = /^tema\s*:\s*(.*)$/i.exec(l))) { tema = m[1].trim(); return; }
+    if (act && (m = reA.exec(l))) {
+      let t = m[3].trim(), ok = !!m[1];
+      if (reOk.test(t)) { ok = true; t = t.replace(reOk, "").trim(); }
+      if (act.alts.length >= 5) { out.avisos.push(`Línea ${nl}: más de 5 alternativas; se ignoró «${t.slice(0, 30)}».`); return; }
+      if (ok) { if (act.correcta < 0) act.correcta = act.alts.length; act.marcadas++; }
+      act.alts.push(t); return;
+    }
+    if ((m = reQ.exec(l))) {
+      cerrar();
+      const [t, puntos] = sacarPuntos(m[2].trim());
+      act = { tema, texto: t, alts: [], correcta: -1, marcadas: 0, puntos, linea: nl }; return;
+    }
+    if (act && !act.alts.length) {                                          // pregunta escrita en varias líneas
+      const [t, puntos] = sacarPuntos(l); act.texto += "\n" + t; if (puntos !== null) act.puntos = puntos; return;
+    }
+    out.avisos.push(`Línea ${nl}: no se entendió «${l.slice(0, 40)}${l.length > 40 ? "…" : ""}».`);
+  });
+  cerrar();
+  if (!out.preguntas.length) {                                             // ¿era el CSV del quiz antiguo?
+    const csv = leerCSV(texto);
+    if (csv.length) return { titulo: "", mostrar: null, preguntas: csv, avisos: csv.some(p => p.correcta < 0) ? ["Algunas preguntas no tienen la correcta marcada."] : [] };
+  }
+  return out;
+}
+
+/** Formato del quiz antiguo (CSV):  N,TEMA,PREGUNTA,A,B,C,D,E   — la correcta lleva * al final. También acepta tabulaciones (pegado desde Sheets). */
+function leerCSV(texto) {
+  const filas = texto.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const sep = filas.some(l => l.includes("\t")) ? "\t" : (filas.join("").split(";").length > filas.join("").split(",").length ? ";" : ",");
+  const partir = l => { const out = []; let c = "", q = false; for (let i = 0; i < l.length; i++) { const ch = l[i];
+    if (q) { if (ch === '"' && l[i + 1] === '"') { c += '"'; i++; } else if (ch === '"') q = false; else c += ch; }
+    else if (ch === '"') q = true; else if (ch === sep) { out.push(c); c = ""; } else c += ch; } out.push(c); return out.map(x => x.trim()); };
+  const preguntas = [];
+  filas.forEach(l => {
+    const f = partir(l);
+    if (f.length < 5 || /^n$/i.test(f[0]) || /pregunta/i.test(f[2])) return;
+    const alts = [], correctaTxt = [];
+    f.slice(3, 8).forEach(a => { if (!a) return; if (a.endsWith("*")) { correctaTxt.push(alts.length); alts.push(a.slice(0, -1).trim()); } else alts.push(a); });
+    if (alts.length >= 2 && f[2]) preguntas.push({ tema: f[1], texto: f[2], alts, correcta: correctaTxt.length ? correctaTxt[0] : -1 });
+  });
+  return preguntas;
+}
+
+/** Lee un .txt en UTF-8; si trae caracteres raros (Bloc de notas antiguo), lo relee como ANSI para no romper las tildes. */
+async function textoDeArchivo(file) {
+  const buf = await file.arrayBuffer();
+  const t = new TextDecoder("utf-8").decode(buf);
+  return t.includes("�") ? new TextDecoder("windows-1252").decode(buf) : t;
+}
+function descargar(nombre, texto) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + texto.replace(/\n/g, "\r\n")], { type: "text/plain;charset=utf-8" }));
+  a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/** Puntos: las preguntas con puntos los conservan; las vacías se reparten lo que falta para 20. */
+function calcPuntos(preguntas) {
+  const fijas = preguntas.filter(p => Number(p.puntos) > 0);
+  const suma = fijas.reduce((t, p) => t + Number(p.puntos), 0), libres = preguntas.length - fijas.length;
+  const cada = libres ? Math.max(0, 20 - suma) / libres : 0;
+  const total = libres ? Math.max(20, suma) : suma;
+  return { suma, libres, cada, total, dif: Math.round((total - 20) * 100) / 100 };
+}
+const fmt = x => String(Math.round(x * 100) / 100).replace(".", ",");
+
+async function vistaEditor(id) {
+  app.replaceChildren(el("p", "vacio", "Cargando…"));
+  let quiz = { id: null, titulo: "", clase: "", mostrar: 10, abierto: false, oculto: true, repetir: false, puntaje: true, errores: false, penalizar: true, preguntas: [vacia()] };
+  history.replaceState(null, "", "?editar=" + (id || "nuevo"));
+  try {
+    if (id) { const d = await Aula.api("quizVer", { id }); quiz = Object.assign(d.quiz, { rindieron: d.resultados.length }); }
+    if (!clases.length) clases = (await Aula.api("quizLista")).clases;
+  } catch (ex) { if (id) { app.replaceChildren(el("div", "aviso", ex.message)); return; } }
+  quiz.preguntas = quiz.preguntas.map(p => ({ ...p, alts: p.alts.slice() }));
+  sucio = false;
+  const marcar = () => { sucio = true; };
+
+  const salir = async () => {
+    if (sucio && !(await confirmar({ titulo: "¿Salir sin guardar?", texto: "Los cambios que hiciste se perderán.", ok: "Salir sin guardar", peligro: true }))) return;
+    vistaLista();
+  };
+
+  /* --- cabecera --- */
+  const top = el("div", "ed-top");
+  const volver = boton("Volver", "ghost lg", "atras"); volver.onclick = salir;
+  top.append(volver, el("h1", "titulo", id ? "Editar quiz" : "Nuevo quiz"));
+
+  /* --- 1. tipo y destino --- */
+  const d0 = destino(quiz.clase);
+  let tipo = d0.tipo === "ec" ? "ec" : "clase";
+  let ecN = d0.n || 1, ecU = d0.u || Number((clases.find(c => c.tipo !== "EC") || {}).unidad) || 1;
+  let claseSel = d0.tipo === "clase" ? quiz.clase : "";
+  const cTipo = el("div", "card"); cTipo.append(el("h2", "", "1 · ¿Qué es este quiz?"));
+  const tipos = el("div", "tipos");
+  const opTipo = (k, em, t, s) => { const b = el("button", "tipo " + k); b.type = "button";
+    const tx = el("span"); tx.append(el("b", "", t), el("small", "", s)); b.append(el("span", "em", em), tx);
+    b.onclick = () => { tipo = k; marcar(); pintarDestino(); }; return b; };
+  const bClase = opTipo("clase", "📝", "Quiz de clase", "Un repaso o práctica. Aparece dentro de la carpeta de la clase.");
+  const bEC = opTipo("ec", "🏁", "EC virtual", "Evaluación continua 1, 2 o 3. Aparece dentro de la carpeta de esa EC.");
+  tipos.append(bClase, bEC);
+  const dest = el("div", "destino"), donde = el("p", "donde");
+  cTipo.append(tipos, dest, donde);
+
+  const unidades = [...new Set([1, 2].concat(clases.map(c => Number(c.unidad)).filter(Boolean)))].sort((a, b) => a - b);
+  function segNum(valores, actual, etiqueta, alElegir) {
+    const s = el("div", "seg grande");
+    valores.forEach(v => { const b = el("button", v === actual ? "on" : "", etiqueta(v)); b.type = "button";
+      b.onclick = () => { s.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); alElegir(v); }; s.appendChild(b); });
+    return s;
+  }
+  const claseActual = () => tipo === "ec" ? `ec${ecN}u${ecU}` : claseSel;
+  function pintarDestino() {
+    bClase.classList.toggle("on", tipo === "clase"); bEC.classList.toggle("on", tipo === "ec");
+    dest.replaceChildren();
+    const grupo = (lab, nodo) => { const g = el("div", "grupo-d"); g.append(el("span", "", lab), nodo); return g; };
+    if (tipo === "ec") {
+      dest.append(
+        grupo("Número de EC", segNum([1, 2, 3], ecN, v => "EC" + v, v => { ecN = v; marcar(); actualizarDonde(); })),
+        grupo("Unidad", segNum(unidades, ecU, v => "Unidad " + v, v => { ecU = v; marcar(); actualizarDonde(); })));
+    } else {
+      const sel = el("select"); sel.append(new Option("— Sin clase (sale en el inicio) —", ""));
+      clases.filter(c => c.tipo !== "EC").forEach(c => sel.append(new Option(`U${c.unidad} · Clase ${c.n}` + (c.tema ? " — " + c.tema : "") + (c.publicada ? "" : " (no publicada)"), c.id)));
+      if (claseSel && ![...sel.options].some(o => o.value === claseSel)) sel.append(new Option(claseSel.toUpperCase() + " (no existe en el Panel)", claseSel));
+      sel.value = claseSel;
+      sel.onchange = () => { claseSel = sel.value; marcar(); actualizarDonde(); };
+      dest.append(grupo("Clase", sel));
+    }
+    actualizarDonde();
+  }
+  function actualizarDonde() {
+    const d = destino(claseActual());
+    donde.className = "donde" + (d.aviso ? " warn" : "");
+    donde.textContent = d.tipo === "suelto" ? "Aparecerá en el inicio, en «Evaluaciones virtuales»."
+      : "Aparecerá dentro de: " + d.texto + (d.aviso ? " — ⚠ " + d.aviso + "." : ".");
+    iTit.placeholder = tipo === "ec" ? `EC virtual ${ecN} · Unidad ${ecU}` : "Ej.: Repaso de fórmulas";
+  }
+
+  /* --- 2. datos --- */
+  const cDatos = el("div", "card"); cDatos.append(el("h2", "", "2 · Datos"));
+  const datos = el("div", "datos");
+  const campo = (lab, input) => { const f = el("div", "field"); f.append(el("label", "", lab), input); return f; };
+  const iTit = el("input"); iTit.value = quiz.titulo; iTit.oninput = marcar;
+  const iMos = el("input"); iMos.type = "number"; iMos.min = 0; iMos.value = quiz.mostrar || 0; iMos.oninput = marcar;
+  iMos.addEventListener("input", () => actualizarPuntos());
+  datos.append(campo("Título", iTit), campo("Preguntas por alumno", iMos));
+  cDatos.append(datos, el("p", "hint", "«Preguntas por alumno»: por defecto 10 (si hay menos, salen todas; 0 = todas). Cada alumno recibe las suyas al azar, y tanto las preguntas como las alternativas salen en orden aleatorio."));
+
+  /* --- 3. opciones para el alumno --- */
+  const cOpc = el("div", "card"); cOpc.append(el("h2", "", "3 · Para el alumno"));
+  let estado = estadoDe(quiz);
+  const descEstado = el("p", "hint");
+  const seg = segEstado(estado, k => { estado = k; marcar(); descEstado.textContent = ESTADOS.find(e => e[0] === k)[2]; }, true);
+  descEstado.textContent = ESTADOS.find(e => e[0] === estado)[2];
+  const opciones = el("div", "opciones");
+  const opcion = (titulo, desc, valor) => {
+    const l = el("label", "opc"), tx = el("span", "txt"), c = el("input", "sw"); c.type = "checkbox"; c.checked = !!valor; c.onchange = marcar;
+    tx.append(el("b", "", titulo), el("small", "", desc)); l.append(tx, c); opciones.appendChild(l); return c;
+  };
+  const oRep = opcion("Puede volver a rendirlo", "Si lo rinde otra vez, se queda con su nota más alta.", quiz.repetir);
+  const oPun = opcion("Ve su puntaje al terminar", "Si lo apagas, solo ve «Respuestas enviadas».", quiz.puntaje !== false);
+  const oErr = opcion("Ve sus errores al terminar", "Qué respondió mal y cuál era la correcta.", quiz.errores);
+  const oPen = opcion("Descontar 1 punto por cada salida", "Si cambia de pestaña o minimiza, pierde 1 punto. Se le advierte al empezar y se le avisa cada vez.", quiz.penalizar !== false);
+  cOpc.append(seg, descEstado, opciones);
+
+  /* --- importar (.txt) --- */
+  const imp = el("div", "importar");
+  const fila = el("div", "fila-imp");
+  const file = el("input"); file.type = "file"; file.accept = ".txt,.csv,text/plain"; file.hidden = true;
+  const bSubir = boton("📄 Subir archivo .txt", "morado");
+  const bPlant = boton("Descargar plantilla", "ghost");
+  fila.append(bSubir, bPlant, el("p", "hint", "O arrastra el archivo aquí. Abre la plantilla con el Bloc de notas para ver el formato."), file);
+  const pegar = el("details"); pegar.appendChild(el("summary", "", "…o pegar el texto"));
+  const ta = el("textarea"); ta.placeholder = "1. ¿Qué atajo guarda un documento?\na) Ctrl + G *\nb) Ctrl + P\n\n2. ¿Qué hace Ctrl + Z? [3]\na) Copiar\nb) Deshacer *";
+  const bImp = boton("Agregar estas preguntas", "sm");
+  pegar.append(ta, bImp);
+  const avisosImp = el("div");
+  imp.append(fila, pegar, avisosImp);
+  bPlant.onclick = () => descargar("plantilla-quiz.txt", PLANTILLA);
+  bSubir.onclick = () => file.click();
+  file.onchange = async () => { const f = file.files[0]; file.value = ""; if (f) importar(await textoDeArchivo(f), f.name); };
+  ["dragenter", "dragover"].forEach(ev => imp.addEventListener(ev, e => { e.preventDefault(); imp.classList.add("encima"); }));
+  ["dragleave", "drop"].forEach(ev => imp.addEventListener(ev, e => { e.preventDefault(); imp.classList.remove("encima"); }));
+  imp.addEventListener("drop", async e => { const f = e.dataTransfer.files[0]; if (f) importar(await textoDeArchivo(f), f.name); });
+  bImp.onclick = () => importar(ta.value);
+
+  async function importar(texto, nombre) {
+    const r = leerTxt(texto || "");
+    avisosImp.replaceChildren();
+    if (!r.preguntas.length) return Aula.toast("No se reconoció ninguna pregunta", "Revisa el formato (descarga la plantilla).", "warn");
+    const actuales = quiz.preguntas.filter(p => p.texto.trim());
+    let reemplazar = false;
+    if (actuales.length) {
+      const c = await confirmar({ titulo: `Se encontraron ${r.preguntas.length} pregunta(s)`, ok: "Importar",
+        texto: nombre ? "Archivo: " + nombre : "", casilla: `Reemplazar las ${actuales.length} pregunta(s) que ya tiene el quiz (si no, se agregan al final).` });
+      if (!c) return;
+      reemplazar = c.marcado;
+    }
+    quiz.preguntas = (reemplazar ? [] : actuales).concat(r.preguntas);
+    if (r.titulo && !iTit.value.trim()) iTit.value = r.titulo;
+    if (r.mostrar !== null) iMos.value = r.mostrar;
+    ta.value = ""; pegar.open = false; marcar(); pintarPreguntas();
+    if (r.avisos.length) {
+      const box = el("div", "avisos-imp"), ul = el("ul");
+      box.append(el("b", "", `Se importaron ${r.preguntas.length} pregunta(s), pero revisa esto:`));
+      r.avisos.slice(0, 12).forEach(a => ul.appendChild(el("li", "", a)));
+      if (r.avisos.length > 12) ul.appendChild(el("li", "", `…y ${r.avisos.length - 12} aviso(s) más.`));
+      box.appendChild(ul); avisosImp.appendChild(box);
+    }
+    Aula.toast(r.preguntas.length + " pregunta(s) importadas", r.avisos.length ? "Hay avisos: revísalos arriba de las preguntas." : "Revisa y guarda el quiz.", r.avisos.length ? "warn" : "");
+  }
+
+  /* --- puntos --- */
+  const ptsBox = el("div", "puntos-box"), ptsTxt = el("span"), ptsChip = el("span", "pts-chip");
+  const bRepartir = boton("Repartir automáticamente", "sm ghost");
+  bRepartir.onclick = () => { quiz.preguntas.forEach(p => p.puntos = null); marcar(); pintarPreguntas(); };
+  ptsBox.append(ptsTxt, bRepartir);
+  const ptsInputs = [];
+  const conTexto = () => quiz.preguntas.filter(p => p.texto.trim() || p.alts.some(a => a.trim()));
+  function actualizarPuntos() {
+    const c = calcPuntos(conTexto()), mal = c.dif !== 0;
+    ptsInputs.forEach(({ inp, p }) => { inp.placeholder = fmt(c.cada); inp.classList.toggle("fijo", Number(p.puntos) > 0); });
+    const nAl = Number(iMos.value) || 0, nPr = conTexto().length;
+    let msg = mal ? (c.dif < 0 ? `Faltan ${fmt(-c.dif)} puntos para llegar a 20.` : `Sobran ${fmt(c.dif)} puntos: el total pasa de 20.`)
+      : c.libres === nPr ? `Suma 20: cada pregunta vale ${fmt(c.cada)} (reparto automático).`
+      : c.libres ? `Suma 20: ${nPr - c.libres} con puntos propios y ${c.libres} automáticas de ${fmt(c.cada)}.` : "Suma 20.";
+    if (mal && c.libres) msg += " Las automáticas quedan en 0.";
+    if (nAl > 0 && nAl < nPr) msg += ` Cada alumno recibe ${nAl} de ${nPr}: su nota se ajusta a 20 con las que le toquen.`;
+    ptsBox.classList.toggle("mal", mal);
+    ptsTxt.replaceChildren(el("b", "", (mal ? "⚠ " : "✓ ") + fmt(c.total) + " / 20"), " · " + msg);
+    ptsChip.className = "pts-chip" + (mal ? " mal" : ""); ptsChip.textContent = (mal ? "⚠ " : "✓ ") + fmt(c.total) + "/20 pts";
+    return c;
+  }
+
+  /* --- preguntas --- */
+  const hPreg = el("h2", "seccion", "4 · Preguntas y puntos");
+  const lista = el("div");
+  const agregar = boton("+ Agregar pregunta", "ghost lg");
+  agregar.onclick = () => { quiz.preguntas.push(vacia()); marcar(); pintarPreguntas(); lista.lastChild.querySelector("textarea").focus(); };
+
+  /* --- barra inferior: Cancelar · Eliminar · Guardar --- */
+  const barra = el("div", "barra-guardar"), estadoTxt = el("span", "estado");
+  const cancelar = boton("Cancelar", "ghost lg", "x"); cancelar.onclick = salir;
+  const borrar = boton("Eliminar quiz", "peligro lg", "basura");
+  borrar.onclick = async () => {
+    const q = Object.assign({}, quiz, { titulo: iTit.value || quiz.titulo || "este quiz", rindieron: quiz.rindieron });
+    if (await eliminar(q)) { sucio = false; vistaLista(); }
+  };
+  const guardar = boton("Guardar quiz", "morado lg", "ok");
+  barra.append(cancelar, estadoTxt, ptsChip); if (quiz.id) barra.append(borrar); barra.append(guardar);
+
+  function pintarPreguntas() {
+    lista.replaceChildren(); ptsInputs.length = 0;
+    quiz.preguntas.forEach((p, i) => {
+      const box = el("div", "preg");
+      const top = el("div", "preg-top");
+      const tema = el("input", "tema"); tema.placeholder = "Tema (opcional)"; tema.value = p.tema || "";
+      tema.oninput = () => { p.tema = tema.value; marcar(); };
+      const ib = (txt, title, cls) => { const b = el("button", "icon-btn " + (cls || ""), txt); b.type = "button"; b.title = title; return b; };
+      const sube = ib("↑", "Subir"); sube.disabled = i === 0;
+      sube.onclick = () => { [quiz.preguntas[i - 1], quiz.preguntas[i]] = [quiz.preguntas[i], quiz.preguntas[i - 1]]; marcar(); pintarPreguntas(); };
+      const baja = ib("↓", "Bajar"); baja.disabled = i === quiz.preguntas.length - 1;
+      baja.onclick = () => { [quiz.preguntas[i + 1], quiz.preguntas[i]] = [quiz.preguntas[i], quiz.preguntas[i + 1]]; marcar(); pintarPreguntas(); };
+      const borra = ib("✕", "Quitar pregunta", "x");
+      borra.onclick = () => { if (p.texto && !confirm("¿Quitar esta pregunta?")) return; quiz.preguntas.splice(i, 1); marcar(); pintarPreguntas(); };
+      const pts = el("input", "pts"); pts.type = "number"; pts.min = 0; pts.step = 0.5; pts.title = "Puntos de esta pregunta (vacío = automático)";
+      pts.value = Number(p.puntos) > 0 ? p.puntos : "";
+      pts.oninput = () => { p.puntos = pts.value === "" ? null : Number(pts.value); marcar(); actualizarPuntos(); };
+      ptsInputs.push({ inp: pts, p });
+      top.append(el("span", "num", String(i + 1)), tema, pts, el("span", "pts-lab", "pts"), sube, baja, borra);
+      const tx = el("textarea"); tx.placeholder = "Escribe la pregunta…"; tx.value = p.texto;
+      tx.oninput = () => { const antes = !!p.texto.trim(); p.texto = tx.value; marcar(); if (antes !== !!p.texto.trim()) actualizarPuntos(); };
+      box.append(top, tx);
+      p.alts.forEach((a, k) => {
+        const fila = el("div", "alt" + (p.correcta === k ? " ok" : ""));
+        const r = el("input"); r.type = "radio"; r.name = "c" + i; r.checked = p.correcta === k; r.title = "Marcar como correcta";
+        r.onchange = () => { p.correcta = k; marcar(); pintarPreguntas(); };
+        const t = el("input"); t.type = "text"; t.value = a; t.placeholder = "Alternativa " + "ABCDE"[k];
+        t.oninput = () => { p.alts[k] = t.value; marcar(); };
+        const q = ib("−", "Quitar alternativa", "x"); q.disabled = p.alts.length <= 2;
+        q.onclick = () => { p.alts.splice(k, 1); if (p.correcta === k) p.correcta = -1; else if (p.correcta > k) p.correcta--; marcar(); pintarPreguntas(); };
+        fila.append(r, el("span", "let", "ABCDE"[k]), t, q); box.appendChild(fila);
+      });
+      const pie = el("div", "pie");
+      pie.append(el("span", "", p.correcta >= 0 ? "✓ correcta: " + "ABCDE"[p.correcta] : "⚠ marca la correcta (círculo)"));
+      if (p.alts.length < 5) { const m = boton("+ alternativa", "sm ghost"); m.onclick = () => { p.alts.push(""); marcar(); pintarPreguntas(); }; pie.appendChild(m); }
+      box.appendChild(pie);
+      lista.appendChild(box);
+    });
+    estadoTxt.textContent = quiz.preguntas.length + " pregunta(s)" + (sucio ? " · sin guardar" : "");
+    actualizarPuntos();
+  }
+
+  guardar.onclick = async () => {
+    const preguntas = quiz.preguntas.filter(p => p.texto.trim() || p.alts.some(a => a.trim()))
+      .map(p => {   // quita alternativas vacías y reajusta el índice de la correcta
+        const alts = [], idx = []; p.alts.forEach((a, k) => { if (a.trim()) { idx.push(k); alts.push(a.trim()); } });
+        return { id: p.id, tema: p.tema, texto: p.texto.trim(), alts, correcta: idx.indexOf(p.correcta), puntos: Number(p.puntos) > 0 ? Number(p.puntos) : null };
+      });
+    const c = actualizarPuntos();
+    if (c.dif !== 0 && !(await confirmar({ titulo: `Los puntos suman ${fmt(c.total)}, no 20`, ok: "Guardar así",
+      texto: (c.dif < 0 ? `Faltan ${fmt(-c.dif)}` : `Sobran ${fmt(c.dif)}`) + " puntos. Si guardas así, la nota igual se ajusta a 20 (cada punto vale " + fmt(20 / c.total) + ")." }))) return;
+    const titulo = iTit.value.trim() || (tipo === "ec" ? iTit.placeholder : "");
+    guardar.disabled = true; estadoTxt.textContent = "Guardando…";
+    try {
+      const datosQuiz = { id: quiz.id, titulo, clase: claseActual(), mostrar: Number(iMos.value) || 0,
+        oculto: estado === "oculto", abierto: estado === "abierto", repetir: oRep.checked, puntaje: oPun.checked, errores: oErr.checked, penalizar: oPen.checked, preguntas };
+      const r = await Aula.api("quizGuardar", { quiz: datosQuiz });
+      const nuevo = !quiz.id;
+      Object.assign(quiz, datosQuiz, { id: r.id }); iTit.value = titulo; sucio = false; olvidar();
+      history.replaceState(null, "", "?editar=" + r.id);
+      if (nuevo) barra.insertBefore(borrar, guardar);
+      Aula.toast("Quiz guardado", estado === "abierto" ? "Está abierto: los alumnos ya pueden rendirlo." : estado === "cerrado" ? "Está cerrado: lo ven pero no pueden rendirlo." : "Está oculto: los alumnos no lo ven.");
+      estadoTxt.textContent = "✓ Guardado · " + preguntas.length + " pregunta(s)";
+    } catch (ex) { Aula.toast("No se guardó", ex.message, "warn"); estadoTxt.textContent = ex.message; }
+    guardar.disabled = false;
+  };
+  // "sin guardar" en la barra al primer cambio
+  app.oninput = () => { if (sucio && !/sin guardar/.test(estadoTxt.textContent)) estadoTxt.textContent = quiz.preguntas.length + " pregunta(s) · sin guardar"; };
+
+  app.replaceChildren(top, cTipo, cDatos, cOpc, hPreg, imp, ptsBox, lista, agregar, barra);
+  pintarDestino();
+  pintarPreguntas();
+}
+
+(async () => {
+  const s = await Aula.listo;
+  document.getElementById("quien").textContent = Aula.quien(s);
+  document.getElementById("salir").onclick = () => Aula.salir();
+  const ed = new URLSearchParams(location.search).get("editar");
+  ed ? vistaEditor(ed === "nuevo" ? null : ed) : vistaLista();
+})();
+</script>
+</body>
+</html>

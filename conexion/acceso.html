@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ingresar · Aula Virtual</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/icono.png">
+<link rel="stylesheet" href="estilo.css">
+<style>
+  body { background: var(--panel); }
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100vh; }
+  .lado { display: flex; flex-direction: column; padding: 32px clamp(24px, 6vw, 72px); }
+  .marca { display: flex; align-items: center; gap: 12px; }
+  .marca .plate-mark { width: 40px; height: 40px; }
+  .marca b { font-family: var(--mono); font-size: 1.05rem; }
+  .marca small { display: block; font-family: var(--mono); font-size: .68rem; color: var(--moss); line-height: 1.2; }
+  .centro { flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; max-width: 400px; margin: 0 auto; padding: 36px 0; }
+  .centro h1 { font-size: clamp(1.7rem, 3.2vw, 2.15rem); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 8px; }
+  .centro .lede { margin-bottom: 30px; font-size: .95rem; }
+  #code { text-transform: uppercase; letter-spacing: .08em; font-family: var(--mono); }
+  .err { color: var(--err); font-size: .86rem; min-height: 1.3em; margin: 10px 2px 0; }
+  .o { display: flex; align-items: center; gap: 12px; color: var(--mut); font-size: .78rem; margin: 26px 0 14px; }
+  .o::before, .o::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+  .activa { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 26px; }
+  .activa .n { font-weight: 600; margin: 2px 0 10px; }
+  .activa .btn + .btn { margin-top: 8px; }
+  .hint { color: var(--mut); font-size: .82rem; }
+  .pie { font-size: .82rem; color: var(--mut); }
+  .arte { position: relative; overflow: hidden; background: #fff; display: grid; place-items: center; padding: 24px; }
+  .arte img { width: 100%; height: 100%; max-height: 100vh; object-fit: contain; display: block; animation: sube .6s ease both; }
+  .doc-badge { display: inline-block; font-family: var(--mono); font-size: .7rem; font-weight: 600; background: var(--amber); color: #fff; border-radius: 6px; padding: 2px 8px; margin-bottom: 10px; }
+  @media (max-width: 860px) {
+    .split { grid-template-columns: 1fr; }
+    .arte { order: -1; height: 230px; padding: 8px; border-bottom: 1px solid var(--line); }
+    .lado { padding-top: 24px; }
+    .centro { padding: 28px 0 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="split">
+  <section class="lado">
+    <div class="marca">
+      <span class="plate-mark"><img src="img/icono.png" alt=""></span>
+      <div><b>Aula Virtual</b><small>Herramientas Informáticas</small></div>
+    </div>
+
+    <div class="centro">
+      <div class="aviso warn hidden" id="motivo" style="margin-bottom:22px"></div>
+
+      <section class="activa hidden" id="activa">
+        <div class="hint">Ya iniciaste sesión como</div>
+        <div class="n" id="activaNombre"></div>
+        <button class="btn block" id="continuar" type="button">Continuar</button>
+        <button class="btn block ghost" id="cambiar" type="button">Ingresar con otro código</button>
+      </section>
+
+      <!-- alumno -->
+      <section id="vAlumno">
+        <p class="eyebrow">Bienvenido</p>
+        <h1>Ingresa a tu aula</h1>
+        <p class="lede">Escribe tu código de alumno para ver tus clases y tus documentos.</p>
+        <form id="fAlumno" autocomplete="off">
+          <div class="field">
+            <label for="code">Código de alumno</label>
+            <input id="code" type="text" placeholder="Ej.: 2026C0000" autocapitalize="characters" spellcheck="false" inputmode="text" required autofocus>
+          </div>
+          <button class="btn block" id="goA" type="submit">Ingresar</button>
+          <div class="err" id="errA" role="alert"></div>
+        </form>
+        <div class="o">¿Eres docente?</div>
+        <button class="btn block ghost" type="button" id="soyDocente">Acceso docente</button>
+      </section>
+
+      <!-- docente -->
+      <section id="vDocente" class="hidden">
+        <span class="doc-badge">DOCENTE</span>
+        <h1>Acceso docente</h1>
+        <p class="lede">Escribe tu contraseña.</p>
+        <form id="fDocente" autocomplete="off">
+          <div class="field">
+            <label for="clave">Contraseña</label>
+            <input id="clave" type="password" required>
+            <button type="button" class="ico" id="eye" title="Ver u ocultar" aria-label="Ver u ocultar la contraseña">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <button class="btn block" id="goD" type="submit">Ingresar</button>
+          <div class="err" id="errD" role="alert"></div>
+        </form>
+        <div class="o">o</div>
+        <button class="btn block ghost" type="button" id="soyAlumno">Soy alumno</button>
+      </section>
+    </div>
+
+    <div class="pie">¿Problemas para ingresar? Avisa a tu docente.</div>
+  </section>
+  <aside class="arte" aria-hidden="true"><img src="img/login.jpg" alt=""></aside>
+</div>
+
+<script src="aula.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const MOTIVOS = { inactivo: "Tu sesión se cerró por inactividad.", expirada: "Tu sesión expiró. Vuelve a ingresar." };
+
+function vista(docente) {
+  $("vAlumno").classList.toggle("hidden", docente);
+  $("vDocente").classList.toggle("hidden", !docente);
+  (docente ? $("clave") : $("code")).focus();
+}
+
+const m = new URLSearchParams(location.search).get("m");
+if (MOTIVOS[m]) { $("motivo").textContent = MOTIVOS[m]; $("motivo").classList.remove("hidden"); }
+
+const previa = Aula.sesion();
+if (previa) {
+  $("activaNombre").textContent = Aula.quien(previa);
+  $("activa").classList.remove("hidden");
+  $("continuar").onclick = () => location.replace(Aula.destinoTrasLogin());
+  $("cambiar").onclick = () => { sessionStorage.clear(); $("activa").classList.add("hidden"); $("code").focus(); };
+}
+
+$("soyDocente").onclick = () => vista(true);
+$("soyAlumno").onclick = () => vista(false);
+$("eye").onclick = () => { $("clave").type = $("clave").type === "password" ? "text" : "password"; };
+
+async function enviar(e, boton, err, accion, datos) {
+  e.preventDefault();
+  $(boton).disabled = true; $(err).textContent = "";
+  const txt = $(boton).textContent; $(boton).textContent = "Verificando…";
+  try {
+    sessionStorage.clear();
+    const r = await Aula.api(accion, datos);
+    Aula.guardar({ token: r.token, rol: r.rol, nombre: r.nombre, alumnos: r.alumnos || [] });
+    location.replace(Aula.destinoTrasLogin());
+  } catch (ex) {
+    $(err).textContent = ex.message;
+    $(boton).disabled = false; $(boton).textContent = txt;
+  }
+}
+$("fAlumno").addEventListener("submit", e => enviar(e, "goA", "errA", "login", { codigo: $("code").value }));
+$("fDocente").addEventListener("submit", e => enviar(e, "goD", "errD", "loginDocente", { clave: $("clave").value }));
+</script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aula Virtual · Herramientas Informáticas</title>
+<script src="conexion/aula.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="conexion/img/favicon.png">
+<link rel="apple-touch-icon" href="conexion/img/icono.png">
+<link rel="stylesheet" href="conexion/estilo.css">
+<style>
+  :root { --ev: #5b4bb0; --ev-d: #3d2f86; --ev-bg: #efecfa; }
+  .bloque { margin-top: 38px; }
+  .bloque-h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; }
+  .bloque-h h2 { font-size: 1.35rem; letter-spacing: -.01em; margin: 0; }
+  .bloque-h .linea { flex: 1; border-top: 1px solid var(--line); transform: translateY(-4px); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+
+  a.carta {
+    --acc: var(--moss); --acc-d: var(--moss-d); --acc-bg: var(--moss-bg);
+    position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 18px;
+    text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px;
+    overflow: hidden; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; min-height: 168px;
+  }
+  a.carta.ec { --acc: var(--amber); --acc-d: var(--amber-d); --acc-bg: var(--amber-bg); }
+  a.carta.ev { --acc: var(--ev); --acc-d: var(--ev-d); --acc-bg: var(--ev-bg); }
+  a.carta::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--acc); }
+  a.carta:hover { transform: translateY(-3px); border-color: var(--acc); box-shadow: 0 12px 28px rgba(16, 35, 28, .10); }
+  .c-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .c-tipo { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: .68rem; font-weight: 600; letter-spacing: .6px; color: var(--acc-d); background: var(--acc-bg); border-radius: 6px; padding: 3px 8px; }
+  .c-tipo svg { width: 14px; height: 14px; }
+  .c-id { font-family: var(--mono); font-size: .7rem; color: var(--mut); }
+  .c-num { font-family: var(--mono); font-size: 2.2rem; font-weight: 600; line-height: 1; letter-spacing: -.03em; }
+  .c-num small { display: block; font-family: var(--sans); font-size: .88rem; font-weight: 500; letter-spacing: 0; color: var(--ink-2); margin-top: 8px; line-height: 1.3; }
+  .c-go { display: flex; align-items: center; justify-content: space-between; font-size: .85rem; font-weight: 600; color: var(--acc-d); }
+  .c-go svg { width: 18px; height: 18px; transition: transform .18s; }
+  a.carta:hover .c-go svg { transform: translateX(4px); }
+  .c-quiz { font-family: var(--mono); font-size: .65rem; font-weight: 700; color: #fff; background: var(--ev); border-radius: 6px; padding: 3px 8px; letter-spacing: .4px; }
+  .borrador { font-family: var(--mono); font-size: .65rem; font-weight: 600; color: var(--mut); border: 1px dashed var(--line); border-radius: 6px; padding: 2px 7px; }
+  a.carta.oculta { background: transparent; border-style: dashed; }
+  a.carta.hecha .c-go { color: var(--mut); }
+
+  .acciones { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .compa { margin-top: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; max-width: 520px; }
+  .compa { margin-top: 14px; background: none; border: 0; padding: 0; max-width: 520px; }
+  .compa .chips { align-items: center; margin-top: 0; }
+  .compa form { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .compa form[hidden] { display: none; }
+  .compa input { flex: 1 1 180px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; font-family: var(--mono); text-transform: uppercase; background: var(--panel); color: var(--ink); }
+  .compa .err { color: var(--err); font-size: .84rem; margin: 8px 0 0; min-height: 1.2em; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .chip { font-size: .82rem; background: var(--moss-bg); border: 1px solid #cfdccb; border-radius: 999px; padding: 4px 12px; }
+  .chip small { font-family: var(--mono); color: var(--moss); margin-left: 6px; }
+
+  .ov { position: fixed; inset: 0; z-index: 130; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(16,35,28,.4); backdrop-filter: blur(3px); }
+  .ov.on { display: flex; }
+  .modal { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; max-width: 420px; width: 100%; box-shadow: 0 20px 50px rgba(16,35,28,.25); }
+  .modal h2 { font-size: 1.1rem; margin: 0 0 14px; }
+  .modal .field { margin-bottom: 14px; }
+  .modal .field input { padding-right: 16px; }
+  .modal .err { color: var(--err); font-size: .84rem; min-height: 1.2em; margin: 4px 0 0; }
+  .modal .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
+  .skeleton { height: 168px; border-radius: 14px; background: linear-gradient(100deg, #ece8dc 30%, #f6f4ee 50%, #ece8dc 70%); background-size: 200% 100%; animation: brillo 1.2s linear infinite; }
+  @keyframes brillo { to { background-position: -200% 0; } }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="plate">
+        <span class="plate-mark"><img src="conexion/img/icono.png" alt=""></span>
+        <span class="plate-txt"><b>Aula Virtual</b><small>Herramientas Informáticas</small></span>
+      </div>
+      <div class="who-chip"><i class="dot"></i><span id="quien"></span>
+        <button class="btn ghost sm" id="salir" type="button">Salir</button></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero anim">
+      <p class="eyebrow" id="eyebrow">Portal</p>
+      <h1 class="titulo" id="saludo">Hola</h1>
+      <p class="lede" id="lede"></p>
+      <div id="extra"></div>
+    </section>
+    <div id="contenido"><div class="grid" style="margin-top:38px"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>
+  </main>
+
+  <div class="ov" id="ovClave"><div class="modal">
+    <h2>Cambiar contraseña</h2>
+    <form id="fClave">
+      <div class="field"><label for="cAct">Contraseña actual</label><input id="cAct" type="password" required></div>
+      <div class="field"><label for="cNue">Nueva (mínimo 6)</label><input id="cNue" type="password" minlength="6" required></div>
+      <div class="field"><label for="cRep">Repite la nueva</label><input id="cRep" type="password" minlength="6" required></div>
+      <div class="err" id="cErr"></div>
+      <div class="row"><button class="btn ghost sm" type="button" id="cCancel">Cancelar</button><button class="btn sm" id="cOk">Guardar</button></div>
+    </form>
+  </div></div>
+
+<script>
+const { el } = Aula;
+const $ = id => document.getElementById(id);
+const ICO = {
+  flecha: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  carpeta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'
+};
+
+function carta({ href, cls, tipo, id, num, sub, go, extra, nueva, precarga }) {
+  const a = el("a", "carta " + (cls || "")); a.href = href;
+  // Al pasar el mouse (o tocar) se piden los datos de la clase antes del clic: al entrar ya están listos
+  if (precarga) ["pointerenter", "touchstart", "focus"].forEach(ev => a.addEventListener(ev, () => Aula.precargar("clase", { id: precarga }), { once: true, passive: true }));
+  const top = el("div", "c-top");
+  const t = el("span", "c-tipo"); t.innerHTML = ICO.carpeta; t.append(tipo);
+  top.append(t, extra || el("span", "c-id", id));
+  const n = el("div", "c-num", num); if (sub) n.appendChild(el("small", "", sub));
+  const g = el("div", "c-go"); g.append(el("span", "", go)); g.insertAdjacentHTML("beforeend", ICO.flecha);
+  a.append(top, n, g);
+  if (nueva) a.addEventListener("click", e => { e.preventDefault(); Aula.abrirInterna(href); });
+  return a;
+}
+
+function bloque(titulo, cartas) {
+  const s = el("section", "bloque anim");
+  const h = el("div", "bloque-h"); h.append(el("h2", "", titulo), el("span", "linea"));
+  const g = el("div", "grid"); cartas.forEach(c => g.appendChild(c));
+  s.append(h, g); return s;
+}
+
+/* Línea discreta: quién está conectado + botón "+ Compañero" que despliega el campo solo si se usa (PC compartida). */
+function pintarCompanero(s) {
+  const caja = el("div", "compa");
+  const chips = el("div", "chips");
+  (s.alumnos || []).forEach(a => { const c = el("span", "chip", Aula.nombreBonito(a.nombre)); c.appendChild(el("small", "", a.grupo + (a.pc ? " · PC " + a.pc : ""))); chips.appendChild(c); });
+  const f = el("form"); f.hidden = true;
+  const inp = el("input"); inp.placeholder = "Código del compañero"; inp.required = true;
+  const b = el("button", "btn sm", "Agregar"); const err = el("div", "err"); err.hidden = true;
+  f.append(inp, b);
+  if ((s.alumnos || []).length < 3) {
+    const abrir = el("button", "btn ghost sm", "+ Compañero"); abrir.type = "button"; abrir.title = "¿Comparten computadora? Agrega a tu compañero con su código";
+    abrir.onclick = () => { f.hidden = !f.hidden; err.hidden = f.hidden; if (!f.hidden) inp.focus(); };
+    chips.appendChild(abrir);
+  }
+  f.onsubmit = async e => {
+    e.preventDefault(); b.disabled = true; err.textContent = "";
+    try {
+      const r = await Aula.api("companero", { codigo: inp.value });
+      const ses = Aula.sesion(); ses.alumnos = r.alumnos; Aula.guardar(ses);
+      Aula.borrarMemoria();          // lo guardado era solo de un alumno
+      location.reload();
+    } catch (ex) { err.textContent = ex.message; b.disabled = false; }
+  };
+  caja.append(chips, f, err);
+  $("extra").appendChild(caja);
+}
+
+function pintarDocente(r) {
+  const acc = el("div", "acciones");
+  const q = el("a", "btn", "Mis quizzes"); q.href = "docente/quizzes.html";
+  const p = el("a", "btn ghost", "Abrir Panel (Google)"); p.href = r.panel; p.target = "_blank"; p.rel = "noopener";
+  const c = el("button", "btn ghost", "Cambiar contraseña"); c.type = "button"; c.onclick = () => { $("ovClave").classList.add("on"); $("cAct").focus(); };
+  acc.append(q, p, c); $("extra").appendChild(acc);
+}
+
+$("cCancel").onclick = () => { $("ovClave").classList.remove("on"); $("fClave").reset(); $("cErr").textContent = ""; };
+$("fClave").onsubmit = async e => {
+  e.preventDefault(); $("cErr").textContent = "";
+  if ($("cNue").value !== $("cRep").value) { $("cErr").textContent = "La nueva contraseña no coincide."; return; }
+  $("cOk").disabled = true;
+  try {
+    await Aula.api("cambiarClave", { actual: $("cAct").value, nueva: $("cNue").value });
+    $("cCancel").click(); Aula.toast("Contraseña cambiada", "Úsala la próxima vez que ingreses.");
+  } catch (ex) { $("cErr").textContent = ex.message; }
+  $("cOk").disabled = false;
+};
+
+(async () => {
+  const s = await Aula.listo;
+  const docente = s.rol === "docente";
+  $("quien").textContent = Aula.quien(s);
+  $("salir").onclick = () => Aula.salir();
+  $("eyebrow").textContent = docente ? "Modo docente" : "Grupo " + [...new Set((s.alumnos || []).map(a => a.grupo))].join(" + ");
+  $("saludo").textContent = docente ? "Hola, " + (s.nombre || "docente") : "Tus clases";
+  $("lede").textContent = docente
+    ? "Todas tus clases (las no publicadas se ven con borde punteado). Entra a una para ver los documentos de tus alumnos."
+    : "Entra a una clase para ver tu documento, presentaciones, enlaces y actividades.";
+
+  const cont = $("contenido");
+  // Muestra al instante lo último cargado (si lo hay) y luego lo actualiza con lo fresco
+  // Alumno: si aún no hay nada en memoria, pinta YA con los datos públicos (datos.json) y luego completa con el Panel
+  let real = false;
+  if (!docente) Aula.publico().then(p => {
+    if (!p || real) return;
+    pintarPortal({ provisional: true, alumnos: s.alumnos || [], clases: p.clases,
+                   quizzes: p.quizzes.map(q => Object.assign({}, q, { rendidos: undefined })) }, s, docente);
+  });
+  try { await Aula.apiRapida("portal", {}, r => { real = true; pintarPortal(r, s, docente); }); }
+  catch (ex) { cont.replaceChildren(el("div", "aviso", ex.message)); }
+})();
+
+function pintarPortal(r, s, docente) {
+  const cont = $("contenido");
+  $("extra").replaceChildren();
+  if (docente) pintarDocente(r);
+  else { s.alumnos = r.alumnos; Aula.guardar(s); $("quien").textContent = Aula.quien(s); pintarCompanero(s); }
+
+  cont.replaceChildren();
+  // Quizzes que el alumno aún debe rendir (abiertos y no hechos por todos los de la sesión)
+  const pendiente = q => q.abierto && q.rendidos !== undefined && q.rendidos.length < (s.alumnos || []).length;
+  const visibles = new Set(r.clases.map(c => c.id));
+  const marca = c => {
+    if (docente) return !c.publicada ? el("span", "borrador", "NO PUBLICADA") : null;
+    const n = r.quizzes.filter(q => q.clase === c.id && pendiente(q)).length;
+    return n ? el("span", "c-quiz", n > 1 ? n + " QUIZZES" : "QUIZ") : null;
+  };
+  // Orden real dentro de cada unidad: C1 · C2 · EC1 · C4 · C5 · EC2 · C7 · C8 · EC3  (la EC n ocupa el lugar 3n)
+  const lugar = c => c.tipo === "EC" ? c.n * 3 : c.n;
+  const unidades = [...new Set(r.clases.map(c => Number(c.unidad)))].sort((a, b) => a - b);
+  unidades.forEach(u => {
+    const cartas = r.clases.filter(c => Number(c.unidad) === u).sort((a, b) => lugar(a) - lugar(b)).map(c => c.tipo === "EC"
+      ? carta({ href: "clases/clase.html?id=" + c.id, cls: "ec" + (c.publicada ? "" : " oculta"), tipo: "EVALUACIÓN", id: c.id,
+                num: "EC" + c.n, sub: c.tema || "Evaluación continua " + c.n, go: docente ? "Ver documentos" : "Abrir mi evaluación", extra: marca(c), precarga: c.id })
+      : carta({ href: "clases/clase.html?id=" + c.id, cls: c.publicada ? "" : "oculta", tipo: "CLASE", id: c.id,
+                num: String(c.n).padStart(2, "0"), sub: c.tema || "Clase " + c.n, go: "Abrir carpeta", extra: marca(c), precarga: c.id }));
+    cont.appendChild(bloque("Unidad " + u, cartas));
+  });
+  // Los quizzes asignados a una clase/EC salen DENTRO de su carpeta; aquí solo los sueltos
+  // (o los de una carpeta que el alumno no ve, para que no queden inaccesibles).
+  const sueltos = r.quizzes.filter(q => !q.clase || (!visibles.has(q.clase) && (docente || q.abierto || (q.rendidos || []).length)));
+  if (sueltos.length) cont.appendChild(bloque("Evaluaciones virtuales", sueltos.map(q => {
+    const hechos = (q.rendidos || []).length, todos = (s.alumnos || []).length;
+    const listo = !docente && todos && hechos >= todos;
+    const etiqueta = docente ? (q.oculto ? "OCULTO" : !q.abierto ? "CERRADO" : null) : (!q.abierto && !listo ? "CERRADO" : null);
+    return carta({
+      href: "eecc/quiz.html?id=" + q.id, cls: "ev" + (listo ? " hecha" : "") + (docente && q.oculto ? " oculta" : ""), tipo: "QUIZ", id: q.npreg + " preg.",
+      num: "Q", sub: q.titulo, go: docente ? "Ver resultados" : listo ? (q.abierto && q.repetir ? "Rendido · intentar de nuevo" : "Ya rendido · ver nota") : q.abierto ? "Rendir" : "No disponible", nueva: !docente,
+      extra: etiqueta ? el("span", "borrador", etiqueta) : null
+    });
+  })));
+  if (!cont.children.length) cont.appendChild(el("p", "vacio", docente
+    ? "Aún no hay clases. Créalas en el Panel: Aula → Nueva clase / EC."
+    : "Aún no hay clases publicadas."));
+}
+</script>
+</body>
+</html>

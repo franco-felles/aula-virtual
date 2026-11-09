@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quiz · Aula Virtual</title>
+<!-- ÚNICA página de quiz: quiz.html?id=<id>
+     alumno  -> rinde (preguntas al azar, sin respuestas en el navegador: corrige el Panel), anti-cambio de pestaña
+     docente -> resultados por grupo, detalle, corrección de nota y reinicio -->
+<script src="../conexion/aula.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="../conexion/img/favicon.png">
+<link rel="stylesheet" href="../conexion/estilo.css">
+<style>
+  body { --acc: #5b4bb0; --acc-d: #3d2f86; --acc-bg: #efecfa; }
+  .volver { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); text-decoration: none; font-size: .85rem; font-weight: 600; margin-bottom: 18px; }
+  .volver:hover { color: var(--acc-d); }
+  .cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat { font-family: var(--mono); font-size: .75rem; color: var(--ink-2); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  .stat b { color: var(--acc-d); font-size: 1rem; margin-right: 4px; }
+
+  .grupo { display: flex; align-items: baseline; gap: 10px; margin: 24px 0 10px; font-size: 1.05rem; }
+  .grupo::after { content: ""; flex: 1; border-top: 1px solid var(--line); transform: translateY(-4px); }
+  .grupo-row { display: flex; align-items: center; gap: 12px; margin: 24px 0 10px; }
+  .grupo-row .grupo { flex: 1; margin: 0; }
+  .tools { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
+  .buscar { position: relative; flex: 1 1 260px; }
+  .buscar input { width: 100%; padding: 12px 14px 12px 40px; font-size: .95rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); outline: none; transition: border-color .15s, box-shadow .15s; }
+  .buscar input:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(53,81,63,.14); }
+  .buscar svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--mut); }
+  .ov { position: fixed; inset: 0; z-index: 130; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(16,35,28,.4); backdrop-filter: blur(3px); }
+  .ov.on { display: flex; }
+  .modal { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; max-width: 420px; width: 100%; box-shadow: 0 20px 50px rgba(16,35,28,.25); }
+  .modal h2 { font-size: 1.1rem; margin: 0 0 6px; }
+  .modal p { color: var(--ink-2); font-size: .88rem; margin: 0 0 14px; }
+  .modal input { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--ink); font: inherit; }
+  .modal .err { color: var(--err); font-size: .82rem; min-height: 1.2em; margin: 8px 0 0; }
+  .modal .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  .alumnos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+
+  button.alumno {
+    display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px;
+    color: var(--ink); font: inherit; transition: border-color .15s, background .15s, transform .15s;
+  }
+  button.alumno:hover { border-color: var(--acc); background: var(--acc-bg); transform: translateY(-1px); }
+  button.alumno .t { min-width: 0; flex: 1; }
+  button.alumno .nom { display: block; font-size: .85rem; font-weight: 600; line-height: 1.25; }
+  button.alumno .cod { display: block; font-family: var(--mono); font-size: .68rem; color: var(--mut); margin-top: 1px; }
+  button.alumno .g { flex: none; font-family: var(--mono); font-size: .72rem; font-weight: 700; color: var(--paper); background: var(--ink); border-radius: 8px; padding: 5px 9px; white-space: nowrap; }
+  button.alumno .g.ok { background: var(--moss); }
+  button.alumno .g.cor { background: var(--amber); }
+  button.alumno.sin { opacity: .6; }
+
+  .ficha { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-bottom: 24px; box-shadow: 0 10px 28px rgba(16,35,28,.06); }
+  .ficha-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .ficha-top b { font-size: 1.05rem; }
+  .ficha-top .mono { font-size: .72rem; color: var(--mut); }
+  .ficha-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 10px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 14px; font-size: .85rem; color: var(--ink-2); }
+  .ficha-meta .nota { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; color: var(--acc-d); line-height: 1; }
+  .ficha-meta .nota small { font-size: .7rem; font-weight: 600; display: block; color: var(--mut); }
+  .ficha-meta .tachada { font-family: var(--mono); font-size: 1rem; text-decoration: line-through; text-decoration-thickness: 2px; color: var(--err); }
+  .ficha-meta .hora, .ficha-meta .aciertos, .ficha-meta .incid { font-family: var(--mono); font-size: .74rem; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; }
+  .ficha-meta .incid { color: var(--amber-d); border-color: #ecd3a8; }
+
+  .pregunta-det { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+  .pregunta-det.ok { border-left: 4px solid var(--moss); }
+  .pregunta-det.fallo { border-left: 4px solid var(--err); }
+  .pregunta-det-q { font-weight: 600; margin-bottom: 8px; }
+  .opciones-det { display: grid; gap: 6px; }
+  .opcion-det { display: flex; align-items: center; gap: 8px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 9px; font-size: .88rem; background: var(--paper); }
+  .opcion-det.correcta { background: #fff3b0; border-color: #e0b000; }
+  .opcion-det.mal { background: #fdecea; border-color: #c62828; color: #7d211b; }
+  .opcion-det .marca { flex: none; font-weight: 700; }
+
+  .ficha-acciones { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-top: 14px; }
+  .correccion { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .correccion label { font-size: .8rem; font-weight: 600; }
+  .correccion input { width: 90px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); font: inherit; }
+
+  /* ---------- alumno: quiz ---------- */
+  .centrado { min-height: 60vh; display: grid; place-items: center; text-align: center; }
+  .tarjeta { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 32px 28px; max-width: 460px; width: 100%; box-shadow: 0 14px 40px rgba(16,35,28,.07); }
+  .tarjeta h1 { font-size: 1.3rem; margin: 14px 0 6px; letter-spacing: -.01em; }
+  .tarjeta p { color: var(--ink-2); margin: 0 0 4px; font-size: .92rem; }
+  .tarjeta .btn { margin-top: 18px; }
+  .icono-ok, .icono-aviso { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; margin: 0 auto; }
+  .icono-ok { background: var(--moss-bg); color: var(--moss-d); }
+  .icono-aviso { background: var(--amber-bg); color: var(--amber-d); }
+  .icono-ok svg, .icono-aviso svg { width: 24px; height: 24px; }
+  .nota-big { font-family: var(--mono); font-size: 3.4rem; font-weight: 700; color: var(--moss-d); line-height: 1; margin: 6px 0 2px; }
+  .nota-big small { display: block; font-family: var(--sans); font-size: .85rem; color: var(--mut); font-weight: 500; margin-top: 4px; }
+  .incid { font-size: .82rem; color: var(--amber-d); background: var(--amber-bg); border: 1px solid #ecd3a8; border-radius: 10px; padding: 10px 12px; margin-top: 12px; }
+  .advertencia { font-size: .85rem; color: #7a4d10; background: var(--amber-bg); border: 1px solid #ecd3a8; border-radius: 10px; padding: 12px 14px; margin: 14px 0 0; text-align: left; }
+
+  .quiz { max-width: 680px; margin: 8px auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 26px; box-shadow: 0 14px 40px rgba(16,35,28,.07); animation: sube .3s ease both; }
+  .barra { height: 8px; background: var(--paper); border-radius: 9px; overflow: hidden; margin-bottom: 10px; }
+  .barra i { display: block; height: 100%; background: linear-gradient(90deg, var(--moss), #5a7d67); transition: width .3s; }
+  .contador { font-family: var(--mono); font-size: .74rem; color: var(--mut); text-align: right; margin-bottom: 14px; }
+  .quiz h1.pregunta { font-size: 1.25rem; line-height: 1.3; letter-spacing: -.01em; margin: 0 0 18px; }
+  .opciones { display: grid; gap: 10px; }
+  button.opcion { width: 100%; text-align: left; padding: 13px 15px; border: 1.5px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 12px; font: inherit; font-size: .95rem; transition: border-color .15s, background .15s; }
+  button.opcion:hover { border-color: var(--acc); background: var(--acc-bg); }
+  .otra-vez { font-size: .85rem; color: var(--acc-d); background: var(--acc-bg); border-radius: 10px; padding: 10px 12px; margin-top: 12px; }
+  .mut { color: var(--mut); font-size: .85rem; }
+  .advertencia.fuerte { background: #fdecea; border-color: #efc3bf; color: #7d211b; font-weight: 600; }
+  .contador .descuento { color: var(--err); font-weight: 700; }
+  .pts-q { font-family: var(--mono); font-size: .72rem; color: var(--mut); font-weight: 500; margin-left: 6px; }
+  .tarjeta .btn.ghost { margin-top: 10px; }
+  .alerta { position: fixed; top: 76px; left: 50%; transform: translateX(-50%); z-index: 120; display: none; max-width: 90vw; background: #7d211b; color: #fff; padding: 10px 16px; border-radius: 12px; font-size: .85rem; box-shadow: 0 12px 30px rgba(16,35,28,.3); }
+  .alerta.on { display: block; animation: sube .3s ease both; }
+</style>
+</head>
+<body>
+  <header class="topbar"><div class="topbar-in">
+    <a class="plate" href="../index.html"><span class="plate-mark"><img src="../conexion/img/icono.png" alt=""></span>
+      <span class="plate-txt"><b>Aula Virtual</b><small>Herramientas Informáticas</small></span></a>
+    <div class="who-chip"><i class="dot"></i><span id="quien"></span><button class="btn ghost sm" id="salir" type="button">Salir</button></div>
+  </div></header>
+  <main class="wrap" id="app"><p class="vacio">Cargando…</p></main>
+
+<script>
+const { el } = Aula;
+const app = document.getElementById("app");
+const quizId = new URLSearchParams(location.search).get("id") || "";
+const fmtHora = iso => { try { return new Date(iso).toLocaleString("es-PE", { dateStyle: "medium", timeStyle: "short" }); } catch { return iso; } };
+const LETRAS = "ABCDE";
+const ICO_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+const ICO_ALERTA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>';
+
+function aviso(titulo, texto) {
+  const c = el("div", "centrado anim"), t = el("div", "tarjeta");
+  const ic = el("div", "icono-aviso"); ic.innerHTML = ICO_ALERTA;
+  const a = el("a", "btn", "Volver al inicio"); a.href = Aula.url("index.html");
+  t.append(ic, el("h1", "", titulo), el("p", "", texto), a);
+  c.appendChild(t); app.replaceChildren(c);
+}
+
+/* ======================= ALUMNO ======================= */
+function elegirAlumno(alumnos) {
+  if (alumnos.length === 1) return abrir(alumnos[0]);
+  const c = el("div", "centrado anim"), t = el("div", "tarjeta");
+  t.append(el("p", "eyebrow", "Computadora compartida"), el("h1", "", "¿Quién va a rendir?"),
+           el("p", "", "Cada uno rinde por separado. Al terminar, vuelve aquí para que rinda el otro."));
+  alumnos.forEach(a => { const b = el("button", "btn block ghost", Aula.nombreBonito(a.nombre)); b.type = "button"; b.style.marginTop = "10px"; b.onclick = () => abrir(a); t.appendChild(b); });
+  c.appendChild(t); app.replaceChildren(c);
+}
+
+async function abrir(alumno) {
+  app.replaceChildren(el("p", "vacio", "Preparando tus preguntas…"));
+  let r;
+  try { r = await Aula.api("quizRendir", { id: quizId, codigo: alumno.codigo }); }
+  catch (ex) { return aviso("No se puede abrir", ex.message); }
+  if (r.yaRendido) return mostrarNota(alumno, r.titulo, r.yaRendido, true);
+  inicio(alumno, r);
+}
+
+function inicio(alumno, r) {
+  const c = el("div", "centrado anim"), t = el("div", "tarjeta");
+  const b = el("button", "btn block", "Comenzar"); b.type = "button";
+  t.append(el("p", "eyebrow", Aula.nombreBonito(alumno.nombre)), el("h1", "", r.titulo),
+    el("p", "", `Tendrás ${r.preguntas.length} preguntas. No se puede volver atrás.`));
+  if (r.previo) t.append(el("div", "otra-vez", "Ya lo rendiste" + (r.previo.puntaje ? ` (nota ${r.previo.nota})` : "") +
+    ` · este es tu intento ${r.previo.intentos + 1}. Se queda tu nota más alta.`));
+  t.append(
+    r.penalizar
+      ? el("div", "advertencia fuerte", "⚠️ Cada vez que cambies de pestaña, abras otro programa o minimices la ventana se te descontará 1 PUNTO. Quédate en esta pantalla hasta terminar.")
+      : el("div", "advertencia", "⚠️ El quiz detecta si cambias de pestaña o minimizas la ventana. Esos eventos quedan registrados y se informan a tu docente."), b);
+  b.onclick = () => rendir(alumno, r);
+  c.appendChild(t); app.replaceChildren(c);
+}
+
+function rendir(alumno, r) {
+  const preguntas = r.preguntas, respuestas = [];
+  let idx = 0, incidentes = 0, ult = 0, terminado = false;
+  const alerta = el("div", "alerta"); document.body.appendChild(alerta);
+  function incidente() {
+    if (terminado) return;
+    const now = Date.now(); if (now - ult < 600) return; ult = now;
+    incidentes++;
+    alerta.textContent = r.penalizar
+      ? `⚠️ Saliste del quiz: −1 punto (llevas −${incidentes}).`
+      : `⚠️ Incidente ${incidentes}: saliste de la pestaña o minimizaste (${fmtHora(new Date())}).`;
+    alerta.classList.add("on"); clearTimeout(incidente.t); incidente.t = setTimeout(() => alerta.classList.remove("on"), 5000);
+  }
+  document.addEventListener("visibilitychange", () => { if (document.hidden) incidente(); });
+  window.addEventListener("blur", incidente);
+  window.onbeforeunload = () => terminado ? undefined : "¿Salir del quiz?";
+
+  function pintar() {
+    if (idx >= preguntas.length) return enviar();
+    const q = preguntas[idx];
+    const quiz = el("div", "quiz");
+    const bar = el("div", "barra"), bi = el("i"); bi.style.width = (idx / preguntas.length * 100) + "%"; bar.appendChild(bi);
+    const ops = el("div", "opciones");
+    q.opciones.forEach(o => {
+      const b = el("button", "opcion", o.texto); b.type = "button";
+      b.onclick = () => { respuestas.push({ id: q.id, elegida: o.i, orden: q.opciones.map(x => x.i) }); idx++; pintar(); };
+      ops.appendChild(b);
+    });
+    const vale = q.puntos ? ` · vale ${String(q.puntos).replace(".", ",")} pt${q.puntos === 1 ? "" : "s"}` : "";
+    const cont = el("div", "contador", `${idx + 1} / ${preguntas.length}${q.tema ? " · " + q.tema : ""}${vale}`);
+    if (r.penalizar && incidentes) cont.appendChild(el("span", "descuento", ` · −${incidentes} por salir`));
+    quiz.append(bar, cont, el("h1", "pregunta", q.texto), ops);
+    app.replaceChildren(quiz);
+  }
+  async function enviar() {
+    terminado = true; window.onbeforeunload = null;
+    app.replaceChildren(el("p", "vacio", "Enviando respuestas…"));
+    for (let intento = 1; intento <= 3; intento++) {
+      try {
+        const res = await Aula.api("quizEnviar", { id: quizId, codigo: alumno.codigo, respuestas, incidentes });
+        return mostrarNota(alumno, r.titulo, res, false);
+      } catch (ex) {
+        if (intento === 3) {
+          const c = el("div", "centrado"), t = el("div", "tarjeta");
+          const b = el("button", "btn block", "Reintentar envío"); b.type = "button"; b.onclick = enviar;
+          t.append(el("h1", "", "No se pudo enviar"), el("p", "", ex.message + " Tus respuestas siguen aquí: no cierres esta pestaña."), b);
+          c.appendChild(t); app.replaceChildren(c);
+        }
+      }
+    }
+  }
+  pintar();
+}
+
+/** r: { puntaje, errores, nota?, aciertos?, total?, mejor?, intentos, revision?, repetir? }
+    (el Panel solo manda lo que el docente permite ver) */
+function mostrarNota(alumno, titulo, r, previa) {
+  const c = el("div", "centrado anim"), t = el("div", "tarjeta");
+  const ic = el("div", "icono-ok"); ic.innerHTML = ICO_OK;
+  t.append(ic, el("p", "eyebrow", Aula.nombreBonito(alumno.nombre)),
+    el("h1", "", previa ? "Ya rendiste este quiz" : r.puntaje === false ? "Respuestas enviadas" : "Quiz terminado"));
+  if (r.puntaje !== false) {
+    const big = el("div", "nota-big", String(r.nota)); big.appendChild(el("small", "", "sobre 20"));
+    t.append(big, el("p", "", `Acertaste ${r.aciertos} de ${r.total} preguntas.`));
+    if (r.mejor != null) t.append(el("p", "", `Tu nota más alta sigue siendo ${r.mejor}.`));
+  } else t.append(el("p", "", "Tu docente revisará tu nota."));
+  if (r.descuento) t.append(el("div", "incid", (r.descuento > 1 ? `Se te descontaron ${r.descuento} puntos` : "Se te descontó 1 punto") + " por salir del quiz."));
+  if (r.intentos > 1) t.append(el("p", "mut", `Intentos: ${r.intentos}`));
+  if (r.revision && r.revision.length) {
+    const v = el("button", "btn block ghost", "Ver mis respuestas"); v.type = "button";
+    v.onclick = () => revision(alumno, titulo, r, previa); t.appendChild(v);
+  }
+  if (r.repetir) {
+    const o = el("button", "btn block ghost", "Intentar de nuevo"); o.type = "button"; o.onclick = () => abrir(alumno); t.appendChild(o);
+  }
+  const s = Aula.sesion();
+  const b = el("button", "btn block", (s.alumnos || []).length > 1 ? "Volver (que rinda el otro)" : "Finalizar"); b.type = "button";
+  b.onclick = () => {
+    if ((s.alumnos || []).length > 1) return elegirAlumno(s.alumnos);
+    if (window.opener) window.close();          // se abrió desde el portal: vuelve a él
+    else location.href = Aula.url("index.html");
+  };
+  t.appendChild(b);
+  c.appendChild(t); app.replaceChildren(c);
+}
+
+function revision(alumno, titulo, r, previa) {
+  const box = el("div", "quiz");
+  const bien = r.revision.filter(p => p.ok).length;
+  box.append(el("p", "eyebrow", Aula.nombreBonito(alumno.nombre) + " · " + titulo), el("h1", "pregunta", "Tus respuestas"),
+    el("p", "mut", `${bien} bien · ${r.revision.length - bien} mal. Amarillo = respuesta correcta, rojo = tu error.`));
+  r.revision.forEach((p, i) => {
+    const pq = el("div", "pregunta-det" + (p.ok ? " ok" : " fallo"));
+    pq.appendChild(el("div", "pregunta-det-q", `${i + 1}. ${p.texto}`));
+    const ops = el("div", "opciones-det");
+    p.opciones.forEach(o => {
+      const x = el("div", "opcion-det" + (o.correcta ? " correcta" : "") + (o.elegida && !o.correcta ? " mal" : ""), o.texto);
+      if (o.elegida) x.prepend(el("span", "marca", o.correcta ? "✓" : "✗"));
+      ops.appendChild(x);
+    });
+    if (!p.opciones.some(o => o.elegida)) ops.appendChild(el("div", "mut", "(sin responder)"));
+    pq.appendChild(ops); box.appendChild(pq);
+  });
+  const b = el("button", "btn block", "Volver"); b.type = "button"; b.style.marginTop = "14px";
+  b.onclick = () => mostrarNota(alumno, titulo, r, previa);
+  box.appendChild(b);
+  app.replaceChildren(box); scrollTo(0, 0);
+}
+
+/* ======================= DOCENTE ======================= */
+async function vistaDocente() {
+  let d;
+  try { d = await Aula.api("quizVer", { id: quizId }); }
+  catch (ex) { return aviso("No se pudo cargar", ex.message); }
+  const { quiz, alumnos } = d;
+  const res = {}; d.resultados.forEach(r => res[r.codigo] = r);
+  const porId = {}; quiz.preguntas.forEach(p => porId[p.id] = p);
+  const grupos = [...new Set(alumnos.map(a => a.grupo))].sort();
+  let sel = null, filtro = "";
+
+  const volver = el("a", "volver", "← Mis quizzes"); volver.href = Aula.url("docente/quizzes.html");
+  const cab = el("div", "cab anim"), izq = el("div");
+  const editar = el("a", "btn sm ghost", "Editar quiz"); editar.href = Aula.url("docente/quizzes.html?editar=" + quiz.id);
+  const csv = el("button", "btn sm ghost", "Descargar resultados (Excel)"); csv.type = "button"; csv.onclick = () => descargarCSV();
+  const bts = el("div", "tools"); bts.style.marginTop = "10px"; bts.append(editar, csv);
+  const estado = quiz.oculto ? " · OCULTO" : quiz.abierto ? " · ABIERTO" : " · CERRADO";
+  izq.append(el("p", "eyebrow", "Quiz · resultados" + estado), el("h1", "titulo", quiz.titulo),
+    el("p", "lede", "Clic en un alumno: sus preguntas (amarillo = correcta, rojo = su error), nota, hora e incidentes. Puedes corregir la nota o reiniciar su intento."), bts);
+  const stats = el("div", "stats");
+  const stat = (b, t) => { const x = el("div", "stat"); x.append(el("b", "", b), t); return x; };
+  stats.append(stat(String(d.resultados.length), "rindieron"), stat(String(alumnos.length), "activos"), stat(String(quiz.mostrar || quiz.preguntas.length), "preguntas c/u"));
+  cab.append(izq, stats);
+  const tools = el("div", "tools anim"), bus = el("div", "buscar");
+  bus.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>';
+  const q = el("input"); q.type = "search"; q.placeholder = "Buscar alumno…"; bus.appendChild(q); tools.appendChild(bus);
+  q.oninput = () => { filtro = q.value; lista(); };
+  const det = el("div"), cont = el("div");
+  app.replaceChildren(volver, cab, tools, det, cont);
+
+  const nota = r => r.correccion != null ? r.correccion : r.nota;
+
+  function lista() {
+    cont.replaceChildren();
+    const pal = Aula.norm(filtro).split(/\s+/).filter(Boolean);
+    grupos.forEach(g => {
+      const hits = alumnos.filter(a => a.grupo === g && (!pal.length || pal.every(w => Aula.norm(a.nombre + " " + a.codigo).includes(w))));
+      if (!hits.length) return;
+      const row = el("div", "grupo-row"), rb = el("button", "btn sm ghost", "Reiniciar grupo"); rb.type = "button";
+      rb.onclick = () => reiniciar(alumnos.filter(a => a.grupo === g && res[a.codigo]).map(a => a.codigo), "todo el grupo " + g);
+      row.append(el("h2", "grupo", "Grupo " + g), rb); cont.appendChild(row);
+      const grid = el("div", "alumnos");
+      hits.sort((a, b) => (a.n || 0) - (b.n || 0)).forEach(a => {
+        const r = res[a.codigo];
+        const b = el("button", "alumno" + (r ? "" : " sin")); b.type = "button";
+        const t = el("span", "t"); t.append(el("span", "nom", Aula.nombreBonito(a.nombre)), el("span", "cod", a.codigo));
+        b.append(t, el("span", "g" + (r ? (r.correccion != null ? " cor" : " ok") : ""), r ? String(nota(r)) : "—"));
+        b.onclick = () => { sel = a.codigo; ficha(); };
+        grid.appendChild(b);
+      });
+      cont.appendChild(grid);
+    });
+  }
+
+  function ficha() {
+    det.replaceChildren();
+    const a = alumnos.find(x => x.codigo === sel), r = res[sel];
+    if (!r) { det.appendChild(el("p", "vacio", Aula.nombreBonito(a.nombre) + " aún no rinde este quiz.")); return; }
+    const card = el("div", "ficha");
+    const top = el("div", "ficha-top"); top.append(el("b", "", Aula.nombreBonito(a.nombre)), el("span", "mono", a.codigo + " · " + a.grupo));
+    const meta = el("div", "ficha-meta"); meta.append(el("span", "", "Nota:"));
+    if (r.correccion != null) { meta.append(el("span", "tachada", String(r.nota))); const n = el("span", "nota", String(r.correccion)); n.appendChild(el("small", "", "corrección")); meta.append(n); }
+    else { const n = el("span", "nota", String(r.nota)); n.appendChild(el("small", "", "sobre 20")); meta.append(n); }
+    meta.append(el("span", "aciertos", `${r.aciertos}/${r.total} correctas`), el("span", "hora", "🕒 " + fmtHora(r.hora)));
+    if (r.intentos > 1) meta.append(el("span", "aciertos", `↻ ${r.intentos} intentos (nota más alta)`));
+    if (r.incidentes) meta.append(el("span", "incid", "⚠️ " + r.incidentes + " salida(s) de la pestaña" + (r.descuento ? ` · −${r.descuento} pts` : "")));
+    card.append(top, meta);
+    (r.detalle || []).forEach((resp, i) => {
+      const p = porId[resp.id];
+      const pq = el("div", "pregunta-det" + (resp.ok ? " ok" : " fallo"));
+      if (!p) { pq.appendChild(el("div", "pregunta-det-q", `${i + 1}. (pregunta borrada del quiz)`)); card.appendChild(pq); return; }
+      const tq = el("div", "pregunta-det-q", `${i + 1}. ${p.texto}`);
+      if (resp.pts) tq.appendChild(el("span", "pts-q", (resp.ok ? "+" : "0 de ") + String(resp.pts).replace(".", ",") + " pts"));
+      pq.appendChild(tq);
+      const ops = el("div", "opciones-det");
+      (resp.orden && resp.orden.length ? resp.orden : p.alts.map((_, k) => k)).forEach(k => {
+        if (p.alts[k] === undefined) return;
+        const o = el("div", "opcion-det" + (k === p.correcta ? " correcta" : "") + (k === resp.elegida && !resp.ok ? " mal" : ""), p.alts[k]);
+        if (k === resp.elegida) o.prepend(el("span", "marca", resp.ok ? "✓" : "✗"));
+        ops.appendChild(o);
+      });
+      pq.appendChild(ops); card.appendChild(pq);
+    });
+    const acc = el("div", "ficha-acciones"), corr = el("div", "correccion");
+    const inp = el("input"); inp.type = "number"; inp.min = 0; inp.max = 20; inp.step = 0.5; inp.placeholder = "Opcional";
+    if (r.correccion != null) inp.value = r.correccion;
+    const g = el("button", "btn sm", "Guardar corrección"); g.type = "button";
+    g.onclick = async () => {
+      g.disabled = true;
+      const v = inp.value.trim() === "" ? null : Math.max(0, Math.min(20, parseFloat(inp.value)));
+      try { await Aula.api("quizCorregir", { id: quiz.id, codigo: sel, correccion: v }); r.correccion = v; ficha(); lista(); Aula.toast("Corrección guardada"); }
+      catch (ex) { Aula.toast("No se guardó", ex.message, "warn"); g.disabled = false; }
+    };
+    corr.append(el("label", "", "Nota de corrección (0–20):"), inp, g);
+    const re = el("button", "btn sm ghost", "Reiniciar su intento"); re.type = "button";
+    re.onclick = () => reiniciar([sel], Aula.nombreBonito(a.nombre));
+    acc.append(corr, re); card.appendChild(acc);
+    det.appendChild(card); det.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /** CSV con ; y BOM: Excel en español lo abre directo, con tildes y columnas bien separadas. */
+  function descargarCSV() {
+    const esc = v => { v = v == null ? "" : String(v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    const filas = [["GRUPO", "N", "CODIGO", "ALUMNO", "NOTA", "NOTA ORIGINAL", "ACIERTOS", "TOTAL", "INTENTOS", "SALIDAS", "DESCUENTO", "HORA"]];
+    alumnos.slice().sort((a, b) => String(a.grupo).localeCompare(String(b.grupo)) || (a.n || 0) - (b.n || 0)).forEach(a => {
+      const r = res[a.codigo];
+      filas.push([a.grupo, a.n, a.codigo, Aula.nombreBonito(a.nombre), r ? nota(r) : "", r ? r.nota : "", r ? r.aciertos : "", r ? r.total : "",
+        r ? r.intentos : "", r ? r.incidentes : "", r ? r.descuento || 0 : "", r ? fmtHora(r.hora) : "no rindió"]);
+    });
+    const texto = "﻿" + filas.map(f => f.map(esc).join(";")).join("\r\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([texto], { type: "text/csv;charset=utf-8" }));
+    a.download = (quiz.titulo || "quiz").replace(/[\\/:*?"<>|]+/g, "-") + " - resultados.csv";
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+
+  async function reiniciar(codigos, quien) {
+    if (!codigos.length) return Aula.toast("Nada que reiniciar", "Nadie de ahí rindió todavía.", "warn");
+    if (!confirm(`¿Reiniciar el quiz de ${quien}? Se borrarán ${codigos.length} nota(s) y podrán rendirlo otra vez.`)) return;
+    try {
+      await Aula.api("quizReiniciar", { id: quiz.id, codigos });
+      codigos.forEach(c => delete res[c]); if (codigos.includes(sel)) sel = null;
+      det.replaceChildren(); lista(); Aula.toast("Reiniciado", codigos.length + " intento(s) borrados.");
+    } catch (ex) { Aula.toast("No se pudo reiniciar", ex.message, "warn"); }
+  }
+  lista();
+}
+
+(async () => {
+  const s = await Aula.listo;
+  document.getElementById("quien").textContent = Aula.quien(s);
+  document.getElementById("salir").onclick = () => Aula.salir();
+  if (!quizId) return aviso("Falta el quiz", "Entra desde el portal.");
+  if (s.rol === "docente") vistaDocente(); else elegirAlumno(s.alumnos || []);
+})();
+</script>
+</body>
+</html>
