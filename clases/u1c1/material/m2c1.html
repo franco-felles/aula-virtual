@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
+<meta name="material-titulo" content="Arma tu PC desde cero">
+<meta name="material-tipo" content="practica">
+<meta name="material-descripcion" content="Instala cada pieza en su lugar, conecta los cables y supera la prueba final: ¡encender el equipo!">
+<script src="../../../conexion/aula.js" data-proteger></script>
+
+<link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
+<title>Arma tu PC desde cero</title>
+<style>
+:root{--bg:#f1f4fb;--fg:#15203b;--mut:#55627f;--card:#ffffff;--bd:#d3daec;--ac:#2f63e0;--ok:#15803d;--bad:#dc2626;--hint:#16a34a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff;--ok:#4ade80;--bad:#f87171;--hint:#4ade80}}
+:root[data-theme="dark"]{--bg:#0e1424;--fg:#e8ecf7;--mut:#9aa6c4;--card:#161e36;--bd:#2a3558;--ac:#6ea0ff;--ok:#4ade80;--bad:#f87171;--hint:#4ade80}
+html{height:100%}
+*{box-sizing:border-box}
+body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
+header{padding:12px 16px 6px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
+h1{margin:0;font-size:1.2rem}
+header p{margin:2px 0 0;color:var(--mut);font-size:.85rem}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;border:1px solid var(--bd);border-radius:99px;overflow:hidden}
+.seg button{font:inherit;font-size:.8rem;padding:6px 11px;border:0;background:var(--card);color:var(--fg);cursor:pointer}
+.seg button.on{background:var(--ac);color:#fff}
+#reset{font:inherit;font-size:.8rem;padding:6px 11px;border-radius:99px;border:1px solid var(--bd);background:var(--card);color:var(--fg);cursor:pointer}
+main{flex:1;min-height:0;display:flex;gap:12px;padding:8px 16px 16px}
+#c{flex:1;min-width:0;position:relative;border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--card);touch-action:none;cursor:grab}
+#c canvas{display:block;width:100%;height:100%}
+#fx{position:absolute;inset:0;pointer-events:none}
+#tip{position:absolute;pointer-events:none;background:var(--ac);color:#fff;padding:4px 10px;border-radius:8px;font-size:.85rem;font-weight:600;white-space:nowrap;transform:translate(14px,-34px);display:none;z-index:2}
+#msg{position:absolute;left:50%;top:12px;transform:translate(-50%,-10px);opacity:0;transition:opacity .25s,transform .25s;background:var(--fg);color:var(--bg);padding:9px 15px;border-radius:14px;font-size:.9rem;font-weight:600;pointer-events:none;max-width:calc(100% - 24px);text-align:center;z-index:2}
+#msg.show{opacity:1;transform:translate(-50%,0)}
+#msg.ok{background:#15803d;color:#fff}#msg.bad{background:#dc2626;color:#fff}
+#hold{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:var(--ac);color:#fff;padding:8px 14px;border-radius:99px;font-size:.85rem;font-weight:600;display:none;max-width:calc(100% - 24px);text-align:center;z-index:2}
+aside{width:340px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.sh{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mut)}
+.bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden;margin:6px 0 10px}
+.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .4s}
+#st{margin:0 0 6px;font-size:1.08rem}
+#sd{margin:0;font-size:.92rem;line-height:1.45}
+#sq{display:none;margin:10px 0 0;font-size:.85rem;line-height:1.4;background:var(--bg);border-radius:10px;padding:8px 10px}
+#pwr{width:100%;font:inherit;font-size:1rem;font-weight:700;padding:11px;border-radius:12px;border:0;background:#15803d;color:#fff;cursor:pointer}
+#pwr.on{background:#dc2626}
+#pmsg{margin:10px 0 0;font-size:.88rem;line-height:1.4;display:none;border-left:3px solid var(--ac);padding:2px 0 2px 10px}
+#pmsg.ok{border-color:var(--ok)}#pmsg.bad{border-color:var(--bad)}
+.sec{margin:14px 0 6px;font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+.sec:first-child{margin-top:0}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font:inherit;font-size:.8rem;padding:6px 10px;border-radius:99px;border:1px solid var(--bd);background:var(--bg);color:var(--fg);cursor:pointer}
+.btns button:hover{border-color:var(--ac);color:var(--ac)}
+.btns button.done{border-color:var(--ok);color:var(--ok)}
+.btns button.done::after{content:" ✓";font-weight:700}
+.btns button.held{background:var(--ac);border-color:var(--ac);color:#fff}
+.hint{animation:hint 1.1s ease-in-out infinite}
+@keyframes hint{50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--hint) 45%,transparent)}}
+@media (prefers-reduced-motion:reduce){.hint{animation:none;outline:2px solid var(--hint)}}
+details.card summary{cursor:pointer;font-weight:600;font-size:.9rem}
+#gl{margin:10px 0 0;padding-left:20px;font-size:.84rem;line-height:1.4}
+#gl li{margin-bottom:6px}
+#gl li.ok{color:var(--mut);text-decoration:line-through}
+#gl li.cur{font-weight:700;color:var(--ac)}
+#gl small{display:block;color:var(--mut);font-weight:400;text-decoration:none}
+@media (max-width:760px){main{flex-direction:column}#c{flex:none;height:58vh}aside{width:auto;overflow:visible}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🛠️ Arma tu PC desde cero</h1>
+    <p>Clase 1 · Material 2 • Toca una pieza de la mesa y luego su lugar en el gabinete · toca una pieza instalada para quitarla · arrastra para girar</p>
+  </div>
+  <div class="tools">
+    <div class="seg" id="modes"><button data-m="guia" class="on">🧭 Guiado</button><button data-m="reto">🏆 Desafío</button></div>
+    <div class="seg" id="views"><button data-v="mesa" class="on">🪑 Mesa</button><button data-v="pc">🔍 Gabinete</button></div>
+    <button id="reset">↺ Empezar de nuevo</button>
+  </div>
+</header>
+<main>
+  <div id="c"><div id="tip"></div><div id="msg" role="status" aria-live="polite"></div><div id="hold"></div><canvas id="fx"></canvas></div>
+  <aside>
+    <div class="card" id="stepc">
+      <div class="sh"><span id="sn"></span><span id="stats"></span></div>
+      <div class="bar"><i id="pb"></i></div>
+      <h2 id="st"></h2>
+      <p id="sd"></p>
+      <p id="sq"></p>
+    </div>
+    <div class="card">
+      <button id="pwr">⏻ Encender la PC</button>
+      <p id="pmsg" role="status"></p>
+    </div>
+    <div class="card">
+      <h3 class="sec">Piezas</h3><div class="btns" id="bpz"></div>
+      <h3 class="sec">Cables</h3><div class="btns" id="bcb"></div>
+      <h3 class="sec">Fuente de poder</h3><div class="btns"><button id="swb">Interruptor: O (apagado)</button></div>
+    </div>
+    <details class="card" id="guide"><summary>📘 Guía para el docente (pasos y preguntas)</summary><ol id="gl"></ol></details>
+  </aside>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ===================== DATOS DEL ARMADO =====================
+const NAME={psu:'Fuente de poder',mb:'Placa madre',cpu:'Procesador (CPU)',paste:'Pasta térmica',cooler:'Cooler (disipador + ventilador)',ram:'Memoria RAM',ssd:'Unidad SSD',hdd:'Disco duro (HDD)',gpu:'Tarjeta gráfica'};
+const PIECES=['psu','mb','cpu','paste','cooler','ram','ssd','hdd','gpu'];
+const REQ={psu:[],mb:[],cpu:['mb'],paste:['cpu'],cooler:['cpu'],ram:['mb'],ssd:[],hdd:[],gpu:['mb']};
+const WHERE={psu:'La fuente va en la parte de abajo del gabinete.',mb:'La placa madre va atornillada al fondo del gabinete.',cpu:'El procesador va en el socket: el cuadrado plateado de la placa madre.',paste:'La pasta térmica va encima del procesador.',cooler:'El cooler va encima del procesador.',ram:'La RAM va en las ranuras largas al lado del procesador.',ssd:'El SSD va en la bahía de almacenamiento (abajo, a la derecha).',hdd:'El disco duro va en la bahía de almacenamiento (arriba, a la derecha).',gpu:'La tarjeta gráfica va en la ranura PCIe, debajo del procesador.'};
+const OKM={psu:'Fuente instalada: el “corazón” de la PC.',mb:'Placa madre en su lugar: ahora todo se conecta a ella.',cpu:'Procesador en el socket. ¡Con cuidado, sin forzar!',paste:'Pasta térmica aplicada: una gotita es suficiente.',cooler:'Cooler montado: el procesador ya no se va a sobrecalentar.',ram:'Memoria RAM instalada.',ssd:'SSD instalado: aquí vivirá el sistema operativo.',hdd:'Disco duro instalado: espacio para muchos archivos.',gpu:'Tarjeta gráfica en la ranura PCIe.'};
+const CAB={
+ c24:{n:'24 pines (placa madre)',need:['psu','mb'],to:[1.35,.35,-.98],r:.07,col:0x26282e},
+ c8:{n:'8 pines (CPU)',need:['psu','mb'],to:[-1.0,2.35,-.98],r:.05,col:0x26282e},
+ pcie:{n:'PCIe (tarjeta gráfica)',need:['psu','gpu'],to:[.8,.25,-.3],r:.05,col:0x26282e},
+ sata1:{n:'SATA (SSD)',need:['psu','ssd'],to:[1.88,.02,-.6],r:.035,col:0xd03a3a},
+ sata2:{n:'SATA (disco duro)',need:['psu','hdd'],to:[1.88,1.46,-.56],r:.035,col:0xd03a3a},
+ hdmi:{n:'HDMI (monitor)',need:['gpu'],to:[-1.85,-.25,-.32],r:.045,col:0x111318},
+ usb:{n:'USB (teclado y mouse)',need:['mb'],to:[-1.95,.95,-.82],r:.035,col:0x6b7280},
+ pow:{n:'Corriente (enchufe)',need:['psu'],to:[-1.6,-2.1,.9],r:.05,col:0x111318}
+};
+const CK=Object.keys(CAB);
+const STEPS=[
+ {k:'psu',t:'Instala la fuente de poder',d:'Toca la fuente en la mesa y luego su lugar: la parte de abajo del gabinete.',q:'¿Por qué crees que la fuente va abajo? (pista: el calor sube)'},
+ {k:'mb',t:'Coloca la placa madre',d:'Va atornillada al fondo del gabinete. Es la base donde se conecta todo lo demás.',q:'¿A qué parte del cuerpo se parece la placa madre?'},
+ {k:'cpu',t:'Inserta el procesador (CPU)',d:'Va en el socket, el cuadrado plateado de la placa. En la vida real se alinea el triangulito dorado y nunca se fuerza.',q:'¿Qué pasaría si se dobla un pin del procesador?'},
+ {k:'paste',t:'Aplica pasta térmica',d:'Una gotita del tamaño de una arveja sobre el CPU ayuda a que el calor pase al disipador.',q:'¿Por qué no basta con apoyar el disipador directamente?'},
+ {k:'cooler',t:'Monta el cooler',d:'El disipador y su ventilador van encima del procesador para enfriarlo.',q:'¿Qué hace nuestro cuerpo cuando tiene calor?'},
+ {k:'ram',t:'Coloca la memoria RAM',d:'Los módulos van en las ranuras largas al lado del procesador. Tienen una muesca: solo entran en un sentido.',q:'¿Qué pasa con lo que hay en la RAM cuando apagas la PC?'},
+ {k:'ssd',t:'Instala la unidad SSD',d:'Va en la bahía de almacenamiento, a la derecha del gabinete.',q:'¿Por qué el SSD es más rápido que un disco duro?'},
+ {k:'hdd',t:'Instala el disco duro (HDD)',d:'También va en la bahía de almacenamiento. Sirve para guardar muchos archivos.',q:'¿La PC funcionaría solo con uno de los dos discos?'},
+ {k:'gpu',t:'Inserta la tarjeta gráfica',d:'Va en la ranura PCIe larga, debajo del procesador.',q:'¿Qué hace la tarjeta gráfica que no hace el monitor?'},
+ {c:'c24',t:'Conecta el cable de 24 pines',d:'Toca el cable en la lista “Cables” y luego su conector en la placa madre (lado derecho). Le da energía a toda la placa.',q:'¿De dónde sale la energía de este cable?'},
+ {c:'c8',t:'Conecta el cable de 8 pines del CPU',d:'Su conector está arriba a la izquierda de la placa madre. Le da energía extra al procesador.',q:'¿Por qué el procesador necesita su propio cable?'},
+ {c:'pcie',t:'Dale energía a la tarjeta gráfica',d:'El cable PCIe va de la fuente al borde de la tarjeta gráfica.',q:'¿Por qué la tarjeta gráfica necesita tanta energía?'},
+ {c:'sata1',t:'Conecta el SSD',d:'El cable SATA (rojo) lleva datos y energía al SSD.',q:''},
+ {c:'sata2',t:'Conecta el disco duro',d:'Otro cable SATA, ahora para el disco duro.',q:''},
+ {c:'hdmi',t:'Conecta el monitor',d:'El cable HDMI va del monitor a la tarjeta gráfica (el conector del lado izquierdo del gabinete).',q:'¿El monitor es un dispositivo de entrada o de salida?'},
+ {c:'usb',t:'Conecta el teclado y el mouse',d:'Van a los puertos USB de la placa madre (lado izquierdo, arriba).',q:'¿Teclado y mouse son de entrada o de salida?'},
+ {c:'pow',t:'Enchufa la fuente',d:'El cable de corriente va de la zapatilla a la fuente de poder.',q:'¿Qué hace la fuente con la electricidad de la pared?'},
+ {sw:1,t:'Prende el interruptor de la fuente',d:'La fuente tiene un interruptor: “O” es apagado e “I” es encendido. Toca el botoncito rojo de la fuente o usa el botón del panel.',q:''},
+ {pw:1,t:'¡Prueba final: enciende la PC!',d:'Presiona el botón de encendido (arriba del gabinete) o el botón verde del panel. Si algo falla, la PC te dará pistas.',q:'¿Qué esperas ver en el monitor si todo está bien?'}
+];
+
+// ===================== ESCENA =====================
+const $=id=>document.getElementById(id);
+const V3=a=>new THREE.Vector3(a[0],a[1],a[2]);
+const DY=-2.93;
+const wrap=$('c'),tip=$('tip');
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+wrap.insertBefore(renderer.domElement,wrap.firstChild);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(40,1,.1,200);
+scene.add(new THREE.HemisphereLight(0xffffff,0x556677,.95));
+const dl=new THREE.DirectionalLight(0xffffff,.75);dl.position.set(4,8,8);scene.add(dl);
+const root=new THREE.Group();scene.add(root);
+const groups={},spin=[],pickAll=[];
+const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.5,metalness:.3},o||{}));
+function P(k){const g=new THREE.Group();g.userData.key=k;root.add(g);groups[k]=g;return g}
+function B(g,w,h,d,c,x,y,z,o){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c,o));m.position.set(x,y,z);g.add(m);return m}
+function C(g,r,h,c,x,y,z){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,24),M(c));m.rotation.x=Math.PI/2;m.position.set(x,y,z);g.add(m);return m}
+function T(g,r,t,c,x,y,z){const m=new THREE.Mesh(new THREE.TorusGeometry(r,t,8,32),M(c));m.position.set(x,y,z);g.add(m);return m}
+function L(g,txt,w,h,x,y,z,bg,fg){const c=document.createElement('canvas');c.width=256;c.height=Math.round(256*h/w);const q=c.getContext('2d');q.fillStyle=bg;q.fillRect(0,0,c.width,c.height);q.fillStyle=fg;q.font='bold '+Math.min(c.height*.5,c.width/txt.length*1.25)+'px sans-serif';q.textAlign='center';q.textBaseline='middle';q.fillText(txt,c.width/2,c.height/2);const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),M(0xffffff,{map:new THREE.CanvasTexture(c),metalness:0,roughness:.6}));m.position.set(x,y,z);g.add(m);return m}
+function fan(g,r,x,y,z,c,rc){const f=new THREE.Group();f.position.set(x,y,z);g.add(f);
+ for(let i=0;i<7;i++){const b=new THREE.Mesh(new THREE.BoxGeometry(r*.75,r*.28,.04),M(c));const a=i/7*Math.PI*2;b.position.set(Math.cos(a)*r*.5,Math.sin(a)*r*.5,0);b.rotation.z=a+.5;f.add(b)}
+ const h=new THREE.Mesh(new THREE.CylinderGeometry(r*.2,r*.2,.08,16),M(0x2a2d34));h.rotation.x=Math.PI/2;f.add(h);
+ if(rc)T(g,r*1.12,r*.1,rc,x,y,z);spin.push({f,k:g.userData.key})}
+
+// Mesa de trabajo
+const desk=new THREE.Mesh(new THREE.BoxGeometry(26,.2,10.5),M(0x8a6a4a,{metalness:0,roughness:.85}));desk.position.set(0,DY-.1,1.6);root.add(desk);
+// Gabinete (fijo, abierto)
+let g=P('case');
+B(g,4.4,5.4,.06,0x2b3350,0,0,-1.3);B(g,4.4,.1,2.4,0x1c2030,0,-2.75,-.1);B(g,4.4,.1,2.4,0x1c2030,0,2.75,-.1);
+B(g,.12,5.4,.1,0x1c2030,-2.14,0,1.05);B(g,.12,5.4,.1,0x1c2030,2.14,0,1.05);
+[[-1.9,-.9],[1.9,-.9],[-1.9,.7],[1.9,.7]].forEach(p=>B(g,.3,.15,.3,0x111317,p[0],-2.87,p[1]));
+const ed=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(4.4,5.4,2.4)),new THREE.LineBasicMaterial({color:0x4f7cff}));ed.position.set(0,0,-.1);g.add(ed);
+// bahía de discos y separadores de la placa
+[1.55,2.2].forEach(x=>B(g,.05,2.9,.05,0x4a5370,x,.45,-.85));[-.95,.4,1.75].forEach(y=>B(g,.7,.04,.3,0x4a5370,1.88,y,-.85));
+[[-1.6,2.2],[1.2,2.2],[-1.6,-.9],[1.2,-.9],[-.2,.65]].forEach(p=>C(g,.05,.1,0xd8b45a,p[0],p[1],-1.25));
+// botón de encendido arriba
+const pwBtn=new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,.07,24),M(0x2a2d34));pwBtn.position.set(1.0,2.83,.7);pwBtn.userData.pw=1;g.add(pwBtn);
+const pwRing=new THREE.Mesh(new THREE.TorusGeometry(.18,.03,8,32),M(0x555a66));pwRing.rotation.x=Math.PI/2;pwRing.position.set(1.0,2.84,.7);pwRing.userData.pw=1;g.add(pwRing);
+const pwLed=B(g,.09,.03,.09,0x444444,1.5,2.82,.7);
+pickAll.push(pwBtn,pwRing);
+
+// ===== Piezas (construidas en su posición final dentro del gabinete) =====
+g=P('mb');B(g,3.4,3.7,.1,0x14161d,-.2,.65,-1.2);
+B(g,1.1,1.1,.06,0xaeb4c2,-.2,1.35,-1.14);B(g,.8,.8,.08,0x0b0c10,-.2,1.35,-1.12);
+for(let i=0;i<6;i++)C(g,.07,.16,i%2?0xc9ccd6:0x222630,-1.1,.8+i*.2,-1.1);
+[.85,1.12].forEach(x=>B(g,.16,1.3,.14,0x23252e,x,1.4,-1.1));
+B(g,.22,.85,.16,0xe9e4d0,1.35,.35,-1.1);B(g,.5,.2,.16,0xe9e4d0,-1.0,2.35,-1.1);B(g,2.4,.12,.14,0xe9e9ee,-.5,-.78,-1.1);
+C(g,.18,.07,0xc0c4cd,-.2,-.95,-1.1);B(g,.6,.6,.12,0xc9d0dc,1.0,-.85,-1.1);
+for(let i=0;i<3;i++)B(g,.28,.14,.16,0x2f6df0,1.34,-.05-i*.2,-1.1);
+B(g,.4,.5,.3,0x2f6df0,-1.78,1.5,-1.0);B(g,.38,.3,.3,0xbfc3cc,-1.78,.95,-1.0);B(g,.38,.3,.3,0xbfc3cc,-1.78,.55,-1.0);
+g=P('cpu');B(g,.9,.9,.05,0x1f7a4d,-.2,1.35,-1.06);B(g,.62,.62,.09,0xd9dce4,-.2,1.35,-1.0,{metalness:.7});
+L(g,'CPU 4.2GHz',.5,.22,-.2,1.35,-.953,'#e6e8ee','#222');
+for(let i=0;i<6;i++){const o=-.34+i*.136;[[o,.4],[o,-.4],[.4,o],[-.4,o]].forEach(p=>B(g,.07,.07,.02,0xd8b45a,-.2+p[0],1.35+p[1],-1.035))}
+g=P('cooler');C(g,.6,.2,0x15171d,-.2,1.35,-.72);T(g,.62,.06,0x15171d,-.2,1.35,-.6);
+for(let i=0;i<16;i++){const a=i/16*Math.PI*2;const m=B(g,.05,.36,.3,0xcfd3da,-.2+Math.cos(a)*.45,1.35+Math.sin(a)*.45,-.84,{metalness:.7});m.rotation.z=a-Math.PI/2}
+[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(p=>B(g,.14,.14,.36,0x15171d,-.2+.62*p[0],1.35+.62*p[1],-.86));
+fan(g,.48,-.2,1.35,-.58,0x1b1e26);
+g=P('ram');[.85,1.12].forEach(x=>{B(g,.08,1.2,.5,0x2a8a4a,x,1.4,-.92);for(let i=0;i<8;i++)B(g,.1,.1,.34,0x15181f,x,.9+i*.14,-.9);B(g,.09,.04,.5,0xd8b45a,x,.78,-.92)});
+g=P('gpu');B(g,2.8,.95,.5,0x24231f,-.3,-.25,-.55);
+B(g,2.8,.07,.52,0x8c8576,-.3,.2,-.55,{metalness:.7});B(g,2.8,.07,.52,0x8c8576,-.3,-.7,-.55,{metalness:.7});B(g,.07,.95,.52,0x8c8576,-1.7,-.25,-.55,{metalness:.7});B(g,.07,.95,.52,0x8c8576,1.1,-.25,-.55,{metalness:.7});
+fan(g,.33,-.85,-.25,-.28,0x15151a,0x8c8576);fan(g,.33,.25,-.25,-.28,0x15151a,0x8c8576);
+L(g,'RTX',.4,.16,-.3,-.25,-.298,'#24231f','#cfc9b8');
+B(g,.08,1.1,.5,0xc9ccd6,-1.75,-.25,-.55);B(g,1.4,.08,.2,0xd8b45a,-.7,-.76,-.55);
+g=P('psu');B(g,4.1,.9,1.8,0x9ea3ab,0,-2.1,-.1,{metalness:.6});
+T(g,.3,.02,0x2a2d34,.2,-2.1,.82);T(g,.18,.02,0x2a2d34,.2,-2.1,.82);fan(g,.3,.2,-2.1,.81,0x1c1e24);
+B(g,.5,.3,.06,0x111111,-1.6,-2.03,.83);L(g,'ATX 600W',1.0,.5,1.3,-2.1,.803,'#e8e8e0','#222');
+const psuSw=B(g,.2,.13,.08,0xe5484d,-1.6,-2.36,.85);psuSw.userData.sw=1;
+L(g,'O / I',.36,.1,-1.6,-2.5,.803,'#111','#fff');
+[0xf1c40f,0xe5484d,0x111111,0xf39c12,0x111111,0xf1c40f].forEach((col,i)=>{const w=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.5,8),M(col));w.position.set(1.15+i*.06,-1.45,-.7);g.add(w)});
+g=P('ssd');B(g,.5,.72,.09,0x15151a,1.88,-.45,-.7);L(g,'SSD',.38,.3,1.88,-.4,-.653,'#111','#e5484d');B(g,.2,.1,.09,0x9a9ea8,1.88,-.04,-.7);
+g=P('hdd');B(g,.5,.72,.2,0xb5bac4,1.88,1.0,-.7,{metalness:.6});L(g,'HDD 1TB',.4,.4,1.88,1.0,-.598,'#eee','#222');B(g,.2,.08,.2,0xd8b45a,1.88,1.4,-.7);
+// Pasta térmica: jeringa en la mesa; una vez aplicada queda como una gota sobre el CPU
+g=P('paste');{const s=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,.7,16),M(0xeef0f4,{metalness:0}));g.add(s);
+ const tp=new THREE.Mesh(new THREE.ConeGeometry(.06,.18,12),M(0xb8bcc4));tp.position.y=.44;g.add(tp);
+ const pl=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.3,8),M(0x2f63e0));pl.position.y=-.48;g.add(pl);B(g,.3,.03,.12,0x2f63e0,0,-.64,0)}
+const blobGeo=new THREE.CylinderGeometry(.2,.22,.03,24);
+const blob=new THREE.Mesh(blobGeo,M(0xb8bcc4,{metalness:.5}));blob.rotation.x=Math.PI/2;blob.position.set(-.2,1.35,-.94);blob.visible=false;blob.userData.key='paste';root.add(blob);pickAll.push(blob);
+
+// ===== Periféricos fijos en la mesa =====
+const FIXN={mon:'Monitor',kb:'Teclado',mouse:'Mouse',strip:'Zapatilla (regleta)'};
+function FX(k){const g=new THREE.Group();g.userData.fix=k;root.add(g);return g}
+const mx=-7.6,mz=-1.2;
+g=FX('mon');B(g,1.5,.08,1,0x1a1d24,mx,DY+.04,mz+.1);B(g,.3,1.5,.16,0x1a1d24,mx,DY+.8,mz-.2);B(g,4.4,2.7,.16,0x111318,mx,-.6,mz);
+const scrC=document.createElement('canvas');scrC.width=512;scrC.height=290;const scrTex=new THREE.CanvasTexture(scrC);
+const screen=new THREE.Mesh(new THREE.PlaneGeometry(4.1,2.32),new THREE.MeshBasicMaterial({map:scrTex}));screen.position.set(mx,-.55,mz+.082);g.add(screen);
+B(g,.07,.07,.02,0x3ddc84,mx+1.95,-1.84,mz+.09);
+g=FX('kb');B(g,3.4,.12,1.3,0x23262e,mx,DY+.06,1.8);for(let r=0;r<4;r++)for(let i=0;i<10;i++)B(g,.25,.07,.22,0x3a3e48,mx-1.35+i*.3,DY+.15,1.35+r*.27);B(g,1.6,.07,.22,0x3a3e48,mx,DY+.15,2.35);
+g=FX('mouse');B(g,1.3,.02,1.4,0x2b3a6b,-5.3,DY+.01,1.8,{metalness:0,roughness:.9});{const m=new THREE.Mesh(new THREE.SphereGeometry(.3,24,16),M(0x2a2d35));m.scale.set(1,.42,1.5);m.position.set(-5.3,DY,1.8);g.add(m)}
+g=FX('strip');B(g,1.8,.14,.42,0xe8e8e8,-4.4,DY+.07,-2.7,{metalness:0});for(let i=0;i<3;i++)B(g,.22,.02,.22,0x333333,-4.9+i*.45,DY+.15,-2.7);B(g,.1,.04,.1,0xe5484d,-3.65,DY+.15,-2.7);
+root.children.forEach(o=>{if(o.userData.fix)o.traverse(m=>{if(m.isMesh){m.userData.fix=o.userData.fix;pickAll.push(m)}})});
+{const cv=new THREE.CatmullRomCurve3([[-5.2,DY+.07,-2.7],[-6,DY+.03,-3.2],[-6.5,DY-.05,-3.9]].map(V3));root.add(new THREE.Mesh(new THREE.TubeGeometry(cv,20,.04,6),M(0x111318)))}
+
+// ===== Convertir piezas: cada una queda en la mesa y sabe dónde va =====
+const ST={};
+const ghostMeshes=[];
+function ghostMat(){return new THREE.MeshBasicMaterial({color:0x9aa6c4,transparent:true,opacity:.25,depthWrite:false})}
+const SCAT={psu:[8.3,-1.2,0,-.3],mb:[8.1,3.3,1,.15],gpu:[-4.4,4.5,1,.2],ram:[-1.7,4.7,1,-.3],cpu:[.3,4.7,1,.4],paste:[1.6,5.6,1,1.1],cooler:[2.9,4.5,1,0],ssd:[4.7,5.3,1,-.3],hdd:[4.7,3.8,1,.3]};
+function qOf(flat,yaw){const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw);if(flat)q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),-Math.PI/2));return q}
+PIECES.forEach(k=>{const gr=groups[k];
+ const c=new THREE.Box3().setFromObject(gr).getCenter(new THREE.Vector3());
+ let ghost;
+ if(k==='paste'){ghost=new THREE.Mesh(new THREE.CylinderGeometry(.32,.32,.06,24),ghostMat());ghost.rotation.x=Math.PI/2;ghost.position.copy(blob.position);root.add(ghost);ghost.userData.slot=k;ghostMeshes.push(ghost);ghost.userData.mat=ghost.material}
+ else{ghost=gr.clone(true);const mat=ghostMat();ghost.traverse(o=>{if(o.isMesh){o.material=mat;o.userData.slot=k;ghostMeshes.push(o)}});ghost.userData.mat=mat;root.add(ghost)}
+ ghost.visible=false;
+ const h=new THREE.Group();root.add(h);h.add(gr);gr.position.copy(c).negate();
+ const s=SCAT[k],tq=qOf(s[2],s[3]);h.quaternion.copy(tq);h.position.set(s[0],0,s[1]);h.updateMatrixWorld(true);
+ const bb=new THREE.Box3().setFromObject(h);const tp=new THREE.Vector3(s[0],DY-bb.min.y+.01,s[1]);h.position.copy(tp);
+ const ip=k==='paste'?blob.position.clone().add(new THREE.Vector3(0,0,.5)):c.clone(),iq=k==='paste'?new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),-Math.PI/2):new THREE.Quaternion();
+ ST[k]={h,ghost,tp,tq,ip,iq,inst:false,hideAt:0};
+ gr.traverse(o=>{if(o.isMesh){o.userData.key=k;pickAll.push(o)}})});
+
+// ===== Cables =====
+const PSU_OUT=[1.3,-1.6,.55];
+const EXT={
+ hdmi:[[mx,-1.6,mz-.12],[mx+.4,DY+.03,mz-.6],[-3.4,DY+.03,-1.9],[-2.6,-1.1,-.5],CAB.hdmi.to],
+ usb:[[mx,DY+.08,1.12],[mx+1.6,DY+.03,.4],[-3.1,DY+.03,-.2],[-2.4,.3,-.5],CAB.usb.to],
+ pow:[[-4.1,DY+.15,-2.5],[-3.2,DY+.03,-1.4],[-2.7,DY+.03,1.4],[-1.9,-2.45,1.35],CAB.pow.to]
+};
+const MOUSE_PTS=[[-5.3,DY+.03,1.2],[-4.3,DY+.03,.4],[-2.9,DY+.03,-.3],[-2.4,.55,-.6],[-1.95,.9,-.82]];
+function route(c){if(EXT[c])return EXT[c].map(V3);const A=V3(PSU_OUT),Bv=V3(CAB[c].to),m=A.clone().lerp(Bv,.5);m.z=Math.max(A.z,Bv.z)+.55;
+ return [A,A.clone().add(new THREE.Vector3(0,.3,.25)),m,Bv.clone().add(new THREE.Vector3(0,0,.35)),Bv]}
+function tube(pts,r,mat){return new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),60,r,8),mat)}
+const CS={};
+CK.forEach(c=>{const d=CAB[c];
+ const gm=ghostMat();gm.color.setHex(0x22c55e);const gh=new THREE.Group();gh.add(tube(route(c),d.r,gm));if(c==='usb')gh.add(tube(MOUSE_PTS.map(V3),d.r,gm));gh.visible=false;root.add(gh);
+ const port=new THREE.Mesh(new THREE.SphereGeometry(.13,16,12),new THREE.MeshBasicMaterial({color:0xffc83d,transparent:true,opacity:.9}));port.position.copy(V3(d.to));port.userData.port=c;port.visible=false;root.add(port);
+ CS[c]={on:false,mesh:null,ghost:gh,port}});
+function cableOn(c){const d=CAB[c],g=new THREE.Group(),mat=M(d.col,{roughness:.8,metalness:0});g.add(tube(route(c),d.r,mat));if(c==='usb')g.add(tube(MOUSE_PTS.map(V3),d.r,mat));
+ const plug=new THREE.Mesh(new THREE.BoxGeometry(d.r*4,d.r*4,.16),M(c.startsWith('sata')?0xd03a3a:0x15171c));plug.position.copy(V3(d.to)).add(new THREE.Vector3(0,0,.08));g.add(plug);
+ g.traverse(o=>{if(o.isMesh){o.userData.cable=c;pickAll.push(o)}});root.add(g);CS[c].mesh=g;CS[c].on=true}
+function cableOff(c){const g=CS[c].mesh;if(g){g.traverse(o=>{if(o.isMesh){const i=pickAll.indexOf(o);if(i>=0)pickAll.splice(i,1);o.geometry.dispose()}});root.remove(g)}CS[c].mesh=null;CS[c].on=false}
+
+// ===================== ESTADO =====================
+let mode='guia',view='mesa',held=null,hover=null,sw=false,power=false,boot=null,won=false;
+let errs=0,tries=0,t0=0,tEnd=0;
+const inst=k=>ST[k]&&ST[k].inst;
+const reqOk=k=>REQ[k].every(inst)&&!(k==='paste'&&inst('cooler'));
+function stepDone(s){return s.k?inst(s.k):s.c?CS[s.c].on:s.sw?sw:won}
+function curStep(){const i=STEPS.findIndex(s=>!stepDone(s));return i<0?STEPS.length:i}
+function startClock(){if(!t0)t0=performance.now()}
+const fmt=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+let toastT;function toast(t,cls,ms){const m=$('msg');m.textContent=t;m.className='show '+(cls||'');clearTimeout(toastT);toastT=setTimeout(()=>m.className='',ms||3200)}
+let actx;function tone(f,d,type,vol,at){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume();const s=actx.currentTime+(at||0),o=actx.createOscillator(),gn=actx.createGain();o.type=type||'sine';o.frequency.value=f;gn.gain.setValueAtTime(vol||.15,s);gn.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(gn).connect(actx.destination);o.start(s);o.stop(s+d+.05)}catch(e){}}
+const sClick=()=>{tone(1400,.05,'square',.06);tone(900,.06,'square',.05,.05)},sBad=()=>tone(160,.25,'sawtooth',.08);
+const lockedByPower=()=>{if(power){toast('⚠️ Apaga la PC antes de tocar las piezas o los cables. ¡Nunca se trabaja con la PC encendida!','bad');return true}return false};
+function err(t){errs++;sBad();toast(t,'bad',4200);refresh()}
+
+// ===================== ACCIONES =====================
+function hold(h){held=h;if(h){startClock();setView('pc')}refresh()}
+function pickPiece(k){if(lockedByPower())return;
+ if(inst(k))return tryRemove(k);
+ if(held&&held.t==='p'&&held.k===k)return hold(null);
+ const s=STEPS[curStep()];if(mode==='guia'&&s&&s.k&&s.k!==k)toast('💡 Puedes tomarla, pero en el modo guiado ahora toca: '+NAME[s.k]+'.');
+ hold({t:'p',k})}
+function tryInstall(k,slot){
+ if(slot!==k)return err('❌ Ese lugar es para: '+NAME[slot]+'. '+WHERE[k]);
+ if(k==='paste'&&inst('cooler'))return err('❌ La pasta va entre el procesador y el cooler: primero quita el cooler.');
+ const miss=REQ[k].filter(r=>!inst(r));if(miss.length)return err('❌ Todavía no: primero instala '+miss.map(m=>NAME[m]).join(' y ')+'.');
+ ST[k].inst=true;if(k==='paste')ST.paste.hideAt=performance.now()+650;held=null;sClick();toast('✅ '+OKM[k],'ok');
+ if(PIECES.some(p=>!inst(p)))setTimeout(()=>{if(!held)setView('mesa')},700);refresh()}
+function tryRemove(k){if(lockedByPower())return;
+ const deps=PIECES.filter(p=>inst(p)&&REQ[p].includes(k));if(k==='cpu'&&inst('cooler')&&!deps.includes('cooler'))deps.push('cooler');
+ const cabs=CK.filter(c=>CS[c].on&&CAB[c].need.includes(k));
+ if(deps.length||cabs.length)return toast('🔧 Para quitar '+NAME[k]+' primero quita: '+deps.map(d=>NAME[d]).concat(cabs.map(c=>'cable '+CAB[c].n)).join(', ')+'.','bad',4200);
+ if(k==='paste'&&inst('cooler'))return toast('🔧 Para limpiar la pasta primero quita el cooler.','bad');
+ ST[k].inst=false;if(k==='paste'){blob.visible=false;ST.paste.h.visible=true}
+ if(k==='psu'&&sw){sw=false}
+ tone(600,.08,'triangle',.08);toast('↩ Quitaste: '+NAME[k]+(k==='paste'?' (limpiaste la pasta)':''));refresh()}
+function pickCable(c){if(lockedByPower())return;
+ if(CS[c].on){cableOff(c);tone(500,.08,'triangle',.08);toast('🔌 Desconectaste el cable '+CAB[c].n+'.');return refresh()}
+ if(held&&held.t==='c'&&held.k===c)return hold(null);
+ const miss=CAB[c].need.filter(r=>!inst(r));if(miss.length)return toast('🔌 Este cable conecta '+CAB[c].need.map(n=>NAME[n]).join(' con ')+'. Falta instalar: '+miss.map(m=>NAME[m]).join(' y ')+'.','bad',4200);
+ hold({t:'c',k:c})}
+function tryConnect(c,port){if(port!==c)return err('❌ Ese es el conector del cable '+CAB[port].n+'.');
+ cableOn(c);held=null;sClick();toast('✅ Cable '+CAB[c].n+' conectado.','ok');refresh()}
+function toggleSw(){if(lockedByPower())return;if(!inst('psu'))return toast('Primero instala la fuente de poder.','bad');startClock();sw=!sw;tone(sw?900:500,.06,'square',.06);toast(sw?'🔛 Interruptor en “I”: la fuente está lista.':'Interruptor en “O”: la fuente está apagada.');refresh()}
+
+// ===================== PRUEBA DE ENCENDIDO =====================
+function diagnose(){
+ if(!CS.pow.on)return{l:0,m:'No pasa nada. 🔌 La fuente no recibe electricidad: falta enchufar el cable de corriente.'};
+ if(!sw)return{l:0,m:'No pasa nada. El interruptor de la fuente está en “O” (apagado).'};
+ if(!inst('mb'))return{l:0,m:'No pasa nada: no hay placa madre. ¡El botón de encendido se conecta a ella!'};
+ if(!CS.c24.on)return{l:0,m:'No pasa nada: la placa madre no recibe energía. Falta el cable de 24 pines.'};
+ if(!inst('cpu'))return{l:'fans',m:'Los ventiladores giran, pero no hay imagen ni pitidos: falta el procesador, el “cerebro” de la PC.'};
+ if(!CS.c8.on)return{l:'blink',m:'Los ventiladores giran un instante y se apagan: el procesador no recibe energía. Falta el cable de 8 pines del CPU.'};
+ if(!inst('ram'))return{l:'beep',m:'Se escuchan pitidos largos y no hay imagen: así avisa la placa madre que no tiene memoria RAM.'};
+ if(!inst('gpu'))return{l:'nosig',m:'El monitor dice “Sin señal”: este procesador no tiene gráficos integrados, falta la tarjeta gráfica.'};
+ if(!CS.pcie.on)return{l:'nosig',m:'El monitor dice “Sin señal” y los ventiladores de la tarjeta gráfica no giran: le falta su cable de energía PCIe.'};
+ if(!CS.hdmi.on)return{l:'nosig',m:'La PC enciende, pero el monitor dice “Sin señal”: falta conectar el cable HDMI a la tarjeta gráfica.'};
+ if(!inst('cooler'))return{l:'hot',m:'Arranca… y a los pocos segundos se apaga sola: ¡el procesador se sobrecalentó! Falta el cooler.'};
+ if(!inst('paste'))return{l:'hot',m:'Arranca… y se apaga por temperatura: sin pasta térmica el calor no pasa bien del procesador al disipador.'};
+ if(!((inst('ssd')&&CS.sata1.on)||(inst('hdd')&&CS.sata2.on)))return{l:'nodisk',m:'Aparece la BIOS pero dice “No se encontró dispositivo de arranque”: falta un disco (SSD o HDD) con su cable SATA. ¡Ahí está guardado el sistema operativo!'};
+ if(!CS.usb.on)return{l:'nokb',m:'¡Arranca el sistema! Pero no puedes escribir tu contraseña: falta conectar el teclado y el mouse.'};
+ return{l:'ok',m:'¡Todo funciona! La PC pasó la prueba de encendido. 🎉'}}
+const timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms));
+function powerBtn(){
+ if(power)return powerOff(false);
+ if(held)hold(null);startClock();tries++;tone(1200,.04,'square',.05);
+ const d=diagnose();showDiag(d);
+ if(d.l===0){refresh();return}
+ power=true;boot={l:d.l,t0:performance.now()};setView('mesa');
+ if(['nosig','hot','nodisk','nokb','ok'].includes(d.l))later(()=>tone(1000,.18,'square',.08),900);
+ if(d.l==='ok')later(win,5200);
+ if(d.l==='beep')[1000,2500,4000].forEach(t=>later(()=>tone(880,.8,'square',.08),t));
+ if(d.l==='blink')later(()=>powerOff(true),900);
+ if(d.l==='hot')later(()=>{tone(300,.5,'sawtooth',.08);powerOff(true)},5600);
+ refresh()}
+function powerOff(auto){power=false;boot=null;timers.splice(0).forEach(clearTimeout);if(!auto)tone(700,.05,'square',.05);refresh()}
+function showDiag(d){const p=$('pmsg');p.style.display='block';p.className=d.l==='ok'?'ok':'bad';p.innerHTML='<b>'+(d.l==='ok'?'✅ Resultado':'🔎 Diagnóstico')+':</b> '+d.m;
+ if(d.l!=='ok')toast('🔎 '+d.m,'bad',5200)}
+function win(){if(won)return;won=true;tEnd=performance.now();refresh();confetti();[523,659,784,1047].forEach((f,i)=>tone(f,.3,'triangle',.12,i*.15));toast('🎉 ¡Felicitaciones! Armaste y encendiste tu PC.','ok',5000)}
+
+// ===================== PANTALLA DEL MONITOR =====================
+function drawScreen(){const q=scrC.getContext('2d'),W=512,H=290;q.fillStyle='#000';q.fillRect(0,0,W,H);q.textAlign='left';
+ if(!boot){scrTex.needsUpdate=true;return}
+ const t=(performance.now()-boot.t0)/1000,l=boot.l;
+ if(l==='fans'||l==='beep'||l==='blink'||l==='nosig'){if(t>1.2){q.fillStyle='#1a1d24';q.fillRect(166,118,180,54);q.strokeStyle='#3a3e48';q.strokeRect(166,118,180,54);q.fillStyle='#9aa6c4';q.font='bold 18px sans-serif';q.textAlign='center';q.fillText('Sin señal',256,145);q.font='12px sans-serif';q.fillText('HDMI',256,162)}scrTex.needsUpdate=true;return}
+ const disk=inst('ssd')&&CS.sata1.on?'SSD 512 GB ............ OK':inst('hdd')&&CS.sata2.on?'HDD 1 TB .............. OK':'Disco ......... NO DETECTADO';
+ if(t<2.6||l==='nodisk'||l==='hot'){q.fillStyle='#c8d0e0';q.font='15px monospace';
+  const lines=['AULA BIOS v2.6  ·  Herramientas Informáticas','','CPU: 8 núcleos @ 4.2 GHz ...... OK','Memoria: 16384 MB DDR4 ....... OK','Video: RTX ..................... OK','Disco: '+disk,'','Presiona SUPR para entrar a la BIOS'];
+  lines.slice(0,Math.min(lines.length,Math.floor(t*4)+1)).forEach((s,i)=>q.fillText(s,18,32+i*22));
+  if(l==='hot'){const temp=Math.min(105,38+t*13);q.font='bold 18px monospace';q.fillStyle=temp>85?'#ff5a5f':temp>65?'#ffb020':'#4ade80';q.fillText('Temperatura CPU: '+Math.round(temp)+' °C',18,232);
+   if(temp>95&&(t*3|0)%2){q.fillStyle='#ff5a5f';q.fillText('⚠ CPU OVERHEAT · APAGANDO',18,260)}}
+  if(l==='nodisk'&&t>2.6){q.fillStyle='#fff';q.font='bold 15px monospace';q.fillText('No se encontró dispositivo de arranque.',18,232);q.fillText('Inserte un disco y presione una tecla_',18,256)}
+  scrTex.needsUpdate=true;return}
+ if(t<4.8){const gr=q.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#0b1430');gr.addColorStop(1,'#000');q.fillStyle=gr;q.fillRect(0,0,W,H);
+  q.fillStyle='#6ea0ff';[[0,0],[1,0],[0,1],[1,1]].forEach(p=>q.fillRect(228+p[0]*30,90+p[1]*30,27,27));
+  for(let i=0;i<6;i++){const a=t*5+i*.5;q.globalAlpha=1-i*.15;q.fillStyle='#fff';q.beginPath();q.arc(256+Math.cos(a)*16,200+Math.sin(a)*16,3,0,7);q.fill()}q.globalAlpha=1;
+  q.fillStyle='#c8d0e0';q.font='14px sans-serif';q.textAlign='center';q.fillText('Iniciando el sistema…',256,250);scrTex.needsUpdate=true;return}
+ const gr=q.createLinearGradient(0,0,W,H);gr.addColorStop(0,'#2f63e0');gr.addColorStop(1,'#6b3fd1');q.fillStyle=gr;q.fillRect(0,0,W,H);q.textAlign='center';
+ if(l==='nokb'){q.fillStyle='#fff';q.font='bold 56px sans-serif';const d=new Date();q.fillText(d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'),256,110);
+  q.font='16px sans-serif';q.fillText('Escribe tu contraseña',256,150);q.fillStyle='rgba(255,255,255,.9)';q.fillRect(156,165,200,30);
+  q.fillStyle='#ffd84a';q.font='bold 15px sans-serif';q.fillText('⌨️ Teclado no detectado',256,230);scrTex.needsUpdate=true;return}
+ q.fillStyle='rgba(0,0,0,.35)';q.fillRect(0,H-26,W,26);q.fillStyle='#fff';q.fillRect(86,40,340,170);q.fillStyle='#15203b';q.font='bold 24px sans-serif';q.fillText('🎉 ¡Tu PC funciona!',256,96);
+ q.font='15px sans-serif';q.fillStyle='#55627f';q.fillText('La armaste desde cero, pieza por pieza.',256,130);q.fillText('Entrada → Proceso → Salida ✔',256,156);q.fillText('Tiempo: '+fmt((tEnd||performance.now())-t0),256,186);
+ scrTex.needsUpdate=true}
+
+// ===================== CONFETI =====================
+const fx=$('fx'),fq=fx.getContext('2d');let conf=[];
+function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const w=fx.width=wrap.clientWidth,h=fx.height=wrap.clientHeight;
+ conf=Array.from({length:160},()=>({x:w/2+(Math.random()-.5)*w*.3,y:h*.35,vx:(Math.random()-.5)*12,vy:-Math.random()*11-3,r:Math.random()*6.28,c:['#2f63e0','#22c55e','#ffd84a','#ef4444','#a855f7','#f97316'][Math.random()*6|0]}))}
+function drawConf(){if(!conf.length)return;fq.clearRect(0,0,fx.width,fx.height);conf.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=.15;fq.save();fq.translate(p.x,p.y);fq.rotate(p.r);fq.fillStyle=p.c;fq.fillRect(-4,-2.5,8,5);fq.restore()});
+ conf=conf.filter(p=>p.y<fx.height+20);if(!conf.length)fq.clearRect(0,0,fx.width,fx.height)}
+
+// ===================== PANEL =====================
+PIECES.forEach(k=>{const b=document.createElement('button');b.textContent=NAME[k].split(' (')[0];b.dataset.k=k;b.onclick=()=>pickPiece(k);$('bpz').appendChild(b)});
+CK.forEach(c=>{const b=document.createElement('button');b.textContent=CAB[c].n;b.dataset.c=c;b.onclick=()=>pickCable(c);$('bcb').appendChild(b)});
+$('swb').onclick=toggleSw;$('pwr').onclick=powerBtn;
+$('gl').innerHTML=STEPS.map(s=>'<li>'+s.t+(s.q?'<small>❓ '+s.q+'</small>':'')+'</li>').join('');
+function refresh(){const i=curStep(),n=STEPS.length,s=STEPS[i];
+ $('sn').textContent=mode==='guia'?(i<n?'Paso '+(i+1)+' de '+n:'¡Completado!'):'Desafío · '+STEPS.filter(stepDone).length+' de '+n;
+ $('pb').style.width=(STEPS.filter(stepDone).length/n*100)+'%';
+ if(won){$('st').textContent='🎉 ¡Lo lograste!';$('sd').innerHTML='Armaste y encendiste tu PC en <b>'+fmt(tEnd-t0)+'</b> con <b>'+errs+'</b> error'+(errs===1?'':'es')+' y <b>'+tries+'</b> intento'+(tries===1?'':'s')+' de encendido.<br>¿Te animas a intentarlo en modo 🏆 Desafío?';$('sq').style.display='none'}
+ else if(mode==='guia'&&s){$('st').textContent=s.t;$('sd').textContent=s.d;if(s.q){$('sq').innerHTML='<b>❓ Pregunta para pensar:</b> '+s.q;$('sq').style.display='block'}else $('sq').style.display='none'}
+ else{$('st').textContent='🏆 Desafío: arma la PC sin ayuda';$('sd').textContent='Instala todas las piezas, conecta los cables y enciéndela. Si no arranca, lee el diagnóstico y descubre qué falta.';$('sq').style.display='none'}
+ const hintOn=mode==='guia'&&!won&&s;
+ document.querySelectorAll('#bpz button').forEach(b=>{const k=b.dataset.k;b.classList.toggle('done',inst(k));b.classList.toggle('held',!!held&&held.k===k);b.classList.toggle('hint',!!hintOn&&s.k===k&&!held)});
+ document.querySelectorAll('#bcb button').forEach(b=>{const c=b.dataset.c;b.classList.toggle('done',CS[c].on);b.classList.toggle('held',!!held&&held.k===c);b.classList.toggle('hint',!!hintOn&&s.c===c&&!held)});
+ $('swb').textContent=sw?'Interruptor: I (encendido)':'Interruptor: O (apagado)';$('swb').classList.toggle('done',sw);$('swb').classList.toggle('hint',!!hintOn&&!!s.sw);
+ $('pwr').textContent=power?'⏻ Apagar la PC':'⏻ Encender la PC';$('pwr').classList.toggle('on',power);$('pwr').classList.toggle('hint',!!hintOn&&!!s.pw&&!power);
+ [...$('gl').children].forEach((li,j)=>{li.className=stepDone(STEPS[j])?'ok':j===i?'cur':''});
+ const hd=$('hold');if(held){hd.style.display='block';hd.textContent=held.t==='p'?'✋ Tienes: '+NAME[held.k]+' · toca su lugar en el gabinete (Esc para soltar)':'🔌 Tienes el cable '+CAB[held.k].n+' · toca su conector (Esc para soltar)'}else hd.style.display='none';
+ pwLed.material.color.setHex(power?0x3ddc84:0x444444);psuSw.material.color.setHex(sw?0x3ddc84:0xe5484d);psuSw.rotation.x=sw?-.35:.35;
+ updStats()}
+function updStats(){$('stats').textContent='⏱ '+fmt(t0?((tEnd||performance.now())-t0):0)+' · ❌ '+errs}
+setInterval(updStats,1000);
+document.querySelectorAll('#modes button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('#modes button').forEach(x=>x.classList.toggle('on',x===b));$('guide').open=false;refresh()});
+document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+$('reset').onclick=()=>{if(!confirm('¿Desarmar todo y empezar de nuevo?'))return;powerOff(true);held=null;sw=false;won=false;errs=tries=t0=tEnd=0;
+ PIECES.forEach(k=>{ST[k].inst=false;ST[k].h.visible=true});blob.visible=false;CK.forEach(c=>{if(CS[c].on)cableOff(c)});$('pmsg').style.display='none';conf=[];fq.clearRect(0,0,fx.width,fx.height);setView('mesa');refresh()};
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&e.detail>0)b.blur()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&held)hold(null)});
+
+// ===================== CÁMARA =====================
+let th=0,ph=1.05,rad=22,tr=22,vt=null,vp=null;
+const target=new THREE.Vector3(0,-1.4,1.4),tg=target.clone();
+function mesaR(){const a=camera.aspect||1.6;return Math.min(46,Math.max(16,27/a+7))}
+function setView(v){view=v;document.querySelectorAll('#views button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+ if(v==='pc'){tg.set(0,.1,0);tr=11.5;vt=.25;vp=1.3}else{tg.set(0,-1.4,1.4);tr=mesaR();vt=0;vp=1.05}}
+function cam(){camera.position.set(target.x+rad*Math.sin(ph)*Math.sin(th),target.y+rad*Math.cos(ph),target.z+rad*Math.sin(ph)*Math.cos(th));camera.lookAt(target)}
+function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(view==='mesa')tr=mesaR()}
+addEventListener('resize',resize);
+
+// ===================== PUNTERO =====================
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
+function shownSlots(){if(!held||held.t!=='p')return[];return PIECES.filter(p=>!inst(p)&&(p===held.k||reqOk(p)))}
+function shownPorts(){if(!held||held.t!=='c')return[];return mode==='guia'?[held.k]:CK.filter(c=>!CS[c].on&&CAB[c].need.every(inst))}
+function hits(e,list){const r=wrap.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(mouse,camera);return ray.intersectObjects(list,false)}
+function slotHits(e){const sl=shownSlots();return hits(e,ghostMeshes.filter(o=>sl.includes(o.userData.slot)))}
+function portHits(e){const sp=shownPorts();return hits(e,sp.map(c=>CS[c].port))}
+function objAt(e){const h=hits(e,pickAll.filter(o=>{let p=o;while(p){if(!p.visible)return false;p=p.parent}return true}))[0];return h?h.object:null}
+function handleClick(e){
+ if(held&&held.t==='p'){const hs=slotHits(e);if(hs.length){const own=hs.find(h=>h.object.userData.slot===held.k);return tryInstall(held.k,(own||hs[0]).object.userData.slot)}}
+ if(held&&held.t==='c'){const hs=portHits(e);if(hs.length){const own=hs.find(h=>h.object.userData.port===held.k);return tryConnect(held.k,(own||hs[0]).object.userData.port)}}
+ const o=objAt(e);
+ if(!o){if(held)hold(null);return}
+ if(o.userData.pw)return powerBtn();
+ if(o.userData.sw&&inst('psu')&&!held)return toggleSw();
+ if(o.userData.cable){if(held)return hold(null);return pickCable(o.userData.cable)}
+ if(o.userData.fix){if(held)return hold(null);const f=o.userData.fix;return toast(f==='mon'?'🖥️ El monitor ya está en la mesa: se conecta con el cable HDMI.':f==='strip'?'🔌 La zapatilla da la electricidad: conecta ahí el cable de corriente.':'⌨️🖱️ Teclado y mouse se conectan con el cable USB.')}
+ if(o.userData.key){if(held&&held.t==='p'&&inst(o.userData.key))return hold(null);return pickPiece(o.userData.key)}}
+function hoverName(e){if(held&&held.t==='p'){const h=slotHits(e)[0];if(h)return{n:mode==='guia'?'Lugar de: '+NAME[h.object.userData.slot]:'¿Va aquí?',slot:h.object.userData.slot}}
+ if(held&&held.t==='c'){const h=portHits(e)[0];if(h)return{n:mode==='guia'?'Conector: '+CAB[h.object.userData.port].n:'¿Este conector?',port:h.object.userData.port}}
+ const o=objAt(e);if(!o)return null;
+ if(o.userData.pw)return{n:'⏻ Botón de encendido'};if(o.userData.sw&&inst('psu'))return{n:'Interruptor de la fuente ('+(sw?'I':'O')+')'};
+ if(o.userData.cable)return{n:'Cable '+CAB[o.userData.cable].n+' (toca para desconectar)'};if(o.userData.fix)return{n:FIXN[o.userData.fix]};
+ if(o.userData.key)return{n:NAME[o.userData.key]+(inst(o.userData.key)?' (toca para quitar)':''),key:o.userData.key};return null}
+let drag=null;
+wrap.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,m:0};wrap.setPointerCapture(e.pointerId)});
+wrap.addEventListener('pointermove',e=>{
+ if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.m+=Math.abs(dx)+Math.abs(dy);drag.x=e.clientX;drag.y=e.clientY;if(drag.m>6){vt=vp=null;th-=dx*.008;ph=Math.min(2.4,Math.max(.35,ph-dy*.008));tip.style.display='none';return}}
+ hover=hoverName(e);const r=wrap.getBoundingClientRect();
+ if(hover){tip.style.display='block';tip.style.left=(e.clientX-r.left)+'px';tip.style.top=(e.clientY-r.top)+'px';tip.textContent=hover.n;wrap.style.cursor='pointer'}else{tip.style.display='none';wrap.style.cursor='grab'}});
+wrap.addEventListener('pointerup',e=>{if(drag&&drag.m<6)handleClick(e);drag=null});
+wrap.addEventListener('pointerleave',()=>{if(!drag){hover=null;tip.style.display='none'}});
+wrap.addEventListener('wheel',e=>{e.preventDefault();tr=Math.min(46,Math.max(4,tr+e.deltaY*.012))},{passive:false});
+const pts=new Map();let pd=0;
+wrap.addEventListener('pointerdown',e=>pts.set(e.pointerId,e));
+wrap.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e);if(pts.size===2){const [a,b]=[...pts.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(pd)tr=Math.min(46,Math.max(4,tr-(d-pd)*.03));pd=d}});
+['pointerup','pointercancel'].forEach(t=>wrap.addEventListener(t,e=>{pts.delete(e.pointerId);pd=0}));
+
+// ===================== ANIMACIÓN =====================
+const tmpC=new THREE.Color();
+function setEm(obj,hex,s){obj.traverse(o=>{if(o.isMesh&&o.material.emissive){tmpC.setHex(hex).multiplyScalar(s);o.material.emissive.copy(tmpC)}})}
+function loop(){requestAnimationFrame(loop);const now=performance.now(),pulse=.5+.5*Math.sin(now*.006);
+ const s=STEPS[curStep()],guia=mode==='guia'&&!won;
+ PIECES.forEach(k=>{const p=ST[k];let pos,q;
+  if(p.inst){pos=p.ip;q=p.iq}else if(held&&held.t==='p'&&held.k===k){pos=p.tp.clone().add(new THREE.Vector3(0,1.1+Math.sin(now*.004)*.08,0));q=p.tq}else{pos=p.tp;q=p.tq}
+  p.h.position.lerp(pos,.14);p.h.quaternion.slerp(q,.14);
+  if(k==='paste'&&p.inst&&p.hideAt&&now>p.hideAt){p.h.visible=false;blob.visible=true;p.hideAt=0}
+  const hv=hover&&hover.key===k,hl=held&&held.t==='p'&&held.k===k,gd=guia&&s&&s.k===k&&!p.inst&&!held;
+  setEm(p.h,hl?0xffb020:hv?0x2a55ff:gd?0x22c55e:0,hl?.6:hv?1:gd?pulse*.9:0)});
+ const sl=shownSlots();
+ PIECES.forEach(k=>{const gh=ST[k].ghost,on=sl.includes(k);gh.visible=on;if(!on)return;const m=gh.userData.mat,right=held.k===k&&guia,hv=hover&&hover.slot===k;
+  m.color.setHex(right?0x22c55e:0x9aa6c4);m.opacity=hv?.55:right?.22+.25*pulse:.18});
+ const sp=shownPorts();
+ CK.forEach(c=>{const S=CS[c],on=sp.includes(c);S.port.visible=on;S.ghost.visible=on&&guia&&held.k===c;
+  if(on){S.port.material.color.setHex(guia&&held.k===c?0x22c55e:0xffc83d);S.port.scale.setScalar((hover&&hover.port===c?1.5:1)+.25*pulse)}});
+ setEm(pwBtn,0x22c55e,guia&&s&&s.pw&&!power?pulse:0);setEm(psuSw,0x22c55e,guia&&s&&s.sw&&inst('psu')?pulse:0);
+ spin.forEach(({f,k})=>{const on=power&&boot&&(k==='psu'||(k==='cooler'&&inst('cooler'))||(k==='gpu'&&CS.pcie.on));if(on&&inst(k))f.rotation.z+=.25});
+ target.lerp(tg,.08);rad+=(tr-rad)*.08;
+ if(vt!==null){th+=(vt-th)*.08;if(Math.abs(vt-th)<.01)vt=null}
+ if(vp!==null){ph+=(vp-ph)*.08;if(Math.abs(vp-ph)<.01)vp=null}
+ drawScreen();drawConf();cam();renderer.render(scene,camera)}
+resize();rad=tr=mesaR();refresh();drawScreen();loop();
+toast('👋 Las piezas están sobre la mesa. ¡Vamos a armar una PC!',null,3500);
+</script>
+</body>
+</html>
