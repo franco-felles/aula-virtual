@@ -176,9 +176,9 @@ const DATA={};
 Object.keys(INFO).forEach(k=>{DATA[k]={name:INFO[k][0],ann:INFO[k][1],desc:INFO[k][2],tags:CLASE[k].slice(),extra:INFO[k][3],tipo:TIPO[k]||'interno'}});
 window.INFO=INFO;window.CLASE=CLASE;window.DATA=DATA;
 const OUT={case:[0,0,-1.6],mb:[0,0,1.6],cpu:[0,.3,2.6],cooler:[0,.4,2.8],ram:[0,0,2.6],gpu:[0,.2,2.6],psu:[0,.6,2.6],ssd:[0,0,2.6],hdd:[0,0,2.6],
- mon:[0,.3,1],kb:[0,.5,.6],mouse:[0,.4,.5],spk:[0,.3,.8],cam:[0,.5,.8],prn:[0,.3,.8],usb:[0,.6,.6]};
+ mon:[0,.3,1],kb:[0,.5,.6],mouse:[0,.4,.5],spk:[0,.3,.8],cam:[0,.5,.8],prn:[0,.3,.4],usb:[0,.6,.6]};
 const AWAY=new THREE.Vector3(0,1.6,3.4),ZERO=new THREE.Vector3();
-const V={ram:1.2,mon:0,kb:0,mouse:.25,spk:0,cam:0,prn:.35,usb:.7},VP={kb:.75,mouse:.7,usb:1.1},R={mon:10,kb:7,mouse:5,spk:13,cam:5,prn:9,usb:5.5};
+const V={ram:1.2,mon:0,kb:0,mouse:.25,spk:0,cam:0,prn:.35,usb:.7},VP={kb:.75,mouse:.7,usb:1.1,prn:.85},R={mon:10,kb:7,mouse:5,spk:13,cam:5,prn:9,usb:5.5};
 const wrap=document.getElementById('c'),tip=document.getElementById('tip');
 const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
@@ -274,11 +274,11 @@ const mBtn={L:B(g,.13,.03,.28,0x3a3e48,-3.775,DY+.11,1.86),R:B(g,.13,.03,.28,0x3
 mBtn.L.userData.y=mBtn.R.userData.y=DY+.11;
 const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.04,16),M(0x8a90a0));wheel.rotation.z=Math.PI/2;wheel.position.set(-3.7,DY+.14,1.88);g.add(wheel);
 // Impresora (el papel sale con lo que escribiste)
-g=P('prn');B(g,2.6,1.1,1.9,0xdfe2e8,4.7,DY+.55,-.2,{metalness:.1});
-B(g,2.1,.05,1.0,0xbfc4cc,4.7,DY+1.12,-.55);B(g,1.9,.1,.02,0x2a2d34,4.7,DY+.75,.755);B(g,.6,.2,.04,0x2a2d34,5.6,DY+.95,.75);
+g=P('prn');B(g,2.6,1.1,1.9,0x3a3f4a,4.7,DY+.55,-.2,{metalness:.2,roughness:.6});
+B(g,2.1,.05,1.0,0x2c3038,4.7,DY+1.12,-.55);B(g,1.9,.1,.02,0x101216,4.7,DY+.75,.755);B(g,.6,.2,.04,0x1d2027,5.6,DY+.95,.75);
 const prnLed=B(g,.06,.06,.02,0x3ddc84,5.82,DY+.95,.775);
 const papC=document.createElement('canvas');papC.width=320;papC.height=240;const papTex=new THREE.CanvasTexture(papC);
-const paper=new THREE.Mesh(new THREE.PlaneGeometry(1.6,1.2),M(0xffffff,{map:papTex,metalness:0,roughness:.9}));paper.rotation.x=-Math.PI/2;paper.position.set(4.7,DY+.75,0);paper.userData.z=0;g.add(paper);
+const paper=new THREE.Mesh(new THREE.PlaneGeometry(1.6,1.2),M(0xd2d4d0,{map:papTex,metalness:0,roughness:1}));paper.rotation.x=-Math.PI/2;paper.position.set(4.7,DY+.75,0);paper.userData.z=0;paper.userData.ng=1;g.add(paper);
 // Pendrive conectado arriba del gabinete
 g=P('usb');B(g,.3,.06,.16,0x0b0c10,1.5,2.82,.6);B(g,.18,.22,.08,0xc9ccd6,1.5,2.9,.6,{metalness:.8});B(g,.26,.65,.12,0x2f63e0,1.5,3.33,.6);
 const usbLed=B(g,.06,.06,.02,0x333333,1.5,3.5,.67);L(g,'USB',.22,.1,1.5,3.2,.661,'#2f63e0','#ffffff');
@@ -309,7 +309,7 @@ function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(
 addEventListener('resize',resize);
 const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
 function at(e){const r=wrap.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(mouse,camera);const h=ray.intersectObjects(pick)[0];return h?h.object.userData.key:null}
-function glow(k,on,col){if(groups[k])groups[k].traverse(o=>{if(o.isMesh&&o.material.emissive)o.material.emissive.setHex(on?(col||0x2a55ff):0)})}
+function glow(k,on,col){if(groups[k])groups[k].traverse(o=>{if(o.isMesh&&o.material.emissive&&!o.userData.ng)o.material.emissive.setHex(on?(col||0x2a55ff):0)})}
 function setHover(k,e){if(quiz&&quiz.lock)return;if(k===hover&&!e)return;if(hover&&hover!==sel)glow(hover,false);hover=k;if(k)glow(k,true);
  if(k&&e&&!quiz){const r=wrap.getBoundingClientRect();tip.style.display='block';tip.style.left=(e.clientX-r.left)+'px';tip.style.top=(e.clientY-r.top)+'px';tip.textContent=INFO[k][0]}else tip.style.display='none';
  wrap.style.cursor=k?'pointer':'grab'}
@@ -375,9 +375,9 @@ function playSound(){try{actx=actx||new (window.AudioContext||window.webkitAudio
  [523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=actx.createOscillator(),gn=actx.createGain(),s=t0+i*.18;o.type='triangle';o.frequency.value=f;
   gn.gain.setValueAtTime(0,s);gn.gain.linearRampToValueAtTime(.25,s+.02);gn.gain.exponentialRampToValueAtTime(.001,s+.35);o.connect(gn).connect(actx.destination);o.start(s);o.stop(s+.4)});
  spkT=performance.now();toast('🔊 Do – Mi – Sol – Do')}catch(e){toast('Tu navegador no permite reproducir sonido.','bad')}}
-function printPaper(){const q=papC.getContext('2d');q.fillStyle='#fff';q.fillRect(0,0,320,240);q.fillStyle='#15203b';q.font='bold 16px sans-serif';q.fillText('Mi documento',16,28);
- q.fillStyle='#d3daec';q.fillRect(16,36,288,2);q.fillStyle='#222';q.font='15px monospace';
- const t=scr.txt.trim()||'¡Hola! (Escribe algo con el teclado antes de imprimir.)';wrapLines(q,t,288).slice(0,10).forEach((l,i)=>q.fillText(l,16,60+i*19));
+function printPaper(){const q=papC.getContext('2d');q.fillStyle='#fff';q.fillRect(0,0,320,240);q.fillStyle='#15203b';q.font='bold 20px sans-serif';q.fillText('Mi documento',16,30);
+ q.fillStyle='#d3daec';q.fillRect(16,36,288,2);q.fillStyle='#000';q.font='bold 21px monospace';
+ const t=scr.txt.trim()||'¡Hola! (Escribe algo con el teclado antes de imprimir.)';wrapLines(q,t,288).slice(0,7).forEach((l,i)=>q.fillText(l,16,68+i*25));
  papTex.needsUpdate=true;paperT=performance.now();toast(scr.txt.trim()?'🖨️ Imprimiendo lo que escribiste…':'🖨️ Imprimiendo… (escribe algo y vuelve a imprimir)')}
 async function toggleCam(b){
  if(scr.video){scr.video.srcObject.getTracks().forEach(t=>t.stop());scr.video=null;restoreMode();camLed.material.color.setHex(0x444444);b.textContent='📷 Encender mi cámara';drawScr();return}
@@ -497,7 +497,7 @@ function loop(){requestAnimationFrame(loop);const now=performance.now(),dt=Math.
  if(!sel&&!flow&&!quiz&&vt===null&&now-lastAct>9000)th+=dt*.12; // gira solo si nadie la toca
  spin.forEach(f=>f.rotation.z+=.06);
  const sp=now-spkT;cones.forEach(c=>c.position.z=c.userData.z+(sp<1500?Math.sin(now*.09)*.035*(1-sp/1500):0));
- if(paperT){const p=Math.min(1,(now-paperT)/2400);paper.position.z=paper.userData.z+1.15*(1-Math.pow(1-p,3));prnLed.material.color.setHex(p<1&&(now/200|0)%2?0xffb020:0x3ddc84)}
+ if(paperT){const p=Math.min(1,(now-paperT)/2400);paper.position.z=paper.userData.z+1.45*(1-Math.pow(1-p,3));prnLed.material.color.setHex(p<1&&(now/200|0)%2?0xffb020:0x3ddc84)}
  if(scr.mode==='copy'){scr.copy=Math.min(1,scr.copy+dt*.4);usbLed.material.color.setHex(scr.copy<1?((now/120|0)%2?0x3ddc84:0x222222):0x3ddc84);
   if(scr.copy>=1){scr.done=scr.done||now;if(now-scr.done>1500){restoreMode();usbLed.material.color.setHex(0x333333)}}drawScr()}
  if(scr.mode==='video')drawScr();
