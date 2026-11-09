@@ -7,6 +7,14 @@
       "tipo": "interactivo",
       "descripcion": "Explora en 3D los componentes y periféricos de la computadora, pruébalos con tu teclado y mouse, y ponte a prueba con un quiz.",
       "orden": 1
+    },
+    {
+      "archivo": "m2c1.html",
+      "ruta": "clases/u1c1/material/m2c1.html",
+      "titulo": "Arma tu PC desde cero",
+      "tipo": "practica",
+      "descripcion": "Instala cada pieza en su lugar, conecta los cables y supera la prueba final: ¡encender el equipo!",
+      "orden": 2
     }
   ]
 }
