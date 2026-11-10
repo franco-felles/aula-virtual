@@ -6,93 +6,237 @@
 <!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
 <meta name="material-titulo" content="La computadora: partes y periféricos">
 <meta name="material-tipo" content="presentacion">
-<meta name="material-descripcion" content="Qué es una computadora, cómo funciona (entrada, proceso, salida), sus componentes internos y los periféricos de entrada y salida.">
+<meta name="material-descripcion" content="Presentación interactiva: qué es una computadora, sus componentes internos y los periféricos de entrada y salida, con experimentos, laboratorios y retos.">
 <title>La computadora: partes y periféricos</title>
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
 <style>
   :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #7c7763;
-          --in: #2f6f4f; --out: #b0522a; --es: #6b4a8f; --soft: #ece8dc; }
+          --in: #2f6f4f; --out: #b0522a; --es: #6b4a8f; --soft: #ece8dc; --ok: #2f7d4a; --bad: #b3362c; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); }
   .escena { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px 16px 72px; }
-  .diapo { display: none; width: min(1100px, 100%); aspect-ratio: 16 / 9; max-height: calc(100vh - 100px); background: var(--paper);
-           border-radius: 18px; padding: clamp(20px, 4.5vw, 56px); overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+  .diapo { display: none; width: min(1140px, 100%); aspect-ratio: 16 / 9; max-height: calc(100vh - 100px); background: var(--paper);
+           border-radius: 18px; padding: clamp(18px, 3.6vw, 46px); overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.35); position: relative; }
   .diapo.on { display: flex; flex-direction: column; justify-content: center; animation: entra .35s ease both; }
   @keyframes entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   .diapo h1 { font-size: clamp(1.8rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 14px; }
-  .diapo h2 { font-size: clamp(1.35rem, 3.2vw, 2.2rem); line-height: 1.15; margin: 0 0 16px; letter-spacing: -.01em; }
-  .diapo h3 { font-size: clamp(1rem, 1.9vw, 1.2rem); margin: 0 0 4px; }
-  .diapo p, .diapo li { font-size: clamp(.98rem, 1.9vw, 1.25rem); line-height: 1.5; margin: 0 0 10px; }
+  .diapo h2 { font-size: clamp(1.3rem, 3vw, 2.05rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.01em; }
+  .diapo h3 { font-size: clamp(.98rem, 1.8vw, 1.15rem); margin: 0 0 4px; }
+  .diapo p, .diapo li { font-size: clamp(.95rem, 1.8vw, 1.2rem); line-height: 1.5; margin: 0 0 10px; }
   .diapo ul { margin: 0; padding-left: 1.2em; } .diapo li + li { margin-top: 6px; } .diapo li { margin-bottom: 0; }
-  .diapo small, .peq { font-size: clamp(.82rem, 1.5vw, .98rem) !important; color: var(--mut); }
-  .eti { font-family: "IBM Plex Mono", monospace; font-size: .85rem !important; letter-spacing: .08em; text-transform: uppercase; color: var(--moss); margin: 0 0 10px !important; }
+  .peq { font-size: clamp(.8rem, 1.45vw, .95rem) !important; color: var(--mut); }
+  .eti { font-family: "IBM Plex Mono", monospace; font-size: .82rem !important; letter-spacing: .08em; text-transform: uppercase; color: var(--moss); margin: 0 0 8px !important; }
   .portada { background: var(--moss); color: #fff; } .portada .eti { color: #cfe3d3; }
   .seccion { background: var(--ink); color: var(--paper); } .seccion .eti { color: #e0b177; }
   .seccion .num { font-family: "IBM Plex Mono", monospace; font-size: clamp(3rem, 9vw, 6rem); color: var(--amber); line-height: 1; margin: 0 0 6px; }
-  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
-  .dos.ancho { grid-template-columns: 1.3fr 1fr; }
-  .nota { background: #fbf1e2; border-left: 5px solid var(--amber); padding: 12px 16px; border-radius: 8px; }
-  .def { font-size: clamp(1.15rem, 2.6vw, 1.7rem) !important; line-height: 1.4 !important; border-left: 6px solid var(--moss); padding-left: 18px; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+  .dos.ancho { grid-template-columns: 1.25fr 1fr; } .dos.angosto { grid-template-columns: 1fr 1.35fr; }
+  .nota { background: #fbf1e2; border-left: 5px solid var(--amber); padding: 10px 14px; border-radius: 8px; }
+  .def { font-size: clamp(1.1rem, 2.4vw, 1.55rem) !important; line-height: 1.4 !important; border-left: 6px solid var(--moss); padding-left: 16px; }
   b.k { color: var(--moss); }
   code { font-family: "IBM Plex Mono", monospace; font-size: .9em; background: var(--soft); padding: 1px 6px; border-radius: 5px; }
+  .portada .foto-portada { position: absolute; right: 4%; bottom: 8%; width: 34%; border-radius: 14px; transform: rotate(3deg); box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+  .portada .txt { max-width: 58%; }
+
+  /* bloques para la clase */
+  .lee { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px 6px; position: relative; }
+  .lee::before { content: "📖 Un alumno lee en voz alta"; display: block; font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+  .pregunta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--soft); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
+  .pregunta > span { font-weight: 600; font-size: clamp(.92rem, 1.7vw, 1.08rem); }
+  .pregunta > span::before { content: "🤔 "; }
+  .pregunta .resp { display: none; flex-basis: 100%; color: var(--moss); font-weight: 600; }
+  .pregunta.ver .resp { display: block; }
+  .pregunta.ver .bt { display: none; }
+
+  .bt { font: 600 clamp(.82rem, 1.5vw, .98rem) "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 16px; cursor: pointer; transition: transform .1s, filter .2s; }
+  .bt:hover { filter: brightness(1.15); } .bt:active { transform: scale(.96); }
+  .bt.sec { background: #fff; color: var(--moss); border: 2px solid var(--moss); }
+  .bt.amb { background: var(--amber); }
+  .bt:disabled { opacity: .4; cursor: default; }
+  .bt.on { background: var(--amber); }
+  .fila { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
   /* tarjetas */
-  .rej { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-  .rej.c3 { grid-template-columns: repeat(3, 1fr); } .rej.c4 { grid-template-columns: repeat(4, 1fr); }
-  .tj { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
-  .tj p { font-size: clamp(.85rem, 1.55vw, 1rem) !important; margin: 0 !important; line-height: 1.4 !important; color: #3d4a43; }
-  .tj svg { width: 38px; height: 38px; color: var(--moss); margin-bottom: 4px; }
-  .tj.in { border-top: 5px solid var(--in); } .tj.in svg { color: var(--in); }
-  .tj.out { border-top: 5px solid var(--out); } .tj.out svg { color: var(--out); }
-  .tj.es { border-top: 5px solid var(--es); } .tj.es svg { color: var(--es); }
+  .rej { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .rej.c3 { grid-template-columns: repeat(3, 1fr); } .rej.c4 { grid-template-columns: repeat(4, 1fr); } .rej.c5 { grid-template-columns: repeat(5, 1fr); } .rej.c6 { grid-template-columns: repeat(6, 1fr); }
+  .tj { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .tj p { font-size: clamp(.82rem, 1.45vw, .97rem) !important; margin: 0 !important; line-height: 1.4 !important; color: #3d4a43; }
+  .tj img { width: 100%; height: 92px; object-fit: contain; display: block; margin-bottom: 6px; mix-blend-mode: multiply; }
 
-  /* ficha de componente */
-  .comp { display: grid; grid-template-columns: 200px 1fr; gap: 30px; align-items: center; }
-  .comp .fig { background: #fff; border: 1px solid var(--line); border-radius: 16px; aspect-ratio: 1; display: grid; place-items: center; color: var(--moss); }
-  .comp .fig svg { width: 70%; height: 70%; }
-  .datos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-  .datos span { font-family: "IBM Plex Mono", monospace; font-size: .8rem; background: var(--soft); border-radius: 99px; padding: 4px 11px; }
-  .analog { margin-top: 10px; font-size: clamp(.92rem, 1.7vw, 1.1rem) !important; }
+  /* cartas que se voltean al tocarlas */
+  .carta { font: inherit; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; position: relative; transition: border-color .2s, background .2s; color: var(--ink); }
+  .carta:hover { border-color: var(--moss); }
+  .carta img { width: 100%; height: 86px; object-fit: contain; display: block; margin-bottom: 6px; mix-blend-mode: multiply; }
+  .carta .emo { font-size: 2.1rem; display: block; line-height: 1.1; margin-bottom: 4px; }
+  .carta h3 { margin: 0; }
+  .carta .atras { display: none; font-size: clamp(.8rem, 1.4vw, .93rem); line-height: 1.35; margin-top: 6px; }
+  .carta.ver .atras { display: block; }
+  .carta:not(.ver)::after { content: "toca"; position: absolute; top: 8px; right: 10px; font: 600 .65rem "IBM Plex Mono", monospace; color: var(--mut); text-transform: uppercase; letter-spacing: .06em; }
+  .carta.ver[data-ok="si"] { border-color: var(--ok); background: #eaf4ec; }
+  .carta.ver[data-ok="no"] { border-color: var(--bad); background: #f8e9e6; }
+  .carta.ver[data-ok="casi"] { border-color: var(--amber); background: #fbf1e2; }
+  .carta.ver[data-t="in"] { border-color: var(--in); } .carta.ver[data-t="out"] { border-color: var(--out); } .carta.ver[data-t="es"] { border-color: var(--es); }
+  .carta[data-t] { border-top-width: 5px; }
+  .carta[data-t="in"] { border-top-color: var(--in); } .carta[data-t="out"] { border-top-color: var(--out); } .carta[data-t="es"] { border-top-color: var(--es); }
+  .sello { font: 700 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; display: inline-block; padding: 2px 8px; border-radius: 99px; color: #fff; margin-bottom: 4px; }
+  .sello.si { background: var(--ok); } .sello.no { background: var(--bad); } .sello.casi { background: var(--amber); }
+
+  /* simulador E-P-S */
+  .eps { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 8px; align-items: stretch; margin-top: 6px; }
+  .etapa { background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 12px; min-height: 120px; transition: .35s; }
+  .etapa h3 { font-family: "IBM Plex Mono", monospace; font-size: .8rem; letter-spacing: .08em; color: var(--mut); }
+  .etapa .cont { font-size: clamp(.9rem, 1.7vw, 1.1rem); line-height: 1.4; min-height: 2.8em; }
+  .etapa.act { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+  .etapa.e-in.act { border-color: var(--in); } .etapa.e-in.act h3 { color: var(--in); }
+  .etapa.e-pr.act { border-color: var(--ink); } .etapa.e-pr.act h3 { color: var(--ink); }
+  .etapa.e-out.act { border-color: var(--out); } .etapa.e-out.act h3 { color: var(--out); }
+  .etapa.e-al.act { border-color: var(--moss); } .etapa.e-al.act h3 { color: var(--moss); }
+  .flecha { align-self: center; font-size: 1.6rem; color: var(--line); font-weight: 700; transition: color .3s; }
+  .flecha.act { color: var(--amber); }
+  .notas input { width: 64px; font: 600 1.1rem "IBM Plex Mono", monospace; padding: 6px 8px; border: 2px solid var(--line); border-radius: 10px; text-align: center; background: #fff; }
+  .notas input:focus { outline: none; border-color: var(--in); }
+
+  /* explorador del gabinete */
+  .explora { display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; align-items: stretch; }
+  .explora .botones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+  .chip { font: 600 .82rem "IBM Plex Sans", sans-serif; background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 6px 4px; cursor: pointer; color: var(--ink); }
+  .chip:hover { border-color: var(--moss); }
+  .chip.on { background: var(--moss); border-color: var(--moss); color: #fff; }
+  .chip.visto:not(.on)::after { content: " ✓"; color: var(--ok); }
+  .panel { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-content: start; }
+  .panel img { width: 150px; height: 130px; object-fit: contain; mix-blend-mode: multiply; }
+  .panel p { font-size: clamp(.86rem, 1.55vw, 1rem) !important; margin-bottom: 8px !important; }
+  .datos { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+  .datos span { font-family: "IBM Plex Mono", monospace; font-size: .74rem; background: var(--soft); border-radius: 99px; padding: 3px 10px; }
+  .analog { font-size: clamp(.86rem, 1.55vw, 1rem) !important; }
   .analog::before { content: "Piénsalo así → "; font-weight: 700; color: var(--amber); }
+  .foto-grande { width: 100%; border-radius: 14px; display: block; }
 
-  /* diagrama E-P-S */
-  .flujo { width: 100%; height: auto; max-height: 52vh; }
-  .flujo text { font-family: "IBM Plex Sans", sans-serif; }
+  /* núcleos */
+  .carriles { display: grid; gap: 6px; margin: 10px 0; }
+  .carril { display: flex; align-items: center; gap: 8px; }
+  .carril b { font: 600 .75rem "IBM Plex Mono", monospace; width: 76px; color: var(--mut); }
+  .pista { flex: 1; height: 34px; background: var(--soft); border-radius: 8px; display: flex; gap: 3px; padding: 3px; overflow: hidden; }
+  .tarea { height: 100%; border-radius: 5px; color: #fff; font: 600 .72rem "IBM Plex Sans", sans-serif; display: grid; place-items: center; white-space: nowrap; overflow: hidden; width: 0; transition: width .6s linear; }
+  .marcador { font: 600 1.05rem "IBM Plex Mono", monospace; }
 
-  /* tabla */
-  table { border-collapse: collapse; width: 100%; font-size: clamp(.85rem, 1.6vw, 1.05rem); }
-  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { font-family: "IBM Plex Mono", monospace; font-size: .78em; letter-spacing: .06em; text-transform: uppercase; color: var(--moss); }
+  /* apagón */
+  .pc-sim { background: #1d2b25; border-radius: 14px; padding: 12px; position: relative; color: #e7efe9; }
+  .pc-sim h3 { font: 600 .74rem "IBM Plex Mono", monospace; letter-spacing: .06em; color: #9fc3ad; margin-bottom: 6px; }
+  .pc-sim textarea { width: 100%; height: 92px; resize: none; border-radius: 10px; border: 0; padding: 10px; font: 1rem "IBM Plex Sans", sans-serif; }
+  .disco-caja { background: #fff; border: 2px dashed var(--moss); border-radius: 12px; padding: 10px 12px; min-height: 140px; font-size: .92rem; }
+  .disco-caja div { background: var(--soft); border-radius: 8px; padding: 5px 9px; margin-top: 6px; }
+  .apagado { position: absolute; inset: 0; background: #000; border-radius: 14px; display: none; place-items: center; color: #8b8; font: 600 1rem "IBM Plex Mono", monospace; }
+  .apagado.on { display: grid; }
+
+  /* carrera */
+  .carrera { display: grid; gap: 12px; margin: 8px 0 12px; }
+  .corredor { display: grid; grid-template-columns: 90px 1fr 80px; gap: 12px; align-items: center; }
+  .corredor img { width: 90px; height: 60px; object-fit: contain; mix-blend-mode: multiply; }
+  .barra-c { height: 26px; background: var(--soft); border-radius: 99px; overflow: hidden; }
+  .barra-c i { display: block; height: 100%; width: 0; background: var(--moss); border-radius: 99px; }
+  .tiempo { font: 600 1rem "IBM Plex Mono", monospace; }
+  table { border-collapse: collapse; width: 100%; font-size: clamp(.82rem, 1.5vw, 1rem); }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: "IBM Plex Mono", monospace; font-size: .76em; letter-spacing: .06em; text-transform: uppercase; color: var(--moss); }
   td:first-child { font-weight: 600; }
+  td.tapa { cursor: pointer; }
+  td.tapa span { background: var(--soft); color: transparent; border-radius: 6px; padding: 2px 8px; transition: .25s; user-select: none; }
+  td.tapa span::after { content: ""; }
+  td.tapa:not(.ver) span { background: repeating-linear-gradient(45deg, #e2ddcf 0 6px, #ece8dc 6px 12px); }
+  td.tapa.ver span { color: var(--ink); background: transparent; }
 
-  /* actividad */
-  .juego { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .juego button { font: 600 clamp(.85rem, 1.6vw, 1.02rem) "IBM Plex Sans", sans-serif; background: #fff; color: var(--ink); border: 2px dashed var(--line);
-                  border-radius: 12px; padding: 14px 8px; cursor: pointer; transition: .2s; }
-  .juego button:hover { border-color: var(--moss); }
-  .juego button i { display: block; font-style: normal; font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; visibility: hidden; }
-  .juego button.ver { border-style: solid; color: #fff; }
-  .juego button.ver i { visibility: visible; }
-  .juego button.ver[data-t="in"] { background: var(--in); border-color: var(--in); }
-  .juego button.ver[data-t="out"] { background: var(--out); border-color: var(--out); }
-  .juego button.ver[data-t="es"] { background: var(--es); border-color: var(--es); }
-  .ley { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: .9rem; }
-  .ley span::before { content: ""; display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+  /* GPU */
+  .lienzo { width: 100%; height: 100%; min-height: 220px; background: #0d1b2a; border-radius: 14px; display: block; }
+  .fps { font: 600 .9rem "IBM Plex Mono", monospace; }
 
-  /* cadena del caso real */
-  .cadena { display: flex; align-items: stretch; gap: 10px; }
-  .cadena .tj { flex: 1; text-align: center; }
-  .cadena .tj svg { width: 48px; height: 48px; }
-  .cadena .fl { align-self: center; font-size: 1.6rem; color: var(--amber); font-weight: 700; }
+  /* quitar pieza */
+  .piezas { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .pieza { font: 600 .8rem "IBM Plex Sans", sans-serif; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 8px 4px; cursor: pointer; color: var(--ink); }
+  .pieza img { width: 100%; height: 60px; object-fit: contain; mix-blend-mode: multiply; display: block; margin-bottom: 4px; }
+  .pieza:hover { border-color: var(--bad); }
+  .pieza.on { border-color: var(--bad); background: #f8e9e6; }
+  .pieza.on img { opacity: .35; }
+  .resultado { margin-top: 14px; background: #fff; border-radius: 14px; border: 1px solid var(--line); padding: 14px 18px; min-height: 96px; display: flex; gap: 16px; align-items: center; }
+  .resultado .emo { font-size: 2.8rem; }
+  .resultado p { margin: 0 !important; }
 
-  @media (max-width: 700px) {
-    .dos, .dos.ancho, .comp { grid-template-columns: 1fr; gap: 16px; }
-    .comp .fig { width: 120px; }
-    .rej.c3, .rej.c4, .juego { grid-template-columns: 1fr 1fr; }
-    .cadena { flex-direction: column; } .cadena .fl { transform: rotate(90deg); }
-    .diapo { aspect-ratio: auto; min-height: 60vh; }
+  /* laboratorios */
+  .lab { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .caja { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+  .caja h3 { display: flex; align-items: center; gap: 8px; }
+  .caja .bt { align-self: flex-start; }
+  .tecla { font: 700 clamp(1.4rem, 3.4vw, 2.2rem) "IBM Plex Mono", monospace; background: var(--ink); color: #fff; border-radius: 12px; min-height: 64px; display: grid; place-items: center; padding: 6px; border-bottom: 6px solid #000; transition: transform .08s; }
+  .tecla.golpe { transform: translateY(3px); border-bottom-width: 3px; }
+  .pad { position: relative; flex: 1; min-height: 80px; background: var(--soft); border-radius: 10px; cursor: crosshair; overflow: hidden; touch-action: none; }
+  .pad .punto { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--in); pointer-events: none; left: 50%; top: 50%; }
+  .pad .info { position: absolute; left: 8px; top: 6px; font: 600 .78rem "IBM Plex Mono", monospace; color: var(--mut); pointer-events: none; }
+  .pad .onda { position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 3px solid var(--in); pointer-events: none; animation: onda .5s ease-out forwards; }
+  @keyframes onda { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+  .vumetro { height: 22px; background: var(--soft); border-radius: 99px; overflow: hidden; }
+  .vumetro i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--in), #d9a441, var(--bad)); transition: width .06s; }
+  .lab video { width: 100%; max-height: 120px; object-fit: cover; border-radius: 10px; background: #000; display: none; transform: scaleX(-1); }
+  .pantalla-color { flex: 1; min-height: 70px; border-radius: 10px; display: grid; place-items: center; color: #fff; font: 700 1.05rem "IBM Plex Sans", sans-serif; transition: background .3s; background: #2f63e0; text-align: center; padding: 6px; }
+  .piano { display: flex; gap: 4px; }
+  .piano button { flex: 1; font: 700 .85rem "IBM Plex Mono", monospace; background: #fff; border: 2px solid var(--line); border-bottom-width: 6px; border-radius: 8px; padding: 14px 0; cursor: pointer; color: var(--ink); }
+  .piano button:active, .piano button.toca { transform: translateY(2px); border-bottom-width: 3px; border-color: var(--out); }
+  .impresora-sim { position: relative; height: 96px; }
+  .impresora-sim .cuerpo { position: absolute; left: 10%; right: 10%; top: 0; height: 34px; background: var(--ink); border-radius: 8px; z-index: 2; }
+  .impresora-sim .hoja { position: absolute; left: 18%; right: 18%; top: 20px; height: 0; background: #fff; border: 1px solid var(--line); overflow: hidden; font: 600 .8rem "IBM Plex Mono", monospace; padding: 0 8px; transition: height 1.8s steps(12); box-shadow: 0 4px 10px rgba(0,0,0,.08); }
+  .impresora-sim .hoja.sale { height: 74px; padding-top: 18px; }
+
+  /* clasificador */
+  .clasif { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: center; }
+  .item { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; }
+  .item img { width: 100%; height: 190px; object-fit: contain; mix-blend-mode: multiply; }
+  .item h3 { font-size: clamp(1.1rem, 2.2vw, 1.5rem); margin-top: 8px; }
+  .opciones { display: grid; gap: 10px; }
+  .opciones button { font: 700 clamp(.95rem, 1.8vw, 1.15rem) "IBM Plex Sans", sans-serif; border: 0; border-radius: 12px; padding: 14px; color: #fff; cursor: pointer; transition: transform .1s, opacity .2s; }
+  .opciones button:active { transform: scale(.97); }
+  .opciones button:disabled { opacity: .35; cursor: default; }
+  .opciones [data-t="in"] { background: var(--in); } .opciones [data-t="out"] { background: var(--out); } .opciones [data-t="es"] { background: var(--es); }
+  .opciones button.elegida { opacity: 1 !important; outline: 4px solid var(--ink); outline-offset: 2px; }
+  .feedback { min-height: 3.2em; font-weight: 600; }
+  .feedback.ok { color: var(--ok); } .feedback.mal { color: var(--bad); }
+  .puntos { font: 600 .9rem "IBM Plex Mono", monospace; color: var(--mut); }
+
+  /* grabadora */
+  .cadena { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; gap: 8px; align-items: stretch; margin: 10px 0 14px; }
+  .cadena .etapa { min-height: 150px; text-align: center; }
+  .cadena .etapa img { width: 100%; height: 64px; object-fit: contain; mix-blend-mode: multiply; }
+  .cadena .etapa .emo { font-size: 2.6rem; line-height: 64px; display: block; height: 64px; }
+  .cadena audio { width: 100%; height: 32px; margin-top: 4px; display: none; }
+
+  /* quiz */
+  .quiz { max-width: 760px; width: 100%; margin: 0 auto; }
+  .quiz .preg { font-size: clamp(1.1rem, 2.4vw, 1.5rem) !important; font-weight: 700; margin: 6px 0 14px !important; }
+  .quiz .alts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quiz .alts button { font: 600 clamp(.92rem, 1.7vw, 1.08rem) "IBM Plex Sans", sans-serif; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; cursor: pointer; color: var(--ink); }
+  .quiz .alts button:hover:not(:disabled) { border-color: var(--moss); }
+  .quiz .alts button.bien { background: #eaf4ec; border-color: var(--ok); }
+  .quiz .alts button.malo { background: #f8e9e6; border-color: var(--bad); }
+  .quiz .alts button:disabled { cursor: default; }
+  .progreso { display: flex; gap: 5px; margin-bottom: 6px; }
+  .progreso i { flex: 1; height: 6px; border-radius: 99px; background: var(--line); }
+  .progreso i.bien { background: var(--ok); } .progreso i.malo { background: var(--bad); } .progreso i.act { background: var(--amber); }
+
+  .creditos { columns: 2; column-gap: 28px; font-size: .74rem; line-height: 1.45; color: var(--mut); }
+  .creditos div { break-inside: avoid; margin-bottom: 3px; }
+  .creditos a { color: var(--moss); }
+  .aviso-lab { font: 600 .72rem "IBM Plex Mono", monospace; color: var(--mut); text-transform: uppercase; letter-spacing: .05em; }
+
+  @media (max-width: 760px) {
+    .dos, .dos.ancho, .dos.angosto, .explora, .lab, .clasif { grid-template-columns: 1fr; gap: 14px; }
+    .rej.c3, .rej.c4, .rej.c5, .rej.c6 { grid-template-columns: 1fr 1fr; }
+    .eps, .cadena { grid-template-columns: 1fr; } .flecha { transform: rotate(90deg); justify-self: center; }
+    .piezas { grid-template-columns: repeat(4, 1fr); }
+    .panel { grid-template-columns: 1fr; } .explora .botones { grid-template-columns: repeat(3, 1fr); }
+    .quiz .alts { grid-template-columns: 1fr; }
+    .portada .foto-portada { display: none; } .portada .txt { max-width: none; }
+    .diapo { aspect-ratio: auto; min-height: 60vh; justify-content: flex-start !important; }
+    .creditos { columns: 1; }
   }
   .control { position: fixed; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); color: #f6f4ee; font: 600 .85rem "IBM Plex Mono", monospace; }
   .control button { background: rgba(246,244,238,.14); color: #f6f4ee; border: 0; border-radius: 10px; padding: 9px 16px; font: inherit; cursor: pointer; }
@@ -102,99 +246,75 @@
 </style>
 </head>
 <body>
-
-<!-- Íconos (línea simple, usan el color del texto) -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="monitor" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="38" height="25" rx="2"/><path d="M19 41h10M24 33v8"/></g></symbol>
-  <symbol id="teclado" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="14" width="42" height="20" rx="3"/><path d="M9 20h2M15 20h2M21 20h2M27 20h2M33 20h2M39 20h0M9 26h2M39 26h0M15 28h18"/></g></symbol>
-  <symbol id="mouse" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="6" width="20" height="36" rx="10"/><path d="M24 6v12M14 18h20"/></g></symbol>
-  <symbol id="micro" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="5" width="12" height="22" rx="6"/><path d="M11 22a13 13 0 0 0 26 0M24 35v7M17 42h14"/></g></symbol>
-  <symbol id="camara" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="13"/><circle cx="24" cy="20" r="5"/><path d="M16 42h16M24 33v9"/></g></symbol>
-  <symbol id="escaner" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 26h38l-3 12H8z"/><path d="M9 26l6-14h18"/><path d="M14 32h10"/></g></symbol>
-  <symbol id="barras" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12v24M13 12v24M19 12v24M22 12v24M28 12v24M34 12v24M37 12v24M41 12v24"/></g></symbol>
-  <symbol id="impresora" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6h20v12"/><rect x="5" y="18" width="38" height="16" rx="3"/><path d="M14 28h20v14H14z"/><path d="M36 23h1"/></g></symbol>
-  <symbol id="parlante" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 18h8l11-9v30l-11-9H8z"/><path d="M33 18a8 8 0 0 1 0 12M37 13a15 15 0 0 1 0 22"/></g></symbol>
-  <symbol id="proyector" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="17" width="40" height="17" rx="3"/><circle cx="32" cy="25.5" r="5"/><path d="M9 24h10M10 34v4M38 34v4"/></g></symbol>
-  <symbol id="audifonos" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 30v-6a16 16 0 0 1 32 0v6"/><rect x="6" y="28" width="8" height="12" rx="3"/><rect x="34" y="28" width="8" height="12" rx="3"/><path d="M14 38q6 6 12 3"/></g></symbol>
-  <symbol id="tactil" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="4" width="24" height="40" rx="4"/><path d="M22 39h4"/><circle cx="24" cy="20" r="4"/><path d="M24 12v-1"/></g></symbol>
-  <symbol id="usb" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="15" y="16" width="18" height="28" rx="3"/><path d="M18 16V5h12v11M21 9h1M26 9h1"/></g></symbol>
-  <symbol id="multi" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14h36v20H6z"/><path d="M10 14l4-6h20l4 6"/><path d="M14 28h20v12H14zM34 20h3"/></g></symbol>
-  <symbol id="placa" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="38" height="38" rx="2"/><rect x="12" y="11" width="11" height="11"/><path d="M30 10v14M34 10v14M11 30h22M11 36h22"/><circle cx="38" cy="36" r="1.5"/></g></symbol>
-  <symbol id="cpu" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="11" width="26" height="26" rx="3"/><rect x="18" y="18" width="12" height="12" rx="1"/><path d="M18 5v6M24 5v6M30 5v6M18 37v6M24 37v6M30 37v6M5 18h6M5 24h6M5 30h6M37 18h6M37 24h6M37 30h6"/></g></symbol>
-  <symbol id="ram" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h42v16H3z"/><path d="M8 19h6v6H8zM17 19h6v6h-6zM26 19h6v6h-6zM35 19h5v6h-5z"/><path d="M6 30v5M12 30v5M18 30v5M30 30v5M36 30v5M42 30v5"/></g></symbol>
-  <symbol id="hdd" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="4" width="30" height="40" rx="3"/><circle cx="24" cy="20" r="10"/><circle cx="24" cy="20" r="2"/><path d="M24 20l9 16"/></g></symbol>
-  <symbol id="ssd" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="16" width="40" height="16" rx="2"/><path d="M10 21h7v6h-7zM21 21h7v6h-7zM36 22v4"/></g></symbol>
-  <symbol id="gpu" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="40" height="22" rx="2"/><circle cx="16" cy="23" r="6"/><circle cx="31" cy="23" r="6"/><path d="M8 34v5h22v-5M43 16h2v14h-2"/></g></symbol>
-  <symbol id="fuente" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="9" width="38" height="30" rx="3"/><circle cx="19" cy="24" r="9"/><path d="M19 15v18M10 24h18"/><path d="M36 19l-3 6h4l-3 6"/></g></symbol>
-  <symbol id="ventilador" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="38" height="38" rx="5"/><circle cx="24" cy="24" r="3"/><path d="M24 21c-2-6 0-10 4-10s4 6-4 10M27 24c6-2 10 0 10 4s-6 4-10-4M24 27c2 6 0 10-4 10s-4-6 4-10M21 24c-6 2-10 0-10-4s6-4 10 4"/></g></symbol>
-  <symbol id="torre" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="4" width="22" height="40" rx="2"/><path d="M18 10h12M18 15h12"/><circle cx="24" cy="34" r="2.5"/></g></symbol>
-  <symbol id="laptop" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="10" width="30" height="20" rx="2"/><path d="M3 36h42l-3-6H6z"/></g></symbol>
-  <symbol id="todo1" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="40" height="28" rx="2"/><path d="M4 28h40M20 34l-2 8h12l-2-8"/></g></symbol>
-  <symbol id="celular" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="4" width="20" height="40" rx="4"/><path d="M22 39h4"/></g></symbol>
-  <symbol id="servidor" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="5" width="34" height="11" rx="2"/><rect x="7" y="19" width="34" height="11" rx="2"/><rect x="7" y="33" width="34" height="11" rx="2"/><path d="M12 10.5h1M12 24.5h1M12 38.5h1M30 10.5h6M30 24.5h6M30 38.5h6"/></g></symbol>
-  <symbol id="enchufe" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4v10M30 4v10M12 14h24v8a12 12 0 0 1-24 0z"/><path d="M24 34v10"/></g></symbol>
-</svg>
-
 <div class="barra" id="barra"></div>
 <main class="escena">
 
   <!-- 1 · PORTADA -->
   <section class="diapo portada">
-    <p class="eti">Herramientas Informáticas · Clase 1</p>
-    <h1>La computadora:<br>partes y periféricos</h1>
-    <p>Qué es, cómo funciona por dentro y con qué dispositivos nos comunicamos con ella.</p>
-    <p class="peq" style="color:#cfe3d3;margin-top:24px">Ing. Fernando F. Huamani Felles</p>
+    <div class="txt">
+      <p class="eti">Herramientas Informáticas · Clase 1</p>
+      <h1>La computadora:<br>partes y periféricos</h1>
+      <p>Hoy vamos a abrirla, a probar sus piezas y a jugar con ella.</p>
+      <p class="peq" style="color:#cfe3d3;margin-top:22px">Ing. Fernando F. Huamani Felles</p>
+    </div>
+    <img class="foto-portada" src="recursos/m3c1/interior.jpg" alt="Gabinete abierto con sus componentes">
   </section>
 
-  <!-- 2 · PREGUNTA DE INICIO -->
+  <!-- 2 · ¿ES UNA COMPUTADORA? -->
   <section class="diapo">
-    <p class="eti">Para empezar</p>
-    <h2>¿Cuántas computadoras usaste hoy?</h2>
-    <div class="rej c4" style="margin:8px 0 18px">
-      <div class="tj"><svg><use href="#celular"/></svg><h3>Tu celular</h3></div>
-      <div class="tj"><svg><use href="#laptop"/></svg><h3>Una laptop</h3></div>
-      <div class="tj"><svg><use href="#barras"/></svg><h3>La caja del market</h3></div>
-      <div class="tj"><svg><use href="#tactil"/></svg><h3>El cajero del banco</h3></div>
+    <p class="eti">Para empezar · toquen cada tarjeta</p>
+    <h2>¿Es una computadora o no?</h2>
+    <p class="peq">Primero voten levantando la mano. Después toquen la tarjeta para ver la respuesta.</p>
+    <div class="rej c4">
+      <button class="carta" data-revela data-ok="si"><span class="emo">📱</span><h3>Tu celular</h3><div class="atras"><span class="sello si">Sí</span><br>Recibe datos, los procesa y te muestra resultados. Es una computadora de bolsillo.</div></button>
+      <button class="carta" data-revela data-ok="no"><span class="emo">🔦</span><h3>Una linterna</h3><div class="atras"><span class="sello no">No</span><br>Solo prende y apaga. No procesa datos ni sigue instrucciones.</div></button>
+      <button class="carta" data-revela data-ok="si"><span class="emo">🏧</span><h3>El cajero del banco</h3><div class="atras"><span class="sello si">Sí</span><br>Lee tu tarjeta, procesa tu clave y te entrega dinero y un voucher.</div></button>
+      <button class="carta" data-revela data-ok="si"><span class="emo">🎮</span><h3>Una consola de videojuegos</h3><div class="atras"><span class="sello si">Sí</span><br>Tiene procesador, memoria y almacenamiento, igual que una PC.</div></button>
+      <button class="carta" data-revela data-ok="casi"><span class="emo">🧮</span><h3>Una calculadora básica</h3><div class="atras"><span class="sello casi">Casi</span><br>Procesa datos, pero solo hace una tarea fija: no se le pueden instalar programas.</div></button>
+      <button class="carta" data-revela data-ok="si"><span class="emo">📺</span><h3>Un Smart TV</h3><div class="atras"><span class="sello si">Sí</span><br>Por dentro tiene una pequeña computadora para correr YouTube o Netflix.</div></button>
+      <button class="carta" data-revela data-ok="no"><span class="emo">🪑</span><h3>Una silla</h3><div class="atras"><span class="sello no">No</span><br>Ni siquiera es electrónica 😄</div></button>
+      <button class="carta" data-revela data-ok="si"><span class="emo">⌚</span><h3>Un reloj inteligente</h3><div class="atras"><span class="sello si">Sí</span><br>Mide tus pasos (entrada), los procesa y te muestra el resultado (salida).</div></button>
     </div>
-    <p class="nota">Todas son computadoras. Cambian de forma y tamaño, pero <b>funcionan con el mismo principio</b>. Eso es lo que veremos hoy.</p>
   </section>
 
   <!-- 3 · DEFINICIÓN -->
   <section class="diapo">
     <p class="eti">Definición</p>
     <h2>¿Qué es una computadora?</h2>
-    <p class="def">Es una <b class="k">máquina electrónica</b> que <b class="k">recibe datos</b>, los <b class="k">procesa</b> siguiendo instrucciones y <b class="k">entrega información</b> útil.</p>
-    <div class="dos" style="margin-top:18px;align-items:start">
-      <div class="tj"><h3>Dato</h3><p>Un valor suelto, sin contexto: <code>18</code>, <code>15</code>, <code>12</code>.</p></div>
-      <div class="tj"><h3>Información</h3><p>El dato ya procesado y con sentido: <i>“Tu promedio es 15, aprobaste”.</i></p></div>
+    <div class="lee">
+      <p class="def">Es una <b class="k">máquina electrónica</b> que <b class="k">recibe datos</b>, los <b class="k">procesa</b> siguiendo instrucciones y <b class="k">entrega información</b> útil.</p>
+    </div>
+    <div class="dos" style="margin-top:14px;align-items:stretch">
+      <div class="tj"><h3>Dato</h3><p>Un valor suelto, sin contexto: <code>14</code>, <code>17</code>, <code>12</code>. Solo números.</p></div>
+      <div class="tj"><h3>Información</h3><p>El dato ya procesado y con sentido: <i>“Tu promedio es 14, aprobaste”.</i></p></div>
+    </div>
+    <div class="pregunta" data-revela>
+      <span>Si te digo solo “38”, ¿es dato o información?</span>
+      <button class="bt sec">Ver respuesta</button>
+      <p class="resp">Es un dato: no sabemos qué significa. “Tienes 38 °C de fiebre” ya es información.</p>
     </div>
   </section>
 
-  <!-- 4 · CICLO E-P-S -->
+  <!-- 4 · SIMULADOR E-P-S -->
   <section class="diapo">
-    <p class="eti">Cómo funciona</p>
-    <h2>Toda computadora sigue el mismo ciclo</h2>
-    <svg class="flujo" viewBox="0 0 900 300" role="img" aria-label="Entrada, proceso y salida, con almacenamiento debajo del proceso">
-      <defs><marker id="pt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b3752c"/></marker></defs>
-      <g font-size="22" font-weight="700" text-anchor="middle">
-        <rect x="10" y="40" width="230" height="120" rx="16" fill="#2f6f4f"/>
-        <text x="125" y="92" fill="#fff">ENTRADA</text>
-        <text x="125" y="122" fill="#d6ece0" font-size="16" font-weight="400">teclado, mouse, micrófono…</text>
-        <rect x="335" y="40" width="230" height="120" rx="16" fill="#10231c"/>
-        <text x="450" y="92" fill="#fff">PROCESO</text>
-        <text x="450" y="122" fill="#c9d3cd" font-size="16" font-weight="400">CPU + memoria RAM</text>
-        <rect x="660" y="40" width="230" height="120" rx="16" fill="#b0522a"/>
-        <text x="775" y="92" fill="#fff">SALIDA</text>
-        <text x="775" y="122" fill="#f6ddd0" font-size="16" font-weight="400">monitor, impresora, parlantes…</text>
-        <rect x="335" y="210" width="230" height="78" rx="16" fill="#fff" stroke="#35513f" stroke-width="2.5"/>
-        <text x="450" y="245" fill="#35513f">ALMACENAMIENTO</text>
-        <text x="450" y="271" fill="#7c7763" font-size="16" font-weight="400">disco HDD / SSD</text>
-      </g>
-      <g stroke="#b3752c" stroke-width="5" fill="none" marker-end="url(#pt)">
-        <path d="M245 100H325"/><path d="M570 100H650"/><path d="M430 165V202"/><path d="M470 205V170"/>
-      </g>
-    </svg>
-    <p class="peq" style="text-align:center;margin-top:8px">Ejemplo: escribes una nota (entrada) → la computadora la procesa → la ves en pantalla (salida) y la guardas (almacenamiento).</p>
+    <p class="eti">Experimento · el ciclo de toda computadora</p>
+    <h2>Entrada → Proceso → Salida</h2>
+    <div class="fila notas">
+      <span>Escribe tres notas (0 a 20):</span>
+      <input id="n1" type="number" min="0" max="20" value="14" aria-label="Nota 1">
+      <input id="n2" type="number" min="0" max="20" value="17" aria-label="Nota 2">
+      <input id="n3" type="number" min="0" max="20" value="12" aria-label="Nota 3">
+      <button class="bt amb" id="eps-go">▶ Procesar</button>
+      <button class="bt sec" id="eps-save" disabled>💾 Guardar</button>
+    </div>
+    <div class="eps" style="margin-top:14px">
+      <div class="etapa e-in" id="e-in"><h3>1 · ENTRADA</h3><div class="cont">Las notas que escribes con el teclado.</div></div>
+      <span class="flecha" id="f1">→</span>
+      <div class="etapa e-pr" id="e-pr"><h3>2 · PROCESO</h3><div class="cont">El procesador hace los cálculos.</div></div>
+      <span class="flecha" id="f2">→</span>
+      <div class="etapa e-out" id="e-out"><h3>3 · SALIDA</h3><div class="cont">El resultado aparece en el monitor.</div></div>
+    </div>
+    <div class="etapa e-al" id="e-al" style="min-height:0;margin-top:10px"><h3>+ ALMACENAMIENTO</h3><div class="cont" id="al-lista" style="min-height:0">Aquí queda guardado lo que decidas guardar.</div></div>
   </section>
 
   <!-- 5 · HARDWARE Y SOFTWARE -->
@@ -202,303 +322,382 @@
     <p class="eti">Dos mundos</p>
     <h2>Hardware y software</h2>
     <div class="dos" style="align-items:stretch">
-      <div class="tj" style="border-top:5px solid var(--moss)">
-        <svg><use href="#cpu"/></svg>
-        <h3>Hardware · hoy</h3>
-        <p>Todo lo <b>físico</b>: lo que puedes tocar. Placa madre, procesador, memoria, teclado, monitor…</p>
-      </div>
-      <div class="tj" style="border-top:5px solid var(--line);opacity:.75">
-        <svg style="color:var(--mut)"><use href="#monitor"/></svg>
-        <h3>Software · próxima clase</h3>
-        <p>Los <b>programas</b> e instrucciones que le dicen al hardware qué hacer.</p>
-      </div>
+      <div class="tj" style="border-top:5px solid var(--moss)"><h3>🔧 Hardware · hoy</h3><p>Todo lo <b>físico</b>: lo que puedes tocar. Placa madre, procesador, teclado, monitor…</p></div>
+      <div class="tj" style="border-top:5px solid var(--line)"><h3>💿 Software · próxima clase</h3><p>Los <b>programas</b> e instrucciones que le dicen al hardware qué hacer.</p></div>
     </div>
-    <p class="nota" style="margin-top:18px">Se necesitan mutuamente: el hardware sin software no hace nada, y el software sin hardware no tiene dónde funcionar.</p>
+    <p style="margin-top:14px"><b>Reto:</b> ¿hardware o software? Respondan en voz alta y toquen para comprobar.</p>
+    <div class="rej c6">
+      <button class="carta" data-revela data-ok="si"><h3>Monitor</h3><div class="atras">🔧 Hardware</div></button>
+      <button class="carta" data-revela data-ok="casi"><h3>WhatsApp</h3><div class="atras">💿 Software</div></button>
+      <button class="carta" data-revela data-ok="si"><h3>Memoria USB</h3><div class="atras">🔧 Hardware</div></button>
+      <button class="carta" data-revela data-ok="casi"><h3>Windows</h3><div class="atras">💿 Software</div></button>
+      <button class="carta" data-revela data-ok="si"><h3>Mouse</h3><div class="atras">🔧 Hardware</div></button>
+      <button class="carta" data-revela data-ok="casi"><h3>Minecraft</h3><div class="atras">💿 Software</div></button>
+    </div>
   </section>
 
   <!-- 6 · TIPOS -->
   <section class="diapo">
     <p class="eti">Formas de computadora</p>
     <h2>Tipos de computadoras</h2>
+    <div class="rej c5">
+      <div class="tj"><img src="recursos/m3c1/desktop.jpg" alt="Computadora de escritorio"><h3>De escritorio</h3><p>Fija. Fácil de reparar y mejorar.</p></div>
+      <div class="tj"><img src="recursos/m3c1/laptop.jpg" alt="Laptop"><h3>Laptop</h3><p>Todo integrado y con batería.</p></div>
+      <div class="tj"><img src="recursos/m3c1/todo1.jpg" alt="Computadora todo en uno"><h3>Todo en uno</h3><p>Las piezas van dentro del monitor.</p></div>
+      <div class="tj"><img src="recursos/m3c1/tablet.jpg" alt="Tablet"><h3>Tablet / celular</h3><p>De bolsillo, con pantalla táctil.</p></div>
+      <div class="tj"><img src="recursos/m3c1/servidor.jpg" alt="Servidores en un centro de datos"><h3>Servidor</h3><p>Atiende a miles de usuarios a la vez.</p></div>
+    </div>
+    <p style="margin:14px 0 6px"><b>¿Cuál le recomendarías a…?</b></p>
     <div class="rej c3">
-      <div class="tj"><svg><use href="#torre"/></svg><h3>De escritorio (desktop)</h3><p>Fija en un lugar. Gabinete separado del monitor, teclado y mouse. Fácil de reparar y mejorar.</p></div>
-      <div class="tj"><svg><use href="#laptop"/></svg><h3>Laptop o portátil</h3><p>Pantalla, teclado y batería integrados. Se lleva a cualquier parte.</p></div>
-      <div class="tj"><svg><use href="#todo1"/></svg><h3>Todo en uno</h3><p>Los componentes van dentro del mismo monitor. Ahorra espacio.</p></div>
-      <div class="tj"><svg><use href="#celular"/></svg><h3>Tablet y smartphone</h3><p>Computadoras de bolsillo con pantalla táctil.</p></div>
-      <div class="tj"><svg><use href="#servidor"/></svg><h3>Servidor</h3><p>Trabaja sin descanso dando servicio a muchos usuarios: páginas web, correos, juegos en línea.</p></div>
-      <div class="tj" style="background:#fbf1e2;border-color:#ecd6b4"><h3>PC</h3><p><b>Personal Computer</b>: cualquier computadora pensada para que la use una persona.</p></div>
+      <button class="carta" data-revela><h3>…un estudiante que va en combi a clases?</h3><div class="atras"><b>Laptop</b>: la lleva a todos lados y tiene batería.</div></button>
+      <button class="carta" data-revela><h3>…una cabina de internet con 15 puestos?</h3><div class="atras"><b>De escritorio</b>: son baratas, duran y se reparan fácil.</div></button>
+      <button class="carta" data-revela><h3>…una tienda online con miles de visitas?</h3><div class="atras"><b>Servidor</b>: funciona 24/7 atendiendo a todos.</div></button>
     </div>
   </section>
 
-  <!-- 7 · ERROR COMÚN -->
+  <!-- 7 · CPU VS GABINETE -->
   <section class="diapo">
-    <p class="eti">Error común</p>
-    <h2>“La CPU” no es la caja</h2>
-    <div class="dos ancho">
-      <div>
-        <p>Mucha gente llama <b>CPU</b> a la caja donde va todo. En realidad esa caja se llama <b class="k">gabinete</b> (o <i>case</i>, o torre).</p>
-        <p>La <b class="k">CPU</b> (Unidad Central de Procesamiento) es el <b>procesador</b>: un chip del tamaño de una galleta que está <b>dentro</b> del gabinete.</p>
-      </div>
-      <div class="rej" style="grid-template-columns:1fr 1fr">
-        <div class="tj" style="text-align:center"><svg style="width:70px;height:70px"><use href="#torre"/></svg><h3>Gabinete</h3><p>la caja</p></div>
-        <div class="tj" style="text-align:center"><svg style="width:70px;height:70px"><use href="#cpu"/></svg><h3>CPU</h3><p>el chip</p></div>
-      </div>
+    <p class="eti">Error muy común</p>
+    <h2>Toca la foto que es <u>la CPU</u></h2>
+    <div class="dos" style="align-items:stretch;max-width:720px">
+      <button class="carta" data-revela data-ok="no"><img src="recursos/m3c1/gabinete.jpg" alt="Gabinete" style="height:170px"><h3>Opción A</h3><div class="atras"><span class="sello no">No</span><br>Esto es el <b>gabinete</b> (case o torre). Mucha gente le dice “CPU”, pero es solo la caja.</div></button>
+      <button class="carta" data-revela data-ok="si"><img src="recursos/m3c1/cpu.jpg" alt="Procesador" style="height:170px"><h3>Opción B</h3><div class="atras"><span class="sello si">¡Sí!</span><br>La <b>CPU</b> (Unidad Central de Procesamiento) es el <b>procesador</b>: un chip pequeño que va dentro del gabinete.</div></button>
     </div>
   </section>
 
-  <!-- 8 · SECCIÓN COMPONENTES -->
+  <!-- 8 · SECCIÓN 1 -->
   <section class="diapo seccion">
     <p class="num">01</p>
     <p class="eti">Parte 1</p>
     <h1>Dentro del gabinete</h1>
-    <p>Los componentes internos que hacen que la computadora funcione.</p>
+    <p>Las piezas internas que hacen que la computadora funcione.</p>
   </section>
 
-  <!-- 9 · PLACA MADRE -->
+  <!-- 9 · EXPLORADOR -->
   <section class="diapo">
-    <p class="eti">Componente interno</p>
-    <div class="comp">
-      <div class="fig"><svg><use href="#placa"/></svg></div>
+    <p class="eti">Explora · toca cada componente</p>
+    <div class="explora">
       <div>
-        <h2>Placa madre (motherboard)</h2>
-        <p>Es la <b>tarjeta principal</b>. Todas las demás piezas se conectan a ella, y a través de ella se comunican entre sí.</p>
-        <p>Tiene un lugar para cada cosa: el <b>zócalo</b> del procesador, las <b>ranuras</b> de memoria RAM, las de tarjetas de video y los <b>puertos</b> (USB, audio, red).</p>
-        <p class="analog">es la ciudad: sus pistas de cobre son las calles por donde viajan los datos.</p>
+        <h2>¿Qué hay dentro?</h2>
+        <img class="foto-grande" src="recursos/m3c1/interior.jpg" alt="Interior de un gabinete">
+        <div class="botones" id="exp-bt"></div>
       </div>
+      <div class="panel" id="exp-panel"></div>
     </div>
   </section>
 
-  <!-- 10 · CPU -->
+  <!-- 10 · NÚCLEOS -->
   <section class="diapo">
-    <p class="eti">Componente interno</p>
-    <div class="comp">
-      <div class="fig"><svg><use href="#cpu"/></svg></div>
+    <p class="eti">Experimento · el procesador</p>
+    <div class="dos ancho" style="align-items:start">
       <div>
-        <h2>Procesador (CPU)</h2>
-        <p><b>Ejecuta las instrucciones</b> de los programas y <b>coordina</b> a todo el equipo. Hace millones de cálculos por segundo.</p>
-        <div class="datos"><span>Velocidad · GHz</span><span>Núcleos · 4, 8, 16…</span><span>Marcas · Intel, AMD</span></div>
-        <p class="analog" style="margin-top:14px">es el cerebro: piensa y da órdenes. Más núcleos = más tareas a la vez.</p>
-        <p class="peq">Se calienta mucho, por eso siempre lleva un disipador con ventilador encima.</p>
+        <h2>¿Para qué sirven los núcleos?</h2>
+        <p>Un procesador puede tener varios <b>núcleos</b>: cada uno es como un trabajador. Tienes 8 tareas abiertas. Elige cuántos núcleos tiene tu procesador y ejecútalas.</p>
       </div>
+      <div class="lee" style="padding-bottom:10px"><p style="margin:0">El procesador <b>ejecuta las instrucciones</b> de los programas. Su velocidad se mide en <b>GHz</b>. Las marcas más conocidas son <b>Intel</b> y <b>AMD</b>.</p></div>
+    </div>
+    <div class="fila" style="margin-top:6px">
+      <span>Núcleos:</span>
+      <button class="bt sec nucleo" data-n="1">1</button>
+      <button class="bt sec nucleo on" data-n="2">2</button>
+      <button class="bt sec nucleo" data-n="4">4</button>
+      <button class="bt sec nucleo" data-n="8">8</button>
+      <button class="bt amb" id="nuc-go">▶ Ejecutar 8 tareas</button>
+      <span class="marcador" id="nuc-t"></span>
+    </div>
+    <div class="carriles" id="carriles"></div>
+    <p class="peq" id="nuc-msg">Prueben primero con 1 núcleo y después con 8. ¿Qué cambia?</p>
+  </section>
+
+  <!-- 11 · APAGÓN RAM -->
+  <section class="diapo">
+    <p class="eti">Experimento · memoria RAM y disco</p>
+    <h2>El experimento del apagón</h2>
+    <div class="dos" style="align-items:stretch">
+      <div class="pc-sim">
+        <h3>🧠 MEMORIA RAM · LO QUE ESTÁS USANDO AHORA</h3>
+        <textarea id="ram-txt" placeholder="Escribe aquí cualquier cosa…"></textarea>
+        <div class="fila" style="margin-top:10px">
+          <button class="bt amb" id="ram-save">💾 Guardar en el disco</button>
+          <button class="bt" id="ram-off" style="background:var(--bad)">⏻ Apagar y encender</button>
+        </div>
+        <div class="apagado" id="ram-neg">Apagando…</div>
+      </div>
+      <div>
+        <div class="disco-caja" id="disco"><b>💽 DISCO (HDD / SSD)</b><span class="peq" style="display:block">Lo guardado queda aquí.</span></div>
+      </div>
+    </div>
+    <p class="peq" style="margin-top:12px">Paso 1: escribe algo. Paso 2: apaga. ¿Qué pasó? Paso 3: escribe otra cosa, guárdala y vuelve a apagar.</p>
+    <div class="pregunta" data-revela>
+      <span>¿Por qué se borró lo que no guardaste?</span>
+      <button class="bt sec">Ver respuesta</button>
+      <p class="resp">La RAM es volátil: solo guarda datos mientras hay electricidad. El disco guarda los archivos de forma permanente.</p>
     </div>
   </section>
 
-  <!-- 11 · RAM -->
+  <!-- 12 · CARRERA HDD vs SSD -->
   <section class="diapo">
-    <p class="eti">Componente interno</p>
-    <div class="comp">
-      <div class="fig"><svg><use href="#ram"/></svg></div>
-      <div>
-        <h2>Memoria RAM</h2>
-        <p>Guarda <b>temporalmente</b> los programas y datos que estás usando <b>en este momento</b>, para que el procesador los tenga a mano.</p>
-        <p>Es muy rápida pero <b>volátil</b>: al apagar la computadora, <b>se borra todo</b> lo que tenía.</p>
-        <div class="datos"><span>Capacidad · GB</span><span>Común hoy · 8 a 32 GB</span></div>
-        <p class="analog" style="margin-top:14px">es tu mesa de trabajo: mientras más grande, más cosas puedes tener abiertas a la vez.</p>
-      </div>
+    <p class="eti">Experimento · almacenamiento</p>
+    <h2>Carrera: HDD contra SSD</h2>
+    <div class="fila"><button class="bt amb" id="car-go">🏁 Abrir un juego en los dos discos</button></div>
+    <div class="carrera">
+      <div class="corredor"><img src="recursos/m3c1/hdd.jpg" alt="Disco duro HDD"><div class="barra-c"><i id="b-hdd"></i></div><span class="tiempo" id="t-hdd">0.0 s</span></div>
+      <div class="corredor"><img src="recursos/m3c1/ssd.jpg" alt="Disco SSD"><div class="barra-c"><i id="b-ssd" style="background:var(--amber)"></i></div><span class="tiempo" id="t-ssd">0.0 s</span></div>
     </div>
-  </section>
-
-  <!-- 12 · ALMACENAMIENTO -->
-  <section class="diapo">
-    <p class="eti">Componente interno</p>
-    <h2>Almacenamiento: HDD y SSD</h2>
-    <p>Guardan tus archivos y programas de forma <b>permanente</b>: no se borran al apagar.</p>
-    <table style="margin-top:6px">
-      <thead><tr><th></th><th><svg width="22" height="22" style="vertical-align:-5px;color:var(--moss)"><use href="#hdd"/></svg> HDD · disco duro</th><th><svg width="22" height="22" style="vertical-align:-5px;color:var(--moss)"><use href="#ssd"/></svg> SSD · estado sólido</th></tr></thead>
+    <table>
+      <thead><tr><th></th><th>HDD · disco duro</th><th>SSD · estado sólido</th></tr></thead>
       <tbody>
-        <tr><td>Cómo funciona</td><td>Disco magnético que gira y un brazo que lee</td><td>Chips de memoria, sin piezas móviles</td></tr>
-        <tr><td>Velocidad</td><td>Más lento</td><td>Hasta 10 veces más rápido o más</td></tr>
-        <tr><td>Resistencia</td><td>Sensible a golpes</td><td>Aguanta mejor los golpes</td></tr>
+        <tr><td>Cómo funciona</td><td>Un disco que gira y un brazo que lee</td><td>Chips de memoria, sin piezas móviles</td></tr>
+        <tr><td>Golpes</td><td>Delicado</td><td>Resistente</td></tr>
         <tr><td>Precio</td><td>Más barato por GB</td><td>Más caro por GB</td></tr>
       </tbody>
     </table>
-    <p class="analog" style="margin-top:12px">es el ropero o archivador: ahí se guarda todo, aunque sacarlo toma más tiempo que tenerlo en la mesa (RAM).</p>
   </section>
 
   <!-- 13 · GPU -->
   <section class="diapo">
-    <p class="eti">Componente interno</p>
-    <div class="comp">
-      <div class="fig"><svg><use href="#gpu"/></svg></div>
+    <p class="eti">Experimento · tarjeta gráfica</p>
+    <div class="dos angosto" style="align-items:stretch">
       <div>
         <h2>Tarjeta gráfica (GPU)</h2>
-        <p>Procesa todo lo que se <b>ve</b>: imágenes, videos, animaciones y juegos. Le quita ese trabajo pesado al procesador.</p>
-        <div class="dos" style="gap:12px;align-items:stretch">
-          <div class="tj"><h3>Integrada</h3><p>Viene dentro del procesador. Suficiente para estudiar, navegar y ver videos.</p></div>
-          <div class="tj"><h3>Dedicada</h3><p>Tarjeta aparte con memoria propia. Para juegos, diseño 3D y edición de video.</p></div>
+        <p>Dibuja todo lo que <b>ves</b>: ventanas, videos y juegos. Mientras más potente, más imágenes por segundo (<b>FPS</b>) puede dibujar.</p>
+        <img src="recursos/m3c1/gpu.jpg" alt="Tarjeta gráfica" style="width:100%;max-height:120px;object-fit:contain;mix-blend-mode:multiply">
+        <div class="fila" style="margin-top:8px">
+          <button class="bt sec gpu-m on" data-m="int">Integrada</button>
+          <button class="bt sec gpu-m" data-m="ded">Dedicada</button>
+          <span class="fps" id="fps"></span>
         </div>
+        <p class="peq" style="margin-top:8px"><b>Integrada:</b> viene dentro del procesador. <b>Dedicada:</b> tarjeta aparte, para juegos y diseño.</p>
       </div>
+      <canvas class="lienzo" id="lienzo" width="640" height="400"></canvas>
     </div>
   </section>
 
-  <!-- 14 · FUENTE Y REFRIGERACIÓN -->
+  <!-- 14 · QUITAR PIEZA -->
   <section class="diapo">
-    <p class="eti">Componentes internos</p>
-    <h2>Energía y temperatura</h2>
-    <div class="dos" style="align-items:stretch">
-      <div class="tj">
-        <svg style="width:52px;height:52px"><use href="#fuente"/></svg>
-        <h3>Fuente de poder</h3>
-        <p>Recibe la electricidad del tomacorriente y la convierte en la energía que necesita cada pieza. Su potencia se mide en <b>watts (W)</b>.</p>
-        <p class="analog">es el corazón: reparte energía a todo el cuerpo.</p>
-      </div>
-      <div class="tj">
-        <svg style="width:52px;height:52px"><use href="#ventilador"/></svg>
-        <h3>Refrigeración</h3>
-        <p>Disipadores y ventiladores que sacan el calor. Sin ellos, el procesador y la tarjeta gráfica se sobrecalientan y el equipo se apaga o se daña.</p>
-        <p class="analog">es el sistema de ventilación de una casa.</p>
-      </div>
-    </div>
+    <p class="eti">¿Qué pasaría si…?</p>
+    <h2>Quítale una pieza a la computadora</h2>
+    <p class="peq">Antes de tocar, que la clase adivine qué va a pasar.</p>
+    <div class="piezas" id="piezas"></div>
+    <div class="resultado" id="quitar-res"><span class="emo">🖥️</span><p>Elige una pieza para quitarla.</p></div>
   </section>
 
-  <!-- 15 · RESUMEN COMPONENTES -->
+  <!-- 15 · OFICINA -->
   <section class="diapo">
-    <p class="eti">Resumen</p>
-    <h2>Una computadora es como una oficina</h2>
+    <p class="eti">Resumen · adivinen antes de tocar</p>
+    <h2>Si la computadora fuera una oficina…</h2>
     <table>
-      <thead><tr><th>Componente</th><th>En la oficina sería…</th><th>Su función</th></tr></thead>
+      <thead><tr><th>Componente</th><th>En la oficina sería… (toca)</th><th>Su función</th></tr></thead>
       <tbody>
-        <tr><td>Placa madre</td><td>El edificio y sus pasillos</td><td>Conecta y comunica todo</td></tr>
-        <tr><td>Procesador (CPU)</td><td>El trabajador</td><td>Ejecuta las instrucciones</td></tr>
-        <tr><td>Memoria RAM</td><td>El escritorio</td><td>Tiene a mano lo que se usa ahora</td></tr>
-        <tr><td>HDD / SSD</td><td>El archivador</td><td>Guarda todo de forma permanente</td></tr>
-        <tr><td>Tarjeta gráfica</td><td>El diseñador</td><td>Prepara lo que se ve en pantalla</td></tr>
-        <tr><td>Fuente de poder</td><td>La instalación eléctrica</td><td>Da energía a todo</td></tr>
+        <tr><td>Placa madre</td><td class="tapa" data-revela><span>El edificio y sus pasillos</span></td><td>Conecta y comunica todo</td></tr>
+        <tr><td>Procesador (CPU)</td><td class="tapa" data-revela><span>El trabajador</span></td><td>Ejecuta las instrucciones</td></tr>
+        <tr><td>Memoria RAM</td><td class="tapa" data-revela><span>El escritorio</span></td><td>Tiene a mano lo que se usa ahora</td></tr>
+        <tr><td>HDD / SSD</td><td class="tapa" data-revela><span>El archivador</span></td><td>Guarda todo de forma permanente</td></tr>
+        <tr><td>Tarjeta gráfica</td><td class="tapa" data-revela><span>El diseñador</span></td><td>Dibuja lo que se ve en pantalla</td></tr>
+        <tr><td>Fuente de poder</td><td class="tapa" data-revela><span>La instalación eléctrica</span></td><td>Da energía a todo</td></tr>
+        <tr><td>Cooler</td><td class="tapa" data-revela><span>El aire acondicionado</span></td><td>Evita que se sobrecaliente</td></tr>
       </tbody>
     </table>
   </section>
 
-  <!-- 16 · SECCIÓN PERIFÉRICOS -->
+  <!-- 16 · SECCIÓN 2 -->
   <section class="diapo seccion">
     <p class="num">02</p>
     <p class="eti">Parte 2</p>
     <h1>Los periféricos</h1>
-    <p>Los dispositivos que conectamos a la computadora para comunicarnos con ella.</p>
+    <p>Los dispositivos que conectamos para comunicarnos con la computadora.</p>
   </section>
 
   <!-- 17 · QUÉ ES UN PERIFÉRICO -->
   <section class="diapo">
     <p class="eti">Definición</p>
     <h2>¿Qué es un periférico?</h2>
-    <p class="def">Es todo dispositivo <b class="k">externo</b> que se conecta a la computadora para <b class="k">meter</b> información, <b class="k">sacarla</b>, o ambas cosas.</p>
-    <div class="rej c3" style="margin-top:20px">
-      <div class="tj in"><svg><use href="#teclado"/></svg><h3>Entrada</h3><p>Envían datos <b>hacia</b> la computadora.</p></div>
-      <div class="tj out"><svg><use href="#monitor"/></svg><h3>Salida</h3><p>Muestran los resultados <b>desde</b> la computadora.</p></div>
-      <div class="tj es"><svg><use href="#tactil"/></svg><h3>Entrada y salida</h3><p>Hacen <b>las dos cosas</b>.</p></div>
+    <div class="lee"><p class="def">Es todo dispositivo <b class="k">externo</b> que se conecta a la computadora para <b class="k">meter</b> información, <b class="k">sacarla</b>, o ambas cosas.</p></div>
+    <div class="rej c3" style="margin-top:14px">
+      <div class="tj" style="border-top:5px solid var(--in)"><h3>⬅️ Entrada</h3><p>La información viaja <b>hacia</b> la computadora.</p></div>
+      <div class="tj" style="border-top:5px solid var(--out)"><h3>➡️ Salida</h3><p>La información viaja <b>desde</b> la computadora hacia ti.</p></div>
+      <div class="tj" style="border-top:5px solid var(--es)"><h3>↔️ Entrada y salida</h3><p>La información viaja en <b>los dos sentidos</b>.</p></div>
     </div>
-    <p class="peq" style="margin-top:14px">Se conectan por cable (USB, HDMI, audio) o de forma inalámbrica (Bluetooth, Wi-Fi).</p>
+    <div class="pregunta" data-revela>
+      <span>El truco: ¿hacia dónde viaja la información? Prueben con el micrófono.</span>
+      <button class="bt sec">Ver respuesta</button>
+      <p class="resp">Tu voz entra a la computadora → es de entrada.</p>
+    </div>
   </section>
 
-  <!-- 18 · ENTRADA -->
+  <!-- 18 · LAB ENTRADA -->
+  <section class="diapo" data-libre>
+    <p class="eti">Laboratorio · periféricos de entrada <span class="aviso-lab">· en esta diapositiva usa los botones de abajo para avanzar</span></p>
+    <h2>Pruébalos en vivo</h2>
+    <div class="lab">
+      <div class="caja">
+        <h3>⌨️ Teclado</h3>
+        <div class="tecla" id="tecla">Presiona una tecla</div>
+        <span class="peq" id="tecla-n">Teclas detectadas: 0</span>
+      </div>
+      <div class="caja">
+        <h3>🖱️ Mouse</h3>
+        <div class="pad" id="pad" data-noswipe><span class="info" id="pad-i">Mueve el mouse aquí y haz clic</span><span class="punto" id="pad-p"></span></div>
+      </div>
+      <div class="caja">
+        <h3>🎙️ Micrófono</h3>
+        <button class="bt" id="mic-go">Activar micrófono</button>
+        <div class="vumetro"><i id="vu"></i></div>
+        <span class="peq" id="mic-m">Habla, aplaude o silba.</span>
+      </div>
+      <div class="caja">
+        <h3>📷 Cámara web</h3>
+        <button class="bt" id="cam-go">Activar cámara</button>
+        <video id="cam" autoplay playsinline muted></video>
+        <span class="peq" id="cam-m">La imagen solo se ve aquí, no se guarda ni se envía.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · GALERÍA ENTRADA -->
   <section class="diapo">
-    <p class="eti" style="color:var(--in)">Periféricos de entrada</p>
+    <p class="eti">Periféricos de entrada · ¿para qué sirve cada uno?</p>
     <h2>Llevan información a la computadora</h2>
     <div class="rej c3">
-      <div class="tj in"><svg><use href="#teclado"/></svg><h3>Teclado</h3><p>Escribir texto, números y dar órdenes con atajos.</p></div>
-      <div class="tj in"><svg><use href="#mouse"/></svg><h3>Mouse</h3><p>Mover el puntero, hacer clic y seleccionar.</p></div>
-      <div class="tj in"><svg><use href="#micro"/></svg><h3>Micrófono</h3><p>Captura la voz y el sonido.</p></div>
-      <div class="tj in"><svg><use href="#camara"/></svg><h3>Cámara web</h3><p>Captura imagen y video: clases virtuales, videollamadas.</p></div>
-      <div class="tj in"><svg><use href="#escaner"/></svg><h3>Escáner</h3><p>Convierte un documento en papel en una imagen digital.</p></div>
-      <div class="tj in"><svg><use href="#barras"/></svg><h3>Lector de código de barras</h3><p>Lee el precio de un producto en la caja.</p></div>
+      <button class="carta" data-revela data-t="in"><img src="recursos/m3c1/teclado.jpg" alt="Teclado"><h3>Teclado</h3><div class="atras">Escribir texto y números, y dar órdenes con atajos como Ctrl + C.</div></button>
+      <button class="carta" data-revela data-t="in"><img src="recursos/m3c1/mouse.jpg" alt="Mouse"><h3>Mouse</h3><div class="atras">Mover el puntero, hacer clic, arrastrar y seleccionar.</div></button>
+      <button class="carta" data-revela data-t="in"><img src="recursos/m3c1/micro.jpg" alt="Micrófono"><h3>Micrófono</h3><div class="atras">Captura tu voz: clases virtuales, notas de voz, grabaciones.</div></button>
+      <button class="carta" data-revela data-t="in"><img src="recursos/m3c1/webcam.jpg" alt="Cámara web"><h3>Cámara web</h3><div class="atras">Captura imagen y video para videollamadas.</div></button>
+      <button class="carta" data-revela data-t="in"><img src="recursos/m3c1/escaner.jpg" alt="Escáner"><h3>Escáner</h3><div class="atras">Convierte un documento en papel en una imagen digital.</div></button>
+      <button class="carta" data-revela data-t="in"><img src="recursos/m3c1/lector.jpg" alt="Lector de código de barras"><h3>Lector de código de barras</h3><div class="atras">Lee el código de un producto en la caja del supermercado.</div></button>
     </div>
   </section>
 
-  <!-- 19 · SALIDA -->
+  <!-- 20 · LAB SALIDA -->
   <section class="diapo">
-    <p class="eti" style="color:var(--out)">Periféricos de salida</p>
-    <h2>Nos muestran los resultados</h2>
+    <p class="eti">Laboratorio · periféricos de salida</p>
+    <h2>Ahora la computadora te habla a ti</h2>
+    <div class="rej c3" style="align-items:stretch">
+      <div class="caja">
+        <h3>🖥️ Monitor</h3>
+        <div class="pantalla-color" id="pant">Toca el botón</div>
+        <button class="bt" id="pant-go" style="background:var(--out)">Cambiar color</button>
+      </div>
+      <div class="caja">
+        <h3>🔊 Parlantes</h3>
+        <div class="piano" id="piano"></div>
+        <div class="fila"><button class="bt sec" data-lado="-1">◀ Izquierdo</button><button class="bt sec" data-lado="1">Derecho ▶</button></div>
+        <span class="peq">Sube el volumen del aula.</span>
+      </div>
+      <div class="caja">
+        <h3>🖨️ Impresora</h3>
+        <div class="impresora-sim"><div class="cuerpo"></div><div class="hoja" id="hoja">¡Hola, clase! 👋</div></div>
+        <button class="bt" id="imp-go" style="background:var(--out)">Imprimir</button>
+      </div>
+    </div>
+    <p class="nota" style="margin-top:12px">Dato curioso: todo lo que estás viendo ahora llega por un periférico de salida: el <b>monitor</b> o el <b>proyector</b>.</p>
+  </section>
+
+  <!-- 21 · GALERÍA SALIDA + E/S -->
+  <section class="diapo">
+    <p class="eti">Salida y entrada-salida · toca para descubrir</p>
+    <h2>Muestran resultados… o hacen las dos cosas</h2>
     <div class="rej c4">
-      <div class="tj out"><svg><use href="#monitor"/></svg><h3>Monitor</h3><p>Muestra imágenes, texto y video. Su tamaño se mide en pulgadas.</p></div>
-      <div class="tj out"><svg><use href="#impresora"/></svg><h3>Impresora</h3><p>Pasa documentos e imágenes al papel.</p></div>
-      <div class="tj out"><svg><use href="#parlante"/></svg><h3>Parlantes</h3><p>Reproducen música, voz y sonidos.</p></div>
-      <div class="tj out"><svg><use href="#proyector"/></svg><h3>Proyector</h3><p>Muestra la pantalla en grande sobre una pared o ecran.</p></div>
-    </div>
-    <p class="nota" style="margin-top:18px">Los <b>audífonos</b> también son de salida… salvo que tengan micrófono. Entonces, ¿de qué tipo serían? 👉</p>
-  </section>
-
-  <!-- 20 · E/S -->
-  <section class="diapo">
-    <p class="eti" style="color:var(--es)">Periféricos de entrada y salida</p>
-    <h2>Hacen las dos cosas</h2>
-    <div class="rej c4">
-      <div class="tj es"><svg><use href="#tactil"/></svg><h3>Pantalla táctil</h3><p>Muestra imagen (salida) y recibe tus toques (entrada).</p></div>
-      <div class="tj es"><svg><use href="#audifonos"/></svg><h3>Audífonos con micrófono</h3><p>Escuchas (salida) y hablas (entrada).</p></div>
-      <div class="tj es"><svg><use href="#multi"/></svg><h3>Impresora multifuncional</h3><p>Imprime (salida) y escanea (entrada).</p></div>
-      <div class="tj es"><svg><use href="#usb"/></svg><h3>Memoria USB</h3><p>Guardas archivos en ella y luego los vuelves a leer.</p></div>
-    </div>
-    <p class="peq" style="margin-top:16px">Truco para clasificar: pregúntate <b>¿hacia dónde viaja la información?</b> Hacia la computadora = entrada. Desde la computadora = salida. En ambos sentidos = entrada y salida.</p>
-  </section>
-
-  <!-- 21 · ACTIVIDAD -->
-  <section class="diapo">
-    <p class="eti">Actividad rápida</p>
-    <h2>¿Entrada, salida o ambas?</h2>
-    <p class="peq">Primero respondan en voz alta. Luego toquen cada tarjeta para ver la respuesta.</p>
-    <div class="juego" id="juego">
-      <button data-t="in">Teclado<i>Entrada</i></button>
-      <button data-t="out">Proyector<i>Salida</i></button>
-      <button data-t="es">Pantalla táctil<i>Entrada y salida</i></button>
-      <button data-t="in">Escáner<i>Entrada</i></button>
-      <button data-t="out">Parlantes<i>Salida</i></button>
-      <button data-t="in">Cámara web<i>Entrada</i></button>
-      <button data-t="es">Multifuncional<i>Entrada y salida</i></button>
-      <button data-t="out">Impresora<i>Salida</i></button>
-      <button data-t="in">Micrófono<i>Entrada</i></button>
-      <button data-t="es">Audífonos con micro<i>Entrada y salida</i></button>
-      <button data-t="out">Monitor<i>Salida</i></button>
-      <button data-t="in">Mouse<i>Entrada</i></button>
-    </div>
-    <div class="ley">
-      <span style="--c:var(--in)">Entrada</span><span style="--c:var(--out)">Salida</span><span style="--c:var(--es)">Entrada y salida</span>
+      <button class="carta" data-revela data-t="out"><img src="recursos/m3c1/monitor.jpg" alt="Monitor"><h3>Monitor</h3><div class="atras">Salida: muestra imagen. Se mide en pulgadas.</div></button>
+      <button class="carta" data-revela data-t="out"><img src="recursos/m3c1/impresora.jpg" alt="Impresora"><h3>Impresora</h3><div class="atras">Salida: pasa los documentos al papel.</div></button>
+      <button class="carta" data-revela data-t="out"><img src="recursos/m3c1/parlantes.jpg" alt="Parlantes"><h3>Parlantes</h3><div class="atras">Salida: reproducen música y voz.</div></button>
+      <button class="carta" data-revela data-t="out"><img src="recursos/m3c1/proyector.jpg" alt="Proyector"><h3>Proyector</h3><div class="atras">Salida: muestra la pantalla en grande.</div></button>
+      <button class="carta" data-revela data-t="es"><img src="recursos/m3c1/tactil.jpg" alt="Pantalla táctil"><h3>Pantalla táctil</h3><div class="atras">Ambas: muestra imagen y recibe tus toques.</div></button>
+      <button class="carta" data-revela data-t="es"><img src="recursos/m3c1/headset.jpg" alt="Audífonos con micrófono"><h3>Audífonos con micro</h3><div class="atras">Ambas: escuchas y hablas.</div></button>
+      <button class="carta" data-revela data-t="es"><img src="recursos/m3c1/multi.jpg" alt="Impresora multifuncional"><h3>Multifuncional</h3><div class="atras">Ambas: imprime y escanea.</div></button>
+      <button class="carta" data-revela data-t="es"><img src="recursos/m3c1/usb.jpg" alt="Memoria USB"><h3>Memoria USB</h3><div class="atras">Ambas: guardas archivos y los vuelves a leer.</div></button>
     </div>
   </section>
 
-  <!-- 22 · CASO REAL -->
+  <!-- 22 · CLASIFICADOR -->
   <section class="diapo">
-    <p class="eti">Todo junto</p>
-    <h2>Un caso real: grabar tu voz</h2>
+    <p class="eti">Juego · clasifica los periféricos</p>
+    <div class="clasif">
+      <div class="item">
+        <p class="puntos" id="cl-pts"></p>
+        <img id="cl-img" src="" alt="">
+        <h3 id="cl-nom"></h3>
+      </div>
+      <div>
+        <h2>¿Entrada, salida o ambas?</h2>
+        <div class="opciones">
+          <button data-t="in">⬅️ Entrada</button>
+          <button data-t="out">➡️ Salida</button>
+          <button data-t="es">↔️ Entrada y salida</button>
+        </div>
+        <p class="feedback" id="cl-fb"></p>
+        <button class="bt amb" id="cl-sig" style="display:none">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23 · GRABADORA -->
+  <section class="diapo">
+    <p class="eti">Todo junto · un caso real</p>
+    <h2>Graba tu voz y mira el recorrido</h2>
+    <div class="fila"><button class="bt amb" id="rec-go">🎙️ Grabar 3 segundos</button><span class="peq" id="rec-m">Un voluntario dice su nombre y su carrera.</span></div>
     <div class="cadena">
-      <div class="tj in"><svg><use href="#micro"/></svg><h3>Entrada</h3><p>Hablas frente al <b>micrófono</b> conectado a la PC.</p></div>
-      <span class="fl">→</span>
-      <div class="tj" style="border-top:5px solid var(--ink)"><svg style="color:var(--ink)"><use href="#cpu"/></svg><h3>Proceso</h3><p>El <b>procesador</b> convierte el sonido en datos, usando la <b>RAM</b> mientras trabaja.</p></div>
-      <span class="fl">→</span>
-      <div class="tj" style="border-top:5px solid var(--moss)"><svg><use href="#ssd"/></svg><h3>Almacenamiento</h3><p>La grabación se guarda en el <b>disco</b>.</p></div>
-      <span class="fl">→</span>
-      <div class="tj out"><svg><use href="#parlante"/></svg><h3>Salida</h3><p>La escuchas por los <b>parlantes</b>.</p></div>
+      <div class="etapa e-in" id="r1"><img src="recursos/m3c1/micro.jpg" alt=""><h3>ENTRADA</h3><div class="cont">El <b>micrófono</b> capta tu voz.</div></div>
+      <span class="flecha" id="rf1">→</span>
+      <div class="etapa e-pr" id="r2"><img src="recursos/m3c1/cpu.jpg" alt=""><h3>PROCESO</h3><div class="cont">El <b>procesador</b> convierte el sonido en datos, usando la <b>RAM</b>.</div></div>
+      <span class="flecha" id="rf2">→</span>
+      <div class="etapa e-al" id="r3"><img src="recursos/m3c1/ssd.jpg" alt=""><h3>ALMACENAMIENTO</h3><div class="cont" id="r3c">Se guarda como archivo en el <b>disco</b>.</div></div>
+      <span class="flecha" id="rf3">→</span>
+      <div class="etapa e-out" id="r4"><img src="recursos/m3c1/parlantes.jpg" alt=""><h3>SALIDA</h3><div class="cont">Los <b>parlantes</b> la reproducen.</div><audio id="rec-a" controls></audio></div>
     </div>
   </section>
 
-  <!-- 23 · TRABAJO -->
+  <!-- 24 · QUIZ -->
+  <section class="diapo">
+    <p class="eti">Reto final</p>
+    <div class="quiz">
+      <div class="progreso" id="qz-prog"></div>
+      <p class="peq" id="qz-num"></p>
+      <p class="preg" id="qz-p"></p>
+      <div class="alts" id="qz-a"></div>
+      <p class="feedback" id="qz-fb" style="margin-top:12px"></p>
+      <button class="bt amb" id="qz-sig" style="display:none">Siguiente →</button>
+    </div>
+  </section>
+
+  <!-- 25 · TRABAJO -->
   <section class="diapo">
     <p class="eti">Trabajo de la clase</p>
     <h2>Arma tu propio caso real</h2>
     <p>Elabora un documento (en Word o a mano) donde menciones:</p>
-    <div class="rej c3" style="margin:6px 0 14px">
-      <div class="tj in"><h3>4 periféricos de entrada</h3><p>Con una línea sobre para qué sirve cada uno.</p></div>
+    <div class="rej c3" style="margin:6px 0 12px">
+      <div class="tj" style="border-top:5px solid var(--in)"><h3>4 periféricos de entrada</h3><p>Con una línea sobre para qué sirve cada uno.</p></div>
       <div class="tj" style="border-top:5px solid var(--ink)"><h3>4 componentes internos</h3><p>Qué hace cada uno dentro del gabinete.</p></div>
-      <div class="tj out"><h3>4 periféricos de salida</h3><p>Con una línea sobre para qué sirve cada uno.</p></div>
+      <div class="tj" style="border-top:5px solid var(--out)"><h3>4 periféricos de salida</h3><p>Con una línea sobre para qué sirve cada uno.</p></div>
     </div>
     <p class="nota">Luego elige <b>un caso real</b> (como el de la grabación de voz) y explica cómo se relacionan una entrada, los componentes internos y una salida.</p>
   </section>
 
-  <!-- 24 · PARA RECORDAR -->
+  <!-- 26 · PARA RECORDAR -->
   <section class="diapo">
     <p class="eti">Para recordar</p>
     <h2>Lo más importante de hoy</h2>
     <ul>
       <li>Una computadora <b>recibe datos, los procesa y entrega información</b>.</li>
-      <li>Siempre sigue el ciclo <b>entrada → proceso → salida</b>, con el almacenamiento guardando los resultados.</li>
-      <li>Por dentro: <b>placa madre, procesador, RAM, almacenamiento, tarjeta gráfica y fuente de poder</b>.</li>
+      <li>Siempre sigue el ciclo <b>entrada → proceso → salida</b>, y el almacenamiento guarda los resultados.</li>
+      <li>Por dentro: <b>placa madre, procesador, RAM, almacenamiento, tarjeta gráfica, fuente y cooler</b>.</li>
       <li>La RAM es <b>temporal</b>; el disco HDD/SSD es <b>permanente</b>.</li>
-      <li>Los periféricos pueden ser de <b>entrada, salida o ambos</b>, según hacia dónde viaja la información.</li>
+      <li>Los periféricos son de <b>entrada, salida o ambos</b>, según hacia dónde viaja la información.</li>
     </ul>
   </section>
 
-  <!-- 25 · CIERRE -->
+  <!-- 27 · CIERRE -->
   <section class="diapo portada">
     <p class="eti">Herramientas Informáticas</p>
     <h1>¡Gracias!</h1>
     <p>Próxima clase: <b>el software</b>, las instrucciones que le dan vida al hardware.</p>
+  </section>
+
+  <!-- 28 · CRÉDITOS -->
+  <section class="diapo">
+    <p class="eti">Créditos de las imágenes</p>
+    <p class="peq">Fotografías de Wikimedia Commons, usadas según sus licencias libres. Toca un nombre para ver la fuente.</p>
+    <div class="creditos" id="creditos"></div>
   </section>
 
 </main>
@@ -509,29 +708,418 @@
   <button id="full" type="button" title="Pantalla completa (F)">⛶</button>
 </nav>
 <script>
-const D = [...document.querySelectorAll(".diapo")];
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const IMG = n => "recursos/m3c1/" + n + ".jpg";
+const espera = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- navegación ---------- */
+const D = $$(".diapo");
+const alSalir = [];               // funciones que se llaman al cambiar de diapositiva
 let i = Math.max(0, Math.min(D.length - 1, Number(location.hash.slice(1)) - 1 || 0));
 function ir(n) {
   i = Math.max(0, Math.min(D.length - 1, n));
   D.forEach((d, k) => d.classList.toggle("on", k === i));
-  document.getElementById("pos").textContent = (i + 1) + " / " + D.length;
-  document.getElementById("ant").disabled = i === 0;
-  document.getElementById("sig").disabled = i === D.length - 1;
-  document.getElementById("barra").style.width = ((i + 1) / D.length * 100) + "%";
+  $("#pos").textContent = (i + 1) + " / " + D.length;
+  $("#ant").disabled = i === 0;
+  $("#sig").disabled = i === D.length - 1;
+  $("#barra").style.width = ((i + 1) / D.length * 100) + "%";
   history.replaceState(null, "", "#" + (i + 1));
+  alSalir.forEach(f => f(D[i]));
 }
-document.getElementById("ant").onclick = () => ir(i - 1);
-document.getElementById("sig").onclick = () => ir(i + 1);
-document.getElementById("full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
-document.querySelectorAll("#juego button").forEach(b => b.onclick = e => { e.stopPropagation(); b.classList.toggle("ver"); });
+$("#ant").onclick = () => ir(i - 1);
+$("#sig").onclick = () => ir(i + 1);
+$("#full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
 addEventListener("keydown", e => {
+  if (e.target.closest("input, textarea, select")) return;
+  if (D[i].hasAttribute("data-libre")) return;
   if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); ir(i + 1); }
   if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); ir(i - 1); }
-  if (e.key.toLowerCase() === "f") document.getElementById("full").click();
+  if (e.key.toLowerCase() === "f") $("#full").click();
 });
 let x0 = null;
-addEventListener("touchstart", e => x0 = e.touches[0].clientX, { passive: true });
-addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) ir(i + (dx < 0 ? 1 : -1)); x0 = null; });
+addEventListener("touchstart", e => { x0 = e.target.closest("[data-noswipe], input, textarea, canvas") ? null : e.touches[0].clientX; }, { passive: true });
+addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 60) ir(i + (dx < 0 ? 1 : -1)); x0 = null; });
+
+/* ---------- tarjetas que se revelan ---------- */
+document.addEventListener("click", e => { const r = e.target.closest("[data-revela]"); if (r) r.classList.toggle("ver"); });
+
+/* ---------- sonido (Web Audio) ---------- */
+let AC = null;
+const audio = () => (AC = AC || new (window.AudioContext || window.webkitAudioContext)());
+function tono(f, dur = .35, pan = 0, tipo = "sine") {
+  const ac = audio(), o = ac.createOscillator(), g = ac.createGain();
+  o.type = tipo; o.frequency.value = f;
+  g.gain.setValueAtTime(.0001, ac.currentTime); g.gain.exponentialRampToValueAtTime(.3, ac.currentTime + .02);
+  g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + dur);
+  let nodo = g;
+  if (ac.createStereoPanner) { const p = ac.createStereoPanner(); p.pan.value = pan; g.connect(p); nodo = p; }
+  o.connect(g); nodo.connect(ac.destination); o.start(); o.stop(ac.currentTime + dur + .05);
+}
+
+/* ---------- simulador E-P-S ---------- */
+let ultimo = null;
+$("#eps-go").onclick = async () => {
+  const ns = ["#n1", "#n2", "#n3"].map(s => Math.max(0, Math.min(20, Number($(s).value) || 0)));
+  ["#e-in", "#e-pr", "#e-out", "#f1", "#f2"].forEach(s => $(s).classList.remove("act"));
+  $("#eps-go").disabled = true; $("#eps-save").disabled = true;
+  $("#e-in").classList.add("act");
+  $("#e-in .cont").innerHTML = "Datos recibidos:<br><b>" + ns.join(" · ") + "</b>";
+  await espera(900); $("#f1").classList.add("act"); $("#e-pr").classList.add("act");
+  const suma = ns.reduce((a, b) => a + b, 0), prom = suma / 3, final = Math.round(prom);
+  $("#e-pr .cont").innerHTML = "Suma: " + suma + "<br>" + suma + " ÷ 3 = " + prom.toFixed(1);
+  await espera(1100); $("#f2").classList.add("act"); $("#e-out").classList.add("act");
+  const ok = final >= 11;
+  $("#e-out .cont").innerHTML = "<b>Promedio: " + final + "</b><br>" + (ok ? "✅ ¡Aprobaste!" : "❌ Desaprobado. ¡A estudiar!");
+  ultimo = final + (ok ? " · aprobado" : " · desaprobado");
+  $("#eps-go").disabled = false; $("#eps-save").disabled = false;
+};
+let guardados = 0;
+$("#eps-save").onclick = () => {
+  if (!ultimo) return;
+  const l = $("#al-lista");
+  if (!guardados) l.textContent = "";
+  guardados++;
+  l.insertAdjacentHTML("beforeend", (guardados > 1 ? " &nbsp;·&nbsp; " : "") + "📄 registro" + guardados + ".txt → promedio " + ultimo);
+  $("#e-al").classList.add("act"); setTimeout(() => $("#e-al").classList.remove("act"), 700);
+  $("#eps-save").disabled = true;
+};
+
+/* ---------- explorador del gabinete ---------- */
+const COMP = [
+  { id: "placa", n: "Placa madre", t: "Es la <b>tarjeta principal</b>. Todas las piezas se conectan a ella y por ella se comunican.", d: ["Zócalo del procesador", "Ranuras de RAM", "Puertos USB"], a: "es la ciudad: sus pistas de cobre son las calles por donde viajan los datos." },
+  { id: "cpu", n: "Procesador", t: "La <b>CPU</b>. Ejecuta las instrucciones de los programas y coordina todo el equipo.", d: ["Velocidad en GHz", "Núcleos: 4, 8, 16…", "Intel · AMD"], a: "es el cerebro: piensa y da las órdenes." },
+  { id: "ram", n: "Memoria RAM", t: "Guarda <b>temporalmente</b> lo que estás usando ahora. Es muy rápida, pero se borra al apagar.", d: ["Se mide en GB", "Hoy: 8 a 32 GB", "Volátil"], a: "es tu mesa de trabajo: más grande, más cosas abiertas a la vez." },
+  { id: "ssd", n: "Disco (SSD / HDD)", t: "Guarda tus archivos y programas de forma <b>permanente</b>, aunque apagues la computadora.", d: ["Se mide en GB o TB", "SSD: rápido", "HDD: barato"], a: "es el ropero: guarda todo, aunque sacar las cosas toma un poco más." },
+  { id: "gpu", n: "Tarjeta gráfica", t: "Dibuja todo lo que ves en pantalla: ventanas, videos y juegos.", d: ["Integrada o dedicada", "Memoria propia (VRAM)"], a: "es el artista del equipo." },
+  { id: "fuente", n: "Fuente de poder", t: "Toma la electricidad del tomacorriente y la convierte en la que necesita cada pieza.", d: ["Se mide en watts (W)", "Ej.: 500 W"], a: "es el corazón: reparte energía a todo el cuerpo." },
+  { id: "cooler", n: "Cooler", t: "Disipador y ventilador que sacan el calor del procesador. Sin él, la PC se apaga por temperatura.", d: ["Disipador de metal", "Ventilador"], a: "es el aire acondicionado de la oficina." },
+  { id: "gabinete", n: "Gabinete", t: "La caja que protege y ordena todos los componentes. También se le llama case o torre.", d: ["Torre · mini torre", "Tiene ventiladores"], a: "es el edificio donde todos trabajan." },
+];
+function mostrarComp(c, b) {
+  $$("#exp-bt .chip").forEach(x => x.classList.remove("on"));
+  b.classList.add("on", "visto");
+  $("#exp-panel").innerHTML = `<img src="${IMG(c.id)}" alt="${c.n}"><div><h2 style="font-size:1.5rem">${c.n}</h2><p>${c.t}</p><div class="datos">${c.d.map(x => "<span>" + x + "</span>").join("")}</div><p class="analog">${c.a}</p></div>`;
+}
+COMP.forEach((c, k) => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.textContent = c.n.split(" (")[0];
+  b.onclick = () => mostrarComp(c, b);
+  $("#exp-bt").append(b);
+});
+mostrarComp(COMP[0], $("#exp-bt .chip"));
+
+/* ---------- núcleos ---------- */
+const TAREAS = [["Chrome", "#2f63e0"], ["Música", "#c2410c"], ["Word", "#1d4ed8"], ["Zoom", "#0e7490"], ["Antivirus", "#15803d"], ["WhatsApp", "#16a34a"], ["Juego", "#7e22ce"], ["Descarga", "#b3752c"]];
+let nucleos = 2, corriendo = false;
+function pintarCarriles() {
+  $("#carriles").innerHTML = Array.from({ length: nucleos }, (_, k) => `<div class="carril"><b>Núcleo ${k + 1}</b><div class="pista" id="pista${k}"></div></div>`).join("");
+}
+$$(".nucleo").forEach(b => b.onclick = () => {
+  if (corriendo) return;
+  $$(".nucleo").forEach(x => x.classList.remove("on")); b.classList.add("on");
+  nucleos = Number(b.dataset.n); pintarCarriles(); $("#nuc-t").textContent = "";
+});
+$("#nuc-go").onclick = async () => {
+  if (corriendo) return; corriendo = true; pintarCarriles();
+  const rondas = Math.ceil(8 / nucleos), t0 = performance.now();
+  const reloj = setInterval(() => $("#nuc-t").textContent = "⏱ " + ((performance.now() - t0) / 1000).toFixed(1) + " s", 50);
+  for (let r = 0; r < rondas; r++) {
+    for (let c = 0; c < nucleos; c++) {
+      const k = r * nucleos + c; if (k >= 8) break;
+      const el = document.createElement("div");
+      el.className = "tarea"; el.textContent = TAREAS[k][0]; el.style.background = TAREAS[k][1];
+      $("#pista" + c).append(el);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.style.width = (100 / rondas - 1) + "%"));
+    }
+    await espera(650);
+  }
+  clearInterval(reloj);
+  const s = ((performance.now() - t0) / 1000).toFixed(1);
+  $("#nuc-t").textContent = "⏱ " + s + " s";
+  $("#nuc-msg").innerHTML = nucleos === 1 ? "Con <b>1 núcleo</b> las tareas hacen cola: una detrás de otra." :
+    "Con <b>" + nucleos + " núcleos</b> se hacen " + nucleos + " tareas a la vez. ¡Más núcleos, menos espera!";
+  corriendo = false;
+};
+pintarCarriles();
+
+/* ---------- apagón ---------- */
+$("#ram-save").onclick = () => {
+  const t = $("#ram-txt").value.trim(); if (!t) { $("#ram-txt").focus(); return; }
+  const d = document.createElement("div"); d.textContent = "📄 " + t; $("#disco").append(d);
+};
+$("#ram-off").onclick = async () => {
+  const neg = $("#ram-neg"); neg.classList.add("on"); neg.textContent = "Apagando…"; tono(220, .4);
+  await espera(1200); $("#ram-txt").value = ""; neg.textContent = "⏻";
+  await espera(700); neg.textContent = "Encendiendo…"; tono(440, .3);
+  await espera(1000); neg.classList.remove("on");
+  $("#ram-txt").placeholder = "La RAM quedó vacía. ¿Y el disco?";
+};
+
+/* ---------- carrera ---------- */
+$("#car-go").onclick = () => {
+  $("#car-go").disabled = true;
+  const corre = (b, t, dur) => {
+    const t0 = performance.now();
+    (function paso(now) {
+      const p = Math.min(1, (now - t0) / dur);
+      $(b).style.width = (p * 100) + "%"; $(t).textContent = ((now - t0) / 1000 * (p < 1 ? 1 : 0) + (p >= 1 ? dur / 1000 : 0)).toFixed(1) + " s";
+      if (p < 1) requestAnimationFrame(paso); else { $(t).textContent = (dur / 1000).toFixed(1) + " s ✔"; tono(b === "#b-ssd" ? 880 : 330, .25); }
+    })(t0);
+  };
+  $("#b-hdd").style.width = $("#b-ssd").style.width = "0";
+  corre("#b-hdd", "#t-hdd", 5200); corre("#b-ssd", "#t-ssd", 900);
+  setTimeout(() => $("#car-go").disabled = false, 5400);
+};
+
+/* ---------- GPU ---------- */
+const cv = $("#lienzo"), cx = cv.getContext("2d");
+let modo = "int", bolas = [], ultimoCuadro = 0, cuadros = 0, tFps = 0;
+function crearBolas(n) {
+  bolas = Array.from({ length: n }, () => ({ x: Math.random() * 600 + 20, y: Math.random() * 360 + 20, vx: (Math.random() - .5) * 6, vy: (Math.random() - .5) * 6, r: 8 + Math.random() * 16, h: Math.random() * 360 }));
+}
+crearBolas(15);
+$$(".gpu-m").forEach(b => b.onclick = () => {
+  $$(".gpu-m").forEach(x => x.classList.remove("on")); b.classList.add("on");
+  modo = b.dataset.m; crearBolas(modo === "int" ? 15 : 90);
+});
+function dibujar(now) {
+  requestAnimationFrame(dibujar);
+  if (!D[i].contains(cv)) return;
+  const intervalo = modo === "int" ? 1000 / 9 : 0;
+  if (now - ultimoCuadro < intervalo) return;
+  const dt = Math.min(4, (now - ultimoCuadro) / 16.7); ultimoCuadro = now;
+  cx.fillStyle = "#0d1b2a"; cx.fillRect(0, 0, 640, 400);
+  for (const b of bolas) {
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    if (b.x < b.r || b.x > 640 - b.r) b.vx *= -1;
+    if (b.y < b.r || b.y > 400 - b.r) b.vy *= -1;
+    b.x = Math.max(b.r, Math.min(640 - b.r, b.x)); b.y = Math.max(b.r, Math.min(400 - b.r, b.y));
+    if (modo === "ded") {
+      const g = cx.createRadialGradient(b.x - b.r / 3, b.y - b.r / 3, 1, b.x, b.y, b.r);
+      g.addColorStop(0, `hsl(${b.h},90%,80%)`); g.addColorStop(1, `hsl(${b.h},70%,35%)`); cx.fillStyle = g;
+    } else cx.fillStyle = `hsl(${b.h},40%,55%)`;
+    cx.beginPath(); cx.arc(b.x, b.y, b.r, 0, 7); cx.fill();
+  }
+  cuadros++;
+  if (now - tFps > 500) { $("#fps").textContent = Math.round(cuadros * 1000 / (now - tFps)) + " FPS · " + bolas.length + " objetos"; cuadros = 0; tFps = now; }
+}
+requestAnimationFrame(dibujar);
+
+/* ---------- quitar pieza ---------- */
+const QUITAR = [
+  ["fuente", "Fuente", "🔌", "<b>No enciende nada.</b> Ni luces ni ventiladores: no hay energía para ninguna pieza."],
+  ["ram", "RAM", "📢", "Enciende, suenan <b>pitidos</b> y la pantalla se queda negra. Sin RAM, el procesador no tiene dónde trabajar."],
+  ["cpu", "Procesador", "💤", "<b>No arranca.</b> Nadie ejecuta las instrucciones. Es como una oficina sin trabajadores."],
+  ["ssd", "Disco", "❓", "Enciende, pero dice <b>“no se encontró un dispositivo de arranque”</b>: no hay dónde están guardados el sistema ni tus archivos."],
+  ["cooler", "Cooler", "🔥", "Enciende… pero en segundos el procesador <b>se sobrecalienta</b> y la PC se apaga sola para protegerse."],
+  ["gpu", "T. gráfica", "😮", "<b>¡Sigue funcionando!</b> Usa la gráfica integrada del procesador (si tiene). Los juegos pesados irán lentos."],
+  ["placa", "Placa madre", "🚫", "<b>Imposible:</b> no hay dónde conectar nada. Todas las piezas quedan sueltas."],
+];
+QUITAR.forEach(([id, n, emo, txt]) => {
+  const b = document.createElement("button");
+  b.className = "pieza"; b.innerHTML = `<img src="${IMG(id)}" alt="">${n}`;
+  b.onclick = () => {
+    $$(".pieza").forEach(x => x.classList.remove("on")); b.classList.add("on");
+    $("#quitar-res").innerHTML = `<span class="emo">${emo}</span><p><b>Sin ${({ "T. gráfica": "tarjeta gráfica dedicada", "RAM": "RAM" })[n] || n.toLowerCase()}:</b> ${txt}</p>`;
+  };
+  $("#piezas").append(b);
+});
+
+/* ---------- laboratorio de entrada ---------- */
+let nTeclas = 0;
+const NOMBRES = { " ": "Espacio", Enter: "Enter ↵", Backspace: "Borrar ⌫", Shift: "Shift ⇧", Control: "Ctrl", Alt: "Alt", Tab: "Tab ⇥", ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Escape: "Esc", CapsLock: "Bloq Mayús", Meta: "Windows ⊞", AltGraph: "Alt Gr" };
+addEventListener("keydown", e => {
+  if (!D[i].hasAttribute("data-libre")) return;
+  if (e.key !== "F11" && e.key !== "F5") e.preventDefault();
+  const t = $("#tecla");
+  t.textContent = NOMBRES[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
+  t.classList.add("golpe"); setTimeout(() => t.classList.remove("golpe"), 90);
+  $("#tecla-n").textContent = "Teclas detectadas: " + (++nTeclas);
+});
+const pad = $("#pad");
+function posPad(e) {
+  const r = pad.getBoundingClientRect(), x = Math.round(e.clientX - r.left), y = Math.round(e.clientY - r.top);
+  $("#pad-p").style.left = x + "px"; $("#pad-p").style.top = y + "px"; return [x, y];
+}
+pad.addEventListener("pointermove", e => { const [x, y] = posPad(e); $("#pad-i").textContent = "Posición: x " + x + " · y " + y; });
+pad.addEventListener("pointerdown", e => {
+  const [x, y] = posPad(e);
+  $("#pad-i").textContent = ["Clic izquierdo", "Clic de la rueda", "Clic derecho"][e.button] || "Toque";
+  const o = document.createElement("span"); o.className = "onda"; o.style.left = x + "px"; o.style.top = y + "px"; pad.append(o); setTimeout(() => o.remove(), 500);
+});
+pad.addEventListener("contextmenu", e => e.preventDefault());
+pad.addEventListener("wheel", e => { e.preventDefault(); $("#pad-i").textContent = "Rueda hacia " + (e.deltaY < 0 ? "arriba ⬆" : "abajo ⬇"); }, { passive: false });
+
+let micStream = null, camStream = null;
+$("#mic-go").onclick = async () => {
+  if (micStream) return;
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const ac = audio(), an = ac.createAnalyser(); an.fftSize = 512;
+    ac.createMediaStreamSource(micStream).connect(an);
+    const buf = new Uint8Array(an.fftSize);
+    $("#mic-go").textContent = "Escuchando…"; $("#mic-m").textContent = "La barra se mueve con tu voz.";
+    (function nivel() {
+      if (!micStream) { $("#vu").style.width = "0"; return; }
+      an.getByteTimeDomainData(buf);
+      let s = 0; for (const v of buf) s += ((v - 128) / 128) ** 2;
+      $("#vu").style.width = Math.min(100, Math.sqrt(s / buf.length) * 400) + "%";
+      requestAnimationFrame(nivel);
+    })();
+  } catch (err) { $("#mic-m").textContent = "No se pudo usar el micrófono: revisa que esté conectado y que el navegador tenga permiso."; }
+};
+$("#cam-go").onclick = async () => {
+  if (camStream) return;
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const v = $("#cam"); v.srcObject = camStream; v.style.display = "block"; $("#cam-go").style.display = "none";
+  } catch (err) { $("#cam-m").textContent = "No se pudo usar la cámara: revisa que esté conectada y que el navegador tenga permiso."; }
+};
+function apagarMedios() {
+  if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; $("#mic-go").textContent = "Activar micrófono"; }
+  if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; $("#cam").style.display = "none"; $("#cam-go").style.display = ""; }
+}
+alSalir.push(d => { if (!d.contains(pad)) apagarMedios(); });
+
+/* ---------- laboratorio de salida ---------- */
+const COLORES = [["#2f63e0", "Azul"], ["#c2410c", "Naranja"], ["#15803d", "Verde"], ["#7e22ce", "Morado"], ["#111", "Negro"], ["#e11d48", "Rojo"]];
+let kc = 0;
+$("#pant-go").onclick = () => {
+  const [c, n] = COLORES[kc++ % COLORES.length];
+  $("#pant").style.background = c;
+  $("#pant").innerHTML = n + "<br><small style='font-weight:400'>Tu pantalla tiene " + (screen.width * devicePixelRatio).toLocaleString("es") + " × " + (screen.height * devicePixelRatio).toLocaleString("es") + " píxeles</small>";
+};
+[["Do", 262], ["Re", 294], ["Mi", 330], ["Fa", 349], ["Sol", 392], ["La", 440]].forEach(([n, f]) => {
+  const b = document.createElement("button"); b.textContent = n;
+  b.onclick = () => tono(f, .5, 0, "triangle"); $("#piano").append(b);
+});
+$$("[data-lado]").forEach(b => b.onclick = () => { const p = Number(b.dataset.lado); tono(523, .25, p); setTimeout(() => tono(659, .35, p), 220); });
+$("#imp-go").onclick = () => {
+  const h = $("#hoja"); h.classList.remove("sale"); void h.offsetWidth; h.classList.add("sale");
+  for (let k = 0; k < 10; k++) setTimeout(() => tono(140 + (k % 2) * 30, .1, 0, "square"), k * 170);
+};
+
+/* ---------- clasificador ---------- */
+const ITEMS = [
+  ["teclado", "Teclado", "in", "Lo que escribes entra a la computadora."],
+  ["mouse", "Mouse", "in", "Tus movimientos y clics entran a la computadora."],
+  ["micro", "Micrófono", "in", "Tu voz entra a la computadora."],
+  ["webcam", "Cámara web", "in", "Tu imagen entra a la computadora."],
+  ["escaner", "Escáner", "in", "El documento en papel entra como imagen."],
+  ["lector", "Lector de código de barras", "in", "El código del producto entra a la computadora."],
+  ["monitor", "Monitor", "out", "La imagen sale de la computadora hacia tus ojos."],
+  ["impresora", "Impresora", "out", "El documento sale de la computadora al papel."],
+  ["parlantes", "Parlantes", "out", "El sonido sale de la computadora."],
+  ["proyector", "Proyector", "out", "La imagen sale de la computadora hacia la pared."],
+  ["tactil", "Pantalla táctil", "es", "Muestra imagen (salida) y recibe tus toques (entrada)."],
+  ["headset", "Audífonos con micrófono", "es", "Escuchas (salida) y hablas (entrada)."],
+  ["multi", "Impresora multifuncional", "es", "Imprime (salida) y escanea (entrada)."],
+  ["usb", "Memoria USB", "es", "Puedes guardar archivos en ella y leerlos después."],
+];
+const NOMBRE_T = { in: "entrada", out: "salida", es: "entrada y salida" };
+let cola = [], ki = 0, pts = 0;
+function nuevaRonda() { cola = ITEMS.slice().sort(() => Math.random() - .5); ki = 0; pts = 0; mostrarItem(); }
+function mostrarItem() {
+  const ops = $$(".opciones button");
+  if (ki >= cola.length) {
+    $("#cl-img").src = IMG("interior"); $("#cl-nom").textContent = "¡Terminaste!";
+    $("#cl-pts").textContent = "";
+    $("#cl-fb").className = "feedback ok";
+    $("#cl-fb").textContent = "Puntaje: " + pts + " de " + cola.length + (pts === cola.length ? " 🏆 ¡Perfecto!" : pts >= 10 ? " 👏 ¡Muy bien!" : " 💪 Repasemos e inténtalo de nuevo.");
+    ops.forEach(b => b.disabled = true);
+    $("#cl-sig").textContent = "Jugar de nuevo ↺"; $("#cl-sig").style.display = ""; return;
+  }
+  const [img, nom] = cola[ki];
+  $("#cl-img").src = IMG(img); $("#cl-img").alt = nom; $("#cl-nom").textContent = nom;
+  $("#cl-pts").textContent = (ki + 1) + " de " + cola.length + " · aciertos: " + pts;
+  $("#cl-fb").textContent = ""; $("#cl-fb").className = "feedback";
+  ops.forEach(b => { b.disabled = false; b.classList.remove("elegida"); });
+  $("#cl-sig").style.display = "none"; $("#cl-sig").textContent = "Siguiente →";
+}
+$$(".opciones button").forEach(b => b.onclick = () => {
+  const [, , t, por] = cola[ki], ok = b.dataset.t === t;
+  if (ok) pts++;
+  $$(".opciones button").forEach(x => { x.disabled = true; if (x.dataset.t === t) x.classList.add("elegida"); });
+  $("#cl-fb").className = "feedback " + (ok ? "ok" : "mal");
+  $("#cl-fb").textContent = (ok ? "✔ ¡Correcto! " : "✘ Era de " + NOMBRE_T[t] + ". ") + por;
+  tono(ok ? 660 : 200, .25, 0, ok ? "sine" : "sawtooth");
+  ki++; $("#cl-sig").style.display = "";
+});
+$("#cl-sig").onclick = () => ki >= cola.length && $("#cl-sig").textContent.includes("nuevo") ? nuevaRonda() : mostrarItem();
+nuevaRonda();
+
+/* ---------- grabadora ---------- */
+$("#rec-go").onclick = async () => {
+  const etapas = ["#r1", "#rf1", "#r2", "#rf2", "#r3", "#rf3", "#r4"];
+  etapas.forEach(s => $(s).classList.remove("act"));
+  const a = $("#rec-a"); a.style.display = "none";
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch (err) { $("#rec-m").textContent = "No se pudo usar el micrófono. Revisa que esté conectado y que el navegador tenga permiso."; return; }
+  $("#rec-go").disabled = true;
+  const rec = new MediaRecorder(stream), partes = [];
+  rec.ondataavailable = e => partes.push(e.data);
+  const listo = new Promise(r => rec.onstop = r);
+  $("#r1").classList.add("act"); rec.start();
+  for (let s = 3; s > 0; s--) { $("#rec-m").textContent = "🔴 Grabando… " + s; await espera(1000); }
+  rec.stop(); stream.getTracks().forEach(t => t.stop()); await listo;
+  $("#rec-m").textContent = "Procesando…";
+  $("#rf1").classList.add("act"); $("#r2").classList.add("act"); await espera(1000);
+  const blob = new Blob(partes, { type: rec.mimeType || "audio/webm" });
+  $("#rf2").classList.add("act"); $("#r3").classList.add("act");
+  $("#r3c").innerHTML = "Guardado: <b>mi_voz.webm</b><br>(" + Math.max(1, Math.round(blob.size / 1024)) + " KB)"; await espera(1100);
+  $("#rf3").classList.add("act"); $("#r4").classList.add("act");
+  a.src = URL.createObjectURL(blob); a.style.display = "block"; a.play().catch(() => {});
+  $("#rec-m").textContent = "¡Escúchate! Puedes volver a grabar.";
+  $("#rec-go").disabled = false;
+};
+
+/* ---------- quiz ---------- */
+const QZ = [
+  ["¿Qué se borra cuando apagas la computadora?", ["El disco SSD", "La memoria RAM", "La placa madre", "La fuente de poder"], 1, "La RAM es volátil: necesita electricidad para guardar datos."],
+  ["La caja donde van todos los componentes se llama…", ["CPU", "Gabinete", "Monitor", "Placa madre"], 1, "La CPU es el procesador; la caja es el gabinete."],
+  ["¿Cuál es un periférico de salida?", ["Escáner", "Micrófono", "Parlantes", "Teclado"], 2, "El sonido sale de la computadora hacia ti."],
+  ["Una pantalla táctil es un periférico de…", ["Entrada", "Salida", "Entrada y salida", "Ninguno"], 2, "Muestra imagen y recibe tus toques."],
+  ["¿Qué pieza ejecuta las instrucciones de los programas?", ["El procesador", "La RAM", "La fuente", "El disco duro"], 0, "El procesador es el cerebro de la computadora."],
+  ["¿Qué tipo de disco es más rápido?", ["HDD", "SSD", "Son iguales", "Depende del color"], 1, "El SSD no tiene piezas que giran: es mucho más rápido."],
+  ["Si le quitas el cooler a la PC…", ["No enciende nada", "Se borra el disco", "Se sobrecalienta y se apaga", "Funciona mejor"], 2, "Sin ventilación, el procesador se calienta y la PC se protege apagándose."],
+];
+let qi = 0, qpts = 0, qres = [];
+function pintarQuiz() {
+  $("#qz-prog").innerHTML = QZ.map((_, k) => `<i class="${qres[k] === true ? "bien" : qres[k] === false ? "malo" : k === qi ? "act" : ""}"></i>`).join("");
+  $("#qz-sig").style.display = "none"; $("#qz-fb").textContent = ""; $("#qz-fb").className = "feedback";
+  if (qi >= QZ.length) {
+    $("#qz-num").textContent = "Resultado";
+    $("#qz-p").textContent = qpts + " de " + QZ.length + " correctas " + (qpts === QZ.length ? "🏆" : qpts >= 5 ? "👏" : "💪");
+    $("#qz-a").innerHTML = "";
+    $("#qz-sig").textContent = "Intentar de nuevo ↺"; $("#qz-sig").style.display = ""; return;
+  }
+  const [p, alts] = QZ[qi];
+  $("#qz-num").textContent = "Pregunta " + (qi + 1) + " de " + QZ.length;
+  $("#qz-p").textContent = p;
+  $("#qz-a").innerHTML = "";
+  alts.forEach((t, k) => {
+    const b = document.createElement("button"); b.textContent = String.fromCharCode(65 + k) + ") " + t;
+    b.onclick = () => {
+      const ok = k === QZ[qi][2]; qres[qi] = ok; if (ok) qpts++;
+      $$("#qz-a button").forEach((x, j) => { x.disabled = true; if (j === QZ[qi][2]) x.classList.add("bien"); });
+      if (!ok) b.classList.add("malo");
+      $("#qz-fb").className = "feedback " + (ok ? "ok" : "mal");
+      $("#qz-fb").textContent = (ok ? "✔ ¡Correcto! " : "✘ No. ") + QZ[qi][3];
+      tono(ok ? 660 : 200, .25, 0, ok ? "sine" : "sawtooth");
+      $("#qz-sig").textContent = qi === QZ.length - 1 ? "Ver resultado →" : "Siguiente →"; $("#qz-sig").style.display = "";
+    };
+    $("#qz-a").append(b);
+  });
+}
+$("#qz-sig").onclick = () => { if (qi >= QZ.length) { qi = 0; qpts = 0; qres = []; } else qi++; pintarQuiz(); };
+pintarQuiz();
+
+/* ---------- créditos ---------- */
+const CRED = [["placa","Smial","FAL","Gigabyte_GA-H87M-D3H_motherboard_%C2%B5ATX_with_Intel_Socket_1150.jpg"],["cpu","Rjluna2","CC BY-SA 4.0","Intel_core_i5-2450m_sr0ch_observe.jpg"],["ram","ElooKoN","CC BY-SA 4.0","RAM_Module_(SDRAM-DDR4).jpg"],["hdd","RetroEditor","CC BY-SA 4.0","2.5_Inch_Hard_Drive_Mechanism.jpg"],["ssd","Raimond Spekking","CC BY-SA 4.0","Crucial_SSD_MX300_525GB-8478.jpg"],["gpu","Joydeep","CC BY-SA 3.0","ASUS_NVIDIA_GeForce_210_silent_graphics_card_with_HDMI.JPG"],["fuente","Victor Korniyenko","CC BY-SA 3.0","Power_Supply_ATX-450PNF.jpg"],["cooler","osman gucel","CC BY 2.0","Cooler_Master_Hyper_212_EVO_-_CPU_Cooler_with_120mm_PWM_Fan_(RR-212E-20PK-R2).jpg"],["gabinete","PJ","CC BY-SA 4.0","Corsair_4000D_Airflow_mid-tower_ATX_case.tif"],["teclado","D-Kuru","CC BY-SA 3.0 AT","Razer_Ornata_Chroma_keyboard-top_PNr%C2%B00463.jpg"],["mouse","Pixloom","CC BY-SA 4.0","A_wireless_computer_mouse.jpg"],["micro","Nicolas Rück (WMDE)","CC BY-SA 3.0","Rode_NT-USB.jpg"],["webcam","Peterhcharlton","CC BY 4.0","Webcam_on_computer_screen.jpg"],["escaner","Boffy b, Arpingstone","Dominio público","Scanner.view.750pix.jpg"],["lector","Raimond Spekking","CC BY-SA 4.0","Honeywell_4600g-8665.jpg"],["monitor","florisla","CC BY-SA 2.0","LG_L194WT-SF_LCD_monitor.jpg"],["impresora","Tim Walker","CC BY 2.0","HP_LaserJet_4100TN_and_scanner_Canon_LiDE_35.jpg"],["parlantes","Evan-Amos","Dominio público","Logitech-usb-speakers.jpg"],["proyector","Dave Pape","Dominio público","InFocus_IN34.jpg"],["headset","Zephyris","CC BY-SA 3.0","Headphones_with_Microphone.jpg"],["multi","Dinkun Chen","CC BY-SA 4.0","Canon_PIXMA_TS_3480_Multifunction_ink-jet_Printer_(4).jpg"],["usb","Dmitry Makeev","CC BY-SA 4.0","Kingston_Technology_DataTraveler_G4_USB_flash_drive_USB_3.0_32_Gb.jpg"],["todo1","Intel Free Press","Dominio público","Dell_Inspiron_One_23_Touch_AIO_Desktop_PC.png"],["servidor","Wilweterings","Dominio público","Datacenter.jpg"],["desktop","Oliver Propst","CC BY-SA 3.0","Desktop_Computer_In_Mozilla_Taiwan_Office_(72739495).jpeg"],["laptop","André Karwath (Aka)","CC BY-SA 4.0","IBM_Thinkpad_R51.jpg"],["tactil","Senado Federal","CC BY 2.0","Livraria_do_Senado_(22622160063).jpg"],["interior","Tiia Monto","CC BY-SA 4.0","ATX_computer_case.jpg"],["tablet","Tnvols2","CC BY-SA 3.0","IPad%26iLife.jpg"]];
+$("#creditos").innerHTML = CRED.map(([f, a, l, u]) => `<div><a href="https://commons.wikimedia.org/wiki/File:${u}" target="_blank" rel="noopener">${f}</a> · ${a} · ${l}</div>`).join("");
+
 ir(i);
 </script>
 </body>
