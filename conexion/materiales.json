@@ -15,6 +15,14 @@
       "tipo": "practica",
       "descripcion": "Instala cada pieza en su lugar, conecta los cables y supera la prueba final: ¡encender el equipo!",
       "orden": 2
+    },
+    {
+      "archivo": "m3c1.html",
+      "ruta": "clases/u1c1/material/m3c1.html",
+      "titulo": "La computadora: partes y periféricos",
+      "tipo": "presentacion",
+      "descripcion": "Qué es una computadora, cómo funciona (entrada, proceso, salida), sus componentes internos y los periféricos de entrada y salida.",
+      "orden": 3
     }
   ]
 }
