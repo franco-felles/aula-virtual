@@ -204,7 +204,13 @@
   @keyframes onda { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
   .vumetro { height: 22px; background: var(--soft); border-radius: 99px; overflow: hidden; }
   .vumetro i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--in), #d9a441, var(--bad)); transition: width .06s; }
-  .lab video { width: 100%; max-height: 120px; object-fit: cover; border-radius: 10px; background: #000; display: none; transform: scaleX(-1); }
+  .cam-marco { position: relative; flex: 1; min-height: 180px; display: none; border-radius: 10px; background: #000; overflow: hidden; }
+  .cam-marco.on { display: block; }
+  .cam-marco video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scaleX(-1); }
+  .cam-zoom { position: absolute; right: 8px; bottom: 8px; z-index: 2; font: 600 .85rem "IBM Plex Sans", sans-serif; background: rgba(255,255,255,.9); color: var(--ink); border: 0; border-radius: 99px; padding: 6px 12px; cursor: pointer; }
+  .cam-marco.grande { position: fixed; inset: 0; z-index: 9999; border-radius: 0; background: rgba(8,14,12,.96); cursor: zoom-out; }
+  .cam-marco.grande video { inset: 4vh 3vw 9vh; width: 94vw; height: 87vh; }
+  .cam-marco.grande .cam-zoom { right: 50%; bottom: 2.5vh; transform: translateX(50%); font-size: 1rem; padding: 8px 18px; }
   .pantalla-color { flex: 1; min-height: 70px; border-radius: 10px; display: grid; place-items: center; color: #fff; font: 700 1.05rem "IBM Plex Sans", sans-serif; transition: background .3s; background: #2f63e0; text-align: center; padding: 6px; }
   .piano { display: flex; gap: 4px; }
   .piano button { flex: 1; font: 700 .85rem "IBM Plex Mono", monospace; background: #fff; border: 2px solid var(--line); border-bottom-width: 6px; border-radius: 8px; padding: 14px 0; cursor: pointer; color: var(--ink); }
@@ -572,7 +578,7 @@
       <div class="caja">
         <h3>📷 Cámara web</h3>
         <button class="bt" id="cam-go">Activar cámara</button>
-        <video id="cam" autoplay playsinline muted></video>
+        <div class="cam-marco" id="cam-marco" data-noswipe><video id="cam" autoplay playsinline muted></video><button class="cam-zoom" id="cam-zoom" type="button">🔍 Ampliar</button></div>
         <span class="peq" id="cam-m">La imagen solo se ve aquí, no se guarda ni se envía.</span>
       </div>
     </div>
@@ -1111,12 +1117,21 @@ $("#cam-go").onclick = async () => {
   if (camStream) return;
   try {
     camStream = await navigator.mediaDevices.getUserMedia({ video: true });
-    const v = $("#cam"); v.srcObject = camStream; v.style.display = "block"; $("#cam-go").style.display = "none";
+    $("#cam").srcObject = camStream; $("#cam-marco").classList.add("on"); $("#cam-go").style.display = "none";
   } catch (err) { $("#cam-m").textContent = "No se pudo usar la cámara: revisa que esté conectada y que el navegador tenga permiso."; }
 };
+function camGrande(si) {
+  const m = $("#cam-marco"); m.classList.toggle("grande", si);
+  $("#cam-zoom").textContent = si ? "✕ Cerrar" : "🔍 Ampliar";
+  if (si) document.body.append(m); else $("#cam-m").before(m);   // fuera de la diapo para que no lo recorte su escala
+}
+$("#cam-zoom").onclick = e => { e.stopPropagation(); camGrande(!$("#cam-marco").classList.contains("grande")); };
+$("#cam-marco").addEventListener("click", () => { if ($("#cam-marco").classList.contains("grande")) camGrande(false); });
+$("#cam-marco").addEventListener("dblclick", e => !e.target.closest(".cam-zoom") && camGrande(!$("#cam-marco").classList.contains("grande")));
+addEventListener("keydown", e => { if (e.key === "Escape" && $("#cam-marco").classList.contains("grande")) camGrande(false); });
 function apagarMedios() {
   if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; $("#mic-go").textContent = "Activar micrófono"; }
-  if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; $("#cam").style.display = "none"; $("#cam-go").style.display = ""; }
+  if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; camGrande(false); $("#cam-marco").classList.remove("on"); $("#cam-go").style.display = ""; }
 }
 alSalir.push(d => { if (!d.contains(pad)) apagarMedios(); });
 
