@@ -14,30 +14,38 @@
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
 <style>
+  :root { --vw: 1vw; }
+  body.escalar { --vw: 11.4px; }
   :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #7c7763;
           --in: #2f6f4f; --out: #b0522a; --es: #6b4a8f; --soft: #ece8dc; --ok: #2f7d4a; --bad: #b3362c; }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   html, body { margin: 0; height: 100%; background: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); }
-  .escena { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px 16px 72px; }
+  .escena { position: fixed; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px 16px 72px; }
   .diapo { display: none; width: min(1140px, 100%); aspect-ratio: 16 / 9; max-height: calc(100vh - 100px); background: var(--paper);
-           border-radius: 18px; padding: clamp(18px, 3.6vw, 46px); overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.35); position: relative; }
+           border-radius: 18px; padding: clamp(18px, calc(var(--vw) * 3.6), 46px); overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.35); position: relative; }
   .diapo.on { display: flex; flex-direction: column; justify-content: center; animation: entra .35s ease both; }
-  @keyframes entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  .diapo h1 { font-size: clamp(1.8rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 14px; }
-  .diapo h2 { font-size: clamp(1.3rem, 3vw, 2.05rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.01em; }
-  .diapo h3 { font-size: clamp(.98rem, 1.8vw, 1.15rem); margin: 0 0 4px; }
-  .diapo p, .diapo li { font-size: clamp(.95rem, 1.8vw, 1.2rem); line-height: 1.5; margin: 0 0 10px; }
+  @keyframes entra { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+  /* pantallas grandes: la diapositiva se diseña a 1140×641 y se escala entera para llenar la pantalla */
+  body.escalar .escena { display: block; padding: 0; }
+  body.escalar .diapo { position: absolute; left: 50%; top: calc((100% - 64px) / 2); width: 1140px; height: 641px; max-height: none; aspect-ratio: auto; transform: translate(-50%, -50%) scale(var(--s, 1)); }
+  .vel { position: absolute; top: 12px; right: 16px; display: flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: 3px 12px; font: 600 .78rem "IBM Plex Mono", monospace; color: var(--mut); z-index: 6; }
+  .vel input { width: 90px; accent-color: var(--amber); cursor: pointer; }
+  .vel b { color: var(--ink); min-width: 3.2em; text-align: right; }
+  .diapo h1 { font-size: clamp(1.8rem, calc(var(--vw) * 5), 3.4rem); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 14px; }
+  .diapo h2 { font-size: clamp(1.3rem, calc(var(--vw) * 3), 2.05rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.01em; }
+  .diapo h3 { font-size: clamp(.98rem, calc(var(--vw) * 1.8), 1.15rem); margin: 0 0 4px; }
+  .diapo p, .diapo li { font-size: clamp(.95rem, calc(var(--vw) * 1.8), 1.2rem); line-height: 1.5; margin: 0 0 10px; }
   .diapo ul { margin: 0; padding-left: 1.2em; } .diapo li + li { margin-top: 6px; } .diapo li { margin-bottom: 0; }
-  .peq { font-size: clamp(.8rem, 1.45vw, .95rem) !important; color: var(--mut); }
+  .peq { font-size: clamp(.8rem, calc(var(--vw) * 1.45), .95rem) !important; color: var(--mut); }
   .eti { font-family: "IBM Plex Mono", monospace; font-size: .82rem !important; letter-spacing: .08em; text-transform: uppercase; color: var(--moss); margin: 0 0 8px !important; }
   .portada { background: var(--moss); color: #fff; } .portada .eti { color: #cfe3d3; }
   .seccion { background: var(--ink); color: var(--paper); } .seccion .eti { color: #e0b177; }
-  .seccion .num { font-family: "IBM Plex Mono", monospace; font-size: clamp(3rem, 9vw, 6rem); color: var(--amber); line-height: 1; margin: 0 0 6px; }
+  .seccion .num { font-family: "IBM Plex Mono", monospace; font-size: clamp(3rem, calc(var(--vw) * 9), 6rem); color: var(--amber); line-height: 1; margin: 0 0 6px; }
   .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
   .dos.ancho { grid-template-columns: 1.25fr 1fr; } .dos.angosto { grid-template-columns: 1fr 1.35fr; }
   .nota { background: #fbf1e2; border-left: 5px solid var(--amber); padding: 10px 14px; border-radius: 8px; }
-  .def { font-size: clamp(1.1rem, 2.4vw, 1.55rem) !important; line-height: 1.4 !important; border-left: 6px solid var(--moss); padding-left: 16px; }
+  .def { font-size: clamp(1.1rem, calc(var(--vw) * 2.4), 1.55rem) !important; line-height: 1.4 !important; border-left: 6px solid var(--moss); padding-left: 16px; }
   b.k { color: var(--moss); }
   code { font-family: "IBM Plex Mono", monospace; font-size: .9em; background: var(--soft); padding: 1px 6px; border-radius: 5px; }
   .portada .foto-portada { position: absolute; right: 4%; bottom: 8%; width: 34%; border-radius: 14px; transform: rotate(3deg); box-shadow: 0 20px 50px rgba(0,0,0,.35); }
@@ -47,13 +55,13 @@
   .lee { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px 6px; position: relative; }
   .lee::before { content: "📖 Un alumno lee en voz alta"; display: block; font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
   .pregunta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--soft); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
-  .pregunta > span { font-weight: 600; font-size: clamp(.92rem, 1.7vw, 1.08rem); }
+  .pregunta > span { font-weight: 600; font-size: clamp(.92rem, calc(var(--vw) * 1.7), 1.08rem); }
   .pregunta > span::before { content: "🤔 "; }
   .pregunta .resp { display: none; flex-basis: 100%; color: var(--moss); font-weight: 600; }
   .pregunta.ver .resp { display: block; }
   .pregunta.ver .bt { display: none; }
 
-  .bt { font: 600 clamp(.82rem, 1.5vw, .98rem) "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 16px; cursor: pointer; transition: transform .1s, filter .2s; }
+  .bt { font: 600 clamp(.82rem, calc(var(--vw) * 1.5), .98rem) "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 16px; cursor: pointer; transition: transform .1s, filter .2s; }
   .bt:hover { filter: brightness(1.15); } .bt:active { transform: scale(.96); }
   .bt.sec { background: #fff; color: var(--moss); border: 2px solid var(--moss); }
   .bt.amb { background: var(--amber); }
@@ -65,7 +73,7 @@
   .rej { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
   .rej.c3 { grid-template-columns: repeat(3, 1fr); } .rej.c4 { grid-template-columns: repeat(4, 1fr); } .rej.c5 { grid-template-columns: repeat(5, 1fr); } .rej.c6 { grid-template-columns: repeat(6, 1fr); }
   .tj { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
-  .tj p { font-size: clamp(.82rem, 1.45vw, .97rem) !important; margin: 0 !important; line-height: 1.4 !important; color: #3d4a43; }
+  .tj p { font-size: clamp(.82rem, calc(var(--vw) * 1.45), .97rem) !important; margin: 0 !important; line-height: 1.4 !important; color: #3d4a43; }
   .tj img { width: 100%; height: 92px; object-fit: contain; display: block; margin-bottom: 6px; mix-blend-mode: multiply; }
 
   /* cartas que se voltean al tocarlas */
@@ -74,7 +82,7 @@
   .carta img { width: 100%; height: 86px; object-fit: contain; display: block; margin-bottom: 6px; mix-blend-mode: multiply; }
   .carta .emo { font-size: 2.1rem; display: block; line-height: 1.1; margin-bottom: 4px; }
   .carta h3 { margin: 0; }
-  .carta .atras { display: none; font-size: clamp(.8rem, 1.4vw, .93rem); line-height: 1.35; margin-top: 6px; }
+  .carta .atras { display: none; font-size: clamp(.8rem, calc(var(--vw) * 1.4), .93rem); line-height: 1.35; margin-top: 6px; }
   .carta.ver .atras { display: block; }
   .carta:not(.ver)::after { content: "toca"; position: absolute; top: 8px; right: 10px; font: 600 .65rem "IBM Plex Mono", monospace; color: var(--mut); text-transform: uppercase; letter-spacing: .06em; }
   .carta.ver[data-ok="si"] { border-color: var(--ok); background: #eaf4ec; }
@@ -90,7 +98,7 @@
   .eps { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 8px; align-items: stretch; margin-top: 6px; }
   .etapa { background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 12px; min-height: 120px; transition: .35s; }
   .etapa h3 { font-family: "IBM Plex Mono", monospace; font-size: .8rem; letter-spacing: .08em; color: var(--mut); }
-  .etapa .cont { font-size: clamp(.9rem, 1.7vw, 1.1rem); line-height: 1.4; min-height: 2.8em; }
+  .etapa .cont { font-size: clamp(.9rem, calc(var(--vw) * 1.7), 1.1rem); line-height: 1.4; min-height: 2.8em; }
   .etapa.act { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
   .etapa.e-in.act { border-color: var(--in); } .etapa.e-in.act h3 { color: var(--in); }
   .etapa.e-pr.act { border-color: var(--ink); } .etapa.e-pr.act h3 { color: var(--ink); }
@@ -106,14 +114,14 @@
   .binario { background: #10231c; color: #9fe0b5; border-radius: 10px; padding: 8px 10px; font: 500 .74rem/1.45 "IBM Plex Mono", monospace; height: 150px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
   .binario div { white-space: nowrap; animation: entra .25s ease both; }
   .binario b { color: #f0c27b; font-weight: 600; }
-  .pantallita { background: #10231c; color: #fff; border-radius: 10px; min-height: 120px; display: grid; place-items: center; font: 700 clamp(1.3rem, 2.8vw, 2rem) "IBM Plex Mono", monospace; letter-spacing: .06em; padding: 8px; text-align: center; word-break: break-all; }
+  .pantallita { background: #10231c; color: #fff; border-radius: 10px; min-height: 120px; display: grid; place-items: center; font: 700 clamp(1.3rem, calc(var(--vw) * 2.8), 2rem) "IBM Plex Mono", monospace; letter-spacing: .06em; padding: 8px; text-align: center; word-break: break-all; }
   .part { position: absolute; left: 0; top: 0; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); pointer-events: none; z-index: 5; }
   .part.txt { width: auto; height: auto; margin: -10px 0 0 -14px; padding: 1px 6px; border-radius: 6px; font: 700 .74rem "IBM Plex Mono", monospace; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
   .mas { margin-top: 8px; border-top: 1px dashed var(--line); padding-top: 6px; }
   .mas summary { cursor: pointer; font-weight: 700; color: var(--amber); font-size: .92rem; list-style: none; }
   .mas summary::-webkit-details-marker { display: none; }
   .mas summary::before { content: "▸ "; } .mas[open] summary::before { content: "▾ "; }
-  .mas p { font-size: clamp(.8rem, 1.4vw, .92rem) !important; color: #3d4a43; margin: 6px 0 0 !important; }
+  .mas p { font-size: clamp(.8rem, calc(var(--vw) * 1.4), .92rem) !important; color: #3d4a43; margin: 6px 0 0 !important; }
 
   /* explorador del gabinete */
   .explora { display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; align-items: stretch; }
@@ -124,10 +132,10 @@
   .chip.visto:not(.on)::after { content: " ✓"; color: var(--ok); }
   .panel { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-content: start; }
   .panel img { width: 150px; height: 130px; object-fit: contain; mix-blend-mode: multiply; }
-  .panel p { font-size: clamp(.86rem, 1.55vw, 1rem) !important; margin-bottom: 8px !important; }
+  .panel p { font-size: clamp(.86rem, calc(var(--vw) * 1.55), 1rem) !important; margin-bottom: 8px !important; }
   .datos { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
   .datos span { font-family: "IBM Plex Mono", monospace; font-size: .74rem; background: var(--soft); border-radius: 99px; padding: 3px 10px; }
-  .analog { font-size: clamp(.86rem, 1.55vw, 1rem) !important; }
+  .analog { font-size: clamp(.86rem, calc(var(--vw) * 1.55), 1rem) !important; }
   .analog::before { content: "Piénsalo así → "; font-weight: 700; color: var(--amber); }
   .foto-grande { width: 100%; border-radius: 14px; display: block; }
 
@@ -136,7 +144,17 @@
   .pc-sim h3 { font: 600 .74rem "IBM Plex Mono", monospace; letter-spacing: .06em; color: #9fc3ad; margin-bottom: 6px; }
   .pc-sim textarea { width: 100%; height: 92px; resize: none; border-radius: 10px; border: 0; padding: 10px; font: 1rem "IBM Plex Sans", sans-serif; }
   .disco-caja { background: #fff; border: 2px dashed var(--moss); border-radius: 12px; padding: 10px 12px; min-height: 140px; font-size: .92rem; }
-  .disco-caja div { background: var(--soft); border-radius: 8px; padding: 5px 9px; margin-top: 6px; }
+  .archivo { display: block; width: 100%; text-align: left; font: inherit; font-size: .9rem; background: var(--soft); border: 2px solid transparent; border-radius: 8px; padding: 6px 10px; margin-top: 6px; cursor: pointer; color: var(--ink); }
+  .archivo:hover { border-color: var(--moss); }
+  .archivo.abierto { border-color: var(--amber); background: #fbf1e2; }
+  .archivo small { display: block; color: var(--mut); font-size: .78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .archivo.nuevo { animation: brillo .9s ease; }
+  @keyframes brillo { 0% { background: #f0c27b; } 100% { background: var(--soft); } }
+  #ram-capa { position: relative; }
+  .estado-ram { font: 600 .74rem "IBM Plex Mono", monospace; margin-top: 6px; color: #9fc3ad; }
+  .estado-ram.sucio { color: #f0c27b; } .estado-ram.ok { color: #7fe0a0; }
+  #ram-arch { color: #f0c27b; text-transform: none; letter-spacing: 0; }
+  .aviso-perdida { margin-top: 10px; background: var(--bad); color: #fff; border-radius: 10px; padding: 8px 12px; font-size: .88rem; animation: entra .3s ease both; z-index: 3; }
   .apagado { position: absolute; inset: 0; background: #000; border-radius: 14px; display: none; place-items: center; color: #8b8; font: 600 1rem "IBM Plex Mono", monospace; }
   .apagado.on { display: grid; }
 
@@ -147,7 +165,7 @@
   .barra-c { height: 26px; background: var(--soft); border-radius: 99px; overflow: hidden; }
   .barra-c i { display: block; height: 100%; width: 0; background: var(--moss); border-radius: 99px; }
   .tiempo { font: 600 1rem "IBM Plex Mono", monospace; }
-  table { border-collapse: collapse; width: 100%; font-size: clamp(.82rem, 1.5vw, 1rem); }
+  table { border-collapse: collapse; width: 100%; font-size: clamp(.82rem, calc(var(--vw) * 1.5), 1rem); }
   th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
   th { font-family: "IBM Plex Mono", monospace; font-size: .76em; letter-spacing: .06em; text-transform: uppercase; color: var(--moss); }
   td:first-child { font-weight: 600; }
@@ -177,7 +195,7 @@
   .caja { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; min-height: 0; }
   .caja h3 { display: flex; align-items: center; gap: 8px; }
   .caja .bt { align-self: flex-start; }
-  .tecla { font: 700 clamp(1.4rem, 3.4vw, 2.2rem) "IBM Plex Mono", monospace; background: var(--ink); color: #fff; border-radius: 12px; min-height: 64px; display: grid; place-items: center; padding: 6px; border-bottom: 6px solid #000; transition: transform .08s; }
+  .tecla { font: 700 clamp(1.4rem, calc(var(--vw) * 3.4), 2.2rem) "IBM Plex Mono", monospace; background: var(--ink); color: #fff; border-radius: 12px; min-height: 64px; display: grid; place-items: center; padding: 6px; border-bottom: 6px solid #000; transition: transform .08s; }
   .tecla.golpe { transform: translateY(3px); border-bottom-width: 3px; }
   .pad { position: relative; flex: 1; min-height: 80px; background: var(--soft); border-radius: 10px; cursor: crosshair; overflow: hidden; touch-action: none; }
   .pad .punto { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--in); pointer-events: none; left: 50%; top: 50%; }
@@ -200,9 +218,9 @@
   .clasif { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: center; }
   .item { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-align: center; }
   .item img { width: 100%; height: 190px; object-fit: contain; mix-blend-mode: multiply; }
-  .item h3 { font-size: clamp(1.1rem, 2.2vw, 1.5rem); margin-top: 8px; }
+  .item h3 { font-size: clamp(1.1rem, calc(var(--vw) * 2.2), 1.5rem); margin-top: 8px; }
   .opciones { display: grid; gap: 10px; }
-  .opciones button { font: 700 clamp(.95rem, 1.8vw, 1.15rem) "IBM Plex Sans", sans-serif; border: 0; border-radius: 12px; padding: 14px; color: #fff; cursor: pointer; transition: transform .1s, opacity .2s; }
+  .opciones button { font: 700 clamp(.95rem, calc(var(--vw) * 1.8), 1.15rem) "IBM Plex Sans", sans-serif; border: 0; border-radius: 12px; padding: 14px; color: #fff; cursor: pointer; transition: transform .1s, opacity .2s; }
   .opciones button:active { transform: scale(.97); }
   .opciones button:disabled { opacity: .35; cursor: default; }
   .opciones [data-t="in"] { background: var(--in); } .opciones [data-t="out"] { background: var(--out); } .opciones [data-t="es"] { background: var(--es); }
@@ -225,9 +243,9 @@
 
   /* quiz */
   .quiz { max-width: 760px; width: 100%; margin: 0 auto; }
-  .quiz .preg { font-size: clamp(1.1rem, 2.4vw, 1.5rem) !important; font-weight: 700; margin: 6px 0 14px !important; }
+  .quiz .preg { font-size: clamp(1.1rem, calc(var(--vw) * 2.4), 1.5rem) !important; font-weight: 700; margin: 6px 0 14px !important; }
   .quiz .alts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .quiz .alts button { font: 600 clamp(.92rem, 1.7vw, 1.08rem) "IBM Plex Sans", sans-serif; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; cursor: pointer; color: var(--ink); }
+  .quiz .alts button { font: 600 clamp(.92rem, calc(var(--vw) * 1.7), 1.08rem) "IBM Plex Sans", sans-serif; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; cursor: pointer; color: var(--ink); }
   .quiz .alts button:hover:not(:disabled) { border-color: var(--moss); }
   .quiz .alts button.bien { background: #eaf4ec; border-color: var(--ok); }
   .quiz .alts button.malo { background: #f8e9e6; border-color: var(--bad); }
@@ -241,7 +259,10 @@
   .creditos a { color: var(--moss); }
   .aviso-lab { font: 600 .72rem "IBM Plex Mono", monospace; color: var(--mut); text-transform: uppercase; letter-spacing: .05em; }
 
+  .dos > *, .eps > *, .cadena > *, .explora > *, .lab > *, .clasif > *, .rej > * { min-width: 0; }
   @media (max-width: 760px) {
+    .vel { position: static; align-self: flex-end; order: -1; margin-bottom: 8px; }
+    .control { gap: 6px; } .control button { padding: 8px 10px; }
     .dos, .dos.ancho, .dos.angosto, .explora, .lab, .clasif { grid-template-columns: 1fr; gap: 14px; }
     .rej.c3, .rej.c4, .rej.c5, .rej.c6 { grid-template-columns: 1fr 1fr; }
     .eps, .cadena { grid-template-columns: 1fr; } .flecha { transform: rotate(90deg); justify-self: center; }
@@ -310,7 +331,7 @@
   </section>
 
   <!-- 4 · SIMULADOR E-P-S -->
-  <section class="diapo">
+  <section class="diapo" data-vel>
     <p class="eti">Experimento · el ciclo de toda computadora</p>
     <div class="dos ancho" style="align-items:end;gap:16px">
       <div>
@@ -413,24 +434,23 @@
   </section>
 
   <!-- 11 · APAGÓN RAM -->
-  <section class="diapo">
+  <section class="diapo" data-vel>
     <p class="eti">Experimento · memoria RAM y disco</p>
     <h2>El experimento del apagón</h2>
-    <div class="dos" style="align-items:stretch">
-      <div class="pc-sim">
-        <h3>🧠 MEMORIA RAM · LO QUE ESTÁS USANDO AHORA</h3>
-        <textarea id="ram-txt" placeholder="Escribe aquí cualquier cosa…"></textarea>
-        <div class="fila" style="margin-top:10px">
+    <div class="dos" id="ram-capa" style="align-items:stretch">
+      <div class="pc-sim" id="ram-pc">
+        <h3>🧠 MEMORIA RAM · LO QUE ESTÁS USANDO AHORA <span id="ram-arch"></span></h3>
+        <textarea id="ram-txt" placeholder="Escribe aquí, por ejemplo: Paciente con fiebre"></textarea>
+        <div class="estado-ram" id="ram-est">Nada abierto todavía</div>
+        <div class="fila" style="margin-top:8px">
           <button class="bt amb" id="ram-save">💾 Guardar en el disco</button>
-          <button class="bt" id="ram-off" style="background:var(--bad)">⏻ Apagar y encender</button>
+          <button class="bt" id="ram-off" style="background:var(--bad)">⏻ Apagar de repente</button>
         </div>
         <div class="apagado" id="ram-neg">Apagando…</div>
       </div>
-      <div>
-        <div class="disco-caja" id="disco"><b>💽 DISCO (HDD / SSD)</b><span class="peq" style="display:block">Lo guardado queda aquí.</span></div>
-      </div>
+      <div class="disco-caja" id="disco"><b>💽 DISCO (HDD / SSD)</b><span class="peq" id="disco-vacio" style="display:block">Aquí quedarán tus archivos guardados. Tócalos para abrirlos.</span><div id="archivos"></div></div>
     </div>
-    <p class="peq" style="margin-top:12px">Paso 1: escribe algo. Paso 2: apaga. ¿Qué pasó? Paso 3: escribe otra cosa, guárdala y vuelve a apagar.</p>
+    <p class="peq" style="margin-top:10px"><b>1.</b> Escribe y guarda. <b>2.</b> Apaga y vuelve a encender. <b>3.</b> Abre tu archivo desde el disco. <b>4.</b> Agrega más palabras y apaga <u>sin guardar</u>. ¿Qué se perdió?</p>
     <div class="pregunta" data-revela>
       <span>¿Por qué se borró lo que no guardaste?</span>
       <button class="bt sec">Ver respuesta</button>
@@ -439,7 +459,7 @@
   </section>
 
   <!-- 12 · CARRERA HDD vs SSD -->
-  <section class="diapo">
+  <section class="diapo" data-vel>
     <p class="eti">Experimento · almacenamiento</p>
     <h2>Carrera: HDD contra SSD</h2>
     <div class="fila"><button class="bt amb" id="car-go">🏁 Abrir un juego en los dos discos</button></div>
@@ -458,7 +478,7 @@
   </section>
 
   <!-- 13 · GPU -->
-  <section class="diapo">
+  <section class="diapo" data-vel>
     <p class="eti">Experimento · tarjeta gráfica</p>
     <div class="dos angosto" style="align-items:stretch">
       <div>
@@ -573,7 +593,7 @@
   </section>
 
   <!-- 20 · LAB SALIDA -->
-  <section class="diapo">
+  <section class="diapo" data-vel>
     <p class="eti">Laboratorio · periféricos de salida</p>
     <h2>Ahora la computadora te habla a ti</h2>
     <div class="rej c3" style="align-items:stretch">
@@ -636,7 +656,7 @@
   </section>
 
   <!-- 23 · GRABADORA -->
-  <section class="diapo">
+  <section class="diapo" data-vel>
     <p class="eti">Todo junto · un caso real</p>
     <h2>Graba tu voz y mira el recorrido</h2>
     <div class="fila"><button class="bt amb" id="rec-go">🎙️ Grabar 3 segundos</button><span class="peq" id="rec-m">Un voluntario dice su nombre y su carrera. Miren cómo viaja la información.</span></div>
@@ -696,6 +716,7 @@
 
 </main>
 <nav class="control">
+  <button id="ini" type="button" title="Volver a la primera diapositiva">⏮ Inicio</button>
   <button id="ant" type="button">← Anterior</button>
   <span id="pos"></span>
   <button id="sig" type="button">Siguiente →</button>
@@ -707,6 +728,33 @@ const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 const IMG = n => "recursos/m3c1/" + n + ".jpg";
 const espera = ms => new Promise(r => setTimeout(r, ms));
 
+/* ---------- escala: la diapositiva llena la pantalla o el proyector ---------- */
+let ESC = 1;
+function ajustar() {
+  const grande = innerWidth >= 760 && innerHeight >= 430;
+  document.body.classList.toggle("escalar", grande);
+  ESC = grande ? Math.min((innerWidth - 32) / 1140, (innerHeight - 88) / 641) : 1;
+  document.documentElement.style.setProperty("--s", ESC);
+}
+addEventListener("resize", ajustar); document.addEventListener("fullscreenchange", ajustar); ajustar();
+
+/* ---------- regulador de velocidad de las animaciones ---------- */
+const VELS = [0.25, 0.5, 1, 1.5, 2];
+let VEL = 1;
+try { const g = Number(localStorage.getItem("m3c1-vel")); if (VELS.includes(g)) VEL = g; } catch (_) {}
+const pausa = ms => espera(ms / VEL);
+$$("[data-vel]").forEach(d => d.insertAdjacentHTML("beforeend", '<label class="vel" title="Velocidad de la animación">🐢<input type="range" min="0" max="4" step="1" aria-label="Velocidad">🐇<b></b></label>'));
+function pintarVel() {
+  $$(".vel input").forEach(x => x.value = VELS.indexOf(VEL));
+  $$(".vel b").forEach(x => x.textContent = String(VEL).replace(".", ",") + "×");
+}
+document.addEventListener("input", e => {
+  if (!e.target.matches(".vel input")) return;
+  VEL = VELS[e.target.value]; pintarVel();
+  try { localStorage.setItem("m3c1-vel", VEL); } catch (_) {}
+});
+pintarVel();
+
 /* ---------- navegación ---------- */
 const D = $$(".diapo");
 const alSalir = [];               // funciones que se llaman al cambiar de diapositiva
@@ -716,20 +764,23 @@ function ir(n) {
   D.forEach((d, k) => d.classList.toggle("on", k === i));
   $("#pos").textContent = (i + 1) + " / " + D.length;
   $("#ant").disabled = i === 0;
-  $("#sig").disabled = i === D.length - 1;
+  $("#ini").disabled = i === 0;
+  $("#sig").textContent = i === D.length - 1 ? "↺ Volver al inicio" : "Siguiente →";
   $("#barra").style.width = ((i + 1) / D.length * 100) + "%";
   history.replaceState(null, "", "#" + (i + 1));
   alSalir.forEach(f => f(D[i]));
 }
 $("#ant").onclick = () => ir(i - 1);
-$("#sig").onclick = () => ir(i + 1);
+$("#sig").onclick = () => ir(i === D.length - 1 ? 0 : i + 1);
+$("#ini").onclick = () => ir(0);
 $("#full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
 addEventListener("keydown", e => {
   if (e.target.closest("input, textarea, select")) return;
   if (D[i].hasAttribute("data-libre")) return;
-  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); ir(i + 1); }
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); ir(i === D.length - 1 ? 0 : i + 1); }
   if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); ir(i - 1); }
   if (e.key.toLowerCase() === "f") $("#full").click();
+  if (e.key === "Home") ir(0);
 });
 let x0 = null;
 addEventListener("touchstart", e => { x0 = e.target.closest("[data-noswipe], input, textarea, canvas") ? null : e.touches[0].clientX; }, { passive: true });
@@ -759,7 +810,7 @@ function particula(capa, desde, hasta, { txt = "", color = "#2f6f4f", dur = 750 
   const pt = (o, lado) => {
     if (!(o instanceof Element)) return o;
     const r = o.getBoundingClientRect();
-    return { x: (lado ? r.right - 18 : r.left + 18) - rc.left, y: r.top + r.height * (.3 + Math.random() * .4) - rc.top };
+    return { x: ((lado ? r.right - 18 * ESC : r.left + 18 * ESC) - rc.left) / ESC, y: (r.top + r.height * (.3 + Math.random() * .4) - rc.top) / ESC };
   };
   const a = pt(desde, 1), b = pt(hasta, 0);
   const p = document.createElement("span");
@@ -771,7 +822,7 @@ function particula(capa, desde, hasta, { txt = "", color = "#2f6f4f", dur = 750 
     { transform: `translate(${a.x}px,${a.y}px) scale(.5)`, opacity: 0 },
     { transform: `translate(${(a.x + b.x) / 2}px,${(a.y + b.y) / 2 + curva}px) scale(1)`, opacity: 1, offset: .5 },
     { transform: `translate(${b.x}px,${b.y}px) scale(.5)`, opacity: 0 }
-  ], { duration: dur, easing: "ease-in-out" }).onfinish = () => p.remove();
+  ], { duration: dur / VEL, easing: "ease-in-out" }).onfinish = () => p.remove();
 }
 const bin8 = n => (n & 255).toString(2).padStart(8, "0");
 const VERDE = "#2f6f4f", AMBAR = "#b3752c", NARANJA = "#b0522a";
@@ -782,7 +833,7 @@ let apagarEtapas = null;
 function encender(...ids) {
   ids.forEach(s => $(s).classList.add("act"));
   clearTimeout(apagarEtapas);
-  apagarEtapas = setTimeout(() => ["#e-in", "#e-pr", "#e-out", "#f1", "#f2"].forEach(s => $(s).classList.remove("act")), 1500);
+  apagarEtapas = setTimeout(() => ["#e-in", "#e-pr", "#e-out", "#f1", "#f2"].forEach(s => $(s).classList.remove("act")), 1500 / VEL);
 }
 function lineaBin(html, b = $("#bin"), max = 12) {
   if (b.querySelector(".peq")) b.innerHTML = "";
@@ -818,10 +869,10 @@ function nuevoPunto(p, inicio) {
   if (++cuenta % 3 === 0 || inicio) {
     lineaBin(`x=${String(p.x).padStart(3, "0")} y=${String(p.y).padStart(3, "0")} → <b>${bin8(p.x)} ${bin8(p.y)}</b>`);
     particula(eps, $("#e-in"), $("#e-pr"), { color: VERDE, dur: 600 });
-    setTimeout(() => particula(eps, $("#e-pr"), $("#e-out"), { txt: Math.random() < .5 ? "1" : "0", color: AMBAR, dur: 600 }), 450);
+    setTimeout(() => particula(eps, $("#e-pr"), $("#e-out"), { txt: Math.random() < .5 ? "1" : "0", color: AMBAR, dur: 600 }), 450 / VEL);
     encender("#e-in", "#f1", "#e-pr", "#f2", "#e-out");
   }
-  setTimeout(() => segmento(gOut, a, p, NARANJA), 900);
+  setTimeout(() => segmento(gOut, a, p, NARANJA), 900 / VEL);
   previo = p;
 }
 cvIn.addEventListener("pointerdown", e => { try { cvIn.setPointerCapture(e.pointerId); } catch (_) {} trazando = true; nuevoPunto(puntoCanvas(e), true); });
@@ -842,11 +893,11 @@ async function enviarTexto() {
     const cod = ch.charCodeAt(0);
     particula(eps, $("#e-in"), $("#e-pr"), { txt: ch === " " ? "␣" : ch, color: VERDE, dur: 650 });
     encender("#e-in", "#f1", "#e-pr");
-    await espera(450);
+    await pausa(450);
     lineaBin(`"${ch === " " ? "espacio" : ch}" → código ${cod} → <b>${bin8(cod)}</b>`);
     particula(eps, $("#e-pr"), $("#e-out"), { txt: bin8(cod), color: AMBAR, dur: 650 });
     encender("#f2", "#e-out");
-    await espera(500);
+    await pausa(500);
     $("#tx-out").textContent += ch;
   }
   enviando = false; $("#tx-go").disabled = false;
@@ -886,33 +937,77 @@ COMP.forEach((c, k) => {
 });
 mostrarComp(COMP[0], $("#exp-bt .chip"));
 
-/* ---------- apagón ---------- */
+/* ---------- apagón: la RAM se borra, el disco no ---------- */
+const archivos = [];          // lo que hay en el disco: { nombre, texto }
+let abierto = -1;             // índice del archivo abierto en la RAM (-1 = ninguno)
+const ramTxt = $("#ram-txt");
+const palabras = t => t.trim() ? t.trim().split(/\s+/).length : 0;
+function estadoRam() {
+  const e = $("#ram-est"), t = ramTxt.value;
+  const guardado = abierto >= 0 ? archivos[abierto].texto : "";
+  $("#ram-arch").textContent = abierto >= 0 ? "· " + archivos[abierto].nombre : "";
+  if (!t && abierto < 0) { e.className = "estado-ram"; e.textContent = "Nada abierto todavía"; return; }
+  if (t === guardado) { e.className = "estado-ram ok"; e.textContent = "✓ Todo está guardado en el disco"; return; }
+  e.className = "estado-ram sucio";
+  e.textContent = "● Hay cambios SIN GUARDAR (solo están en la RAM)";
+}
+function pintarArchivos(nuevo) {
+  $("#disco-vacio").hidden = archivos.length > 0;
+  $("#archivos").innerHTML = archivos.map((a, k) =>
+    `<button class="archivo${k === abierto ? " abierto" : ""}${k === nuevo ? " nuevo" : ""}" data-k="${k}">📄 ${a.nombre} · ${palabras(a.texto)} palabras<small>${a.texto.replace(/</g, "&lt;")}</small></button>`).join("");
+}
+function chorro(desde, hasta, n) {
+  for (let k = 0; k < n; k++) setTimeout(() => particula($("#ram-capa"), desde, hasta, { txt: Math.random() < .5 ? "1" : "0", color: AMBAR, dur: 650 }), k * 60 / VEL);
+}
+ramTxt.addEventListener("input", estadoRam);
 $("#ram-save").onclick = () => {
-  const t = $("#ram-txt").value.trim(); if (!t) { $("#ram-txt").focus(); return; }
-  const d = document.createElement("div"); d.textContent = "📄 " + t; $("#disco").append(d);
+  const t = ramTxt.value.trim(); if (!t) { ramTxt.focus(); return; }
+  ramTxt.value = t;
+  if (abierto < 0) { archivos.push({ nombre: "nota" + (archivos.length + 1) + ".txt", texto: t }); abierto = archivos.length - 1; }
+  else archivos[abierto].texto = t;
+  chorro($("#ram-pc"), $("#disco"), 10);
+  setTimeout(() => { pintarArchivos(abierto); estadoRam(); }, 500 / VEL);
 };
+$("#archivos").addEventListener("click", e => {
+  const b = e.target.closest(".archivo"); if (!b) return;
+  if (ramTxt.value && ramTxt.value !== (abierto >= 0 ? archivos[abierto].texto : "") && !confirm("Tienes cambios sin guardar en la RAM. ¿Abrir el archivo igual?")) return;
+  abierto = Number(b.dataset.k);
+  chorro($("#disco"), $("#ram-pc"), 10);
+  ramTxt.value = "";
+  setTimeout(() => { ramTxt.value = archivos[abierto].texto; pintarArchivos(); estadoRam(); ramTxt.focus(); ramTxt.setSelectionRange(9999, 9999); }, 550 / VEL);
+});
 $("#ram-off").onclick = async () => {
+  const guardado = abierto >= 0 ? archivos[abierto].texto : "";
+  const perdidas = ramTxt.value !== guardado ? Math.max(0, palabras(ramTxt.value) - palabras(guardado)) : 0;
+  const huboCambios = ramTxt.value !== guardado && ramTxt.value.trim() !== "";
   const neg = $("#ram-neg"); neg.classList.add("on"); neg.textContent = "Apagando…"; tono(220, .4);
-  await espera(1200); $("#ram-txt").value = ""; neg.textContent = "⏻";
-  await espera(700); neg.textContent = "Encendiendo…"; tono(440, .3);
-  await espera(1000); neg.classList.remove("on");
-  $("#ram-txt").placeholder = "La RAM quedó vacía. ¿Y el disco?";
+  await pausa(1200); ramTxt.value = ""; abierto = -1; neg.textContent = "⏻";
+  await pausa(700); neg.textContent = "Encendiendo…"; tono(440, .3);
+  await pausa(1000); neg.classList.remove("on");
+  pintarArchivos(); estadoRam();
+  ramTxt.placeholder = archivos.length ? "La RAM quedó vacía. Abre tu archivo desde el disco →" : "La RAM quedó vacía.";
+  $$("#ram-pc .aviso-perdida").forEach(x => x.remove());
+  if (huboCambios) {
+    $("#ram-pc").insertAdjacentHTML("beforeend", `<div class="aviso-perdida">⚠️ Se perdió lo que no guardaste${perdidas ? ` (${perdidas} palabra${perdidas > 1 ? "s" : ""})` : ""}. La RAM se borra sin electricidad.${archivos.length ? " Lo guardado sigue en el disco." : ""}</div>`);
+    setTimeout(() => $$("#ram-pc .aviso-perdida").forEach(x => x.remove()), 6000);
+  }
 };
 
 /* ---------- carrera ---------- */
 $("#car-go").onclick = () => {
   $("#car-go").disabled = true;
+  const v = VEL;
   const corre = (b, t, dur) => {
-    const t0 = performance.now();
+    const t0 = performance.now(), real = dur / v;
     (function paso(now) {
-      const p = Math.min(1, (now - t0) / dur);
-      $(b).style.width = (p * 100) + "%"; $(t).textContent = ((now - t0) / 1000 * (p < 1 ? 1 : 0) + (p >= 1 ? dur / 1000 : 0)).toFixed(1) + " s";
+      const p = Math.min(1, (now - t0) / real);
+      $(b).style.width = (p * 100) + "%"; $(t).textContent = (p * dur / 1000).toFixed(1) + " s";
       if (p < 1) requestAnimationFrame(paso); else { $(t).textContent = (dur / 1000).toFixed(1) + " s ✔"; tono(b === "#b-ssd" ? 880 : 330, .25); }
     })(t0);
   };
   $("#b-hdd").style.width = $("#b-ssd").style.width = "0";
   corre("#b-hdd", "#t-hdd", 5200); corre("#b-ssd", "#t-ssd", 900);
-  setTimeout(() => $("#car-go").disabled = false, 5400);
+  setTimeout(() => $("#car-go").disabled = false, 5400 / v);
 };
 
 /* ---------- GPU ---------- */
@@ -934,7 +1029,7 @@ function dibujar(now) {
   const dt = Math.min(4, (now - ultimoCuadro) / 16.7); ultimoCuadro = now;
   cx.fillStyle = "#0d1b2a"; cx.fillRect(0, 0, 640, 400);
   for (const b of bolas) {
-    b.x += b.vx * dt; b.y += b.vy * dt;
+    b.x += b.vx * dt * VEL; b.y += b.vy * dt * VEL;
     if (b.x < b.r || b.x > 640 - b.r) b.vx *= -1;
     if (b.y < b.r || b.y > 400 - b.r) b.vy *= -1;
     b.x = Math.max(b.r, Math.min(640 - b.r, b.x)); b.y = Math.max(b.r, Math.min(400 - b.r, b.y));
@@ -982,7 +1077,7 @@ addEventListener("keydown", e => {
 });
 const pad = $("#pad");
 function posPad(e) {
-  const r = pad.getBoundingClientRect(), x = Math.round(e.clientX - r.left), y = Math.round(e.clientY - r.top);
+  const r = pad.getBoundingClientRect(), x = Math.round((e.clientX - r.left) / ESC), y = Math.round((e.clientY - r.top) / ESC);
   $("#pad-p").style.left = x + "px"; $("#pad-p").style.top = y + "px"; return [x, y];
 }
 pad.addEventListener("pointermove", e => { const [x, y] = posPad(e); $("#pad-i").textContent = "Posición: x " + x + " · y " + y; });
@@ -1039,8 +1134,8 @@ $("#pant-go").onclick = () => {
 });
 $$("[data-lado]").forEach(b => b.onclick = () => { const p = Number(b.dataset.lado); tono(523, .25, p); setTimeout(() => tono(659, .35, p), 220); });
 $("#imp-go").onclick = () => {
-  const h = $("#hoja"); h.classList.remove("sale"); void h.offsetWidth; h.classList.add("sale");
-  for (let k = 0; k < 10; k++) setTimeout(() => tono(140 + (k % 2) * 30, .1, 0, "square"), k * 170);
+  const h = $("#hoja"); h.classList.remove("sale"); h.style.transitionDuration = (1.8 / VEL) + "s"; void h.offsetWidth; h.classList.add("sale");
+  for (let k = 0; k < 10; k++) setTimeout(() => tono(140 + (k % 2) * 30, .1, 0, "square"), k * 170 / VEL);
 };
 
 /* ---------- clasificador ---------- */
@@ -1102,7 +1197,7 @@ function flujoSalida() {          // mientras suena la grabación: disco → par
     if (recA.paused || recA.ended) { saliendo = false; return; }
     particula(cad, $("#r3"), $("#r4"), { txt: Math.random() < .5 ? "1" : "0", color: AMBAR, dur: 650 });
     particula(cad, $("#r4"), $("#ro"), { txt: "♪", color: NARANJA, dur: 700 });
-    setTimeout(paso, 130);
+    setTimeout(paso, 130 / VEL);
   })();
 }
 recA.addEventListener("play", flujoSalida);
@@ -1151,9 +1246,9 @@ $("#rec-go").onclick = async () => {
   for (let k = 1; k <= 16; k++) {
     particula(cad, $("#r2"), $("#r3"), { txt: Math.random() < .5 ? "1" : "0", color: AMBAR, dur: 650 });
     $("#r3c").innerHTML = `Guardando <b>mi_voz.webm</b><br>${Math.round(kb * k / 16)} KB`;
-    await espera(110);
+    await pausa(110);
   }
-  await espera(500);
+  await pausa(500);
   $("#r3c").innerHTML = `Guardado: <b>mi_voz.webm</b><br>(${kb} KB = ${(kb * 8192).toLocaleString("es")} ceros y unos)`;
   $("#r2b").hidden = true; $("#r2 img").hidden = false; $("#r2c").hidden = false;
 
