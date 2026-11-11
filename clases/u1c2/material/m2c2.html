@@ -6,7 +6,7 @@
 <!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
 <meta name="material-titulo" content="Simulador AulaOS">
 <meta name="material-tipo" content="interactivo">
-<meta name="material-descripcion" content="Una computadora de práctica: enciéndela, inicia sesión, abre programas, guarda archivos, mira el administrador de tareas y descubre qué pasa si la desenchufas.">
+<meta name="material-descripcion" content="Una computadora de práctica: enciéndela, abre programas, guarda archivos y mira el administrador de tareas. Incluye la historia guiada «Necesito Word»: qué pasa si pirateas un programa y cuál es la solución gratis y legal.">
 <title>Simulador AulaOS</title>
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
@@ -188,6 +188,98 @@
   .guia-p label:has(input:checked) { color: var(--mut); text-decoration: line-through; }
   .volver { display: block; text-align: center; margin-top: 8px; color: var(--moss); font-weight: 600; }
 
+  /* historias guiadas */
+  .hist { position: fixed; top: 56px; right: 10px; width: min(360px, calc(100vw - 20px)); z-index: 9400; background: var(--paper); border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,.5); display: flex; flex-direction: column; max-height: calc(100vh - 130px); border: 3px solid var(--amber); animation: sube .25s ease both; }
+  .hist .h-cab { display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: var(--amber); color: #fff; border-radius: 12px 12px 0 0; }
+  .hist .h-cab b { flex: 1; font-size: .84rem; line-height: 1.25; }
+  .hist .h-cab small { font: 600 .7rem "IBM Plex Mono", monospace; opacity: .9; white-space: nowrap; }
+  .hist .h-cab button { border: 0; background: rgba(255,255,255,.25); color: #fff; border-radius: 6px; width: 26px; height: 24px; cursor: pointer; font-weight: 700; }
+  .hist .h-cuerpo { padding: 10px 12px; overflow: auto; font-size: .9rem; line-height: 1.45; }
+  .hist.mini .h-cuerpo, .hist.mini .h-pie { display: none; }
+  .h-prog { display: flex; gap: 3px; margin-bottom: 8px; }
+  .h-prog i { flex: 1; height: 5px; border-radius: 99px; background: var(--line); }
+  .h-prog i.ok { background: var(--ok); } .h-prog i.act { background: var(--amber); }
+  .h-txt code { font-family: "IBM Plex Mono", monospace; background: var(--soft); padding: 1px 5px; border-radius: 4px; font-size: .85em; }
+  .h-nota { margin-top: 8px; background: #eaf4ec; color: #1f5b35; border-radius: 10px; padding: 8px 10px; font-weight: 600; font-size: .85rem; }
+  .h-lista { margin: 6px 0 0; padding-left: 1.1em; } .h-lista li { margin-bottom: 4px; }
+  .h-tabla { width: 100%; border-collapse: collapse; font-size: .78rem; margin-top: 6px; }
+  .h-tabla th, .h-tabla td { border-bottom: 1px solid var(--line); padding: 4px 5px; text-align: left; }
+  .h-tabla th { font-size: .72rem; color: var(--moss); }
+  .hist .h-pie { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .hist .h-pie .bt { flex: 1; padding: 8px 6px; }
+  .historias { display: grid; gap: 6px; margin-bottom: 12px; }
+  .historias button { border: 2px solid var(--amber); background: #fbf1e2; border-radius: 10px; padding: 9px 10px; cursor: pointer; font-weight: 700; font-size: .82rem; text-align: left; color: var(--ink); }
+  .historias button small { display: block; font-weight: 400; color: var(--mut); margin-top: 2px; }
+  .historias button.verde { border-color: var(--ok); background: #eaf4ec; }
+
+  /* editor de documentos */
+  .doc { display: flex; flex-direction: column; height: 100%; }
+  .doc-herr { display: flex; align-items: center; gap: 4px; padding: 6px; background: var(--mc); color: #fff; flex-wrap: wrap; }
+  .doc-herr .marca { font-size: .8rem; margin-right: 6px; }
+  .doc-herr button { border: 0; background: rgba(255,255,255,.2); color: #fff; border-radius: 6px; min-width: 30px; height: 28px; cursor: pointer; font-size: .85rem; padding: 0 8px; }
+  .doc-herr button:hover { background: rgba(255,255,255,.35); }
+  .doc-herr .guardar { background: #fff; color: var(--ink); font-weight: 700; }
+  .doc-herr .sep { width: 1px; height: 20px; background: rgba(255,255,255,.35); margin: 0 2px; }
+  .doc-herr .estado-g { color: #fff; opacity: .9; }
+  .doc-herr .estado-g.sucio { color: #fde68a; }
+  .act-pirata { font: 700 .7rem "IBM Plex Mono", monospace; background: #e11d48; padding: 3px 8px; border-radius: 99px; }
+  .doc-fondo { flex: 1; overflow: auto; background: #e9e6dd; padding: 14px; min-height: 160px; }
+  .hoja { background: #fff; min-height: 100%; max-width: 620px; margin: 0 auto; padding: 22px 26px; box-shadow: 0 4px 14px rgba(0,0,0,.12); outline: none; font: 1rem/1.55 "IBM Plex Sans", sans-serif; }
+  .hoja h3 { margin: 0 0 8px; }
+  .licencia { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; gap: 6px; background: linear-gradient(#f3f6fb, #fff); }
+  .lic-logo { font-size: 3.4rem; }
+  .licencia p { max-width: 380px; line-height: 1.45; margin: 0 0 8px; }
+  .lic-nota { font-size: .8rem; color: var(--mut); }
+  .leeme { margin: 0; padding: 14px; font: 600 .82rem/1.5 "IBM Plex Mono", monospace; white-space: pre-wrap; background: #fffef3; height: 100%; }
+  .ven-anuncio { border: 3px solid #f59e0b; }
+  .anuncio { height: 100%; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; gap: 4px; }
+  .anuncio span { font-size: 2.2rem; } .anuncio p { margin: 0 0 6px; font-size: .82rem; line-height: 1.35; }
+  .anuncio .bt { background: #fde047; color: #111; animation: parpadeo .8s steps(2) infinite; }
+  @keyframes parpadeo { 50% { filter: brightness(1.4); } }
+  .smart h3 { margin: 0 0 8px; } .smart { border-left: 5px solid var(--azul); padding-left: 12px; margin-bottom: 10px; }
+  .smart.av { border-color: var(--bad); }
+  .peq-g { font-size: .8rem; color: var(--mut); margin: 4px 0; }
+  .inst { padding: 14px; display: flex; flex-direction: column; gap: 6px; height: 100%; }
+  .inst h3 { margin: 0; } .inst label { display: flex; gap: 8px; font-size: .86rem; align-items: center; }
+  .inst-mal { background: linear-gradient(#1b1b1b, #2b2b2b); color: #eee; }
+  .inst-mal h3 { color: #fde047; }
+  .letra-chica { font-size: .6rem; color: #888; line-height: 1.3; margin: 2px 0; }
+  .barra-i { height: 8px; background: rgba(127,127,127,.3); border-radius: 99px; overflow: hidden; margin-top: auto; }
+  .barra-i i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .09s linear; }
+  .ok-i { font-weight: 700; color: #4ade80; margin: 0; }
+  .inst:not(.inst-mal) .ok-i { color: var(--ok); }
+  .rescate { position: absolute; inset: 0 0 52px; z-index: 8600; background: rgba(120,0,0,.92); display: grid; place-items: center; color: #fff; text-align: center; padding: 16px; animation: abre .3s ease both; }
+  .res-caja { max-width: 520px; } .res-caja h2 { font-size: 1.5rem; margin: 6px 0; } .res-caja p { line-height: 1.45; margin: 0 0 8px; }
+  .res-reloj { font: 700 2.6rem "IBM Plex Mono", monospace; color: #fde047; margin: 6px 0 10px; }
+  .res-nota { font-size: .78rem; opacity: .8; }
+  /* páginas del navegador */
+  .buscador, .secu { text-align: center; padding-top: 10px; }
+  .buscador input, .secu input { width: min(420px, 90%); font: 1rem "IBM Plex Sans", sans-serif; padding: 10px 16px; border: 2px solid var(--line); border-radius: 99px; margin: 8px 0; }
+  .buscador a, .web a[data-q2] { color: var(--azul); cursor: pointer; text-decoration: underline; }
+  .secu { background: repeating-linear-gradient(45deg, #fff7d6 0 20px, #ffe9a8 20px 40px); margin: -18px; padding: 18px; min-height: 100%; }
+  .secu h2 { color: #e11d48; }
+  .secu-ads { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; }
+  .secu-ads div { background: #e11d48; color: #fff; font-weight: 700; padding: 10px; border-radius: 8px; cursor: pointer; font-size: .85rem; animation: parpadeo 1s steps(2) infinite; }
+  .res { padding: 8px 4px; border-bottom: 1px solid var(--soft); cursor: pointer; }
+  .res:hover { background: #f8f7f2; }
+  .res a { color: #1a0dab; font-weight: 600; font-size: .95rem; display: block; margin: 2px 0; }
+  .res p { margin: 0 !important; font-size: .82rem !important; color: #444; }
+  .res-dom { font: 600 .74rem "IBM Plex Mono", monospace; color: var(--bad); }
+  .res.alt .res-dom { color: var(--ok); }
+  .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+  .tags span { font-size: .7rem; font-weight: 700; background: #eaf4ec; color: var(--ok); border-radius: 99px; padding: 2px 8px; }
+  .pista-g { margin-top: 10px !important; background: #fbf1e2; border-left: 4px solid var(--amber); padding: 8px 10px; border-radius: 6px; font-size: .84rem; }
+  .pirata { background: #111; color: #fff; margin: -18px; padding: 16px; min-height: 100%; text-align: center; }
+  .pirata h2 { color: #fde047; font-size: 1.3rem; }
+  .p-ad { background: linear-gradient(90deg, #e11d48, #7e22ce); padding: 10px; font-weight: 700; border-radius: 6px; margin: 8px 0; animation: parpadeo 1s steps(2) infinite; }
+  .p-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+  .p-botones button { border: 0; border-radius: 8px; padding: 12px; font-weight: 800; cursor: pointer; background: #16a34a; color: #fff; font-size: .9rem; }
+  .p-botones button.grande { grid-column: 1 / -1; font-size: 1.2rem; padding: 16px; background: #22c55e; animation: parpadeo .7s steps(2) infinite; }
+  .p-cuenta { color: #fca5a5; font-weight: 700; }
+  .oficial { max-width: 520px; margin: 0 auto; text-align: center; padding-top: 10px; }
+  .oficial p { line-height: 1.5; }
+  .doc-web { height: 360px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  @media (max-width: 700px) { .hist { top: auto; bottom: 108px; max-height: 46vh; } .secu-ads, .p-botones { grid-template-columns: 1fr; } }
   @media (max-width: 700px) {
     .ven { left: 0 !important; top: 0 !important; width: 100% !important; height: calc(100% - 52px) !important; border-radius: 0; }
     .ven .barra .maxi { display: none; }
@@ -250,6 +342,11 @@
 <div class="guia-p" id="guia-p">
   <button id="doc-b">🧭 Guía paso a paso</button>
   <div class="caja" id="doc-c" hidden>
+    <h4>Historias guiadas</h4>
+    <div class="historias">
+      <button id="h1">🎭 1. «Necesito Word… ¡lo pirateo!»<small>Qué pasa cuando instalas un programa pirata.</small></button>
+      <button id="h2" class="verde">✅ 2. La solución: alternativas gratis<small>Programas gratis y legales que hacen lo mismo.</small></button>
+    </div>
     <h4>Experimentos: provoca situaciones reales</h4>
     <div class="acc">
       <button id="d-usb">🔌 Conectar USB</button>
@@ -262,6 +359,12 @@
     <div id="guia"></div>
     <a class="volver" href="#" id="d-reset">↺ Reiniciar todo el simulador</a>
   </div>
+</div>
+
+<div class="hist" id="hist" hidden>
+  <div class="h-cab"><b id="hist-t"></b><small id="hist-n"></small><button id="hist-min" title="Minimizar">—</button><button id="hist-x" title="Cerrar">✕</button></div>
+  <div class="h-cuerpo" id="hist-b"></div>
+  <div class="h-pie"><button class="bt sec" id="hist-ant">◂</button><button class="bt amb" id="hist-auto" style="background:var(--amber)">🤖 Hacerlo por mí</button><button class="bt" id="hist-sig">Siguiente ▸</button></div>
 </div>
 
 <script>
@@ -285,7 +388,7 @@ function ver(id) { $$(".pantalla").forEach(p => p.hidden = p.id !== id); }
    RAM (temporal): ventanas abiertas y texto sin guardar
    ========================================================= */
 const DISCO0 = () => ({
-  Documentos: [{ n: "Informe de práctica.txt", t: "Informe de práctica de enfermería\n\nPaciente: cama 12\nPresión arterial: 120/80\nTemperatura: 36.8 °C" }, { n: "Lista de compras.txt", t: "- Guantes\n- Mascarillas\n- Alcohol en gel" }],
+  Documentos: [{ n: "Informe de práctica.docx", html: "<h3>Informe de práctica de enfermería</h3><p><b>Paciente:</b> cama 12</p><p><b>Presión arterial:</b> 120/80 mmHg</p><p><b>Temperatura:</b> 36.8 °C</p><p><b>Observaciones:</b> </p>" }, { n: "Notas de clase.txt", t: "Clase 2: el sistema operativo\n- Se carga primero\n- Administra memoria, archivos y seguridad" }, { n: "Lista de compras.txt", t: "- Guantes\n- Mascarillas\n- Alcohol en gel" }],
   "Imágenes": [{ n: "Foto de grupo.jpg", e: "👩‍⚕️👨‍⚕️👩‍⚕️" }, { n: "Atardecer.jpg", e: "🌅" }, { n: "Mi gato.jpg", e: "🐈" }],
   Descargas: [{ n: "Guía de procedimientos.pdf" }, { n: "Instalar juego.exe" }],
   "Música": [{ n: "Huaylas.mp3" }],
@@ -293,7 +396,7 @@ const DISCO0 = () => ({
 });
 let disco = DISCO0(), apagadoMal = false, usb = false, contador = 0, sesion = false;
 const USB_ARCH = [{ n: "Trabajo grupal.txt", t: "Trabajo grupal: el sistema operativo\n\nIntegrantes: …" }, { n: "Foto del laboratorio.jpg", e: "🖥️🖥️🖥️" }];
-const ICO = n => { const x = n.split(".").pop().toLowerCase(); return { txt: "🗒️", jpg: "🖼️", pdf: "📕", exe: "⚙️", mp3: "🎵", docx: "📘" }[x] || "📄"; };
+const ICO = n => { const x = n.split(".").pop().toLowerCase(); return { txt: "🗒️", jpg: "🖼️", pdf: "📕", exe: "⚙️", mp3: "🎵", docx: "📘", bloqueado: "🔒" }[x] || "📄"; };
 
 /* ---------- arranque ---------- */
 async function encender() {
@@ -345,13 +448,18 @@ const APPS = {
 const DESK = ["archivos", "notas", "calc", "nav", "admin", "conf", "papelera"];
 function entrarEscritorio() {
   sesion = true; ver("escritorio");
-  $("#iconos").innerHTML = DESK.map(k => `<button class="icono" data-app="${k}"><span>${k === "papelera" && disco.Papelera.length ? "🗑️" : APPS[k].e}</span>${APPS[k].n}</button>`).join("");
+  pintarIconos();
+  if (H.adware) { clearInterval(timerAnuncios); timerAnuncios = setInterval(nuevoAnuncio, 7000); setTimeout(nuevoAnuncio, 1500); }
+  if (H.cifrado) setTimeout(mostrarRescate, 1200);
   setTimeout(() => aviso("👋", "¡Bienvenida, Ana!", matchMedia("(pointer: coarse)").matches ? "Toca un ícono para abrir un programa." : "Haz doble clic en un ícono para abrir un programa."), 600);
 }
 $("#iconos").addEventListener("dblclick", e => { const b = e.target.closest(".icono"); if (b) abrirIcono(b.dataset.app); });
 $("#iconos").addEventListener("click", e => { const b = e.target.closest(".icono"); if (b && matchMedia("(pointer: coarse)").matches) abrirIcono(b.dataset.app); });
 $("#iconos").addEventListener("keydown", e => { const b = e.target.closest(".icono"); if (b && e.key === "Enter") abrirIcono(b.dataset.app); });
-function abrirIcono(k) { if (k === "papelera") abrir("archivos", { carpeta: "Papelera" }); else abrir(k); }
+function abrirIcono(k) {
+  const go = () => { if (k === "papelera") abrir("archivos", { carpeta: "Papelera" }); else abrir(k); };
+  if (H.minero) { document.body.style.cursor = "wait"; setTimeout(() => { document.body.style.cursor = ""; go(); }, 1400); } else go();
+}
 
 /* ---------- ventanas ---------- */
 const VEN = []; let zTop = 10;
@@ -383,7 +491,7 @@ function enfocar(v) {
   v.el.classList.remove("min"); v.el.style.zIndex = ++zTop;
   VEN.forEach(x => x.el.classList.toggle("foco", x === v)); pintarTareas();
 }
-function cerrar(v) { v.el.remove(); VEN.splice(VEN.indexOf(v), 1); clearInterval(v.timer); pintarTareas(); }
+function cerrar(v) { if (!VEN.includes(v)) return; v.el.remove(); VEN.splice(VEN.indexOf(v), 1); clearInterval(v.timer); pintarTareas(); if (v.esAnuncio) { H.anunciosCerrados++; if (H.anunciosCerrados >= 2) ev("cerroAnuncio2"); } }
 function intentarCerrar(v) {
   if (v.colgada) { aviso("⏳", v.titulo + " no responde", "Ábrelo en el Administrador de tareas y pulsa «Finalizar tarea»."); tono(200, .3, "square"); return; }
   if (v.sucio) {
@@ -424,7 +532,7 @@ $("#btn-inicio").onclick = e => {
   e.stopPropagation(); if (menuEl) return cerrarMenu();
   menuEl = document.createElement("div"); menuEl.className = "menu";
   menuEl.innerHTML = `<div class="usu"><span class="av">👩‍⚕️</span><div><b>Ana Quispe</b><br><small style="color:var(--mut)">Usuario de AulaOS</small></div></div>
-    <div class="apps">${DESK.map(k => `<button data-app="${k}"><span>${APPS[k].e}</span>${APPS[k].n}</button>`).join("")}</div>
+    <div class="apps">${pintarIconos().map(k => `<button data-app="${k}"><span>${APPS[k].e}</span>${APPS[k].n}</button>`).join("")}</div>
     <div class="energia"><button data-p="sesion">🔒 Cerrar sesión</button><button data-p="reiniciar">🔄 Reiniciar</button><button data-p="apagar">⏻ Apagar</button></div>`;
   $("#escritorio").append(menuEl); $("#btn-inicio").classList.add("on");
   menuEl.onclick = ev => {
@@ -544,6 +652,14 @@ function abrirArchivo(carpeta, n) {
   const f = buscar(carpeta, n), ext = n.split(".").pop().toLowerCase();
   if (ext === "txt") { const ya = VEN.find(v => v.app === "notas" && v.archivo && v.archivo.n === n && v.archivo.carpeta === carpeta); if (ya) return enfocar(ya); abrir("notas", { archivo: { carpeta, n } }); }
   else if (ext === "jpg") { const v = abrir("visor", { f }); }
+  else if (ext === "bloqueado") { tono(150, .4, "square"); dialogo(`<h3>🔒 Archivo cifrado</h3><p><b>${esc(n)}</b> fue secuestrado por un ransomware. Su contenido ahora es basura ilegible:</p><p style="font-family:monospace;background:#111;color:#f87171;padding:8px;border-radius:6px">Ã¥#@!x9%&Ð…ÿ¤ß¶</p><div class="fila"><button class="bt" data-r="x">Entendido</button></div>`, () => {}); ev("abrioBloqueado"); }
+  else if (ext === "docx") {
+    if (H.writer) abrir("writer", { archivo: { carpeta, n } });
+    else if (H.crack) abrir("word", { archivo: { carpeta, n } });
+    else dialogo(`<h3>📘 No hay un programa para abrir este archivo</h3><p><b>${esc(n)}</b> es un documento de Word, pero Word está <b>sin licencia</b> en este equipo.</p><div class="fila"><button class="bt sec" data-r="x">Cerrar</button><button class="bt" data-r="si">🌐 Buscar una solución en internet</button></div>`, r => { if (r === "si") navAbrir().ir("inicio"); });
+  }
+  else if (n === CRACK) abrirCrack();
+  else if (n === LIBRE) { const v = abrir("instalador", { tipo: "libre" }); }
   else if (ext === "exe") dialogo(`<h3>⚠ Control de seguridad</h3><p>¿Quieres permitir que <b>${esc(n)}</b> haga cambios en tu equipo?<br><br>Solo instala programas que vengan de un lugar <b>confiable</b>.</p><div class="fila"><button class="bt" data-r="x">No, gracias</button><button class="bt sec" data-r="si">Sí</button></div>`, r => { if (r === "si") aviso("🛡️", "Instalación bloqueada", "El antivirus detectó que este programa no es confiable."); });
   else aviso(ICO(n), "Abrir " + n, ext === "pdf" ? "En una PC real se abriría en el lector de PDF." : ext === "mp3" ? "🎵 Reproduciendo… (en una PC real sonaría la canción)." : "No hay un programa para este tipo de archivo.", 3500);
 }
@@ -562,12 +678,6 @@ INI.calc = v => {
   };
 };
 
-/* Navegador */
-INI.nav = v => {
-  const c = $(".cuerpo", v.el);
-  c.innerHTML = `<div class="nav"><div class="dir"><button class="bt sec">←</button><input value="https://aula.iespal.edu.pe" aria-label="Dirección"></div><div class="web"><h2>🏥 Aula virtual · Enfermería</h2><p>Esta “página” es de mentira, pero fíjate en el Administrador de tareas: el navegador es de los programas que <b>más RAM</b> usan, sobre todo con muchas pestañas.</p><div class="tarj"><div>📘 Clase 1<br><b>La computadora</b></div><div>⚙️ Clase 2<br><b>El sistema operativo</b></div><div>📝 Evaluación continua</div><div>📅 Horario</div></div></div></div>`;
-  $("input", c).addEventListener("keydown", e => { if (e.key === "Enter") { $(".web", c).innerHTML = `<h2>🔎 ${esc(e.target.value)}</h2><p>Este navegador es de práctica y no se conecta a internet de verdad.</p>`; v.ram += 150; } });
-};
 
 /* Configuración */
 const FONDOS = ["linear-gradient(135deg,#1e5a46 0%,#2f63e0 100%)", "linear-gradient(135deg,#b3752c,#6b4a8f)", "linear-gradient(160deg,#0d1b2a,#2f6f4f)", "linear-gradient(135deg,#e11d48,#f59e0b)", "#35513f"];
@@ -586,20 +696,24 @@ INI.admin = v => {
   const c = $(".cuerpo", v.el); v.selId = null; v.hist = { cpu: [], ram: [] };
   c.innerHTML = `<div class="admin"><div class="graficos"><div class="graf"><b><span>🧠 Procesador</span><span class="vc"></span></b><canvas class="gc" width="300" height="60"></canvas></div><div class="graf"><b><span>💭 Memoria RAM</span><span class="vr"></span></b><canvas class="gr" width="300" height="60"></canvas></div></div><div class="tabla"><table><thead><tr><th>Proceso</th><th>Procesador</th><th>Memoria</th><th>Estado</th></tr></thead><tbody></tbody></table></div><div class="pie"><span class="info" style="font-size:.78rem;color:var(--mut)">Selecciona un programa para cerrarlo a la fuerza.</span><button class="bt peligro" style="margin-left:auto" disabled>Finalizar tarea</button></div></div>`;
   const tb = $("tbody", c), btn = $(".pie .bt", c);
+  ev("abrioAdmin");
   const tick = () => {
-    const filas = SIS.map(s => ({ n: s[0], ram: s[1], cpu: s[2] * (0.5 + Math.random()), sis: true }))
+    const filas = SIS.filter(s => !(H.antivirusOff && s[0].includes("Antivirus"))).map(s => ({ n: s[0], ram: s[1], cpu: s[2] * (0.5 + Math.random()), sis: true }))
+      .concat(H.minero ? [{ id: "minero", n: "⛏️ svch0st_miner.exe", ram: 1400, cpu: 78 + Math.random() * 12, cuelga: true }] : [])
       .concat(VEN.filter(x => x !== v || true).map(x => ({ id: x.id, n: x.nombre || APPS[x.app].e + " " + APPS[x.app].n, ram: x.ram, cpu: x.colgada ? 24 + Math.random() * 8 : x.cpu * (0.4 + Math.random() * 1.2), cuelga: x.colgada })));
     const cpu = Math.min(100, filas.reduce((a, f) => a + f.cpu, 0)), ram = filas.reduce((a, f) => a + f.ram, 0);
     v.hist.cpu.push(cpu); v.hist.ram.push(ram / 8192 * 100); if (v.hist.cpu.length > 40) { v.hist.cpu.shift(); v.hist.ram.shift(); }
     $(".vc", c).textContent = Math.round(cpu) + " %"; $(".vr", c).textContent = (ram / 1024).toFixed(1) + " / 8 GB";
     dibujar($(".gc", c), v.hist.cpu, "#2f63e0"); dibujar($(".gr", c), v.hist.ram, "#6b4a8f");
     tb.innerHTML = filas.map(f => `<tr class="${f.sis ? "sis" : ""} ${f.cuelga ? "cuelga" : ""} ${f.id && f.id === v.selId ? "sel" : ""}" data-id="${f.id || ""}"><td>${esc(f.n)}</td><td>${f.cpu.toFixed(1)} %</td><td>${Math.round(f.ram)} MB</td><td>${f.cuelga ? "No responde" : "Activo"}</td></tr>`).join("");
+    if (v.selId === "minero") { btn.disabled = !H.minero; $(".info", c).textContent = H.minero ? "Se cerrará: svch0st_miner.exe (proceso sospechoso)" : "El proceso se cerró… por ahora."; return; }
     const sel = VEN.find(x => x.id === v.selId);
     btn.disabled = !sel || sel === v;
     $(".info", c).textContent = sel ? (sel === v ? "No puedes cerrar el administrador desde aquí 🙂" : "Se cerrará: " + (sel.nombre || APPS[sel.app].n) + (sel.sucio ? " · ⚠ perderás lo no guardado" : "")) : "Toca un programa de la lista para seleccionarlo.";
   };
-  tb.onclick = e => { const tr = e.target.closest("tr"); if (!tr) return; if (!tr.dataset.id) { aviso("🔒", "Proceso del sistema", "Los procesos del sistema no se deben cerrar: el equipo podría dejar de funcionar.", 3500); return; } v.selId = +tr.dataset.id; tick(); };
-  btn.onclick = () => { const x = VEN.find(y => y.id === v.selId); if (!x) return; cerrar(x); v.selId = null; tono(250, .2); aviso("✔", "Tarea finalizada", "El SO cerró el programa y liberó su memoria RAM.", 3000); tick(); };
+  tb.onclick = e => { const tr = e.target.closest("tr"); if (!tr) return; if (tr.dataset.id === "minero") { v.selId = "minero"; tick(); return; } if (!tr.dataset.id) { aviso("🔒", "Proceso del sistema", "Los procesos del sistema no se deben cerrar: el equipo podría dejar de funcionar.", 3500); return; } v.selId = +tr.dataset.id; tick(); };
+  v.matarMinero = () => { if (!H.minero) return; H.minero = false; v.selId = null; tono(250, .2); aviso("✔", "Tarea finalizada", "Se cerró svch0st_miner.exe.", 3000); tick(); setTimeout(() => { if (H.crack && !H.minero) { H.minero = true; tono(150, .4, "square"); aviso("⛏️", "svch0st_miner.exe se volvió a abrir solo", "El virus se reinicia cada vez que lo cierras.", 6000); ev("mineroVuelve"); } }, 3500); };
+  btn.onclick = () => { if (v.selId === "minero") return v.matarMinero(); const x = VEN.find(y => y.id === v.selId); if (!x) return; cerrar(x); v.selId = null; tono(250, .2); aviso("✔", "Tarea finalizada", "El SO cerró el programa y liberó su memoria RAM.", 3000); tick(); };
   tick(); v.timer = setInterval(tick, 1000);
 };
 function dibujar(cv, datos, col) {
@@ -636,7 +750,7 @@ $("#d-cuelga").onclick = colgar;
 $("#d-notif").onclick = () => sesion ? aviso("💬", "WhatsApp · Grupo Enfermería", "¿Ya abrieron el simulador? 😄") : alert0("Primero inicia sesión.");
 $("#d-bat").onclick = () => { if (!sesion) return alert0("Primero inicia sesión."); $("#bat").textContent = "🪫"; aviso("🪫", "Batería baja: 10 %", "Conecta el cargador. El SO activó el ahorro de energía.", 6000); };
 $("#d-corte").onclick = () => { if ($("#apagado").hidden) desenchufar(); else alert0("La computadora ya está apagada."); };
-$("#d-reset").onclick = e => { e.preventDefault(); VEN.slice().forEach(cerrar); disco = DISCO0(); usb = false; apagadoMal = false; sesion = false; $("#bat").textContent = "🔋"; $("#usb-ico").hidden = true; $("#d-usb").textContent = "🔌 Conectar USB"; $("#escritorio").style.removeProperty("--fondo"); $$("#guia input").forEach(i => i.checked = false); ver("apagado"); $("#ap-msj").textContent = "Una computadora de práctica. Presiona el botón para encenderla."; };
+$("#d-reset").onclick = e => { e.preventDefault(); cerrarHist(); restaurarSistema(true); VEN.slice().forEach(cerrar); disco = DISCO0(); usb = false; apagadoMal = false; sesion = false; $("#bat").textContent = "🔋"; $("#usb-ico").hidden = true; $("#d-usb").textContent = "🔌 Conectar USB"; $("#escritorio").style.removeProperty("--fondo"); $$("#guia input").forEach(i => i.checked = false); ver("apagado"); $("#ap-msj").textContent = "Una computadora de práctica. Presiona el botón para encenderla."; };
 const GUIA = [
   "Enciende la computadora y observa la revisión inicial: el equipo revisa sus piezas antes de cargar el SO.",
   "Fíjate en el mensaje «Copiando el sistema del disco a la RAM»: así empieza a trabajar el SO.",
@@ -652,6 +766,329 @@ const GUIA = [
   "Apaga correctamente desde el menú Inicio.",
 ];
 $("#guia").innerHTML = GUIA.map((g, k) => `<label><input type="checkbox"> ${k + 1}. ${g}</label>`).join("");
+
+/* =========================================================
+   HISTORIAS GUIADAS · «Necesito Word»
+   1) Ana piratea Word y se infecta   2) La solución: alternativas gratis y legales
+   ========================================================= */
+const H = { activa: 0, paso: 0, crack: false, writer: false, antivirusOff: false, adware: false, secuestro: false, minero: false, cifrado: false, anunciosCerrados: 0 };
+const CRACK = "Word_2024_FULL_crack.exe", LIBRE = "LibreOffice_Instalador.exe";
+let timerAnuncios = null, timerRansom = null;
+function ev(nombre) {
+  if (!H.activa) return;
+  const p = PASOS[H.activa][H.paso];
+  if (p && p.espera && [].concat(p.espera).includes(nombre) && H.pend !== H.paso) { const k = H.paso, h = H.activa; H.pend = k; setTimeout(() => { if (H.activa === h && H.paso === k) avanzarHist(); }, 700); }
+  if (p && p.si && p.si[nombre]) histNota(p.si[nombre]);
+}
+function pintarIconos() {
+  const desk = ["archivos", "notas", "word", ...(H.writer ? ["writer"] : []), "calc", "nav", "admin", "conf", "papelera"];
+  $("#iconos").innerHTML = desk.map(k => `<button class="icono" data-app="${k}"><span>${APPS[k].e}</span>${APPS[k].n}</button>`).join("");
+  return desk;
+}
+APPS.word = { e: "📘", n: "Word", ram: 320, cpu: 3, w: 660, h: 460 };
+APPS.writer = { e: "✍️", n: "LibreOffice Writer", ram: 260, cpu: 2, w: 660, h: 460 };
+APPS.instalador = { e: "📦", n: "Instalador", ram: 60, cpu: 4, w: 460, h: 380 };
+APPS.anuncio = { e: "📢", n: "Anuncio", ram: 90, cpu: 3, w: 300, h: 210 };
+APPS.leeme = { e: "🗒️", n: "LEEME - IMPORTANTE.txt", ram: 20, cpu: 0, w: 360, h: 250 };
+
+/* ---------- editor de documentos (Word, Writer, Google Docs) ---------- */
+function editor(cont, v, op, marca) {
+  v.archivo = op.archivo || null;
+  cont.innerHTML = `<div class="doc"><div class="doc-herr" style="--mc:${marca.color}"><b class="marca">${marca.e} ${marca.n}</b><button data-c="bold" title="Negrita"><b>N</b></button><button data-c="italic" title="Cursiva"><i>K</i></button><button data-c="underline" title="Subrayado"><u>S</u></button><span class="sep"></span><button data-c="justifyLeft" title="Izquierda">⇤</button><button data-c="justifyCenter" title="Centrar">↔</button><button data-c="justifyRight" title="Derecha">⇥</button><span class="sep"></span><button data-a="g" class="guardar">💾 ${marca.guardar || "Guardar"}</button>${marca.extra || ""}<span class="estado-g"></span></div><div class="doc-fondo"><div class="hoja" contenteditable="true" spellcheck="false"></div></div></div>`;
+  const hoja = $(".hoja", cont), est = $(".estado-g", cont);
+  if (v.archivo) { const f = buscar(v.archivo.carpeta, v.archivo.n); hoja.innerHTML = f ? (f.html || esc(f.t || "").replace(/\n/g, "<br>")) : ""; }
+  else hoja.innerHTML = "<p>Escribe aquí tu documento…</p>";
+  const estado = () => { est.className = "estado-g" + (v.sucio ? " sucio" : ""); est.textContent = v.sucio ? "● Sin guardar" : v.archivo ? "✔ Guardado: " + v.archivo.n : ""; };
+  hoja.addEventListener("input", () => { if (!v.sucio) { v.sucio = true; estado(); } });
+  $(".doc-herr", cont).addEventListener("mousedown", e => { if (e.target.closest("[data-c]")) e.preventDefault(); });
+  $(".doc-herr", cont).addEventListener("click", e => {
+    const b = e.target.closest("[data-c]"); if (b) { hoja.focus(); document.execCommand(b.dataset.c); v.sucio = true; estado(); return; }
+    if (e.target.closest("[data-a=g]")) guardarDoc(v, hoja, marca, estado);
+  });
+  v.guardarAuto = () => guardarDoc(v, hoja, marca, estado);
+  v.hoja = hoja; v.ta = { value: "" };
+  estado();
+}
+function guardarDoc(v, hoja, marca, estado) {
+  const hecho = () => { const f = buscar(v.archivo.carpeta, v.archivo.n); f.html = hoja.innerHTML; f.t = hoja.innerText; v.sucio = false; estado(); refrescarExpl(); tono(660, .1); aviso("💾", "Guardado", `${esc(v.archivo.n)} se guardó en <b>${esc(v.archivo.carpeta)}</b>.`, 3000); ev("guardoDoc"); };
+  if (v.archivo) return hecho();
+  const dest = marca.dest || "Documentos";
+  dialogo(`<h3>💾 Guardar como</h3><p>Se guardará en <b>${dest}</b> como documento de Word (<b>.docx</b>).</p><input value="Mi documento" aria-label="Nombre"><div class="fila"><button class="bt sec" data-r="x">Cancelar</button><button class="bt" data-r="si">Guardar</button></div>`, (r, nom) => {
+    if (r !== "si") return;
+    nom = (nom || "Mi documento").trim().replace(/[\\/:*?"<>|]/g, "") || "Mi documento"; if (!/\.docx$/i.test(nom)) nom += ".docx";
+    if (buscar(dest, nom)) nom = nom.replace(/\.docx$/i, " (2).docx");
+    disco[dest].push({ n: nom, nuevo: true }); v.archivo = { carpeta: dest, n: nom }; hecho();
+  }, d => { const i = $("input", d); i.focus(); i.select(); });
+}
+INI.word = (v, op) => {
+    const c = $(".cuerpo", v.el);
+    if (!H.crack) {
+      c.innerHTML = `<div class="licencia"><div class="lic-logo">📘</div><h3>Word · Activar producto</h3><p>Esta aplicación es <b>de pago</b>. Para crear y editar documentos necesitas comprar una licencia o una suscripción.</p><div class="fila" style="justify-content:center"><button class="bt" data-a="comprar">🛒 Comprar licencia</button><button class="bt sec" data-a="cerrar">Cerrar</button></div><p class="lic-nota">Solo lectura: no puedes escribir ni guardar.</p></div>`;
+      c.onclick = e => { const b = e.target.closest("[data-a]"); if (!b) return; if (b.dataset.a === "cerrar") cerrar(v); else aviso("💳", "Tienda", "Ana no tiene dinero para pagar la licencia este mes…", 3500); };
+      ev("wordBloqueado"); return;
+    }
+    editor(c, v, op, { n: "Word", e: "📘", color: "#2b579a", extra: '<span class="act-pirata">✓ Activado por xXcrackXx</span>' });
+    v.titulo = (op.archivo ? op.archivo.n : "Documento nuevo") + " — Word";
+    ev("abrioWordPirata");
+  };
+INI.writer = (v, op) => {
+  editor($(".cuerpo", v.el), v, op, { n: "LibreOffice Writer", e: "✍️", color: "#18a303" });
+  v.titulo = (op.archivo ? op.archivo.n : "Documento nuevo") + " — LibreOffice Writer";
+  ev("abrioWriter");
+};
+INI.leeme = v => { $(".cuerpo", v.el).innerHTML = `<pre class="leeme">=== LEEME - IMPORTANTE ===
+
+1. DESACTIVA TU ANTIVIRUS antes de instalar
+   (dice que es virus pero es FALSO POSITIVO 😉)
+2. Ejecuta el instalador
+3. Disfruta Word FULL GRATIS para siempre
+
+         by xXcrackXx</pre>`; };
+INI.anuncio = (v, op) => {
+  const A = op.a || ANUNCIOS[Math.floor(Math.random() * ANUNCIOS.length)];
+  v.titulo = A[1]; v.el.classList.add("ven-anuncio");
+  $(".cuerpo", v.el).innerHTML = `<div class="anuncio" style="background:${A[3]}"><span>${A[0]}</span><b>${A[1]}</b><p>${A[2]}</p><button class="bt">¡LO QUIERO!</button></div>`;
+  $(".cuerpo", v.el).onclick = e => { if (e.target.closest("button")) { aviso("😵", "¡Más anuncios!", "Hacer clic en un anuncio abre otros… y puede descargar más virus.", 3000); nuevoAnuncio(); nuevoAnuncio(); } };
+  v.esAnuncio = true;
+};
+const ANUNCIOS = [
+  ["🎁", "¡FELICIDADES!", "Ganaste un celular de último modelo. Reclámalo ahora antes de que expire.", "linear-gradient(135deg,#f59e0b,#e11d48)"],
+  ["⚠️", "¡Tu PC tiene 47 virus!", "Descarga YA el Optimizador PC Turbo para limpiarla.", "linear-gradient(135deg,#b91c1c,#111)"],
+  ["🎰", "Casino online", "Te regalamos S/ 500 para jugar. ¡Regístrate con tu tarjeta!", "linear-gradient(135deg,#7e22ce,#db2777)"],
+  ["💊", "¡Baja 10 kilos en 7 días!", "La pastilla milagrosa que los médicos no quieren que conozcas.", "linear-gradient(135deg,#16a34a,#065f46)"],
+  ["💸", "Préstamo inmediato", "Sin requisitos. Solo ingresa los datos de tu tarjeta.", "linear-gradient(135deg,#0ea5e9,#1e3a8a)"],
+];
+function nuevoAnuncio() {
+  if (!sesion || !H.adware || VEN.filter(x => x.esAnuncio).length >= 6) return;
+  const v = abrir("anuncio");
+  v.el.style.left = Math.max(6, Math.random() * (innerWidth - 320)) + "px"; v.el.style.top = Math.max(6, Math.random() * (innerHeight - 290)) + "px";
+  tono(950, .08, "square", .12);
+}
+function iniciarAdware() {
+  H.adware = true; clearInterval(timerAnuncios);
+  nuevoAnuncio(); setTimeout(nuevoAnuncio, 900);
+  timerAnuncios = setInterval(nuevoAnuncio, 7000);
+}
+function secuestrar() {
+  H.secuestro = true;
+  aviso("🌐", "Se cambió la página de inicio", "Un programa cambió la configuración de tu navegador sin preguntarte.", 5000);
+  VEN.filter(v => v.app === "nav").slice().forEach(cerrar);
+}
+function activarMinero() {
+  H.minero = true;
+  aviso("🐢", "El equipo va muy lento", "El ventilador suena fuerte y los programas tardan en abrir.", 5000);
+}
+function robarCuentas() {
+  aviso("📧", "Alerta de seguridad · Correo", "Alguien inició sesión en tu cuenta desde <b>otro país</b>. ¿Fuiste tú?", 9000);
+  setTimeout(() => aviso("💬", "WhatsApp", "Tu cuenta se abrió en <b>otro dispositivo</b>.", 9000), 1600);
+  setTimeout(() => aviso("🏦", "Banco", "Se intentó un pago de <b>S/ 850</b> con tu tarjeta.", 9000), 3200);
+}
+function ransomware() {
+  H.cifrado = true;
+  ["Documentos", "Imágenes", "Música"].forEach(k => disco[k].forEach(f => { if (!/\.bloqueado$/.test(f.n)) { f.n += ".bloqueado"; f.html = null; f.t = "Ã¥#@!x9%&Ð…"; } }));
+  VEN.filter(v => ["notas", "word", "writer", "visor"].includes(v.app)).slice().forEach(v => { v.sucio = false; cerrar(v); });
+  refrescarExpl(); mostrarRescate();
+}
+function mostrarRescate() {
+  $$(".rescate").forEach(x => x.remove()); clearInterval(timerRansom);
+  const r = document.createElement("div"); r.className = "rescate";
+  r.innerHTML = `<div class="res-caja"><div style="font-size:3rem">🔒💀</div><h2>¡TUS ARCHIVOS HAN SIDO CIFRADOS!</h2><p>Todos tus documentos, fotos y trabajos fueron bloqueados. Para recuperarlos paga <b>S/ 1 500 en criptomonedas</b>.</p><p>Si no pagas antes de que termine el tiempo, se borrarán para siempre:</p><div class="res-reloj" id="res-reloj">47:59:59</div><p class="res-nota">(Simulación con fines educativos. En la vida real, aunque pagues, muchas veces no devuelven nada.)</p><button class="bt sec" id="res-x">Cerrar esta ventana</button></div>`;
+  $("#escritorio").append(r);
+  let s = 48 * 3600 - 1;
+  timerRansom = setInterval(() => { s--; const el = $("#res-reloj"); if (!el) return clearInterval(timerRansom); el.textContent = [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map(x => String(x).padStart(2, "0")).join(":"); }, 1000);
+  $("#res-x").onclick = () => { r.remove(); clearInterval(timerRansom); aviso("🔒", "La ventana se cerró…", "…pero tus archivos siguen bloqueados. Intenta abrir uno en Mis archivos.", 5000); };
+  tono(110, .8, "sawtooth", .25);
+}
+function restaurarSistema(silencio) {
+  clearInterval(timerAnuncios); clearInterval(timerRansom); $$(".rescate, .velo").forEach(x => x.remove());
+  VEN.slice().forEach(v => { v.sucio = false; cerrar(v); });
+  Object.assign(H, { crack: false, writer: false, antivirusOff: false, adware: false, secuestro: false, minero: false, cifrado: false, anunciosCerrados: 0 });
+  disco = DISCO0();
+  if (sesion) pintarIconos();
+  if (!silencio) aviso("♻️", "Sistema restaurado", "La computadora volvió a como estaba antes del «crack».", 5000);
+}
+
+/* ---------- el «crack» y el instalador legal ---------- */
+function descargar(nombre, ok) {
+  if (!buscar("Descargas", nombre)) disco.Descargas.push({ n: nombre, nuevo: true });
+  refrescarExpl(); tono(700, .08);
+  aviso("⬇️", "Descarga completa", `<b>${esc(nombre)}</b> está en <b>Mis archivos → Descargas</b>.`, 5000);
+  ev(ok);
+}
+function abrirCrack() {
+  ev("avisoSO");
+  dialogo(`<div class="smart"><h3>🛡️ AulaOS protegió tu equipo</h3><p>Se impidió el inicio de una <b>aplicación no reconocida</b>. Ejecutarla podría poner en riesgo tu equipo.</p><p class="peq-g">Aplicación: ${CRACK}<br>Editor: <b>Desconocido</b></p></div><div class="fila"><button class="bt sec" data-r="si">Ejecutar de todos modos</button><button class="bt" data-r="no">No ejecutar (recomendado)</button></div>`, r => {
+    if (r === "no") { aviso("👍", "¡Buena decisión!", "No ejecutar programas desconocidos te protege.", 4000); ev("noEjecuto"); return; }
+    ev("ejecutoCrack");
+    setTimeout(() => {
+      const l = abrir("leeme"); l.el.style.left = "8%"; l.el.style.top = "12%";
+      setTimeout(antivirusAlerta, 900);
+    }, 600);
+  });
+}
+function antivirusAlerta() {
+  tono(300, .3, "square");
+  dialogo(`<div class="smart av"><h3>🛡️ Antivirus · ¡Amenaza detectada!</h3><p>Se encontró un <b>troyano</b> escondido en <b>${CRACK}</b>. Recomendamos eliminarlo ahora.</p></div><div class="fila"><button class="bt sec" data-r="si">Permitir y desactivar antivirus</button><button class="bt" data-r="no">Eliminar amenaza (recomendado)</button></div>`, r => {
+    if (r === "no") { disco.Descargas = disco.Descargas.filter(f => f.n !== CRACK); refrescarExpl(); aviso("🛡️", "Amenaza eliminada", "El antivirus borró el archivo peligroso. ¡Te salvó!", 5000); ev("antivirusElimino"); return; }
+    H.antivirusOff = true; aviso("⚠️", "Antivirus desactivado", "Tu equipo ya no está protegido.", 5000); ev("permitioVirus");
+    setTimeout(() => abrir("instalador", { tipo: "crack" }), 700);
+  });
+}
+INI.instalador = (v, op) => {
+  const c = $(".cuerpo", v.el), crack = op.tipo === "crack";
+  v.titulo = crack ? "Instalador Word FULL 2024" : "Instalar LibreOffice";
+  c.innerHTML = crack
+    ? `<div class="inst inst-mal"><h3>📘 Word FULL 2024 ✅ ACTIVADO</h3><p class="peq-g">by xXcrackXx · Editor: desconocido</p><label><input type="checkbox" checked disabled> Word FULL (activado para siempre)</label><label><input type="checkbox" checked> Buscador Súper para tu navegador (recomendado)</label><label><input type="checkbox" checked> Optimizador PC Turbo</label><label><input type="checkbox" checked> Ofertas y regalos exclusivos</label><p class="letra-chica">Al continuar aceptas que se instalen programas de terceros y que se compartan tus datos con nuestros socios.</p><div class="barra-i"><i></i></div><button class="bt" data-a="inst">Instalar ▸</button></div>`
+    : `<div class="inst"><h3>✍️ LibreOffice</h3><p class="peq-g">The Document Foundation · <b style="color:var(--ok)">✔ Editor verificado</b></p><p>Instala Writer (textos), Calc (hojas de cálculo) e Impress (presentaciones). Gratis y legal.</p><p class="peq-g">No incluye programas adicionales.</p><div class="barra-i"><i></i></div><button class="bt" data-a="inst">Instalar ▸</button></div>`;
+  c.onclick = e => {
+    const b = e.target.closest("[data-a=inst]"); if (!b) return;
+    b.disabled = true; let p = 0; const bar = $(".barra-i i", c);
+    const t = setInterval(() => {
+      p += 4; bar.style.width = p + "%";
+      if (p < 100) return; clearInterval(t);
+      if (crack) { H.crack = true; b.outerHTML = '<p class="ok-i">✔ ¡Word activado para siempre! 😎</p><button class="bt" data-a="fin">Finalizar</button>'; ev("instaloCrack"); if (!H.activa) setTimeout(infeccionLibre, 3000); }
+      else { H.writer = true; b.outerHTML = '<p class="ok-i">✔ LibreOffice se instaló correctamente.</p><button class="bt" data-a="fin">Finalizar</button>'; ev("instaloLibre"); }
+      pintarIconos(); tono(660, .12);
+      $("[data-a=fin]", c).onclick = () => cerrar(v);
+    }, 90);
+  };
+  v.instalarAuto = () => { const b = $("[data-a=inst]", c); b && !b.disabled && b.click(); };
+};
+function infeccionLibre() {   // cuando alguien instala el crack sin seguir la historia
+  iniciarAdware(); setTimeout(secuestrar, 12000); setTimeout(activarMinero, 22000); setTimeout(robarCuentas, 34000); setTimeout(() => H.crack && ransomware(), 50000);
+}
+
+/* ---------- navegador con páginas ---------- */
+INI.nav = (v, op) => {
+  const c = $(".cuerpo", v.el);
+  c.innerHTML = `<div class="nav"><div class="dir"><button class="bt sec" data-a="ini" title="Inicio">⌂</button><input aria-label="Buscar o escribir una dirección"></div><div class="web"></div></div>`;
+  const inp = $("input", c), web = $(".web", c);
+  v.ir = (pag, q) => {
+    v.pag = pag; web.scrollTop = 0;
+    if (pag === "inicio" && H.secuestro) { inp.value = "https://buscador-super.xyz"; web.innerHTML = `<div class="secu"><h2>🔎 Buscador SÚPER</h2><input class="secu-in" placeholder="Busca aquí… (todo lo que escribas será guardado 😈)"><div class="secu-ads"><div>🎰 CASINO: S/ 500 GRATIS</div><div>💊 BAJA 10 KG YA</div><div>⚠️ TU PC ESTÁ INFECTADA · CLIC AQUÍ</div><div>🎁 GANASTE UN PREMIO</div></div><p class="peq-g">Esta no es tu página de inicio: un programa la cambió sin permiso.</p></div>`; $(".secu-in", web).onkeydown = e => { if (e.key === "Enter") nuevoAnuncio(); }; web.onclick = e => { if (e.target.closest(".secu-ads div")) nuevoAnuncio(); }; ev("navSecuestrado"); return; }
+    web.onclick = null;
+    if (pag === "inicio") { inp.value = ""; inp.placeholder = "Busca en internet o escribe una dirección"; web.innerHTML = `<div class="buscador"><h2>🔎 Buscador</h2><input class="b-in" placeholder="¿Qué quieres buscar?"><p class="peq-g">Prueba: <a data-q="word gratis full crack">word gratis full crack</a> · <a data-q="alternativas gratis a Word">alternativas gratis a Word</a></p></div>`; $(".b-in", web).onkeydown = e => { if (e.key === "Enter") v.buscar(e.target.value); }; web.onclick = e => { const a = e.target.closest("[data-q]"); if (a) v.buscar(a.dataset.q); }; return; }
+    if (pag === "busqueda") {
+      inp.value = q; const t = q.toLowerCase();
+      const malo = /crack|full|pirat|activador|serial|keygen|mega/.test(t), bueno = !malo && /altern|libre|gratis|docs|legal|office|word/.test(t);
+      if (malo) { web.innerHTML = `<p class="peq-g">Resultados para «${esc(q)}»</p>` + [["WORD 2024 FULL CRACK ✅ DESCARGA GRATIS MEGA 100% FUNCIONAL!!", "descargas-full-gratis.xyz", "Descarga word full español gratis activado permanente sin virus 2024 2025 mega mediafire…"], ["Activador Office PERMANENTE 2024 ✔ sin virus garantizado", "activadores-pro.top", "El mejor activador. Desactiva tu antivirus antes de usar…"], ["Word gratis full español + serial 🔥🔥", "softfull-mega.click", "Link directo sin publicidad (pulsa saltar anuncio)…"]].map(r => `<div class="res" data-p="pirata"><span class="res-dom">🚩 ${r[1]}</span><a>${r[0]}</a><p>${r[2]}</p></div>`).join("") + `<p class="pista-g">🚩 Señales de peligro: MAYÚSCULAS, emojis, «100% sin virus», dominios raros (.xyz, .top, .click) y «desactiva tu antivirus».</p>`; ev("buscoCrack"); }
+      else if (bueno) { web.innerHTML = `<p class="peq-g">Resultados para «${esc(q)}» · Alternativas <b>gratis y legales</b> a Word</p>` + ALT.map((a, k) => `<div class="res alt" data-alt="${k}"><span class="res-dom">✔ ${a.dom}</span><a>${a.e} ${a.n}</a><p>${a.d}</p><div class="tags">${a.tags.map(x => `<span>${x}</span>`).join("")}</div></div>`).join(""); ev("buscoAlt"); }
+      else web.innerHTML = `<p class="peq-g">Resultados para «${esc(q)}»</p><p>Este navegador es de práctica. Prueba buscar <a data-q2="alternativas gratis a Word">alternativas gratis a Word</a>.</p>`;
+      web.onclick = e => { const r = e.target.closest("[data-p]"); if (r) return v.ir(r.dataset.p); const a = e.target.closest("[data-alt]"); if (a) return v.ir(ALT[+a.dataset.alt].pag, +a.dataset.alt); const q2 = e.target.closest("[data-q2]"); if (q2) v.buscar(q2.dataset.q2); };
+      return;
+    }
+    if (pag === "pirata") {
+      inp.value = "http://descargas-full-gratis.xyz/word-full-crack";
+      web.innerHTML = `<div class="pirata"><div class="p-ad">🎰 CASINO ONLINE · ¡GANA YA!</div><h2>WORD 2024 FULL ✅ CRACK + ACTIVADOR</h2><p>✅ 100% sin virus · ⭐⭐⭐⭐⭐ 9 846 comentarios</p><div class="p-botones"><button data-d>⬇ DOWNLOAD</button><button data-d class="grande">⬇⬇ DESCARGAR AHORA ⬇⬇</button><button data-d>▶ PLAY</button><button data-d>📥 MEGA</button></div><p class="p-cuenta">Tu descarga empezará en 5… 4… 3…</p><div class="p-ad">💊 ¡BAJA DE PESO SIN DIETA!</div><p class="peq-g" style="color:#ccc">Contraseña del archivo: www.descargas-full-gratis.xyz</p></div>`;
+      web.onclick = e => { if (e.target.closest("[data-d]")) { if (H.antivirusOff || H.crack) nuevoAnuncio(); descargar(CRACK, "descargoCrack"); } };
+      ev("sitioPirata"); return;
+    }
+    if (pag === "libre") {
+      inp.value = "https://www.libreoffice.org/descargar";
+      web.innerHTML = `<div class="oficial"><h2>✍️ LibreOffice</h2><p>La suite de oficina <b>gratuita y legal</b>: Writer (textos), Calc (hojas de cálculo) e Impress (presentaciones). Abre y guarda archivos de Word (<b>.docx</b>), Excel y PowerPoint.</p><button class="bt" data-dl>⬇ Descargar LibreOffice</button><p class="peq-g">✔ Página oficial · sin anuncios · sin «activadores»</p></div>`;
+      web.onclick = e => { if (e.target.closest("[data-dl]")) descargar(LIBRE, "descargoLibre"); };
+      ev("sitioLibre"); return;
+    }
+    if (pag === "docs" || pag === "wordweb") {
+      const docs = pag === "docs";
+      inp.value = docs ? "https://docs.google.com" : "https://www.office.com";
+      if (!docs && !v.sesionMS) { web.innerHTML = `<div class="oficial"><h2>📘 Word para la web</h2><p>Puedes usar Word <b>gratis en el navegador</b> con una cuenta Microsoft (también gratuita). Tiene menos funciones que el Word de pago, pero alcanza para tus trabajos.</p><button class="bt" data-ms>Iniciar sesión con mi cuenta gratuita</button></div>`; web.onclick = e => { if (e.target.closest("[data-ms]")) { v.sesionMS = true; v.ir("wordweb"); } }; return; }
+      web.innerHTML = `<div class="doc-web"></div><p class="pista-g">${docs ? "☁️ Se guarda solo en tu cuenta de Google. Para tener el archivo de Word: <b>Archivo → Descargar → Microsoft Word (.docx)</b>. ¡Es el que usamos en clase!" : "☁️ Se guarda en tu cuenta Microsoft (OneDrive) y se puede descargar como .docx."}</p>`;
+      editor($(".doc-web", web), v, {}, docs ? { n: "Google Docs", e: "📄", color: "#1a73e8", guardar: "Descargar .docx", dest: "Descargas" } : { n: "Word para la web", e: "📘", color: "#2b579a", guardar: "Descargar .docx", dest: "Descargas" });
+      ev(docs ? "abrioDocs" : "abrioWordWeb"); return;
+    }
+    if (pag === "info") { const a = ALT[q]; inp.value = "https://" + a.dom; web.innerHTML = `<div class="oficial"><h2>${a.e} ${a.n}</h2><p>${a.d}</p><p class="peq-g">En la vida real lo descargarías desde su página oficial: <b>${a.dom}</b>.</p></div>`; return; }
+  };
+  v.buscar = q => { if (!q || !q.trim()) return; v.ir("busqueda", q.trim()); };
+  inp.addEventListener("keydown", e => { if (e.key !== "Enter") return; const t = inp.value.trim(); if (/libreoffice\.org/i.test(t)) v.ir("libre"); else if (/docs\.google/i.test(t)) v.ir("docs"); else v.buscar(t); });
+  $("[data-a=ini]", c).onclick = () => v.ir("inicio");
+  v.ir(op.pag || "inicio", op.q);
+};
+const ALT = [
+  { n: "Google Docs", e: "📄", dom: "docs.google.com", pag: "docs", d: "Gratis con tu cuenta de Google. Funciona en el navegador y en el celular, se guarda solo y permite trabajar en grupo al mismo tiempo. Se descarga como .docx.", tags: ["Gratis", "Sin instalar", "En la nube"] },
+  { n: "Word para la web", e: "📘", dom: "office.com", pag: "wordweb", d: "La versión gratuita de Word en el navegador, con una cuenta Microsoft gratuita.", tags: ["Gratis", "Sin instalar", "Oficial de Microsoft"] },
+  { n: "LibreOffice Writer", e: "✍️", dom: "libreoffice.org", pag: "libre", d: "Se instala en la computadora y funciona sin internet. Abre y guarda documentos de Word (.docx).", tags: ["Gratis", "Se instala", "Sin internet"] },
+  { n: "WPS Office", e: "📝", dom: "wps.com", pag: "info", d: "Muy parecido a Word, para computadora y celular. La versión gratuita muestra publicidad.", tags: ["Gratis con anuncios", "Celular y PC"] },
+  { n: "ONLYOFFICE", e: "🗂️", dom: "onlyoffice.com", pag: "info", d: "Editores de escritorio gratuitos con un diseño muy parecido al de Word.", tags: ["Gratis", "Se instala"] },
+];
+function navAbrir() { return VEN.find(v => v.app === "nav") || abrir("nav"); }
+
+/* ---------- pasos de cada historia ---------- */
+const auto = {
+  clicDialogo(r) { const b = $(`.velo [data-r="${r}"]`); if (b) { b.click(); return true; } return false; },
+  abrirDescargas() { const v = VEN.find(x => x.app === "archivos") || abrir("archivos", { carpeta: "Descargas" }); v.carpeta = "Descargas"; v.pintar(); enfocar(v); },
+};
+const PASOS = {
+  1: [
+    { t: "Ana debe entregar mañana su <b>informe de práctica en Word</b>. Pero en su computadora Word es <b>de pago</b>… y decide piratearlo. Veamos qué pasa. 👀" },
+    { t: "Haz doble clic en el ícono <b>📘 Word</b> del escritorio.", espera: "wordBloqueado", auto: () => abrir("word") },
+    { t: "Word pide comprar una licencia. Ana no quiere pagar: cierra Word, abre el <b>🌐 Navegador</b> y busca <code>word gratis full crack</code>.", espera: "buscoCrack", auto: () => { VEN.filter(v => v.app === "word").forEach(cerrar); navAbrir().buscar("word gratis full crack"); } },
+    { t: "🚩 Mira los resultados: MAYÚSCULAS, emojis, «100% sin virus» y páginas con nombres raros (.xyz, .top, .click). Son señales de peligro… pero Ana entra al primero.", espera: "sitioPirata", auto: () => navAbrir().ir("pirata") },
+    { t: "La página está llena de anuncios y botones falsos. Pulsa el botón <b>DESCARGAR</b> más grande.", espera: "descargoCrack", auto: () => descargar(CRACK, "descargoCrack") },
+    { t: "Abre <b>📁 Mis archivos → Descargas</b> y haz doble clic en <b>" + CRACK + "</b>.", espera: "avisoSO", auto: () => { if (!buscar("Descargas", CRACK)) descargar(CRACK, ""); auto.abrirDescargas(); abrirCrack(); } },
+    { t: "🛡️ <b>1.ª advertencia:</b> el SO avisa que el programa no es reconocido y que su editor es desconocido. Lo correcto es «No ejecutar»… pero Ana lo ignora: pulsa <b>Ejecutar de todos modos</b>.", espera: "ejecutoCrack", auto: () => { if (!auto.clicDialogo("si")) abrirCrack(); },
+      si: { noEjecuto: "👏 ¡Eso es lo correcto! Para ver qué le pasó a Ana, vuelve a abrir el archivo y elige «Ejecutar de todos modos» (o pulsa «Hacerlo por mí»)." } },
+    { t: "🛡️ <b>2.ª advertencia:</b> el antivirus encontró un <b>troyano</b>. Pero el archivo LEEME del «crack» dice que es un «falso positivo» y que lo desactives… y Ana le hace caso: pulsa <b>Permitir y desactivar antivirus</b>.", espera: "permitioVirus", auto: () => { if (!auto.clicDialogo("si")) antivirusAlerta(); },
+      si: { antivirusElimino: "👏 ¡El antivirus te salvó! Así debería terminar la historia. Para ver qué le pasó a Ana, pulsa «Hacerlo por mí»." } },
+    { t: "El instalador trae casillas <b>ya marcadas</b> para instalar «extras» que nadie pidió, y letra chiquita. Ana no lee nada y pulsa <b>Instalar</b>.", espera: "instaloCrack", auto: () => { const v = VEN.find(x => x.app === "instalador") || abrir("instalador", { tipo: "crack" }); setTimeout(() => v.instalarAuto(), 300); } },
+    { t: "¡Parece que funcionó! Cierra el instalador, abre <b>📘 Word</b> y escribe algo en tu documento.", espera: "abrioWordPirata", auto: () => { VEN.filter(v => ["instalador", "leeme"].includes(v.app)).forEach(cerrar); abrir("word", { archivo: buscar("Documentos", "Informe de práctica.docx") ? { carpeta: "Documentos", n: "Informe de práctica.docx" } : null }); } },
+    { t: "😬 <b>Síntoma 1 · Adware:</b> empiezan a salir ventanas de publicidad solas. Ciérralas con ✕… ¿qué pasa? (No hagas clic en «¡LO QUIERO!»)", alEntrar: iniciarAdware, espera: "cerroAnuncio2", auto: () => { H.anunciosCerrados = Math.max(H.anunciosCerrados, 1); VEN.filter(v => v.esAnuncio).slice().forEach(cerrar); if (H.anunciosCerrados < 2) { H.anunciosCerrados = 2; ev("cerroAnuncio2"); } } },
+    { t: "<b>Síntoma 2 · Navegador secuestrado:</b> abre el <b>🌐 Navegador</b>. Tu página de inicio cambió por un «buscador» lleno de anuncios que guarda todo lo que escribes.", alEntrar: secuestrar, espera: "navSecuestrado", auto: () => navAbrir().ir("inicio") },
+    { t: "<b>Síntoma 3 · Todo va lento:</b> abre el <b>📊 Administrador de tareas</b>. ¿Qué es <b>svch0st_miner.exe</b>? (es un <i>cero</i>, no una «o»: se disfraza de proceso del sistema). Usa tu procesador para ganar dinero para otra persona. Selecciónalo y pulsa <b>Finalizar tarea</b>.", alEntrar: activarMinero, espera: "mineroVuelve", auto: () => { const v = VEN.find(x => x.app === "admin") || abrir("admin"); enfocar(v); setTimeout(() => v.matarMinero && v.matarMinero(), 800); } },
+    { t: "¡Se volvió a abrir solo! Los virus se esconden para no dejarse cerrar.<br><br><b>Síntoma 4 · Robo de cuentas:</b> el «crack» traía un programa espía que anotó todo lo que Ana escribió, incluidas sus contraseñas. Mira las notificaciones. 👇", alEntrar: robarCuentas },
+    { t: "<b>El golpe final · Ransomware (secuestro de archivos):</b> todos los documentos y fotos de Ana quedaron bloqueados. Cierra la ventana roja e intenta abrir su informe en <b>Mis archivos → Documentos</b>.", alEntrar: ransomware, espera: "abrioBloqueado", auto: () => { $$(".rescate").forEach(x => x.remove()); const v = VEN.find(x => x.app === "archivos") || abrir("archivos"); v.carpeta = "Documentos"; v.pintar(); abrirArchivo("Documentos", "Informe de práctica.docx.bloqueado"); } },
+    { t: `<b>¿Qué salió mal?</b><ul class="h-lista"><li>Un «crack» es un programa <b>modificado por desconocidos</b>: nadie regala trabajo gratis, ganan con tus datos.</li><li>El SO avisó <b>dos veces</b> (aviso de seguridad y antivirus) y Ana ignoró ambas.</li><li>Instaló «extras» sin leer.</li><li>Resultado: anuncios, navegador espía, PC lenta, cuentas robadas y <b>archivos secuestrados</b>… y el informe no se entregó.</li><li>Además, piratear programas es <b>ilegal</b>.</li></ul>`, final: "♻️ Restaurar y ver la solución", alFin: () => iniciarHistoria(2) },
+  ],
+  2: [
+    { t: "Restauramos la computadora a como estaba antes del «crack». ⚠️ En la vida real no siempre se puede: a veces hay que <b>formatear</b> y se pierde todo lo que no estaba guardado en otro lugar.<br><br>Ahora hagámoslo bien: la solución <b>no es piratear</b>, sino buscar una alternativa <b>gratis y legal</b>.", alEntrar: () => restaurarSistema() },
+    { t: "Abre el <b>🌐 Navegador</b> y busca <code>alternativas gratis a Word</code>.", espera: "buscoAlt", auto: () => navAbrir().buscar("alternativas gratis a Word") },
+    { t: "¡Hay varias opciones <b>gratis y legales</b>, de páginas oficiales! Lee cada una. Luego entra a <b>✍️ LibreOffice Writer</b>.", espera: "sitioLibre", auto: () => navAbrir().ir("libre") },
+    { t: "Fíjate: es la <b>página oficial</b> (libreoffice.org), sin anuncios ni botones falsos. Pulsa <b>Descargar LibreOffice</b>.", espera: "descargoLibre", auto: () => descargar(LIBRE, "descargoLibre") },
+    { t: "Abre <b>📁 Mis archivos → Descargas</b> y haz doble clic en <b>" + LIBRE + "</b>. Mira: el SO no muestra advertencias (el editor está verificado) y no hay extras escondidos. Pulsa <b>Instalar</b>.", espera: "instaloLibre", auto: () => { if (!buscar("Descargas", LIBRE)) descargar(LIBRE, ""); auto.abrirDescargas(); const v = VEN.find(x => x.app === "instalador") || abrir("instalador", { tipo: "libre" }); setTimeout(() => v.instalarAuto(), 400); } },
+    { t: "Apareció <b>✍️ LibreOffice Writer</b> en el escritorio. Abre <b>Informe de práctica.docx</b> desde <b>Mis archivos → Documentos</b>: ahora se abre con Writer.", espera: "abrioWriter", auto: () => { VEN.filter(v => v.app === "instalador").forEach(cerrar); abrir("writer", { archivo: { carpeta: "Documentos", n: "Informe de práctica.docx" } }); } },
+    { t: "Escribe algo, ponle <b>negrita</b> o céntralo, y pulsa <b>💾 Guardar</b>. Se guarda como <b>.docx</b>: quien lo reciba lo abrirá en Word sin problemas.", espera: "guardoDoc", auto: () => { const v = VEN.find(x => x.app === "writer"); if (v) { v.hoja.insertAdjacentHTML("beforeend", "<p><b>Conclusión:</b> paciente estable, se continúa el tratamiento.</p>"); v.guardarAuto(); } } },
+    { t: "Abre el <b>📊 Administrador de tareas</b>: todo normal. Sin procesos raros y con el procesador tranquilo.", espera: "abrioAdmin", auto: () => abrir("admin") },
+    { t: "Otra opción <b>sin instalar nada</b>: en el Navegador entra a <b>📄 Google Docs</b> (¡el que usamos en clase!). Se guarda solo y también se descarga como .docx.", espera: "abrioDocs", auto: () => navAbrir().ir("docs") },
+    { t: `<b>Pirata vs. alternativa gratis</b><table class="h-tabla"><tr><th></th><th>🏴‍☠️ Word pirata</th><th>✅ Alternativa gratis</th></tr><tr><td>Precio</td><td>S/ 0… al inicio</td><td>S/ 0</td></tr><tr><td>¿Es legal?</td><td>❌ No</td><td>✅ Sí</td></tr><tr><td>Virus</td><td>😈 Muy probable</td><td>✔ No (de la página oficial)</td></tr><tr><td>Actualizaciones</td><td>❌ No</td><td>✅ Sí</td></tr><tr><td>Abre y guarda .docx</td><td>Sí</td><td>Sí</td></tr><tr><td>Tus archivos y cuentas</td><td>En riesgo</td><td>Seguros</td></tr></table><p style="margin-top:8px">Opciones: <b>Google Docs</b>, <b>Word para la web</b>, <b>LibreOffice Writer</b>, <b>WPS Office</b>, <b>ONLYOFFICE</b>. La solución no es piratear: casi siempre hay una alternativa <b>gratis y legal</b>.</p>`, final: "✔ Terminar" },
+  ],
+};
+const TITULOS = { 1: "🎭 Historia 1 · «Necesito Word… ¡lo pirateo!»", 2: "✅ Historia 2 · La solución: alternativas gratis" };
+function arrancarRapido() { if (!sesion) { $$(".pantalla").forEach(p => p.hidden = true); entrarEscritorio(); } }
+function iniciarHistoria(n) {
+  $("#doc-c").hidden = true;
+  arrancarRapido();
+  if (n === 1) restaurarSistema(true);
+  H.activa = n; H.paso = 0; H.pend = -1; $("#hist").hidden = false; $("#hist").classList.remove("mini"); pintarHist();
+}
+function histNota(t) { const n = $("#hist .h-nota"); if (n) { n.innerHTML = t; n.hidden = false; } }
+function pintarHist() {
+  const P = PASOS[H.activa], p = P[H.paso];
+  $("#hist-t").textContent = TITULOS[H.activa];
+  $("#hist-n").textContent = `Paso ${H.paso + 1} de ${P.length}`;
+  $("#hist-b").innerHTML = `<div class="h-prog">${P.map((_, k) => `<i class="${k < H.paso ? "ok" : k === H.paso ? "act" : ""}"></i>`).join("")}</div><div class="h-txt">${p.t}</div><div class="h-nota" hidden></div>`;
+  $("#hist-ant").disabled = H.paso === 0;
+  const sig = $("#hist-sig"), hz = $("#hist-auto");
+  if (p.final) { sig.textContent = p.final; hz.hidden = true; }
+  else if (p.espera) { sig.textContent = "Saltar ▸"; hz.hidden = !p.auto; }
+  else { sig.textContent = "Siguiente ▸"; hz.hidden = true; }
+  sig.classList.toggle("sec", !!p.espera);
+  if (p.alEntrar) p.alEntrar();
+  $("#hist-b").scrollTop = 0; tono(520, .05);
+}
+function avanzarHist() {
+  const P = PASOS[H.activa], p = P[H.paso];
+  if (p.final) { const f = p.alFin; cerrarHist(); f && f(); return; }
+  H.paso = Math.min(P.length - 1, H.paso + 1); H.pend = -1; pintarHist();
+}
+function cerrarHist() { H.activa = 0; $("#hist").hidden = true; }
+$("#hist-sig").onclick = () => { const p = PASOS[H.activa][H.paso]; if (p.espera && p.auto && !p.final) p.auto(); avanzarHist(); };
+$("#hist-auto").onclick = () => { const p = PASOS[H.activa][H.paso]; p.auto && p.auto(); };
+$("#hist-ant").onclick = () => { if (H.paso > 0) { H.paso--; const p = PASOS[H.activa][H.paso]; const ae = p.alEntrar; if (H.activa === 2 && H.paso === 0) { pintarHist(); return; } p.alEntrar = null; pintarHist(); p.alEntrar = ae; } };
+$("#hist-x").onclick = cerrarHist;
+$("#hist-min").onclick = () => $("#hist").classList.toggle("mini");
+$("#h1").onclick = () => iniciarHistoria(1);
+$("#h2").onclick = () => iniciarHistoria(2);
+
 document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarMenu(); });
 </script>
 </body>
