@@ -174,18 +174,18 @@
   .giro { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,.2); border-top-color: #fff; border-radius: 50%; animation: gira 1s linear infinite; margin: 0 auto 14px; }
   @keyframes gira { to { transform: rotate(360deg); } }
 
-  /* panel docente */
-  .docente { position: fixed; top: 10px; right: 10px; z-index: 9500; font-size: .85rem; }
-  .docente > button { border: 0; border-radius: 99px; padding: 8px 14px; background: var(--amber); color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.35); }
-  .docente .caja { position: absolute; right: 0; top: 44px; width: min(320px, calc(100vw - 20px)); background: var(--paper); border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.45); padding: 12px; max-height: calc(100vh - 80px); overflow: auto; }
-  .docente h4 { margin: 4px 0 6px; font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--moss); }
-  .docente .acc { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
-  .docente .acc button { border: 1.5px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 6px; cursor: pointer; font-weight: 600; font-size: .8rem; }
-  .docente .acc button:hover { border-color: var(--moss); }
-  .docente .acc button.rojo { border-color: var(--bad); color: var(--bad); }
-  .docente label { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; line-height: 1.35; cursor: pointer; }
-  .docente label input { margin-top: 3px; accent-color: var(--moss); }
-  .docente label:has(input:checked) { color: var(--mut); text-decoration: line-through; }
+  /* guía paso a paso */
+  .guia-p { position: fixed; top: 10px; right: 10px; z-index: 9500; font-size: .85rem; }
+  .guia-p > button { border: 0; border-radius: 99px; padding: 8px 14px; background: var(--amber); color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+  .guia-p .caja { position: absolute; right: 0; top: 44px; width: min(320px, calc(100vw - 20px)); background: var(--paper); border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.45); padding: 12px; max-height: calc(100vh - 80px); overflow: auto; }
+  .guia-p h4 { margin: 4px 0 6px; font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--moss); }
+  .guia-p .acc { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .guia-p .acc button { border: 1.5px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 6px; cursor: pointer; font-weight: 600; font-size: .8rem; }
+  .guia-p .acc button:hover { border-color: var(--moss); }
+  .guia-p .acc button.rojo { border-color: var(--bad); color: var(--bad); }
+  .guia-p label { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; line-height: 1.35; cursor: pointer; }
+  .guia-p label input { margin-top: 3px; accent-color: var(--moss); }
+  .guia-p label:has(input:checked) { color: var(--mut); text-decoration: line-through; }
   .volver { display: block; text-align: center; margin-top: 8px; color: var(--moss); font-weight: 600; }
 
   @media (max-width: 700px) {
@@ -194,7 +194,7 @@
     .expl { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .expl .lado { display: flex; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); } .expl .lado button { width: auto; white-space: nowrap; }
     .abiertas button em { display: none; }
     .bandeja .extra { display: none; }
-    .docente { top: auto; bottom: 60px; right: auto; left: 8px; } .docente > button { padding: 8px 11px; font-size: .8rem; } .docente .caja { top: auto; bottom: 44px; left: 0; right: auto; max-height: calc(100vh - 140px); }
+    .guia-p { top: auto; bottom: 60px; right: auto; left: 8px; } .guia-p > button { padding: 8px 11px; font-size: .8rem; } .guia-p .caja { top: auto; bottom: 44px; left: 0; right: auto; max-height: calc(100vh - 140px); }
     .iconos { grid-auto-flow: row; grid-template-columns: repeat(auto-fill, 88px); grid-template-rows: none; right: 12px; }
   }
 </style>
@@ -247,10 +247,10 @@
 <section class="pantalla" id="apagando" hidden><div><div class="giro"></div><b id="apg-t">Apagando…</b><p id="apg-s" style="opacity:.7;font-size:.9rem"></p></div></section>
 
 <!-- PANEL DOCENTE -->
-<div class="docente" id="docente">
-  <button id="doc-b">🎓 Panel docente</button>
+<div class="guia-p" id="guia-p">
+  <button id="doc-b">🧭 Guía paso a paso</button>
   <div class="caja" id="doc-c" hidden>
-    <h4>Acciones</h4>
+    <h4>Experimentos: provoca situaciones reales</h4>
     <div class="acc">
       <button id="d-usb">🔌 Conectar USB</button>
       <button id="d-cuelga">🐞 Colgar una app</button>
@@ -258,7 +258,7 @@
       <button id="d-bat">🪫 Batería baja</button>
       <button class="rojo" id="d-corte" style="grid-column:1/-1">⚡ Desenchufar (corte de luz)</button>
     </div>
-    <h4>Guía para la demostración</h4>
+    <h4>Pasos sugeridos (márcalos al terminar)</h4>
     <div id="guia"></div>
     <a class="volver" href="#" id="d-reset">↺ Reiniciar todo el simulador</a>
   </div>
@@ -313,7 +313,7 @@ async function encender() {
   await L("<br>Buscando el sistema operativo en el disco… encontrado: AulaOS 2.0", 700);
   await espera(700);
   ver("carga");
-  const pasos = ["Copiando el sistema del disco a la RAM…", "Cargando controladores (teclado, mouse, sonido, Wi-Fi)…", "Iniciando servicios del sistema…", "Preparando la pantalla de inicio…"];
+  const pasos = ["Copiando el sistema del disco a la RAM…", "Preparando el teclado, el mouse, el sonido y el Wi-Fi…", "Iniciando servicios del sistema…", "Preparando la pantalla de inicio…"];
   for (let p = 0; p <= 100; p += 4) { $("#carga-b").style.width = p + "%"; $("#carga-t").textContent = pasos[Math.min(3, Math.floor(p / 26))]; await espera(70); }
   await espera(300);
   ver("login"); $("#lg-pass").value = ""; $("#lg-mal").textContent = ""; setTimeout(() => $("#lg-pass").focus(), 100);
@@ -612,11 +612,11 @@ function dibujar(cv, datos, col) {
   g.lineTo(px(datos.length - 1), H); g.lineTo(px(0), H); g.closePath(); g.fillStyle = col + "22"; g.fill();
 }
 
-/* ---------- acciones del docente ---------- */
+/* ---------- experimentos de la guía ---------- */
 function ponerUSB() {
   if (!sesion) return alert0("Primero enciende la computadora e inicia sesión.");
   if (usb) return quitarUSB(true);
-  aviso("🔌", "Nuevo dispositivo detectado", "Instalando el controlador de la memoria USB…", 2500);
+  aviso("🔌", "Nuevo dispositivo detectado", "El SO está reconociendo la memoria USB…", 2500);
   setTimeout(() => { usb = true; $("#usb-ico").hidden = false; $("#d-usb").textContent = "⏏ Expulsar USB"; refrescarExpl(); aviso("✔", "Memoria USB lista", "Ábrela en <b>Mis archivos → USB (E:)</b>.", 5000); }, 2600);
 }
 function quitarUSB(bien) {
@@ -638,8 +638,8 @@ $("#d-bat").onclick = () => { if (!sesion) return alert0("Primero inicia sesión
 $("#d-corte").onclick = () => { if ($("#apagado").hidden) desenchufar(); else alert0("La computadora ya está apagada."); };
 $("#d-reset").onclick = e => { e.preventDefault(); VEN.slice().forEach(cerrar); disco = DISCO0(); usb = false; apagadoMal = false; sesion = false; $("#bat").textContent = "🔋"; $("#usb-ico").hidden = true; $("#d-usb").textContent = "🔌 Conectar USB"; $("#escritorio").style.removeProperty("--fondo"); $$("#guia input").forEach(i => i.checked = false); ver("apagado"); $("#ap-msj").textContent = "Una computadora de práctica. Presiona el botón para encenderla."; };
 const GUIA = [
-  "Enciende y explica la revisión de la BIOS (POST).",
-  "Señala «Copiando el sistema del disco a la RAM».",
+  "Enciende la computadora y observa la revisión inicial: el equipo revisa sus piezas antes de cargar el SO.",
+  "Fíjate en el mensaje «Copiando el sistema del disco a la RAM»: así empieza a trabajar el SO.",
   "Inicia sesión: prueba primero una contraseña incorrecta.",
   "Abre 2 o 3 programas: mueve, minimiza y maximiza ventanas.",
   "Abre el Administrador de tareas: mira cómo sube la RAM al abrir el Navegador.",
@@ -647,7 +647,7 @@ const GUIA = [
   "Bloc de notas: escribe algo y guárdalo. Míralo en Mis archivos → Documentos.",
   "Escribe otro texto SIN guardar y pulsa «Desenchufar». Enciende: ¿qué se perdió y qué no?",
   "Elimina un archivo, recupéralo de la Papelera.",
-  "Conecta la USB (controlador) y expúlsala correctamente.",
+  "Conecta la USB, ábrela en Mis archivos, copia un archivo y expúlsala correctamente.",
   "Configuración → Acerca de este equipo (como en el celular).",
   "Apaga correctamente desde el menú Inicio.",
 ];

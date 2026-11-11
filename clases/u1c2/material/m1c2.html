@@ -6,7 +6,7 @@
 <!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
 <meta name="material-titulo" content="El sistema operativo">
 <meta name="material-tipo" content="presentacion">
-<meta name="material-descripcion" content="Presentación interactiva: qué es el sistema operativo, cómo arranca la computadora, sus seis tareas, los SO que usamos y cómo cuidarlo, con demostraciones en vivo.">
+<meta name="material-descripcion" content="Presentación interactiva: qué es el sistema operativo, su historia animada, ventanas vs. comandos, qué hace (memoria, archivos, seguridad) y los SO que usamos. Incluye la tarea.">
 <title>El sistema operativo</title>
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <script src="../../../conexion/zoom.js" defer></script>
@@ -401,7 +401,6 @@
   .abrecon { min-height: 54px; display: flex; align-items: center; gap: 12px; background: var(--ink); color: #fff; border-radius: 12px; padding: 8px 14px; margin-top: 10px; font-size: .95rem; }
   .abrecon .emo { font-size: 1.8rem; }
 
-  /* controladores */
   .drv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .disp { background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 8px; text-align: center; transition: .3s; }
   .disp img { width: 100%; height: 80px; object-fit: contain; mix-blend-mode: multiply; }
@@ -500,6 +499,207 @@
     .fila-c { grid-template-columns: 110px 1fr; } .fila-c .mas-menos { grid-column: 1 / -1; }
     .leyenda3 { grid-template-columns: 1fr; }
   }
+
+  /* ====== v2 ====== */
+  .ram-log { margin-top: 8px; display: grid; gap: 4px; min-height: 24px; }
+  .ram-log div { background: #f0c27b; color: var(--ink); border-radius: 8px; padding: 5px 10px; font-size: .8rem; font-weight: 600; animation: entra .3s ease both; }
+
+  /* cadena de archivos */
+  .cadena2 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 12px 0 10px; position: relative; }
+  .eslabon { background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 8px 6px; text-align: center; transition: .3s; position: relative; }
+  .eslabon .emo { font-size: 1.7rem; display: block; line-height: 1.2; }
+  .eslabon code { display: block; font-size: .7rem; margin: 4px auto 2px; word-break: break-all; background: var(--soft); }
+  .eslabon h3 { font-size: .78rem !important; margin: 2px 0 0 !important; line-height: 1.2; }
+  .eslabon.act { border-color: var(--amber); background: #fbf1e2; transform: translateY(-5px); box-shadow: 0 10px 22px rgba(0,0,0,.12); }
+  .eslabon.hecho { border-color: var(--ok); }
+  .eslabon:not(:last-child)::after { content: "→"; position: absolute; right: -10px; top: 50%; translate: 0 -50%; color: var(--line); font-weight: 700; z-index: 2; }
+  .eslabon.hecho:not(:last-child)::after { color: var(--ok); }
+
+  /* laboratorio ventanas vs comandos */
+  #lab2-d { justify-content: flex-start !important; }
+  .tareas2 { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .tareas2 button { font: 600 .82rem "IBM Plex Sans", sans-serif; background: #fff; border: 2px solid var(--line); border-radius: 99px; padding: 5px 12px; cursor: pointer; color: var(--ink); }
+  .tareas2 button:hover { border-color: var(--moss); } .tareas2 button.on { background: var(--amber); border-color: var(--amber); color: #fff; }
+  .tareas2 button:disabled { opacity: .5; cursor: wait; }
+  .lab2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 0; }
+  .lab2 > div { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .cab2 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: .9rem; }
+  .cont { font: 600 .74rem "IBM Plex Mono", monospace; color: var(--amber); }
+  .gui2 { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; flex: 1; min-height: 250px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+  .g-barra { display: flex; align-items: center; gap: 6px; padding: 5px 8px; background: var(--soft); font: 600 .8rem "IBM Plex Sans", sans-serif; }
+  .g-barra span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .g-barra button { border: 0; background: #fff; border-radius: 6px; padding: 3px 8px; cursor: pointer; font-weight: 700; }
+  .g-barra button:disabled { opacity: .35; cursor: default; }
+  .g-herr { display: flex; flex-wrap: wrap; gap: 3px; padding: 5px 6px; border-bottom: 1px solid var(--line); }
+  .g-herr button { font: 600 .7rem "IBM Plex Sans", sans-serif; border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 3px 6px; cursor: pointer; color: var(--ink); }
+  .g-herr button:hover:not(:disabled) { border-color: var(--azul, #2f63e0); } .g-herr button:disabled { opacity: .35; cursor: default; }
+  .g-cuerpo { position: relative; flex: 1; min-height: 160px; overflow: hidden; }
+  .g-area { position: absolute; inset: 0; padding: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 6px; align-content: start; overflow: auto; }
+  .gi { font: 600 .74rem "IBM Plex Sans", sans-serif; border: 2px solid transparent; background: none; border-radius: 10px; padding: 6px 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--ink); word-break: break-word; text-align: center; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  .gi span { font-size: 2rem; line-height: 1.1; }
+  .gi em { font-style: normal; }
+  .gi:hover { background: var(--soft); } .gi.sel { border-color: #2f63e0; background: #e3ecf9; } .gi.drop { border-color: var(--ok); background: #eaf4ec; }
+  .gi.nuevo { animation: brillo 1s ease; } .gi.corte { opacity: .45; }
+  .gi input { width: 100%; font: 600 .74rem "IBM Plex Sans", sans-serif; text-align: center; border: 1.5px solid #2f63e0; border-radius: 4px; padding: 1px 2px; }
+  .vacio2 { color: var(--mut); font-size: .85rem; grid-column: 1 / -1; }
+  .ctx { position: absolute; z-index: 5; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 26px rgba(0,0,0,.2); padding: 4px; min-width: 170px; animation: entra .12s ease both; }
+  .ctx button { display: block; width: 100%; text-align: left; font: 600 .8rem "IBM Plex Sans", sans-serif; border: 0; background: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; color: var(--ink); }
+  .ctx button:hover, .ctx button.foco { background: #e3ecf9; } .ctx button:disabled { opacity: .4; cursor: default; }
+  .np { position: absolute; inset: 8px; z-index: 6; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 14px 34px rgba(0,0,0,.25); display: flex; flex-direction: column; padding: 8px; gap: 6px; animation: entra .15s ease both; }
+  .np-t { display: flex; justify-content: space-between; align-items: center; font-size: .82rem; }
+  .np-t button { border: 0; background: var(--bad); color: #fff; border-radius: 6px; cursor: pointer; font-weight: 700; padding: 2px 8px; }
+  .np textarea { flex: 1; resize: none; border: 1px solid var(--line); border-radius: 8px; padding: 8px; font: .9rem "IBM Plex Sans", sans-serif; }
+  .np .bt { align-self: flex-end; padding: 5px 12px; }
+  .cur { position: absolute; left: 60%; top: 70%; z-index: 9; font-size: 1.3rem; color: #111; text-shadow: 0 0 3px #fff, 0 0 3px #fff; transform: rotate(-25deg); transform-origin: 0 0; transition: left .5s ease, top .5s ease; pointer-events: none; opacity: 0; }
+  .cur.on { opacity: 1; } .cur.clic { scale: .75; } .cur.der::after { content: "derecho"; position: absolute; left: 14px; top: 10px; font: 700 .55rem "IBM Plex Mono", monospace; background: var(--amber); color: #fff; padding: 1px 4px; border-radius: 4px; transform: rotate(25deg); }
+  .fantasma { position: absolute; z-index: 8; font-size: 2rem; pointer-events: none; opacity: .75; transition: left .6s ease, top .6s ease; }
+  .pista2 { font-size: .76rem; color: var(--mut); margin-top: 5px; min-height: 2.4em; line-height: 1.35; }
+  .pista2 .bt { padding: 2px 8px; font-size: .72rem; margin-left: 4px; }
+  #lab2 .term { min-height: 250px; max-height: none; flex: 1; font-size: .8rem; }
+  .term .sal .hint { color: #f0c27b; }
+  .lab-x { margin-top: 6px; background: var(--ink); color: #fff; border-radius: 10px; padding: 7px 12px; font-size: .84rem; line-height: 1.4; min-height: 2.6em; }
+  .lab-x b { color: #f0c27b; }
+  .capa-guia { position: absolute; inset: 10px; z-index: 20; background: var(--paper); border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.35); padding: 18px 22px; overflow: auto; animation: entra .2s ease both; }
+  .capa-guia h3 { font-size: 1.15rem !important; margin-bottom: 8px !important; }
+  .capa-guia .cerrar-g { position: sticky; top: 0; float: right; }
+  .capa-guia table td, .capa-guia table th { font-size: .82rem; padding: 5px 8px; }
+  .capa-guia table td code { white-space: nowrap; }
+  .capa-guia ol li { font-size: .92rem !important; }
+
+  /* seguridad */
+  .celu.grande-c { width: 280px; }
+  .celu.grande-c .pant-c { min-height: 430px; text-align: left; gap: 8px; padding: 12px 10px; }
+  .seg-top { display: flex; justify-content: space-between; font: 600 .66rem "IBM Plex Mono", monospace; color: var(--mut); }
+  .sms { background: #fff; border-radius: 14px; padding: 10px 12px; box-shadow: 0 6px 16px rgba(0,0,0,.1); font-size: .86rem; line-height: 1.4; animation: entra .3s ease both; }
+  .sms .de { font: 700 .74rem "IBM Plex Sans", sans-serif; color: var(--mut); display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .sms a { color: #2f63e0; text-decoration: underline; word-break: break-all; }
+  .burbuja { background: #fff; border-radius: 4px 14px 14px 14px; padding: 8px 10px; font-size: .86rem; line-height: 1.4; max-width: 88%; box-shadow: 0 2px 6px rgba(0,0,0,.08); animation: entra .3s ease both; }
+  .burbuja small { display: block; font-size: .66rem; color: var(--mut); text-align: right; }
+  .chat-cab { display: flex; align-items: center; gap: 8px; background: #2f6f4f; color: #fff; margin: -12px -10px 4px; padding: 10px; border-radius: 20px 20px 0 0; font-size: .86rem; }
+  .chat-cab span { font-size: 1.4rem; }
+  .alerta-so { background: #fff; border-radius: 14px; padding: 12px; box-shadow: 0 8px 20px rgba(0,0,0,.14); font-size: .85rem; line-height: 1.4; text-align: center; animation: entra .3s ease both; }
+  .alerta-so b { display: block; margin-bottom: 4px; }
+  .seg-ops { display: grid; gap: 6px; margin-top: auto; }
+  .seg-ops button { font: 600 .84rem "IBM Plex Sans", sans-serif; border: 2px solid var(--line); background: #fff; border-radius: 12px; padding: 9px 10px; cursor: pointer; text-align: left; color: var(--ink); }
+  .seg-ops button:hover { border-color: var(--moss); }
+  .seg-res { border-radius: 12px; padding: 10px; font-size: .82rem; line-height: 1.4; animation: entra .3s ease both; }
+  .seg-res.ok { background: #eaf4ec; color: #1f5b35; } .seg-res.mal { background: #f8e9e6; color: #8c2a22; }
+  .seg-res b { display: block; margin-bottom: 3px; }
+  .seg-res .so { display: block; margin-top: 6px; color: var(--ink); font-size: .78rem; }
+  .seg-dos { grid-template-columns: 1fr 1.05fr !important; gap: 22px !important; }
+  .seg-marcador { display: flex; gap: 5px; margin-top: 12px; }
+  .seg-marcador i { flex: 1; height: 8px; border-radius: 99px; background: var(--line); }
+  .seg-marcador i.ok { background: var(--ok); } .seg-marcador i.mal { background: var(--bad); } .seg-marcador i.act { background: var(--amber); }
+
+  /* línea de tiempo animada */
+  .linea-foto { background: #10231c; border: 0; }
+  .sc { position: absolute; inset: 0; overflow: hidden; color: #fff; font-family: "IBM Plex Sans", sans-serif; }
+  .sc .pie-sc { position: absolute; left: 0; right: 0; bottom: 0; padding: 6px 10px; background: rgba(0,0,0,.55); font-size: .78rem; text-align: center; z-index: 4; }
+  .sc .foto-b { position: absolute; top: 8px; right: 8px; z-index: 6; font: 600 .72rem "IBM Plex Sans", sans-serif; border: 0; border-radius: 99px; padding: 4px 10px; cursor: pointer; background: rgba(255,255,255,.9); color: var(--ink); }
+  .sc .foto-real { position: absolute; inset: 0; z-index: 5; background: #000; display: grid; place-items: center; }
+  .sc .foto-real img { width: 100%; height: 100%; object-fit: contain; }
+  /* eniac */
+  .sc-eniac { background: #2b2b26; }
+  .tablero { position: absolute; left: 6%; right: 6%; top: 8%; bottom: 22%; background: #3c3a33; border: 4px solid #1b1a16; border-radius: 6px; display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; padding: 10px; align-content: start; }
+  .foco { width: 100%; aspect-ratio: 1; border-radius: 50%; background: #5a4a1e; animation: foco 1.2s infinite alternate; }
+  @keyframes foco { to { background: #ffd36b; box-shadow: 0 0 10px #ffb02e; } }
+  .enchufes { position: absolute; left: 6%; right: 6%; bottom: 24%; height: 22%; display: flex; justify-content: space-around; align-items: center; }
+  .enchufes i { width: 16px; height: 16px; border-radius: 50%; background: #111; border: 3px solid #888; }
+  .cable { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+  .cable path { stroke: #e05a3a; stroke-width: 1.6; fill: none; stroke-linecap: round; transition: d .8s ease; }
+  .mano { position: absolute; font-size: 2rem; transition: left .8s ease, top .8s ease; z-index: 3; }
+  /* tarjeta perforada */
+  .sc-tarj { background: #23302a; }
+  .perfo { position: absolute; left: 10%; top: 14%; width: 62%; aspect-ratio: 7.4 / 3.2; background: #f2e3b3; border-radius: 4px; clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 100%, 0 14%); display: grid; grid-template-columns: repeat(20, 1fr); grid-template-rows: repeat(8, 1fr); gap: 2px; padding: 6px; animation: entraTarj 4s ease-in-out infinite; }
+  .perfo i { background: transparent; border-radius: 1px; }
+  .perfo i.h { background: #23302a; }
+  @keyframes entraTarj { 0%, 55% { transform: translateX(0); } 85%, 100% { transform: translateX(70%); opacity: .2; } }
+  .lector { position: absolute; right: 6%; top: 8%; width: 28%; height: 52%; background: #6b6f73; border-radius: 6px; border: 3px solid #3b3e41; display: grid; place-items: center; font: 700 .7rem "IBM Plex Mono", monospace; z-index: 2; text-align: center; }
+  .impreso { position: absolute; left: 10%; right: 10%; bottom: 16%; background: #fffdf5; color: #222; font: 600 .78rem "IBM Plex Mono", monospace; padding: 6px 8px; border-radius: 4px; min-height: 2.2em; }
+  /* terminales */
+  .sc-term { background: #000; font: 500 clamp(.7rem, calc(var(--vw) * 1.25), .9rem)/1.5 "IBM Plex Mono", monospace; color: #cfd8d3; padding: 12px 14px; white-space: pre-wrap; }
+  .sc-term.verde { color: #4ade80; }
+  .sc-term .cursor-b { animation: parpa 1s steps(2) infinite; }
+  .red { position: absolute; inset: 0; }
+  .red .centro { position: absolute; left: 50%; top: 42%; translate: -50% -50%; font-size: 3.2rem; }
+  .red .usu { position: absolute; font-size: 2rem; text-align: center; }
+  .red .usu small { display: block; font: 600 .62rem "IBM Plex Mono", monospace; color: #9fe0b5; }
+  .red svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .red line { stroke: #4ade80; stroke-width: 2; stroke-dasharray: 6 6; animation: flujo 1s linear infinite; }
+  @keyframes flujo { to { stroke-dashoffset: -12; } }
+  /* escritorios antiguos y modernos */
+  .sc-mac { background: #c9c9c9; color: #111; }
+  .sc-mac .menu-sup { height: 16px; background: #fff; border-bottom: 2px solid #111; font: 700 .62rem "IBM Plex Mono", monospace; padding: 1px 8px; display: flex; gap: 12px; }
+  .sc-mac .ic { position: absolute; text-align: center; font: 600 .62rem "IBM Plex Mono", monospace; }
+  .sc-mac .ic span { display: block; font-size: 1.8rem; filter: grayscale(1); }
+  .sc-mac .vent { position: absolute; left: 18%; top: 22%; width: 0; height: 0; background: #fff; border: 2px solid #111; box-shadow: 4px 4px 0 #111; overflow: hidden; transition: width .5s, height .5s; font: 600 .66rem "IBM Plex Mono", monospace; }
+  .sc-mac .vent.ab { width: 58%; height: 50%; }
+  .sc-mac .vent .tb { height: 16px; border-bottom: 2px solid #111; background: repeating-linear-gradient(#fff 0 2px, #111 2px 3px); text-align: center; }
+  .sc-mac .vent .tb b { background: #fff; padding: 0 6px; }
+  .sc .flecha-m { position: absolute; z-index: 3; font-size: 1.4rem; transition: left .7s ease, top .7s ease; color: #111; text-shadow: 0 0 2px #fff; transform: rotate(-25deg); }
+  .sc-w1 { background: #fff; color: #111; }
+  .sc-w1 .t { position: absolute; border: 2px solid #111; background: #fff; opacity: 0; transition: opacity .4s; font: 600 .7rem "IBM Plex Mono", monospace; }
+  .sc-w1 .t.on { opacity: 1; }
+  .sc-w1 .t b { display: block; background: #2a2aa0; color: #fff; padding: 2px 6px; }
+  .sc-w1 .t p { margin: 4px 6px !important; font-size: .7rem !important; line-height: 1.3 !important; }
+  .sc-lin { background: radial-gradient(#1d3b5a, #0b1622); }
+  .sc-lin .peng { position: absolute; left: 50%; top: 40%; translate: -50% -50%; font-size: 3.6rem; animation: late 1.4s ease-in-out infinite; }
+  @keyframes late { 50% { scale: 1.12; } }
+  .sc-lin .pc { position: absolute; font-size: 1.7rem; opacity: .3; transition: opacity .4s, scale .4s; }
+  .sc-lin .pc.on { opacity: 1; scale: 1.15; }
+  .sc-95 { background: #008080; }
+  .sc-95 .barra95 { position: absolute; left: 0; right: 0; bottom: 0; height: 13%; background: #c0c0c0; border-top: 2px solid #fff; display: flex; align-items: center; padding: 0 4px; gap: 6px; }
+  .sc-95 .inicio95 { background: #c0c0c0; color: #111; font: 700 .72rem "IBM Plex Sans", sans-serif; padding: 2px 8px; border: 2px outset #fff; }
+  .sc-95 .inicio95.pres { border-style: inset; }
+  .sc-95 .reloj95 { margin-left: auto; color: #111; font: 600 .66rem "IBM Plex Mono", monospace; border: 1px inset #fff; padding: 1px 6px; }
+  .sc-95 .menu95 { position: absolute; left: 0; bottom: 13%; width: 46%; background: #c0c0c0; border: 2px outset #fff; color: #111; font: 600 .74rem "IBM Plex Sans", sans-serif; transform-origin: bottom; transform: scaleY(0); transition: transform .35s; display: flex; }
+  .sc-95 .menu95.ab { transform: scaleY(1); }
+  .sc-95 .menu95 .lado95 { background: #808080; color: #c0c0c0; writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 700; padding: 6px 3px; }
+  .sc-95 .menu95 ul { list-style: none; margin: 0; padding: 4px 0; flex: 1; }
+  .sc-95 .menu95 li { padding: 4px 10px; font-size: .74rem !important; margin: 0 !important; }
+  .sc-95 .menu95 li.h { background: #000080; color: #fff; }
+  .sc-95 .ic95 { position: absolute; left: 12px; text-align: center; font: 600 .62rem "IBM Plex Sans", sans-serif; }
+  .sc-95 .ic95 span { display: block; font-size: 1.6rem; }
+  .sc-tel { background: linear-gradient(160deg, #1b2a24, #10231c); display: grid; place-items: center; }
+  .tel { width: 42%; aspect-ratio: 9 / 18; background: #000; border-radius: 22px; border: 4px solid #333; position: relative; overflow: hidden; }
+  .tel .scr { position: absolute; inset: 0; background: linear-gradient(170deg, #3a6ea5, #1c2f4a); }
+  .tel .hora-t { position: absolute; top: 14%; width: 100%; text-align: center; font-weight: 700; font-size: 1.3rem; }
+  .tel .desliza { position: absolute; bottom: 12%; left: 10%; right: 10%; height: 26px; border-radius: 99px; background: rgba(255,255,255,.2); font-size: .6rem; display: grid; place-items: center; }
+  .tel .dedo { position: absolute; bottom: 9%; left: 8%; font-size: 1.6rem; z-index: 3; animation: dedo 2s ease-in-out infinite; }
+  @keyframes dedo { 0%, 15% { left: 8%; } 60%, 100% { left: 66%; } }
+  .tel .grid-ic { position: absolute; inset: 14% 8% auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; font-size: 1.1rem; text-align: center; }
+  .tel .grid-ic span { animation: pop .4s ease both; }
+  @keyframes pop { from { scale: 0; } }
+  .tel .notif { position: absolute; left: 0; right: 0; top: 0; background: rgba(20,24,30,.92); padding: 22px 6px 6px; transform: translateY(-100%); transition: transform .6s ease; display: grid; gap: 4px; font-size: .55rem; }
+  .tel .notif.ab { transform: translateY(0); }
+  .tel .notif div { background: rgba(255,255,255,.12); border-radius: 6px; padding: 4px 6px; }
+  .sc-11 { background: linear-gradient(135deg, #1e3a8a, #60a5fa 60%, #93c5fd); }
+  .sc-11 .barra11 { position: absolute; left: 0; right: 0; bottom: 0; height: 12%; background: rgba(240,244,250,.85); display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.1rem; }
+  .sc-11 .v11 { position: absolute; left: 20%; right: 20%; top: 14%; bottom: 22%; background: #fff; border-radius: 12px; color: #111; box-shadow: 0 16px 40px rgba(0,0,0,.35); transform: scale(.7); opacity: 0; transition: .5s; padding: 10px; font-size: .8rem; }
+  .sc-11 .v11.ab { transform: scale(1); opacity: 1; }
+  .sc-ia { background: #f6f4ee; color: var(--ink); padding: 14px; display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; }
+  .sc-ia .yo { align-self: flex-end; background: #2f63e0; color: #fff; border-radius: 14px 14px 4px 14px; padding: 8px 12px; max-width: 80%; font-size: .86rem; }
+  .sc-ia .bot { align-self: flex-start; background: #fff; border: 1px solid var(--line); border-radius: 14px 14px 14px 4px; padding: 8px 12px; max-width: 85%; font-size: .86rem; }
+
+  /* tarea */
+  .prohibidos { display: flex; gap: 8px; flex-wrap: wrap; }
+  .prohibidos span { background: #f8e9e6; color: var(--bad); border-radius: 99px; padding: 4px 12px; font-weight: 700; text-decoration: line-through; }
+  .hoja { background: #fff; border-radius: 6px; padding: 18px 18px 18px 40px; box-shadow: 0 14px 30px rgba(0,0,0,.15); transform: rotate(1.5deg); background-image: repeating-linear-gradient(transparent 0 31px, #dbe7f3 31px 32px); position: relative; font-family: "IBM Plex Sans", sans-serif; }
+  .hoja::before { content: ""; position: absolute; left: 28px; top: 0; bottom: 0; width: 2px; background: #f0a3a3; }
+  .hoja b { display: block; font-size: .9rem; } .hoja small { display: block; color: var(--mut); margin-bottom: 8px; }
+  .renglon { display: grid; grid-template-columns: 28px 1fr 46px; align-items: end; gap: 8px; height: 40px; }
+  .renglon span { font-weight: 700; color: var(--moss); }
+  .renglon i { border-bottom: 2px dotted #9aa; height: 70%; }
+  .renglon em { border: 2px dashed #c9c3b3; border-radius: 6px; height: 34px; display: grid; place-items: center; font-style: normal; }
+
+  @media (max-width: 760px) {
+    .cadena2 { grid-template-columns: repeat(2, 1fr); } .eslabon::after { display: none; }
+    .lab2 { grid-template-columns: 1fr; }
+    .celu.grande-c { width: 100%; max-width: 300px; }
+    .seg-dos { grid-template-columns: 1fr !important; }
+    .diapo > * { flex-shrink: 0; }
+    .lab2 { flex: none; } .gui2 { min-height: 320px; } #lab2 .term { min-height: 260px; }
+  }
 </style>
 </head>
 <body>
@@ -560,7 +760,6 @@
     </div>
   </section>
 
-  <!-- 4 · SECCIÓN 1 -->
   <section class="diapo seccion">
     <p class="num">01</p>
     <p class="eti">Primera parte</p>
@@ -580,21 +779,12 @@
       <div class="tj"><h3>🌉 Hace de puente</h3><p>Traduce tus clics y toques en órdenes que el hardware entiende.</p></div>
     </div>
     <p class="nota" style="margin-top:12px">Ejemplos que ya conoces: <b>Windows</b> en la PC del laboratorio, <b>Android</b> o <b>iOS</b> en tu celular.</p>
-  </section>
-
-  <!-- 6 · ANALOGÍA HOSPITAL -->
-  <section class="diapo">
-    <p class="eti">Piénsalo así · toquen cada casilla gris</p>
-    <h2>El SO es como la jefa de enfermeras del servicio</h2>
-    <p class="peq" style="margin-bottom:8px !important">Ella no atiende a cada paciente, pero <b>organiza</b> todo para que el servicio funcione. Antes de destapar, pregunten: ¿qué será en la computadora?</p>
-    <table class="hosp">
-      <tr><th>En el hospital, la jefa…</th><th>En la computadora, el SO…</th></tr>
-      <tr><td>🛏️ Asigna las camas a los pacientes que llegan</td><td class="tapa"><span>Asigna la <b>memoria RAM</b> a cada programa que se abre</span></td></tr>
-      <tr><td>⏱️ Organiza los turnos para que todos sean atendidos</td><td class="tapa"><span>Reparte el <b>tiempo del procesador</b> entre los programas</span></td></tr>
-      <tr><td>🗂️ Ordena las historias clínicas en el archivo</td><td class="tapa"><span>Organiza los <b>archivos y carpetas</b> en el disco</span></td></tr>
-      <tr><td>🩺 Coordina los equipos: monitores, bombas de infusión…</td><td class="tapa"><span>Controla los <b>dispositivos</b>: impresora, cámara, parlantes…</span></td></tr>
-      <tr><td>🪪 Solo deja entrar a UCI al personal con credencial</td><td class="tapa"><span>Protege con <b>usuario y contraseña</b> y da permisos</span></td></tr>
-    </table>
+    <details class="mas">
+      <summary>Para saber más</summary>
+      <p>“Operativo” viene de <i>operar</i>: es el programa que hace <b>operar</b> (funcionar) a la máquina. En inglés se dice <i>operating system</i> (OS).</p>
+      <p>Viene instalado en el disco o en la memoria interna del celular. Cuando compras una laptop “con Windows”, ya trae el SO; si la compras “sin sistema”, no podrás usarla hasta instalarle uno.</p>
+      <p>Cada SO tiene <b>versiones</b> (Windows 10, Windows 11; Android 14, Android 15…). Las nuevas corrigen errores y traen funciones nuevas.</p>
+    </details>
   </section>
 
   <!-- 7 · CAPAS -->
@@ -623,7 +813,7 @@
     <p class="eti">Reto · ¿de qué tipo es?</p>
     <h2>No todo el software es igual</h2>
     <div class="leyenda3">
-      <div class="tj" style="--c:var(--c-so)"><h3>⚙️ De sistema</h3><p>Hace funcionar la máquina: el <b>SO</b> y los <b>controladores</b>.</p></div>
+      <div class="tj" style="--c:var(--c-so)"><h3>⚙️ De sistema</h3><p>Hace funcionar la máquina: el <b>sistema operativo</b>.</p></div>
       <div class="tj" style="--c:var(--c-ap)"><h3>📱 De aplicación</h3><p>Lo usas para <b>tus tareas</b>: escribir, chatear, navegar.</p></div>
       <div class="tj" style="--c:var(--c-hw)"><h3>🧰 Utilitario</h3><p><b>Cuida y mantiene</b> el equipo: antivirus, limpiadores, compresores.</p></div>
     </div>
@@ -633,33 +823,73 @@
       <button class="carta" data-revela data-s="uti"><span class="emo">🛡️</span><h3>Antivirus</h3><div class="atras">🧰 <b>Utilitario</b>: protege el equipo.</div></button>
       <button class="carta" data-revela data-s="app"><span class="emo">📝</span><h3>Google Docs</h3><div class="atras">📱 <b>De aplicación</b>: para escribir documentos.</div></button>
       <button class="carta" data-revela data-s="sis"><span class="emo">🤖</span><h3>Android</h3><div class="atras">⚙️ <b>De sistema</b>: el SO de la mayoría de celulares.</div></button>
-      <button class="carta" data-revela data-s="sis"><span class="emo">🖨️</span><h3>Controlador de la impresora</h3><div class="atras">⚙️ <b>De sistema</b>: enseña al SO a usar la impresora.</div></button>
+      <button class="carta" data-revela data-s="sis"><span class="emo">🍎</span><h3>iOS</h3><div class="atras">⚙️ <b>De sistema</b>: el SO del iPhone.</div></button>
       <button class="carta" data-revela data-s="uti"><span class="emo">🗜️</span><h3>Compresor ZIP</h3><div class="atras">🧰 <b>Utilitario</b>: junta y achica archivos.</div></button>
       <button class="carta" data-revela data-s="app"><span class="emo">🎵</span><h3>Spotify</h3><div class="atras">📱 <b>De aplicación</b>: para escuchar música.</div></button>
     </div>
   </section>
 
-  <!-- 9 · SECCIÓN 2 -->
   <section class="diapo seccion">
     <p class="num">02</p>
     <p class="eti">Segunda parte</p>
-    <h1>¿Qué hace el sistema operativo?</h1>
+    <h1>¿De dónde viene? Un poco de historia</h1>
   </section>
 
-  <!-- 10 · ARRANQUE -->
-  <section class="diapo" data-vel>
-    <p class="eti">Experimento · ¿qué pasa cuando presionas el botón de encendido?</p>
-    <div class="fila" style="justify-content:space-between">
-      <h2 style="margin:0">El arranque, paso a paso</h2>
-      <div class="fila"><button class="bt amb" id="arr-go">⏻ Encender</button><button class="bt sec" id="arr-paso">Paso a paso ▸</button></div>
+
+  <section class="diapo">
+    <p class="eti">Historia del sistema operativo · muevan la barra o reproduzcan la historia</p>
+    <div class="linea">
+      <div class="linea-foto" id="lt-foto"></div>
+      <div>
+        <p class="anio" id="lt-anio"></p>
+        <h2 id="lt-tit" style="margin-top:6px"></h2>
+        <p id="lt-txt"></p>
+        <div class="fila"><button class="bt sec" id="lt-ant">◂ Antes</button><button class="bt" id="lt-sig">Después ▸</button><button class="bt sec" id="lt-rep">↻ Repetir animación</button><button class="bt amb" id="lt-auto">▶ Reproducir la historia</button></div>
+      </div>
     </div>
-    <div class="arranque" id="arr"></div>
-    <div class="explica" id="arr-x"><span class="emo">👆</span><p>Pulsa <b>Encender</b> para verlo de corrido, o <b>Paso a paso</b> para explicarlo con calma.</p></div>
-    <div class="pregunta" data-revela>
-      <span>¿Por qué una PC con disco SSD enciende mucho más rápido que una con HDD?</span>
-      <button class="bt sec">Ver respuesta</button>
-      <p class="resp">Porque al encender hay que copiar el sistema operativo del disco a la RAM, y el SSD lee mucho más rápido (¿recuerdan la carrera de la clase 1?).</p>
+    <div class="regla"><input type="range" id="lt-r" min="0" value="0" aria-label="Año"><div class="marcas" id="lt-m"></div></div>
+  </section>
+
+
+  <section class="diapo" data-vel id="lab2-d">
+    <p class="eti">Antes y ahora · cómo le damos órdenes a la computadora</p>
+    <div class="fila" style="justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h2 style="margin:0">Ventanas de hoy vs. comandos de 1981</h2>
+      <div class="fila"><button class="bt sec" id="lab-guia-b">🧭 Guía paso a paso</button><button class="bt sec" id="lab-cmd-b">📖 Guía de comandos</button><button class="bt sec" id="lab-re">↺ Reiniciar</button></div>
     </div>
+    <div class="tareas2" id="lab-t"></div>
+    <div class="lab2" id="lab2">
+      <div class="lado-g">
+        <div class="cab2"><b>🖱️ Hoy · ventanas</b><span class="cont" id="g-cont"></span></div>
+        <div class="gui2">
+          <div class="g-barra"><button id="g-atras" title="Atrás">←</button><span id="g-ruta"></span><button id="g-pap" title="Papelera: restaurar el último">🗑️ 0</button></div>
+          <div class="g-herr" id="g-herr">
+            <button data-op="carpeta">📁 Nueva carpeta</button><button data-op="archivo">📝 Nuevo archivo</button><button data-op="ren">✏️ Renombrar</button><button data-op="copiar">📋 Copiar</button><button data-op="cortar">✂️ Cortar</button><button data-op="pegar">📌 Pegar</button><button data-op="del">🗑️ Eliminar</button>
+          </div>
+          <div class="g-cuerpo" id="g-cuerpo" data-noswipe>
+            <div class="g-area" id="g-area"></div>
+            <div class="ctx" id="g-ctx" hidden></div>
+            <div class="np" id="g-np" hidden><div class="np-t"><b id="g-np-n"></b><button id="g-np-x">✕</button></div><textarea id="g-np-ta" spellcheck="false"></textarea><button class="bt" id="g-np-g">💾 Guardar</button></div>
+            <span class="cur" id="g-cur">➤</span>
+            <span class="fantasma" id="g-fan" hidden></span>
+          </div>
+        </div>
+        <div class="pista2" id="g-pista">💡 Clic derecho (o mantén presionado) sobre un archivo o en el espacio vacío. Doble clic para abrir.</div>
+      </div>
+      <div class="lado-c">
+        <div class="cab2"><b>⌨️ 1981 · línea de comandos</b><span class="cont" id="c-cont"></span></div>
+        <div class="term" id="term" data-noswipe><div class="sal" id="term-s"></div><div class="lin-in"><span id="term-p">C:\ANA&gt;</span><input id="term-i" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Escribe un comando"></div></div>
+        <div class="pista2" id="c-pista">💡 Escribe <b>ayuda</b> y pulsa Enter. ¿No recuerdas un comando? Abre la 📖 Guía de comandos.</div>
+      </div>
+    </div>
+    <div class="lab-x" id="lab-x">Elige una tarea arriba para verla hecha en las dos computadoras al mismo tiempo. Después, ¡hazlo tú!</div>
+    <div class="capa-guia" id="lab-guia" hidden></div>
+  </section>
+
+  <section class="diapo seccion">
+    <p class="num">03</p>
+    <p class="eti">Tercera parte</p>
+    <h1>¿Qué hace el sistema operativo?</h1>
   </section>
 
   <!-- 11 · FUNCIONES -->
@@ -675,58 +905,47 @@
     </div>
   </section>
 
-  <!-- 12 · MULTITAREA -->
-  <section class="diapo" data-vel>
-    <p class="eti">Demostración · tarea 1: administrar el procesador</p>
-    <div class="fila" style="justify-content:space-between;align-items:end">
-      <div><h2 style="margin:0">El procesador malabarista</h2>
-      <p class="peq" style="margin:4px 0 0 !important">El procesador hace <b>una cosa a la vez</b>. El SO le da a cada programa un turno cortito. Bajen la velocidad 🐢 para ver los turnos.</p></div>
-      <div class="fila"><button class="bt amb" id="mt-go">▶ Iniciar</button><button class="bt sec" id="mt-add">＋ Videollamada</button><button class="bt sec" id="mt-re">↺</button></div>
-    </div>
-    <div class="malabar" style="margin-top:12px">
-      <div class="cpu-caja"><div class="chip-cpu" id="mt-chip">🧠</div><small>PROCESADOR · AHORA ATIENDE A:</small><div class="turno" id="mt-turno">—</div><small id="mt-n">Turnos dados: 0</small></div>
-      <div class="procs" id="mt-procs"></div>
-    </div>
-    <div class="pregunta" data-revela>
-      <span>Entonces, ¿tu celular hace varias cosas <i>a la vez</i>?</span>
-      <button class="bt sec">Ver respuesta</button>
-      <p class="resp">En realidad no: cambia de programa miles de veces por segundo y por eso parece simultáneo. Es como la enfermera que va de cama en cama tan rápido que todos sienten que los atiende.</p>
-    </div>
-  </section>
 
-  <!-- 13 · RAM -->
   <section class="diapo">
-    <p class="eti">Demostración · tarea 2: administrar la memoria</p>
-    <h2>¿Por qué el celular se pone lento? 🐢</h2>
+    <p class="eti">Demostración · administrar la memoria RAM</p>
+    <h2>¿Por qué el celular se pone lento… y por qué a veces cierra apps solo?</h2>
     <div class="ramviz">
       <div class="ram-mod">
         <h3><span>💭 MEMORIA RAM · 8 GB</span><span id="ram-uso">0 / 8 GB</span></h3>
         <div class="celdas" id="ram-c"></div>
         <div class="disco-v" id="ram-d"><small>💾 MEMORIA VIRTUAL (EN EL DISCO) · MUCHO MÁS LENTA</small></div>
         <div class="velocimetro"><span class="em" id="ram-em">🐇</span><span id="ram-txt">Todo va rápido</span></div>
+        <div class="ram-log" id="ram-log"></div>
       </div>
       <div>
-        <p class="peq" style="margin-bottom:6px !important">Abre y cierra apps. Cada cuadrito es medio GB de RAM.</p>
+        <p class="peq" style="margin-bottom:6px !important">Toca las apps para abrirlas o cerrarlas. Cada cuadrito es medio GB de RAM. Ábrelas todas y mira qué hace el SO.</p>
         <div class="apps-b" id="ram-apps"></div>
         <button class="bt sec" id="ram-cerrar" style="margin-top:8px">✕ Cerrar todas</button>
-        <p class="nota peq" style="margin-top:10px">Cuando la RAM se llena, el SO pasa lo que no usas al disco. Funciona… pero <b>todo se vuelve lento</b>.</p>
+        <details class="mas">
+          <summary>¿Qué está pasando? (para repasar)</summary>
+          <p><b>1. Hay espacio:</b> cada app que abres ocupa un pedazo de la RAM. Todo va rápido.</p>
+          <p><b>2. La RAM se llena:</b> el SO pasa lo que no estás usando al disco (memoria virtual). Funciona, pero todo se vuelve lento.</p>
+          <p><b>3. Ni así alcanza:</b> el SO <b>cierra por su cuenta</b> la app que usaste hace más tiempo, para no “estrangular” la RAM y que el equipo no se congele. Por eso, cuando vuelves a una app, a veces se recarga desde cero y pierdes lo que estabas viendo.</p>
+          <p>El sistema operativo siempre se reserva su parte de la RAM: sin él, nada funciona.</p>
+        </details>
       </div>
     </div>
   </section>
 
-  <!-- 14 · ARCHIVOS -->
+
   <section class="diapo">
-    <p class="eti">Demostración · tarea 3: organizar los archivos</p>
+    <p class="eti">Demostración · organizar los archivos</p>
     <div class="dos angosto" style="align-items:start;gap:18px">
       <div>
         <h2>Carpetas, rutas y extensiones</h2>
         <p class="peq">El SO guarda todo en <b>carpetas</b> dentro de otras carpetas, como un archivador con cajones y fólderes.</p>
         <p class="peq">La <b>ruta</b> es la dirección exacta de un archivo. La <b>extensión</b> (lo que va después del punto) le dice al SO con qué programa abrirlo.</p>
-        <div class="pregunta" data-revela style="margin-top:6px">
-          <span>¿Qué pasa si le cambias la extensión a un archivo?</span>
-          <button class="bt sec">Ver respuesta</button>
-          <p class="resp">El SO intentará abrirlo con otro programa y probablemente salga un error. ¡Mejor no tocarla!</p>
-        </div>
+        <p class="peq">👀 Entra también a <b>Windows</b> y a <b>Archivos de programa</b>: ¡el propio sistema y tus apps también son archivos!</p>
+        <details class="mas">
+          <summary>Extensiones que debes reconocer</summary>
+          <p><b>.docx</b> Word · <b>.xlsx</b> Excel · <b>.pptx</b> PowerPoint · <b>.pdf</b> documento PDF · <b>.txt</b> texto simple · <b>.jpg / .png</b> imágenes · <b>.mp3</b> audio · <b>.mp4</b> video · <b>.zip</b> comprimido · <b>.exe</b> programa (en Windows) · <b>.apk</b> app (en Android).</p>
+          <p>Si le cambias la extensión a un archivo, el SO intentará abrirlo con otro programa y probablemente salga un error.</p>
+        </details>
       </div>
       <div>
         <div class="ventana">
@@ -734,70 +953,55 @@
           <div class="ruta" id="ex-ruta"></div>
           <div class="expl-cuerpo"><div class="arbol" id="ex-arbol"></div><div class="archivos" id="ex-arch"></div></div>
         </div>
-        <div class="abrecon" id="ex-abre"><span class="emo">👆</span><span>Toca un archivo para ver con qué programa lo abre el SO.</span></div>
+        <div class="abrecon" id="ex-abre"><span class="emo">👆</span><span>Toca un archivo para ver qué es y con qué programa lo abre el SO.</span></div>
       </div>
     </div>
   </section>
 
-  <!-- 15 · CONTROLADORES -->
+
   <section class="diapo" data-vel>
-    <p class="eti">Demostración · tarea 4: controlar los dispositivos</p>
+    <p class="eti">El SO no es un mago</p>
     <div class="fila" style="justify-content:space-between;align-items:end">
-      <div><h2 style="margin:0">Controladores (drivers): los intérpretes</h2>
-      <p class="peq" style="margin:4px 0 0 !important">Cada aparato “habla su propio idioma”. El <b>controlador</b> es el pequeño programa que traduce entre el aparato y el SO, como un intérprete de quechua entre el paciente y la enfermera.</p></div>
-      <label class="interruptor"><input type="checkbox" id="drv-sin"> Simular “sin controlador”</label>
+      <div><h2 style="margin:0">Es una cadena de archivos que trabajan en equipo</h2>
+      <p class="peq" style="margin:4px 0 0 !important">Desde que presionas el botón hasta que abres tu informe, cada paso lo hace un <b>archivo</b> que llama al siguiente.</p></div>
+      <div class="fila"><button class="bt amb" id="cad-go">▶ Ver la cadena</button><button class="bt sec" id="cad-paso">Paso a paso ▸</button></div>
     </div>
-    <div class="drv" id="drv" style="margin-top:12px"></div>
-    <p class="nota peq" style="margin-top:12px">Hoy casi todos los controladores se instalan <b>solos</b> al conectar el aparato (“Plug and Play”: conectar y usar). A veces hay que descargarlos de la página del fabricante.</p>
+    <div class="cadena2" id="cad"></div>
+    <div class="explica" id="cad-x"><span class="emo">⛓️</span><p>Pulsa <b>Ver la cadena</b> y sigue el recorrido, eslabón por eslabón.</p></div>
+    <div class="rej c3" style="margin-top:10px">
+      <div class="tj"><h3>📦 Es enorme</h3><p>Windows 11 pide al menos <b>64 GB</b> de espacio y está formado por <b>decenas de miles de archivos</b>, casi todos en <code>C:\Windows</code>.</p></div>
+      <div class="tj"><h3>🔒 Está protegido</h3><p>Si se borra o se daña un archivo importante, el equipo puede <b>dejar de encender</b>. Por eso el SO no te deja tocar sus carpetas.</p></div>
+      <div class="tj"><h3>🧩 Tus apps también</h3><p>Una app es otro grupo de archivos (<code>chrome.exe</code>, <code>WhatsApp.exe</code>) que el SO abre cuando tocas su ícono.</p></div>
+    </div>
   </section>
 
-  <!-- 16 · INTERFAZ -->
+
   <section class="diapo">
-    <p class="eti">Demostración · tarea 5: la interfaz</p>
-    <h2>Dos formas de darle órdenes</h2>
-    <div class="dos" style="align-items:stretch">
+    <p class="eti">Seguridad · casos que pasan todos los días</p>
+    <div class="dos seg-dos">
       <div>
-        <h3>🖱️ Interfaz gráfica: ventanas e íconos</h3>
-        <div class="gui" id="gui">
-          <button class="ico" data-v="doc"><span>📁</span>Documentos</button>
-          <button class="ico" data-v="img"><span>🖼️</span>Imágenes</button>
-          <button class="ico" data-v="hora"><span>🕒</span>Reloj</button>
-          <div class="mini-ven" id="gui-v"><div class="tit"><span id="gui-t"></span><button type="button" id="gui-x">✕</button></div><div class="cu" id="gui-c"></div></div>
-        </div>
+        <h2>El SO pone los candados… pero la llave la tienes tú 🔑</h2>
+        <p class="peq">El sistema operativo te protege con contraseñas, permisos, avisos y actualizaciones. Pero casi todos los robos pasan porque <b>la persona abre la puerta</b>: toca un enlace, da un código o permite algo que no debía.</p>
+        <div class="seg-marcador" id="seg-m"></div>
+        <div class="fila" style="margin-top:8px"><button class="bt sec" id="seg-ant">◂ Caso anterior</button><button class="bt sec" id="seg-re">↺ Empezar de nuevo</button></div>
+        <details class="mas">
+          <summary>Reglas para no caer (para repasar)</summary>
+          <p>🔗 Ningún banco te pide tu clave por mensaje o enlace. Si dudas, llama al número oficial que está detrás de tu tarjeta.</p>
+          <p>🔢 Los códigos que llegan por SMS <b>son solo tuyos</b>: quien te los pide quiere entrar a tu cuenta.</p>
+          <p>📞 Si un familiar “cambió de número” y pide dinero, llámalo a su número de siempre.</p>
+          <p>📦 Instala apps solo desde la tienda oficial (Play Store, App Store, AppGallery).</p>
+          <p>🙅 Si un permiso no tiene nada que ver con lo que hace la app, recházalo.</p>
+          <p>🔐 Usa contraseñas largas, distintas para cada cuenta, y activa la verificación en dos pasos.</p>
+          <p>🔄 Instala las actualizaciones: cierran huecos que los delincuentes ya conocen.</p>
+        </details>
       </div>
-      <div>
-        <h3>⌨️ Línea de comandos: escribir órdenes</h3>
-        <div class="term" id="term"><div class="sal" id="term-s"></div><div class="lin-in"><span>C:\Usuarios\Ana&gt;</span><input id="term-i" autocomplete="off" spellcheck="false" aria-label="Escribe un comando"></div></div>
-        <div class="sug" id="term-sug"></div>
-      </div>
-    </div>
-    <p class="peq" style="margin-top:10px !important">Antes solo existía la línea de comandos (como en MS-DOS). Hoy usamos ventanas, pantallas <b>táctiles</b> y hasta la <b>voz</b> (“Ok Google”, Siri). Los técnicos siguen usando comandos porque son más rápidos para ciertas tareas.</p>
-  </section>
-
-  <!-- 17 · SEGURIDAD -->
-  <section class="diapo">
-    <p class="eti">Demostración · tarea 6: la seguridad</p>
-    <div class="dos" style="gap:26px">
-      <div>
-        <h2>El SO te protege… si lo dejas</h2>
-        <ul>
-          <li><b>Usuario y contraseña</b>, PIN, huella o rostro: solo tú entras.</li>
-          <li><b>Permisos</b>: cada app debe pedirte permiso para usar la cámara, el micrófono, tu ubicación o tus contactos.</li>
-          <li><b>Actualizaciones</b>: cierran las “puertas” que usan los virus.</li>
-        </ul>
-        <p class="nota peq" style="margin-top:10px">Regla de oro: si un permiso <b>no tiene nada que ver</b> con lo que hace la app, recházalo.</p>
-      </div>
-      <div>
-        <div class="celu"><div class="pant-c" id="perm"></div></div>
-        <p class="peq" style="text-align:center;margin-top:8px !important">Voten en el chat: ¿Permitir o Rechazar?</p>
-      </div>
+      <div><div class="celu grande-c"><div class="pant-c" id="seg"></div></div></div>
     </div>
   </section>
 
-  <!-- 18 · SECCIÓN 3 -->
   <section class="diapo seccion">
-    <p class="num">03</p>
-    <p class="eti">Tercera parte</p>
+    <p class="num">04</p>
+    <p class="eti">Cuarta parte</p>
     <h1>Los sistemas operativos que usamos</h1>
   </section>
 
@@ -810,31 +1014,16 @@
 
   <!-- 20 · ESCRITORIO VS MÓVIL -->
   <section class="diapo">
-    <p class="eti">Comparación · toquen cada casilla gris</p>
+    <p class="eti">Comparación</p>
     <h2>SO de computadora vs. SO de celular</h2>
     <table>
       <tr><th></th><th>💻 Computadora</th><th>📱 Celular</th></tr>
-      <tr><td>Ejemplos</td><td class="tapa"><span>Windows, macOS, Linux, ChromeOS</span></td><td class="tapa"><span>Android, iOS, HarmonyOS</span></td></tr>
-      <tr><td>Cómo lo manejas</td><td class="tapa"><span>Teclado y mouse</span></td><td class="tapa"><span>Pantalla táctil y voz</span></td></tr>
-      <tr><td>Cómo instalas apps</td><td class="tapa"><span>Descargas un instalador o usas una tienda</span></td><td class="tapa"><span>Casi siempre desde la tienda: Play Store, App Store, AppGallery</span></td></tr>
-      <tr><td>Dónde ves tus archivos</td><td class="tapa"><span>Explorador de archivos (Finder en Mac)</span></td><td class="tapa"><span>App “Archivos” o la Galería</span></td></tr>
-      <tr><td>Qué cuida más</td><td class="tapa"><span>Trabajar con varias ventanas a la vez</span></td><td class="tapa"><span>La batería y los datos móviles</span></td></tr>
+      <tr><td>Ejemplos</td><td>Windows, macOS, Linux, ChromeOS</td><td>Android, iOS, HarmonyOS</td></tr>
+      <tr><td>Cómo lo manejas</td><td>Teclado y mouse</td><td>Pantalla táctil y voz</td></tr>
+      <tr><td>Cómo instalas apps</td><td>Descargas un instalador o usas una tienda</td><td>Casi siempre desde la tienda: Play Store, App Store, AppGallery</td></tr>
+      <tr><td>Dónde ves tus archivos</td><td>Explorador de archivos (Finder en Mac)</td><td>App “Archivos” o la Galería</td></tr>
+      <tr><td>Qué cuida más</td><td>Trabajar con varias ventanas a la vez</td><td>La batería y los datos móviles</td></tr>
     </table>
-  </section>
-
-  <!-- 21 · LÍNEA DE TIEMPO -->
-  <section class="diapo">
-    <p class="eti">Historia · muevan la barra</p>
-    <div class="linea">
-      <div class="linea-foto" id="lt-foto"></div>
-      <div>
-        <p class="anio" id="lt-anio"></p>
-        <h2 id="lt-tit" style="margin-top:6px"></h2>
-        <p id="lt-txt"></p>
-        <div class="fila"><button class="bt sec" id="lt-ant">◂ Antes</button><button class="bt" id="lt-sig">Después ▸</button></div>
-      </div>
-    </div>
-    <div class="regla"><input type="range" id="lt-r" min="0" value="0" aria-label="Año"><div class="marcas" id="lt-m"></div></div>
   </section>
 
   <!-- 22 · SO ESCONDIDOS -->
@@ -853,71 +1042,6 @@
     </div>
   </section>
 
-  <!-- 23 · LIBRE VS PROPIETARIO -->
-  <section class="diapo">
-    <p class="eti">¿Quién es el dueño?</p>
-    <h2>Software libre y software propietario</h2>
-    <div class="dos" style="align-items:stretch">
-      <div class="tj" style="border-top:5px solid var(--c-ap)">
-        <h3>🔒 Propietario</h3>
-        <p>Es de una empresa. <b>No puedes ver ni cambiar</b> cómo está hecho, y a veces pagas una licencia.</p>
-        <p style="margin-top:6px !important"><b>Ej.:</b> Windows, macOS, iOS.</p>
-        <p class="analog" style="margin-top:8px !important">el plato de un restaurante famoso: lo disfrutas, pero no te dan la receta.</p>
-      </div>
-      <div class="tj" style="border-top:5px solid var(--ok)">
-        <h3>🔓 Libre o de código abierto</h3>
-        <p>Su “receta” (el código) es pública: cualquiera puede <b>verla, usarla, mejorarla y compartirla</b>, casi siempre gratis.</p>
-        <p style="margin-top:6px !important"><b>Ej.:</b> Linux (Ubuntu, Debian, Linux Mint…).</p>
-        <p class="analog" style="margin-top:8px !important">la receta de la abuela que circula en la familia y cada uno le agrega algo.</p>
-      </div>
-    </div>
-    <div class="pregunta" data-revela>
-      <span>Y Android, ¿es libre o propietario?</span>
-      <button class="bt sec">Ver respuesta</button>
-      <p class="resp">Las dos cosas: su base es de código abierto y está hecha sobre Linux, pero el Android de tu celular trae apps y servicios de Google (Play Store, Gmail, Maps) que son propietarios.</p>
-    </div>
-  </section>
-
-  <!-- 24 · ACTIVIDAD CELULAR -->
-  <section class="diapo">
-    <p class="eti">Actividad · con tu celular en la mano 📱</p>
-    <div class="dos" style="align-items:start;gap:22px">
-      <div>
-        <h2>¿Qué SO tiene tu celular?</h2>
-        <div class="pasos-c">
-          <div><b>🤖 Android:</b> Ajustes → Acerca del teléfono → Versión de Android <span class="peq">(en algunos: “Información del software”)</span></div>
-          <div><b>🍎 iPhone:</b> Ajustes → General → Información → Versión de iOS</div>
-          <div><b>🌸 Huawei:</b> Ajustes → Acerca del teléfono → Versión de HarmonyOS o EMUI</div>
-        </div>
-        <p style="margin-top:12px">✍️ Escribe en el chat: <b>marca, sistema y versión</b>.<br><span class="peq">Ejemplo: “Samsung · Android 14”</span></p>
-      </div>
-      <div>
-        <h3 style="margin-bottom:8px">📊 Conteo del aula <span class="peq" id="ct-tot"></span></h3>
-        <div class="conteo" id="ct"></div>
-        <div class="fila" style="margin-top:10px"><button class="bt sec" id="ct-re">↺ Reiniciar conteo</button></div>
-        <p class="peq" style="margin-top:8px !important">En Perú, unos <b>8 de cada 10</b> celulares usan Android. ¿Se parece a nuestra aula?</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 25 · ACTUALIZACIONES -->
-  <section class="diapo" data-vel>
-    <p class="eti">Mantenimiento · ¿por qué el SO se actualiza?</p>
-    <div class="dos" style="gap:24px">
-      <div>
-        <h2>Actualizar sí, apagar a la mitad no</h2>
-        <ul>
-          <li>🛡️ <b>Seguridad:</b> tapa los huecos que usan los virus.</li>
-          <li>🔧 <b>Arreglos:</b> corrige errores y fallas.</li>
-          <li>✨ <b>Novedades:</b> agrega funciones nuevas.</li>
-        </ul>
-        <p class="nota peq" style="margin-top:10px">Cuando un SO es muy antiguo deja de recibir actualizaciones y se vuelve inseguro. Por ejemplo, <b>Windows 10 dejó de recibirlas en octubre de 2025</b>.</p>
-        <div class="fila" style="margin-top:10px"><button class="bt amb" id="up-go">⬇ Instalar actualización</button><button class="bt sec" id="up-corte" disabled>🔌 Desenchufar a la mitad</button></div>
-      </div>
-      <div class="upd" id="upd"><div class="pct" id="up-pct">✓</div><div class="barra-u"><i id="up-b"></i></div><div class="msj" id="up-m">Tu sistema está al día.</div></div>
-    </div>
-  </section>
-
   <!-- 26 · QUIZ -->
   <section class="diapo">
     <p class="eti">Reto final · respondan con la letra en el chat</p>
@@ -931,18 +1055,46 @@
     </div>
   </section>
 
-  <!-- 27 · PARA RECORDAR -->
+  <!-- PARA RECORDAR -->
   <section class="diapo">
     <p class="eti">Para recordar</p>
     <h2>Lo más importante de hoy</h2>
     <ul>
       <li>El <b>sistema operativo</b> es el programa principal: se carga <b>primero</b> y hace de <b>puente</b> entre tú, las apps y el hardware.</li>
-      <li>Al encender, el SO se copia del <b>disco</b> a la <b>RAM</b>.</li>
-      <li>Administra el <b>procesador</b> (turnos), la <b>memoria</b>, los <b>archivos</b>, los <b>dispositivos</b> (con controladores), la <b>interfaz</b> y la <b>seguridad</b>.</li>
+      <li>Antes se le daban órdenes <b>escribiendo comandos</b> (MS-DOS); hoy usamos <b>ventanas</b>, el <b>tacto</b> y la <b>voz</b>.</li>
+      <li>Administra el <b>procesador</b>, la <b>memoria</b> (y cierra apps si la RAM no alcanza), los <b>archivos</b>, los <b>dispositivos</b>, la <b>interfaz</b> y la <b>seguridad</b>.</li>
+      <li>No es magia: es una <b>cadena de miles de archivos</b> que trabajan en equipo.</li>
+      <li>El SO avisa, pregunta y bloquea, pero <b>la última decisión de seguridad es tuya</b>.</li>
       <li>De computadora: <b>Windows, macOS, Linux, ChromeOS</b>. De celular: <b>Android, iOS, HarmonyOS</b>.</li>
-      <li>Puede ser <b>propietario</b> (de una empresa) o <b>libre</b> (código abierto, como Linux).</li>
-      <li>Mantenlo <b>actualizado</b> y revisa los <b>permisos</b> de tus apps.</li>
     </ul>
+  </section>
+
+
+  <section class="diapo">
+    <p class="eti">Tarea para la próxima clase ✍️</p>
+    <div class="dos ancho" style="gap:26px">
+      <div>
+        <h2>10 sistemas operativos que no sean los de siempre</h2>
+        <p>En una hoja, haz una lista de <b>10 sistemas operativos diferentes</b> a:</p>
+        <div class="prohibidos"><span>Windows</span><span>macOS</span><span>iOS</span><span>Android</span></div>
+        <p style="margin-top:12px">Para cada uno escribe:</p>
+        <ul>
+          <li>✏️ Su <b>nombre</b>.</li>
+          <li>📱 En qué <b>aparato</b> se usa (computadora, reloj, televisor, auto, consola, servidor…).</li>
+          <li>🎨 Un <b>dibujo</b>: su logo o el aparato donde funciona.</li>
+        </ul>
+        <p class="nota peq" style="margin-top:12px">Pista: busca en internet qué SO usan los relojes inteligentes, los televisores, las consolas, los autos o los servidores.</p>
+      </div>
+      <div class="hoja">
+        <b>Herramientas Informáticas · Tarea 2</b>
+        <small>Nombre: __________________</small>
+        <div class="renglon"><span>1.</span><i></i><em>🎨</em></div>
+        <div class="renglon"><span>2.</span><i></i><em>🎨</em></div>
+        <div class="renglon"><span>3.</span><i></i><em>🎨</em></div>
+        <div class="renglon"><span>…</span><i></i><em></em></div>
+        <div class="renglon"><span>10.</span><i></i><em>🎨</em></div>
+      </div>
+    </div>
   </section>
 
   <!-- 28 · CIERRE -->
@@ -1055,11 +1207,12 @@ function cargarWeb(img) {
   img.onerror = () => { const d = document.createElement("span"); d.className = "emo"; d.textContent = img.dataset.emo || "🖼️"; img.replaceWith(d); };
 }
 $$("img[data-commons]").forEach(cargarWeb);
-const estado = {};                       // temporizadores por demo, para detenerlas al salir
+const estado = {};
 function parar(k) { (estado[k] || []).forEach(clearTimeout); estado[k] = []; }
 function luego(k, f, ms) { (estado[k] = estado[k] || []).push(setTimeout(f, ms / VEL)); }
+const escH = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-/* ---------- 3 · encender con / sin sistema ---------- */
+/* ---------- encender con / sin sistema ---------- */
 const BIOS = [
   ["AulaBIOS v2.6 · Revisión de encendido (POST)", ""],
   ["Procesador ........................ ", "OK"],
@@ -1082,10 +1235,9 @@ async function encender(conSO) {
   await pausa(1300); if (!vivo()) return;
   if (!conSO) {
     p.insertAdjacentHTML("beforeend", `<div class="lin err">✘ No se encontró ningún sistema operativo.</div><div class="lin err">No bootable device. Insert boot disk and press any key_<span class="parpa">█</span></div>`);
-    tono(180, .5, 0, "square");
-    return;
+    tono(180, .5, 0, "square"); return;
   }
-  p.insertAdjacentHTML("beforeend", `<div class="lin ok">✔ Sistema operativo encontrado. Cargando en la RAM…</div>`);
+  p.insertAdjacentHTML("beforeend", `<div class="lin ok">✔ Sistema operativo encontrado. Copiándolo del disco a la RAM…</div>`);
   await pausa(1100); if (!vivo()) return;
   p.innerHTML = `<div class="escri" style="background:#0d1b2a"><div><div class="carga"></div>Iniciando…</div></div>`;
   await pausa(1800); if (!vivo()) return;
@@ -1098,25 +1250,25 @@ function apagarMon() { monTurno++; $("#mon").classList.remove("on"); $("#mon-p")
 apagarMon();
 alSalir.push(d => { if (!d.contains($("#mon"))) apagarMon(); });
 
-/* ---------- 7 · capas ---------- */
+/* ---------- capas ---------- */
 const ESCN = {
   wsp: { t: "💬 Enviar un WhatsApp", ico: "✉️", pasos: [
     [0, "Tocas el botón <b>Enviar</b> en la pantalla."],
     [1, "WhatsApp arma el mensaje y le pide al SO: <i>“envía esto por internet”</i>."],
-    [2, "El SO le da turno en el procesador y manda la orden a la antena Wi-Fi o de datos."],
-    [3, "El hardware (antena) envía el mensaje. ✓✓"],
-    [2, "El SO recibe la confirmación y avisa a WhatsApp."],
+    [2, "El SO le da un turno en el procesador y manda la orden a la antena Wi-Fi o de datos."],
+    [3, "El hardware (la antena) envía el mensaje. ✓✓"],
+    [2, "El SO recibe la confirmación y le avisa a WhatsApp."],
     [0, "Ves los dos checks en tu pantalla. Todo en menos de un segundo."] ] },
   imp: { t: "🖨️ Imprimir un informe", ico: "📄", pasos: [
     [0, "Pulsas <b>Imprimir</b> en Google Docs."],
     [1, "La aplicación prepara las páginas y se las entrega al SO."],
-    [2, "El SO las pone en la <b>cola de impresión</b> y usa el <b>controlador</b> para traducirlas al idioma de esa impresora."],
+    [2, "El SO las pone en la <b>cola de impresión</b>, en orden, y se las va enviando a la impresora."],
     [3, "La impresora (hardware) recibe las órdenes y saca la hoja."],
     [2, "Si falta papel, la impresora avisa al SO…"],
     [0, "…y el SO te muestra el mensaje: <i>“La impresora no tiene papel”</i>."] ] },
   foto: { t: "📷 Tomar una foto", ico: "📸", pasos: [
     [0, "Abres la Cámara y tocas el botón redondo."],
-    [1, "La app Cámara le pide al SO usar el sensor de la cámara."],
+    [1, "La app Cámara le pide al SO usar la cámara."],
     [2, "El SO revisa que la app tenga <b>permiso</b> y enciende la cámara."],
     [3, "El sensor captura la luz y el procesador la convierte en una imagen."],
     [2, "El SO guarda el archivo <code>.jpg</code> en la carpeta de fotos del almacenamiento."],
@@ -1144,107 +1296,559 @@ async function capas(k) {
 $$(".esc").forEach(b => b.onclick = () => capas(b.dataset.esc));
 alSalir.push(d => { if (!d.contains($("#capas"))) { capTurno++; $("#viajero").style.opacity = 0; $$(".capa").forEach(x => x.classList.remove("act")); } });
 
-/* ---------- 10 · arranque ---------- */
-const ARR = [
-  ["⏻", "Botón", "Presionas el botón de encendido.", "Empieza todo"],
-  ["🔌", "Fuente", "La fuente de poder reparte energía a todas las piezas.", "Hardware"],
-  ["🧪", "BIOS / UEFI", "Un pequeño programa grabado en la placa madre revisa que todo esté bien (POST). Si algo falla, suena un pitido.", "Revisión"],
-  ["💾", "Busca el SO", "La BIOS busca en el disco dónde está instalado el sistema operativo.", "Disco = permanente"],
-  ["💭", "Copia a la RAM", "El SO se copia del disco a la RAM, porque desde la RAM el procesador trabaja mucho más rápido.", "RAM = temporal"],
-  ["🔐", "Inicio de sesión", "El SO ya está al mando: te pide usuario y contraseña, PIN o huella.", "Seguridad"],
-  ["🖥️", "Escritorio", "¡Listo! Aparecen el escritorio y los íconos. Ya puedes abrir tus aplicaciones.", "Listo para usar"],
-];
-$("#arr").innerHTML = ARR.map(a => `<div class="paso"><span class="emo">${a[0]}</span><h3>${a[1]}</h3></div>`).join("");
-let arrN = -1;
-function arrMostrar(n) {
-  arrN = n;
-  $$(".paso").forEach((p, k) => { p.classList.toggle("act", k === n); p.classList.toggle("hecho", k < n); });
-  if (n < 0) return;
-  const a = ARR[n];
-  $("#arr-x").innerHTML = `<span class="emo">${a[0]}</span><p><small>Paso ${n + 1} de 7 · ${a[3]}</small>${a[2]}</p>`;
-  tono(330 + n * 60, .15);
-  $("#arr-paso").textContent = n >= ARR.length - 1 ? "↺ Reiniciar" : "Paso a paso ▸";
+/* ---------- línea de tiempo animada ---------- */
+function tipear(k, el, texto, ms = 45, alFin) {
+  let n = 0; el.textContent = "";
+  const paso = () => { if (n > texto.length) { alFin && alFin(); return; } el.textContent = texto.slice(0, n++); luego(k, paso, ms); };
+  paso();
 }
-$("#arr-paso").onclick = () => { parar("arr"); arrMostrar(arrN >= ARR.length - 1 ? 0 : arrN + 1); };
-$("#arr-go").onclick = () => { parar("arr"); ARR.forEach((_, k) => luego("arr", () => arrMostrar(k), k * 2300)); };
-alSalir.push(d => { if (!d.contains($("#arr"))) parar("arr"); });
+function fotoBoton(f, archivo) {
+  const b = document.createElement("button"); b.className = "foto-b"; b.textContent = "📷 Ver foto real";
+  b.onclick = () => {
+    const ya = $(".foto-real", f); if (ya) { ya.remove(); b.textContent = "📷 Ver foto real"; return; }
+    const d = document.createElement("div"); d.className = "foto-real"; d.innerHTML = `<img data-commons="${archivo}" data-w="900" data-emo="🗄️" alt="Foto real">`; f.querySelector(".sc").append(d); cargarWeb($("img", d)); b.textContent = "✕ Volver a la animación";
+  };
+  $(".sc", f).append(b);
+}
+const ESCENAS = {
+  eniac(f) {
+    f.innerHTML = `<div class="sc sc-eniac"><div class="tablero">${Array.from({ length: 24 }, () => `<i class="foco" style="animation-delay:${(Math.random() * 1.2).toFixed(2)}s;animation-duration:${(0.4 + Math.random()).toFixed(2)}s"></i>`).join("")}</div><div class="enchufes">${"<i></i>".repeat(6)}</div><svg class="cable" viewBox="0 0 100 100" preserveAspectRatio="none"><path id="eniac-c" d="M10 66 Q30 95 50 66"/></svg><span class="mano" id="eniac-m">✋</span><div class="pie-sc">Sin sistema operativo: para cada tarea nueva, ¡había que desconectar y conectar cables a mano!</div></div>`;
+    fotoBoton(f, "Classic_shot_of_the_ENIAC.jpg");
+    const X = [12, 27, 42, 58, 73, 88]; let a = 0, b = 2;
+    const mover = () => {
+      a = b; b = (b + 1 + Math.floor(Math.random() * 4)) % 6; if (a === b) b = (b + 1) % 6;
+      const c = $("#eniac-c"); if (!c) return;
+      c.setAttribute("d", `M${X[a]} 66 Q${(X[a] + X[b]) / 2} 98 ${X[b]} 66`);
+      const m = $("#eniac-m"); m.style.left = `calc(${X[b]}% - 14px)`; m.style.top = "52%";
+      tono(140, .08, 0, "square"); luego("lt", mover, 1500);
+    };
+    mover();
+  },
+  tarjeta(f) {
+    f.innerHTML = `<div class="sc sc-tarj"><div class="perfo" id="perfo">${"<i></i>".repeat(160)}</div><div class="lector">LECTOR<br>DE TARJETAS</div><div class="impreso" id="tarj-out"></div><div class="pie-sc">Cada agujero era un dato. Un programa podía necesitar cientos de tarjetas… ¡y en orden!</div></div>`;
+    fotoBoton(f, "PunchCardDecks.agr.jpg");
+    const ciclo = () => {
+      const cs = $$("#perfo i"); if (!cs.length) return; cs.forEach(c => c.classList.remove("h"));
+      $("#tarj-out").textContent = "";
+      const huecos = Array.from({ length: 34 }, () => Math.floor(Math.random() * 160));
+      huecos.forEach((h, j) => luego("lt", () => { cs[h] && cs[h].classList.add("h"); if (j % 4 === 0) tono(900, .02); }, j * 60));
+      luego("lt", () => { const o = $("#tarj-out"); o && tipear("lt", o, "> RESULTADO: PACIENTE 0042 · TEMP 38.5 · FIEBRE"); }, 2600);
+      luego("lt", ciclo, 6000);
+    };
+    ciclo();
+  },
+  unix(f) {
+    f.innerHTML = `<div class="sc" style="background:#000"><div class="red"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="42" x2="16" y2="18"/><line x1="50" y1="42" x2="84" y2="18"/><line x1="50" y1="42" x2="16" y2="72"/><line x1="50" y1="42" x2="84" y2="72"/></svg><span class="centro">🖥️</span><span class="usu" style="left:8%;top:6%">⌨️<small>usuario 1</small></span><span class="usu" style="right:8%;top:6%">⌨️<small>usuario 2</small></span><span class="usu" style="left:8%;top:60%">⌨️<small>usuario 3</small></span><span class="usu" style="right:8%;top:60%">⌨️<small>usuario 4</small></span></div><div class="pie-sc" id="unix-t" style="font-family:'IBM Plex Mono',monospace;text-align:left"></div></div>`;
+    const lineas = ["$ who", "ana    terminal1", "luis   terminal2", "rosa   terminal3", "→ Varias personas usan la misma computadora a la vez."];
+    let n = 0; const sig = () => { const el = $("#unix-t"); if (!el) return; if (n >= lineas.length) { n = 0; luego("lt", sig, 2500); return; } tipear("lt", el, lineas[n++], 40, () => luego("lt", sig, 700)); };
+    sig();
+  },
+  dos(f) {
+    f.innerHTML = `<div class="sc sc-term" id="dos-t"></div>`;
+    const guion = "Microsoft MS-DOS\n\nC:\\> dir\n\n INFORME  DOC    2.048\n NOTAS    TXT      512\n JUEGOS       <DIR>\n\nC:\\> cd JUEGOS\nC:\\JUEGOS> _";
+    const ciclo = () => { const el = $("#dos-t"); if (!el) return; tipear("lt", el, guion, 55, () => luego("lt", ciclo, 3000)); };
+    ciclo();
+  },
+  mac(f) {
+    f.innerHTML = `<div class="sc sc-mac"><div class="menu-sup"><span>◆</span><span>Archivo</span><span>Edición</span><span>Ver</span></div><div class="ic" style="right:8%;top:16%"><span>💾</span>Disco</div><div class="ic" style="right:8%;top:62%"><span>🗑️</span>Papelera</div><div class="vent" id="mac-v"><div class="tb"><b>Disco</b></div><p style="margin:8px !important">📄 Carta &nbsp; 📄 Notas<br>📁 Dibujos</p></div><span class="flecha-m" id="mac-f" style="left:20%;top:70%">➤</span><div class="pie-sc">Por primera vez muchas personas usan íconos, ventanas y un mouse en vez de escribir comandos.</div></div>`;
+    const ciclo = () => {
+      const fl = $("#mac-f"), v = $("#mac-v"); if (!fl) return;
+      v.classList.remove("ab"); fl.style.left = "20%"; fl.style.top = "70%";
+      luego("lt", () => { fl.style.left = "84%"; fl.style.top = "24%"; }, 600);
+      luego("lt", () => { tono(700, .04); }, 1500); luego("lt", () => { tono(700, .04); v.classList.add("ab"); }, 1700);
+      luego("lt", ciclo, 5200);
+    };
+    ciclo();
+  },
+  win1(f) {
+    f.innerHTML = `<div class="sc sc-w1"><div class="t" style="left:3%;top:4%;width:46%;height:42%"><b>Reloj</b><p>🕘 10:30</p></div><div class="t" style="left:51%;top:4%;width:46%;height:42%"><b>Calendario</b><p>Noviembre 1985</p></div><div class="t" style="left:3%;top:48%;width:94%;height:36%"><b>Bloc de notas</b><p>Las ventanas se acomodaban una al lado de la otra.</p></div><div class="pie-sc">Windows 1.0 funcionaba encima de MS-DOS.</div></div>`;
+    const ts = $$(".sc-w1 .t");
+    const ciclo = () => { ts.forEach(t => t.classList.remove("on")); ts.forEach((t, j) => luego("lt", () => { t.classList.add("on"); tono(500 + j * 120, .06); }, 400 + j * 800)); luego("lt", ciclo, 5000); };
+    ciclo();
+  },
+  linux(f) {
+    const pos = [[8, 10], [42, 6], [78, 10], [8, 62], [78, 62], [42, 70], [24, 36], [62, 36]];
+    f.innerHTML = `<div class="sc sc-lin"><span class="peng">🐧</span>${pos.map(p => `<span class="pc" style="left:${p[0]}%;top:${p[1]}%">💻</span>`).join("")}<div class="pie-sc">Lo comparte por internet y miles de personas de todo el mundo lo van mejorando.</div></div>`;
+    const ciclo = () => { const pcs = $$(".sc-lin .pc"); if (!pcs.length) return; pcs.forEach(p => p.classList.remove("on")); pcs.forEach((p, j) => luego("lt", () => { p.classList.add("on"); tono(600 + j * 60, .04); }, j * 350)); luego("lt", ciclo, 4500); };
+    ciclo();
+  },
+  w95(f) {
+    f.innerHTML = `<div class="sc sc-95"><div class="ic95" style="top:8%"><span>🖥️</span>Mi PC</div><div class="ic95" style="top:30%"><span>🗑️</span>Papelera</div><div class="menu95" id="m95"><div class="lado95">Windows 95</div><ul><li>📁 Programas</li><li>📄 Documentos</li><li>⚙️ Configuración</li><li>🔍 Buscar</li><li>⏻ Apagar el sistema</li></ul></div><div class="barra95"><span class="inicio95" id="i95">◆ Inicio</span><span class="reloj95">10:30</span></div><span class="flecha-m" id="f95" style="left:60%;top:40%">➤</span><div class="pie-sc" style="top:0;bottom:auto">Nacen el botón Inicio y la barra de tareas.</div></div>`;
+    const ciclo = () => {
+      const fl = $("#f95"), m = $("#m95"), ib = $("#i95"); if (!fl) return;
+      m.classList.remove("ab"); ib.classList.remove("pres"); $$("#m95 li").forEach(l => l.classList.remove("h")); fl.style.left = "60%"; fl.style.top = "40%";
+      luego("lt", () => { fl.style.left = "6%"; fl.style.top = "90%"; }, 500);
+      luego("lt", () => { ib.classList.add("pres"); m.classList.add("ab"); tono(650, .05); }, 1400);
+      $$("#m95 li").forEach((l, j) => luego("lt", () => { $$("#m95 li").forEach(x => x.classList.remove("h")); l.classList.add("h"); }, 2000 + j * 450));
+      luego("lt", ciclo, 5600);
+    };
+    ciclo();
+  },
+  iphone(f) {
+    f.innerHTML = `<div class="sc sc-tel"><div class="tel"><div class="scr" id="tel-s"></div></div><div class="pie-sc">Todo se maneja tocando la pantalla con los dedos.</div></div>`;
+    const ciclo = () => {
+      const s = $("#tel-s"); if (!s) return;
+      s.innerHTML = `<div class="hora-t">10:30</div><div class="desliza">desliza para desbloquear</div><span class="dedo">👆</span>`;
+      luego("lt", () => { s.innerHTML = `<div class="grid-ic">${["💬", "📞", "📷", "🗺️", "🎵", "⚙️", "🌐", "📅", "☁️", "📝", "🕒", "📧"].map((e, j) => `<span style="animation-delay:${j * .06}s">${e}</span>`).join("")}</div>`; tono(880, .08); }, 2100);
+      luego("lt", ciclo, 5600);
+    };
+    ciclo();
+  },
+  android(f) {
+    f.innerHTML = `<div class="sc sc-tel"><div class="tel"><div class="scr"><div class="notif" id="and-n"><div>💬 Mensaje nuevo de Rosa</div><div>📅 Clase a las 2:00 p. m.</div><div>🔋 Batería 80 %</div></div><span class="logo" style="--m:url(recursos/m1c2/android.svg);--c:#3ddc84;width:60%;height:30%;position:absolute;left:20%;top:38%"></span><span class="dedo" style="animation:none;left:44%;top:2%;bottom:auto" id="and-d">👇</span></div></div><div class="pie-sc">Notificaciones, Play Store y muchísimas marcas de celulares.</div></div>`;
+    const ciclo = () => { const n = $("#and-n"); if (!n) return; n.classList.remove("ab"); luego("lt", () => { n.classList.add("ab"); tono(760, .06); }, 1000); luego("lt", () => n.classList.remove("ab"), 3600); luego("lt", ciclo, 4800); };
+    ciclo();
+  },
+  w11(f) {
+    f.innerHTML = `<div class="sc sc-11"><div class="v11" id="v11"><b>📁 Explorador de archivos</b><p style="margin:8px 0 0 !important;font-size:.8rem !important">📄 Documentos &nbsp; 🖼️ Imágenes &nbsp; ⬇️ Descargas</p></div><div class="barra11"><span>⊞</span><span>🔍</span><span>📁</span><span>🌐</span><span>💬</span></div><div class="pie-sc" style="bottom:12%">Esquinas redondeadas y la barra de tareas al centro.</div></div>`;
+    const ciclo = () => { const v = $("#v11"); if (!v) return; v.classList.remove("ab"); luego("lt", () => { v.classList.add("ab"); tono(620, .06); }, 700); luego("lt", ciclo, 4200); };
+    ciclo();
+  },
+  ia(f) {
+    f.innerHTML = `<div class="sc sc-ia" id="ia"></div>`;
+    const ciclo = () => {
+      const c = $("#ia"); if (!c) return; c.innerHTML = `<div class="yo" id="ia-y"></div>`;
+      tipear("lt", $("#ia-y"), "Busca las fotos del paseo y ponlas en una carpeta", 40, () => {
+        luego("lt", () => { c.insertAdjacentHTML("beforeend", '<div class="bot" id="ia-b">…</div>'); }, 500);
+        luego("lt", () => { const b = $("#ia-b"); b && tipear("lt", b, "Listo ✅ Creé la carpeta «Paseo» con 24 fotos.", 35); }, 1500);
+        luego("lt", ciclo, 5200);
+      });
+    };
+    ciclo();
+  },
+};
+const LT = [
+  ["1946", "Sin sistema operativo", "La ENIAC, una de las primeras computadoras, ocupaba un salón entero. Para cambiar de tarea había que <b>reconectar cables a mano</b>: todavía no existía el SO.", "eniac"],
+  ["1950s", "Tarjetas perforadas", "Los programas se escribían haciendo <b>agujeros en tarjetas de cartón</b>. Aparecen los primeros programas que organizaban el trabajo de la máquina: los abuelos del SO.", "tarjeta"],
+  ["1969", "Nace Unix", "Un SO que permite que <b>varias personas usen la misma computadora a la vez</b>. Sus ideas siguen vivas en Linux, macOS, Android e iOS.", "unix"],
+  ["1981", "MS-DOS", "Llega a las computadoras personales. Pantalla negra y <b>solo comandos escritos</b>: había que memorizarlos. ¡En la siguiente diapositiva lo vas a probar!", "dos"],
+  ["1984", "Ventanas, íconos y mouse", "La computadora Macintosh de Apple populariza la <b>interfaz gráfica</b>: ya no hace falta memorizar comandos, basta con señalar y hacer clic.", "mac"],
+  ["1985", "Windows 1.0", "Microsoft lanza <b>Windows</b>: ventanas que funcionan encima de MS-DOS.", "win1"],
+  ["1991", "Linux", "Un estudiante finlandés crea <b>Linux</b> y lo comparte por internet. Hoy hace funcionar la mayoría de los servidores de internet.", "linux"],
+  ["1995", "El botón Inicio", "Windows 95 trae el <b>botón Inicio</b> y la barra de tareas que usamos hasta hoy.", "w95"],
+  ["2007", "El iPhone y iOS", "Apple presenta el iPhone: un SO pensado para <b>tocar la pantalla con los dedos</b>.", "iphone"],
+  ["2008", "Android", "Sale el primer celular con <b>Android</b>. Hoy es el SO más usado del mundo.", "android"],
+  ["2021", "Windows 11", "La versión actual de Windows: más segura y con un diseño renovado.", "w11"],
+  ["Hoy", "SO con inteligencia artificial", "Los SO ya incluyen <b>asistentes con IA</b> que entienden lo que les pides con tu voz o por escrito.", "ia"],
+];
+let ltAuto = false;
+$("#lt-r").max = LT.length - 1;
+$("#lt-m").innerHTML = LT.map((l, k) => `<button data-k="${k}">${l[0]}</button>`).join("");
+function ltVer(k) {
+  k = Math.max(0, Math.min(LT.length - 1, k)); $("#lt-r").value = k;
+  const [a, t, x, sc] = LT[k];
+  $("#lt-anio").textContent = a; $("#lt-tit").textContent = t; $("#lt-txt").innerHTML = x;
+  parar("lt"); ESCENAS[sc]($("#lt-foto"));
+  $$("#lt-m button").forEach((b, j) => b.classList.toggle("on", j === k));
+  $("#lt-ant").disabled = k === 0; $("#lt-sig").disabled = k === LT.length - 1;
+  if (ltAuto) { if (k < LT.length - 1) luego("lt", () => ltVer(k + 1), 8000); else ltAutoOff(); }
+}
+function ltAutoOff() { ltAuto = false; $("#lt-auto").textContent = "▶ Reproducir la historia"; }
+$("#lt-r").oninput = e => { ltAutoOff(); ltVer(+e.target.value); };
+$("#lt-m").onclick = e => { const b = e.target.closest("button"); if (b) { ltAutoOff(); ltVer(+b.dataset.k); } };
+$("#lt-ant").onclick = () => { ltAutoOff(); ltVer(+$("#lt-r").value - 1); };
+$("#lt-sig").onclick = () => { ltAutoOff(); ltVer(+$("#lt-r").value + 1); };
+$("#lt-rep").onclick = () => ltVer(+$("#lt-r").value);
+$("#lt-auto").onclick = () => { if (ltAuto) { ltAutoOff(); return; } ltAuto = true; $("#lt-auto").textContent = "⏸ Pausar"; ltVer(+$("#lt-r").value >= LT.length - 1 ? 0 : +$("#lt-r").value); };
+alSalir.push(d => { if (d.contains($("#lt-foto"))) ltVer(+$("#lt-r").value); else { parar("lt"); ltAutoOff(); } });
 
-/* ---------- 11 · funciones ---------- */
+/* ---------- laboratorio: ventanas vs comandos ---------- */
+const FS0 = () => ({ n: "ANA", d: true, h: [
+  { n: "Enfermeria", d: true, h: [{ n: "notas.txt", t: "Repasar signos vitales." }] },
+  { n: "informe.txt", t: "Informe de practica: paciente estable." },
+  { n: "foto.jpg", t: "(una imagen)" } ] });
+const LB = { g: { fs: FS0(), cwd: [], sel: null, pap: [], clip: null }, c: { fs: FS0(), cwd: [] } };
+const dAct = s => s.cwd.length ? s.cwd[s.cwd.length - 1] : s.fs;
+const hallar = (d, n) => d.h.find(x => x.n.toLowerCase() === String(n).toLowerCase());
+const icoF = x => x.d ? "📁" : /\.jpg$/i.test(x.n) ? "🖼️" : "🗒️";
+const copiaP = x => JSON.parse(JSON.stringify(x));
+let cuentaG = { c: 0, t: 0 }, cuentaC = 0;
+function pintarCuentas() { $("#g-cont").textContent = `🖱️ ${cuentaG.c} clics · ⌨️ ${cuentaG.t} teclas`; $("#c-cont").textContent = `⌨️ ${cuentaC} teclas`; }
+function nombreLibre(d, base, ext = "") { let n = base + ext, k = 2; while (hallar(d, n)) n = `${base} (${k++})${ext}`; return n; }
+
+/* --- lado ventanas --- */
+function gPintar(nuevo) {
+  const s = LB.g, d = dAct(s);
+  $("#g-ruta").textContent = "📁 " + ["Ana", ...s.cwd.map(x => x.n)].join(" › ");
+  $("#g-atras").disabled = !s.cwd.length;
+  $("#g-pap").textContent = "🗑️ " + s.pap.length;
+  if (s.sel && !hallar(d, s.sel)) s.sel = null;
+  $("#g-area").innerHTML = d.h.length ? d.h.map(x => `<button class="gi ${x.n === s.sel ? "sel" : ""} ${x.n === nuevo ? "nuevo" : ""} ${s.clip && s.clip.modo === "mover" && s.clip.origen === d && s.clip.item.n === x.n ? "corte" : ""}" data-n="${escH(x.n)}" draggable="true"><span>${icoF(x)}</span><em>${escH(x.n)}</em></button>`).join("") : '<p class="vacio2">Esta carpeta está vacía.</p>';
+  const hay = !!s.sel;
+  $$("#g-herr button").forEach(b => { const op = b.dataset.op; b.disabled = (["ren", "copiar", "cortar", "del"].includes(op) && !hay) || (op === "pegar" && !s.clip); });
+}
+const gEl = n => $$("#g-area .gi").find(b => b.dataset.n === n);
+function gPista(txt, cmd) {
+  $("#g-pista").innerHTML = txt + (cmd ? ` · En 1981: <code>${escH(cmd)}</code> <button class="bt sec" data-cmd="${escH(cmd)}">⌨️ Probarlo allá</button>` : "");
+}
+$("#g-pista").onclick = e => { const b = e.target.closest("[data-cmd]"); if (b && !labOcupado) { $("#term-i").value = b.dataset.cmd; $("#term-i").focus(); $("#c-pista").innerHTML = "💡 Pulsa <b>Enter</b> para ejecutar el comando."; } };
+function gNombrar(n) {          // nombre en línea; devuelve promesa con el nombre final
+  return new Promise(res => {
+    const b = gEl(n); if (!b) return res(n);
+    const em = $("em", b), inp = document.createElement("input"); inp.value = n; em.replaceWith(inp);
+    const punto = n.lastIndexOf("."), finSel = punto > 0 && !hallar(dAct(LB.g), n).d ? punto : n.length;
+    setTimeout(() => { inp.focus(); inp.setSelectionRange(0, finSel); }, 0);
+    let hecho = false;
+    const fin = ok => {
+      if (hecho) return; hecho = true;
+      const d = dAct(LB.g), it = hallar(d, n); let nv = inp.value.trim().replace(/[\\/:*?"<>|]/g, "");
+      if (!ok || !nv || (nv.toLowerCase() !== n.toLowerCase() && hallar(d, nv))) nv = n;
+      it.n = nv; LB.g.sel = nv; gPintar(); res(nv);
+    };
+    inp.addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Enter") fin(true); if (e.key === "Escape") fin(false); });
+    inp.addEventListener("blur", () => fin(true));
+    inp.addEventListener("click", e => e.stopPropagation()); inp.addEventListener("dblclick", e => e.stopPropagation());
+  });
+}
+const GOP = {
+  async carpeta() { const d = dAct(LB.g), n = nombreLibre(d, "Nueva carpeta"); d.h.push({ n, d: true, h: [] }); LB.g.sel = n; gPintar(n); const f = await gNombrar(n); gPista(`📁 Creaste la carpeta «${escH(f)}».`, "md " + f.replace(/\s+/g, "")); return f; },
+  async archivo() { const d = dAct(LB.g), n = nombreLibre(d, "Nuevo documento", ".txt"); d.h.push({ n, t: "" }); LB.g.sel = n; gPintar(n); const f = await gNombrar(n); gPista(`📝 Creaste «${escH(f)}». Ábrelo con doble clic para escribir.`, `echo Hola > ${f.replace(/\s+/g, "")}`); return f; },
+  async ren() { const a = LB.g.sel; if (!a) return; const f = await gNombrar(a); if (f !== a) gPista(`✏️ «${escH(a)}» ahora se llama «${escH(f)}».`, `ren ${a.replace(/\s+/g, "")} ${f.replace(/\s+/g, "")}`); },
+  copiar() { const s = LB.g, it = hallar(dAct(s), s.sel); if (!it) return; s.clip = { item: copiaP(it), modo: "copiar", origen: dAct(s) }; gPintar(); gPista(`📋 Copiaste «${escH(it.n)}». Entra a otra carpeta y usa Pegar.`); },
+  cortar() { const s = LB.g, it = hallar(dAct(s), s.sel); if (!it) return; s.clip = { item: it, modo: "mover", origen: dAct(s) }; gPintar(); gPista(`✂️ Cortaste «${escH(it.n)}». Entra a otra carpeta y usa Pegar para moverlo.`); },
+  pegar() {
+    const s = LB.g, d = dAct(s); if (!s.clip) return;
+    const { item, modo, origen } = s.clip;
+    if (modo === "mover") { if (origen === d) { gPista("Ya está en esta carpeta 🙂"); return; } origen.h.splice(origen.h.indexOf(item), 1); }
+    const n = hallar(d, item.n) ? nombreLibre(d, item.n.replace(/(\.\w+)$/, ""), (item.n.match(/\.\w+$/) || [""])[0]) : item.n;
+    const nuevo = modo === "mover" ? item : copiaP(item); nuevo.n = n; d.h.push(nuevo);
+    s.clip = modo === "mover" ? null : s.clip; s.sel = n; gPintar(n); tono(620, .08);
+    const destino = s.cwd.length ? s.cwd[s.cwd.length - 1].n : "ANA";
+    gPista(`${modo === "mover" ? "📦 Moviste" : "📋 Pegaste una copia de"} «${escH(n)}» en «${escH(destino === "ANA" ? "Ana" : destino)}».`, `${modo === "mover" ? "move" : "copy"} ${item.n.replace(/\s+/g, "")} ${destino}`);
+  },
+  del() { const s = LB.g, d = dAct(s), it = hallar(d, s.sel); if (!it) return; d.h.splice(d.h.indexOf(it), 1); s.pap.push({ it, d }); s.sel = null; gPintar(); tono(300, .1); gPista(`🗑️ «${escH(it.n)}» se fue a la Papelera: todavía se puede recuperar (botón 🗑️ de arriba).`, (it.d ? "rd " : "del ") + it.n.replace(/\s+/g, "")); },
+  abrir(n) {
+    const s = LB.g, it = hallar(dAct(s), n); if (!it) return;
+    if (it.d) { s.cwd.push(it); s.sel = null; gPintar(); gPista(`📂 Entraste a la carpeta «${escH(it.n)}».`, "cd " + it.n.replace(/\s+/g, "")); return; }
+    if (/\.jpg$/i.test(it.n)) { gPista(`🖼️ En una PC real se abriría el visor de Fotos.`, "type " + it.n); return; }
+    $("#g-np-n").textContent = "🗒️ " + it.n; $("#g-np-ta").value = it.t || ""; $("#g-np").hidden = false; $("#g-np").dataset.n = it.n;
+    gPista(`🗒️ Abriste «${escH(it.n)}». Escribe y pulsa Guardar.`, "type " + it.n.replace(/\s+/g, ""));
+  },
+  atras() { const s = LB.g; if (!s.cwd.length) return; s.cwd.pop(); s.sel = null; gPintar(); gPista("⬅ Volviste a la carpeta anterior.", "cd .."); },
+  restaurar() { const s = LB.g, u = s.pap.pop(); if (!u) { gPista("La papelera está vacía."); return; } u.it.n = hallar(u.d, u.it.n) ? nombreLibre(u.d, u.it.n.replace(/(\.\w+)$/, ""), (u.it.n.match(/\.\w+$/) || [""])[0]) : u.it.n; u.d.h.push(u.it); gPintar(u.it.n); tono(620, .1); gPista(`↩ «${escH(u.it.n)}» volvió de la Papelera. En la línea de comandos esto no se puede: DEL borra para siempre.`); },
+};
+$("#g-np-g").onclick = () => { const it = hallar(dAct(LB.g), $("#g-np").dataset.n); if (it) { it.t = $("#g-np-ta").value; tono(660, .1); const txt = it.t.split("\n")[0].slice(0, 40); gPista(`💾 Guardaste «${escH(it.n)}».`, `echo ${txt || "texto"} > ${it.n.replace(/\s+/g, "")}`); } $("#g-np").hidden = true; };
+$("#g-np-x").onclick = () => { $("#g-np").hidden = true; };
+$("#g-herr").onclick = e => { const b = e.target.closest("button"); if (b && !b.disabled && !labOcupado) GOP[b.dataset.op](); };
+$("#g-atras").onclick = () => !labOcupado && GOP.atras();
+$("#g-pap").onclick = () => !labOcupado && GOP.restaurar();
+$("#g-area").addEventListener("click", e => { if (labOcupado) return; ctxCerrar(); const b = e.target.closest(".gi"); LB.g.sel = b ? b.dataset.n : null; gPintar(); });
+$("#g-area").addEventListener("dblclick", e => { if (labOcupado) return; const b = e.target.closest(".gi"); if (b) GOP.abrir(b.dataset.n); });
+function ctxMostrar(x, y, sobre) {
+  const c = $("#g-ctx"), s = LB.g;
+  const ops = sobre ? [["abrir", "📂 Abrir"], ["ren", "✏️ Cambiar nombre"], ["copiar", "📋 Copiar"], ["cortar", "✂️ Cortar"], ["del", "🗑️ Eliminar"]] : [["carpeta", "📁 Nueva carpeta"], ["archivo", "📝 Nuevo documento de texto"], ["pegar", "📌 Pegar"]];
+  c.innerHTML = ops.map(([k, t]) => `<button data-op="${k}" ${k === "pegar" && !s.clip ? "disabled" : ""}>${t}</button>`).join("");
+  const W = $("#g-cuerpo").clientWidth, H = $("#g-cuerpo").clientHeight;
+  c.style.left = Math.min(x, W - 180) + "px"; c.style.top = Math.min(y, H - ops.length * 32 - 10) + "px"; c.hidden = false;
+  return c;
+}
+function ctxCerrar() { $("#g-ctx").hidden = true; }
+function puntoLocal(ev) { const r = $("#g-cuerpo").getBoundingClientRect(); return [(ev.clientX - r.left) / ESC, (ev.clientY - r.top) / ESC]; }
+$("#g-cuerpo").addEventListener("contextmenu", e => {
+  e.preventDefault(); if (labOcupado) return;
+  const b = e.target.closest(".gi"); LB.g.sel = b ? b.dataset.n : null; gPintar();
+  const [x, y] = puntoLocal(e); ctxMostrar(x, y, !!b);
+});
+let toqueLargo = null;
+$("#g-cuerpo").addEventListener("touchstart", e => { const t = e.touches[0]; toqueLargo = setTimeout(() => { const b = e.target.closest(".gi"); LB.g.sel = b ? b.dataset.n : null; gPintar(); const [x, y] = puntoLocal(t); ctxMostrar(x, y, !!b); }, 550); }, { passive: true });
+["touchend", "touchmove"].forEach(ev => $("#g-cuerpo").addEventListener(ev, () => clearTimeout(toqueLargo), { passive: true }));
+$("#g-ctx").onclick = e => { const b = e.target.closest("button"); if (!b || b.disabled) return; ctxCerrar(); const op = b.dataset.op; op === "abrir" ? GOP.abrir(LB.g.sel) : GOP[op](); };
+// arrastrar y soltar para mover
+$("#g-area").addEventListener("dragstart", e => { const b = e.target.closest(".gi"); if (!b || labOcupado) return e.preventDefault(); e.dataTransfer.setData("text/plain", b.dataset.n); LB.g.sel = b.dataset.n; });
+$("#g-area").addEventListener("dragover", e => { const b = e.target.closest(".gi"); const it = b && hallar(dAct(LB.g), b.dataset.n); if (it && it.d) { e.preventDefault(); $$("#g-area .gi").forEach(x => x.classList.toggle("drop", x === b)); } });
+$("#g-area").addEventListener("drop", e => {
+  e.preventDefault(); $$("#g-area .drop").forEach(x => x.classList.remove("drop"));
+  const b = e.target.closest(".gi"), n = e.dataTransfer.getData("text/plain"), d = dAct(LB.g), dest = b && hallar(d, b.dataset.n), it = hallar(d, n);
+  if (!dest || !dest.d || !it || it === dest) return;
+  moverA(it, dest);
+});
+function moverA(it, dest) {
+  const d = dAct(LB.g); d.h.splice(d.h.indexOf(it), 1); if (hallar(dest, it.n)) it.n = nombreLibre(dest, it.n.replace(/(\.\w+)$/, ""), (it.n.match(/\.\w+$/) || [""])[0]); dest.h.push(it); LB.g.sel = null; gPintar(); tono(620, .08);
+  gPista(`📦 Moviste «${escH(it.n)}» a «${escH(dest.n)}» arrastrándolo.`, `move ${it.n.replace(/\s+/g, "")} ${dest.n.replace(/\s+/g, "")}`);
+}
+
+/* --- lado comandos (estilo MS-DOS) --- */
+const cPrompt = () => "C:\\" + ["ANA", ...LB.c.cwd.map(x => x.n.toUpperCase())].join("\\") + ">";
+function cOut(h, cls = "") { $("#term-s").insertAdjacentHTML("beforeend", `<span class="${cls}">${h}</span>\n`); $("#term-s").scrollTop = 1e6; }
+function cRun(raw) {
+  raw = raw.trim(); if (!raw) return;
+  cOut(escH(cPrompt() + " " + raw), "cmd");
+  const s = LB.c, d = dAct(s);
+  const m = raw.match(/^(\S+)\s*(.*)$/), cmd = m[1].toLowerCase(), resto = m[2].trim(), args = resto ? resto.split(/\s+/) : [];
+  const malo = t => { cOut(escH(t), "er"); tono(200, .15, 0, "square"); };
+  const ok = t => { if (t) cOut(escH(t)); tono(520, .04); };
+  switch (cmd) {
+    case "ayuda": case "help":
+      ok("DIR        muestra lo que hay en la carpeta\nCD nombre  entra a una carpeta (CD .. para volver)\nMD nombre  crea una carpeta\nRD nombre  borra una carpeta vacía\nECHO texto > archivo.txt   crea un archivo con ese texto\nTYPE archivo   muestra lo que dice un archivo\nREN viejo nuevo   cambia el nombre\nCOPY archivo carpeta   copia\nMOVE archivo carpeta   mueve\nDEL archivo   borra (¡para siempre!)\nCLS        limpia la pantalla"); break;
+    case "dir": case "ls": {
+      const filas = d.h.map(x => x.d ? ` ${x.n.padEnd(16)} <DIR>` : ` ${x.n.padEnd(16)} ${String((x.t || "").length * 8 + 64).padStart(5)} bytes`);
+      ok(` Directorio de ${cPrompt().slice(0, -1)}\n\n${filas.join("\n") || " (vacío)"}\n\n ${d.h.filter(x => !x.d).length} archivo(s)   ${d.h.filter(x => x.d).length} carpeta(s)`); break; }
+    case "cd": case "cd..": case "cd\\": {
+      const a = cmd === "cd.." ? ".." : cmd === "cd\\" ? "\\" : resto;
+      if (!a) { ok(cPrompt().slice(0, -1)); break; }
+      if (a === "..") { s.cwd.pop(); ok(); break; }
+      if (a === "\\" || a === "/") { s.cwd = []; ok(); break; }
+      const it = hallar(d, a); if (it && it.d) { s.cwd.push(it); ok(); } else malo("El sistema no puede encontrar la ruta especificada."); break; }
+    case "md": case "mkdir":
+      if (!args[0]) { malo("Falta el nombre de la carpeta. Ejemplo: md Practicas"); break; }
+      if (hallar(d, args[0])) { malo("Ya existe una carpeta o archivo con ese nombre."); break; }
+      d.h.push({ n: args[0], d: true, h: [] }); ok(); break;
+    case "rd": case "rmdir": {
+      const it = hallar(d, args[0] || ""); if (!it || !it.d) { malo("No se encontró esa carpeta."); break; }
+      if (it.h.length) { malo("La carpeta no está vacía."); break; }
+      d.h.splice(d.h.indexOf(it), 1); ok(); break; }
+    case "echo": {
+      const mm = resto.match(/^(.*?)\s*(>>?)\s*(\S+)$/);
+      if (!mm) { ok(resto); break; }
+      const [, txt, op, nom] = mm; let it = hallar(d, nom);
+      if (it && it.d) { malo("Es una carpeta, no un archivo."); break; }
+      if (!it) { it = { n: nom, t: "" }; d.h.push(it); }
+      it.t = op === ">>" && it.t ? it.t + "\n" + txt : txt; ok(); break; }
+    case "type": case "cat": {
+      const it = hallar(d, args[0] || ""); if (!it || it.d) { malo("No se encuentra el archivo."); break; }
+      ok(/\.jpg$/i.test(it.n) ? "ÿØÿà▒JFIF▒▒▒ (es una imagen: en pantalla negra solo se ven símbolos raros)" : (it.t || "(archivo vacío)")); break; }
+    case "ren": case "rename": {
+      const it = hallar(d, args[0] || ""); if (!it) { malo("No se encuentra el archivo."); break; }
+      if (!args[1]) { malo("Falta el nombre nuevo. Ejemplo: ren informe.txt final.txt"); break; }
+      if (hallar(d, args[1])) { malo("Ya existe un archivo con ese nombre."); break; }
+      it.n = args[1]; ok(); break; }
+    case "copy": case "move": {
+      const it = hallar(d, args[0] || ""); if (!it) { malo("No se encuentra el archivo."); break; }
+      if (!args[1]) { malo(`Falta el destino. Ejemplo: ${cmd} ${it.n} Enfermeria`); break; }
+      let dest = args[1] === ".." ? (s.cwd.length > 1 ? s.cwd[s.cwd.length - 2] : s.fs) : hallar(d, args[1]);
+      if (args[1] === ".." && !s.cwd.length) { malo("Ya estás en la carpeta principal."); break; }
+      if (dest && dest.d) {
+        if (hallar(dest, it.n)) { malo("Ya existe un archivo con ese nombre en el destino."); break; }
+        if (cmd === "move") d.h.splice(d.h.indexOf(it), 1);
+        dest.h.push(cmd === "move" ? it : copiaP(it)); ok(`        1 archivo(s) ${cmd === "move" ? "movido(s)" : "copiado(s)"}.`);
+      } else if (!dest && cmd === "copy") { const c = copiaP(it); c.n = args[1]; d.h.push(c); ok("        1 archivo(s) copiado(s)."); }
+      else malo("No se encontró la carpeta de destino.");
+      break; }
+    case "del": case "erase": {
+      const it = hallar(d, args[0] || ""); if (!it) { malo("No se encuentra el archivo."); break; }
+      if (it.d) { malo("Para borrar carpetas se usa RD (y deben estar vacías)."); break; }
+      d.h.splice(d.h.indexOf(it), 1); ok(); cOut("⚠ Borrado para siempre: aquí no existe la Papelera.", "hint"); break; }
+    case "cls": case "clear": $("#term-s").innerHTML = ""; break;
+    case "ver": ok("MS-DOS (simulado) · Herramientas Informáticas"); break;
+    default: malo("Comando o nombre de archivo incorrecto. Escribe AYUDA.");
+  }
+  $("#term-p").textContent = cPrompt();
+}
+$("#term-i").addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Enter" && !labOcupado) { cuentaC += e.target.value.length + 1; pintarCuentas(); cRun(e.target.value); e.target.value = ""; } });
+$("#term").onclick = () => !labOcupado && $("#term-i").focus();
+
+/* --- demostraciones: la misma tarea en las dos computadoras --- */
+let labOcupado = false, labTurno = 0;
+const labVivo = t => t === labTurno && D[i].contains($("#lab2"));
+async function esperaL(t, ms) { await pausa(ms); if (!labVivo(t)) throw "fin"; }
+async function gCur(t, el, dx = .5, dy = .5) {
+  const cur = $("#g-cur"), base = $("#g-cuerpo").getBoundingClientRect(); cur.classList.add("on");
+  let x, y;
+  if (el) { const r = el.getBoundingClientRect(); x = (r.left - base.left + r.width * dx) / ESC; y = (r.top - base.top + r.height * dy) / ESC; }
+  else { x = $("#g-cuerpo").clientWidth * .78; y = $("#g-cuerpo").clientHeight * .82; }
+  cur.style.left = x + "px"; cur.style.top = y + "px";
+  await esperaL(t, 600); return [x, y];
+}
+async function gClic(t, der = false, doble = false) {
+  const cur = $("#g-cur"); cuentaG.c += doble ? 2 : 1; pintarCuentas();
+  cur.classList.add("clic"); if (der) cur.classList.add("der"); tono(der ? 500 : 700, .03);
+  await esperaL(t, 140); cur.classList.remove("clic");
+  if (doble) { cur.classList.add("clic"); tono(700, .03); await esperaL(t, 120); cur.classList.remove("clic"); }
+  await esperaL(t, 200); cur.classList.remove("der");
+}
+async function gMenu(t, el, op) {
+  const [x, y] = await gCur(t, el);
+  if (el) { LB.g.sel = el.dataset.n; gPintar(); }
+  await gClic(t, true);
+  const c = ctxMostrar(x + 6, y + 6, !!el);
+  await esperaL(t, 300);
+  const b = $(`[data-op="${op}"]`, c); await gCur(t, b, .3, .5); b.classList.add("foco"); await gClic(t); ctxCerrar();
+}
+async function gTeclear(t, inp, txt) {
+  inp.value = ""; for (const ch of txt) { inp.value += ch; cuentaG.t++; pintarCuentas(); tono(900, .015); await esperaL(t, 85); }
+  cuentaG.t++; pintarCuentas(); await esperaL(t, 200);
+  inp.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+  await esperaL(t, 250);
+}
+async function cTeclear(t, cmd) {
+  const inp = $("#term-i"); inp.value = "";
+  for (const ch of cmd) { inp.value += ch; cuentaC++; pintarCuentas(); tono(1000, .012); await esperaL(t, 75); }
+  cuentaC++; pintarCuentas(); await esperaL(t, 250); cRun(cmd); inp.value = ""; await esperaL(t, 500);
+}
+async function gCasa(t) { while (LB.g.cwd.length) { await gCur(t, $("#g-atras")); await gClic(t); GOP.atras(); await esperaL(t, 200); } }
+async function cCasa(t) { if (LB.c.cwd.length) await cTeclear(t, "cd \\"); }
+function asegurar(s, n, crear) { const d = s.fs; if (!hallar(d, n)) d.h.push(crear()); }
+function quitar(s, n) { const d = s.fs, it = hallar(d, n); if (it) d.h.splice(d.h.indexOf(it), 1); }
+const ORIG = n => copiaP(FS0().h.find(x => x.n === n));
+const DEMOS = {
+  carpeta: { b: "📁 Crear carpeta", g: "clic derecho → «Nueva carpeta» → escribir el nombre → Enter", c: "<b>MD</b> (de <i>make directory</i>: crear directorio) + el nombre",
+    pre() { quitar(LB.g, "Practicas"); quitar(LB.c, "Practicas"); },
+    async gui(t) { await gCasa(t); await gMenu(t, null, "carpeta"); GOP.carpeta(); await esperaL(t, 200); await gTeclear(t, $("#g-area input"), "Practicas"); },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "md Practicas"); await cTeclear(t, "dir"); } },
+  archivo: { b: "📝 Crear y escribir un archivo", g: "clic derecho → «Nuevo documento» → nombre → doble clic → escribir → Guardar", c: "<b>ECHO</b> texto <b>&gt;</b> archivo.txt (el signo &gt; manda el texto al archivo)",
+    pre() { quitar(LB.g, "turnos.txt"); quitar(LB.c, "turnos.txt"); },
+    async gui(t) {
+      await gCasa(t); await gMenu(t, null, "archivo"); GOP.archivo(); await esperaL(t, 200); await gTeclear(t, $("#g-area input"), "turnos.txt");
+      const el = gEl("turnos.txt"); await gCur(t, el); await gClic(t, false, true); GOP.abrir("turnos.txt"); await esperaL(t, 300);
+      const ta = $("#g-np-ta"); ta.value = ""; for (const ch of "Lunes: turno mañana") { ta.value += ch; cuentaG.t++; pintarCuentas(); await esperaL(t, 70); }
+      await gCur(t, $("#g-np-g")); await gClic(t); $("#g-np-g").click();
+    },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "echo Lunes: turno manana > turnos.txt"); await cTeclear(t, "type turnos.txt"); } },
+  ren: { b: "✏️ Cambiar nombre", g: "clic derecho sobre el archivo → «Cambiar nombre» → escribir → Enter", c: "<b>REN</b> nombre-viejo nombre-nuevo",
+    pre() { for (const s of [LB.g, LB.c]) { quitar(s, "final.txt"); asegurar(s, "informe.txt", () => ORIG("informe.txt")); } },
+    async gui(t) { await gCasa(t); await gMenu(t, gEl("informe.txt"), "ren"); GOP.ren(); await esperaL(t, 100); await gTeclear(t, $("#g-area input"), "final.txt"); },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "ren informe.txt final.txt"); await cTeclear(t, "dir"); } },
+  mover: { b: "📦 Mover a una carpeta", g: "arrastrar el archivo con el mouse y soltarlo sobre la carpeta", c: "<b>MOVE</b> archivo carpeta-destino",
+    pre() { for (const s of [LB.g, LB.c]) { asegurar(s, "Enfermeria", () => ORIG("Enfermeria")); const e = hallar(s.fs, "Enfermeria"); quitar({ fs: e }, "foto.jpg"); asegurar(s, "foto.jpg", () => ORIG("foto.jpg")); } },
+    async gui(t) {
+      await gCasa(t); const f = gEl("foto.jpg"), e = gEl("Enfermeria"); const [x0, y0] = await gCur(t, f);
+      const fan = $("#g-fan"); fan.textContent = "🖼️"; fan.style.left = (x0 - 16) + "px"; fan.style.top = (y0 - 16) + "px"; fan.hidden = false; cuentaG.c++; pintarCuentas();
+      await esperaL(t, 200); const [x1, y1] = await gCur(t, e); fan.style.left = (x1 - 16) + "px"; fan.style.top = (y1 - 16) + "px"; e.classList.add("drop"); await esperaL(t, 500);
+      fan.hidden = true; moverA(hallar(dAct(LB.g), "foto.jpg"), hallar(dAct(LB.g), "Enfermeria"));
+    },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "move foto.jpg Enfermeria"); await cTeclear(t, "dir"); } },
+  copiar: { b: "📋 Copiar", g: "clic derecho → «Copiar» → abrir la carpeta → clic derecho → «Pegar»", c: "<b>COPY</b> archivo carpeta-destino",
+    pre() { for (const s of [LB.g, LB.c]) { asegurar(s, "Enfermeria", () => ORIG("Enfermeria")); asegurar(s, "informe.txt", () => ORIG("informe.txt")); quitar({ fs: hallar(s.fs, "Enfermeria") }, "informe.txt"); } },
+    async gui(t) { await gCasa(t); await gMenu(t, gEl("informe.txt"), "copiar"); GOP.copiar(); await gCur(t, gEl("Enfermeria")); await gClic(t, false, true); GOP.abrir("Enfermeria"); await esperaL(t, 300); await gMenu(t, null, "pegar"); GOP.pegar(); },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "copy informe.txt Enfermeria"); await cTeclear(t, "dir Enfermeria".split(" ")[0]); } },
+  del: { b: "🗑️ Eliminar", g: "seleccionar → «Eliminar» (va a la Papelera y se puede recuperar)", c: "<b>DEL</b> archivo (¡se borra para siempre, sin Papelera!)",
+    pre() { for (const s of [LB.g, LB.c]) asegurar(s, "foto.jpg", () => ORIG("foto.jpg")); },
+    async gui(t) { await gCasa(t); const f = gEl("foto.jpg"); await gCur(t, f); await gClic(t); LB.g.sel = "foto.jpg"; gPintar(); await gCur(t, $('#g-herr [data-op="del"]')); await gClic(t); GOP.del(); await esperaL(t, 300); await gCur(t, $("#g-pap")); },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "del foto.jpg"); await cTeclear(t, "dir"); } },
+  ver: { b: "👀 Ver qué dice un archivo", g: "doble clic sobre el archivo", c: "<b>TYPE</b> archivo",
+    pre() { for (const s of [LB.g, LB.c]) asegurar(s, "informe.txt", () => ORIG("informe.txt")); },
+    async gui(t) { await gCasa(t); await gCur(t, gEl("informe.txt")); await gClic(t, false, true); GOP.abrir("informe.txt"); await esperaL(t, 1500); await gCur(t, $("#g-np-x")); await gClic(t); $("#g-np").hidden = true; },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "type informe.txt"); } },
+  entrar: { b: "📂 Entrar a una carpeta", g: "doble clic sobre la carpeta (← para volver)", c: "<b>CD</b> carpeta y luego <b>DIR</b> para ver qué hay (CD .. para volver)",
+    pre() { for (const s of [LB.g, LB.c]) asegurar(s, "Enfermeria", () => ORIG("Enfermeria")); },
+    async gui(t) { await gCasa(t); await gCur(t, gEl("Enfermeria")); await gClic(t, false, true); GOP.abrir("Enfermeria"); },
+    async cmd(t) { await cCasa(t); await cTeclear(t, "cd Enfermeria"); await cTeclear(t, "dir"); } },
+};
+DEMOS.copiar.cmd = async t => { await cCasa(t); await cTeclear(t, "copy informe.txt Enfermeria"); await cTeclear(t, "cd Enfermeria"); await cTeclear(t, "dir"); };
+$("#lab-t").innerHTML = Object.entries(DEMOS).map(([k, d]) => `<button data-k="${k}">${d.b}</button>`).join("");
+$("#lab-t").onclick = async e => {
+  const b = e.target.closest("button"); if (!b || labOcupado) return;
+  const k = b.dataset.k, dm = DEMOS[k], t = ++labTurno;
+  labOcupado = true; $$("#lab-t button").forEach(x => { x.disabled = true; x.classList.toggle("on", x === b); });
+  ctxCerrar(); $("#g-np").hidden = true; dm.pre(); gPintar(); $("#term-p").textContent = cPrompt();
+  cuentaG = { c: 0, t: 0 }; cuentaC = 0; pintarCuentas();
+  $("#lab-x").innerHTML = `<b>${dm.b}</b> · 🖱️ Ventanas: ${dm.g} · ⌨️ Comandos: ${dm.c}`;
+  try { await Promise.all([dm.gui(t), dm.cmd(t)]); } catch (_) {}
+  if (t === labTurno) {
+    $("#g-cur").classList.remove("on");
+    if (D[i].contains($("#lab2"))) $("#lab-x").innerHTML += `<br>✔ Resultado: <b>${cuentaG.c} clics y ${cuentaG.t} teclas</b> con ventanas vs. <b>${cuentaC} teclas</b> con comandos… ¡y había que memorizar cada comando!`;
+  }
+  labOcupado = false; $$("#lab-t button").forEach(x => x.disabled = false);
+};
+function labReset() {
+  labTurno++; labOcupado = false; LB.g = { fs: FS0(), cwd: [], sel: null, pap: [], clip: null }; LB.c = { fs: FS0(), cwd: [] };
+  $("#term-s").innerHTML = ""; cOut("Microsoft MS-DOS (simulado)\nEscribe AYUDA y pulsa Enter para ver los comandos.\n"); $("#term-p").textContent = cPrompt();
+  cuentaG = { c: 0, t: 0 }; cuentaC = 0; pintarCuentas(); ctxCerrar(); $("#g-np").hidden = true; $("#g-cur").classList.remove("on"); $("#g-fan").hidden = true;
+  $$("#lab-t button").forEach(x => { x.disabled = false; x.classList.remove("on"); });
+  $("#lab-x").innerHTML = "Elige una tarea arriba para verla hecha en las dos computadoras al mismo tiempo. Después, ¡hazlo tú!";
+  gPista("💡 Clic derecho (o mantén presionado) sobre un archivo o en el espacio vacío. Doble clic para abrir. También puedes arrastrar archivos a una carpeta.");
+  gPintar();
+}
+$("#lab-re").onclick = labReset;
+alSalir.push(d => { if (!d.contains($("#lab2")) && labOcupado) { labTurno++; labOcupado = false; $$("#lab-t button").forEach(x => x.disabled = false); $("#g-cur").classList.remove("on"); $("#g-fan").hidden = true; ctxCerrar(); } });
+const GUIA_LAB = `<button class="bt sec cerrar-g" data-cerrar>✕ Cerrar</button><h3>🧭 Guía paso a paso</h3>
+  <ol>
+    <li><b>Mira primero:</b> toca una tarea de arriba (por ejemplo «📁 Crear carpeta»). Las dos computadoras la harán a la vez: a la izquierda con el mouse, a la derecha escribiendo comandos. Abajo verás cuántos clics y teclas necesitó cada una.</li>
+    <li><b>Hazlo tú en la de ventanas:</b> haz clic derecho (en el celular, mantén presionado) sobre un archivo o en el espacio vacío. También puedes usar los botones de la barra, hacer doble clic para abrir y arrastrar un archivo hasta una carpeta para moverlo.</li>
+    <li><b>Ahora en la de 1981:</b> toca la pantalla negra, escribe un comando y pulsa <b>Enter</b>. Empieza con <code>dir</code> para ver qué hay. Si no recuerdas un comando, abre la <b>📖 Guía de comandos</b>.</li>
+    <li><b>Puente entre las dos:</b> cada vez que hagas algo con ventanas, abajo aparecerá el comando equivalente con un botón <b>⌨️ Probarlo allá</b> para escribirlo en la computadora antigua.</li>
+    <li><b>Para comparar:</b> borra un archivo en cada una. En la de ventanas va a la Papelera (botón 🗑️) y se puede recuperar. En la de comandos, <code>DEL</code> lo borra para siempre.</li>
+    <li>¿Se desordenó todo? Pulsa <b>↺ Reiniciar</b>.</li>
+  </ol>`;
+const CMDS = [
+  ["DIR", "Muestra lo que hay en la carpeta actual", "dir", "Abrir la carpeta y mirar"],
+  ["CD", "Entra a una carpeta", "cd Enfermeria", "Doble clic en la carpeta"],
+  ["CD ..", "Vuelve a la carpeta anterior", "cd ..", "Botón ← Atrás"],
+  ["MD", "Crea una carpeta nueva (make directory)", "md Practicas", "Clic derecho → Nueva carpeta"],
+  ["RD", "Borra una carpeta (debe estar vacía)", "rd Practicas", "Seleccionar → Eliminar"],
+  ["ECHO … >", "Crea un archivo y escribe un texto en él", "echo Hola > saludo.txt", "Nuevo documento → escribir → Guardar"],
+  ["ECHO … >>", "Agrega otra línea al final de un archivo", "echo Adios >> saludo.txt", "Abrir → escribir → Guardar"],
+  ["TYPE", "Muestra el contenido de un archivo", "type informe.txt", "Doble clic en el archivo"],
+  ["REN", "Cambia el nombre de un archivo o carpeta", "ren informe.txt final.txt", "Clic derecho → Cambiar nombre"],
+  ["COPY", "Copia un archivo a otra carpeta", "copy informe.txt Enfermeria", "Copiar → Pegar"],
+  ["MOVE", "Mueve un archivo a otra carpeta", "move foto.jpg Enfermeria", "Arrastrar y soltar, o Cortar → Pegar"],
+  ["DEL", "Borra un archivo para siempre", "del foto.jpg", "Eliminar (va a la Papelera)"],
+  ["CLS", "Limpia la pantalla", "cls", "—"],
+  ["AYUDA", "Muestra la lista de comandos", "ayuda", "—"],
+];
+const GUIA_CMD = `<button class="bt sec cerrar-g" data-cerrar>✕ Cerrar</button><h3>📖 Guía de comandos (estilo MS-DOS)</h3>
+  <p class="peq">Se escriben en la pantalla negra y se ejecutan con <b>Enter</b>. Da igual si usas mayúsculas o minúsculas. Deja un <b>espacio</b> entre el comando y los nombres. En esta práctica, escribe los nombres <b>sin espacios ni tildes</b>, como en 1981 (en MS-DOS los nombres tenían como máximo 8 letras más la extensión: <code>INFORME.TXT</code>).</p>
+  <table><tr><th>Comando</th><th>Para qué sirve</th><th>Ejemplo</th><th>Con ventanas sería…</th><th></th></tr>
+  ${CMDS.map(c => `<tr><td><code>${c[0]}</code></td><td>${c[1]}</td><td><code>${escH(c[2])}</code></td><td>${c[3]}</td><td><button class="bt sec" data-probar="${escH(c[2])}" style="padding:2px 8px;font-size:.74rem">Probar</button></td></tr>`).join("")}</table>`;
+function labGuia(html) { const g = $("#lab-guia"); g.innerHTML = html; g.hidden = false; g.scrollTop = 0; }
+$("#lab-guia-b").onclick = () => labGuia(GUIA_LAB);
+$("#lab-cmd-b").onclick = () => labGuia(GUIA_CMD);
+$("#lab-guia").onclick = e => {
+  if (e.target.closest("[data-cerrar]")) { $("#lab-guia").hidden = true; return; }
+  const p = e.target.closest("[data-probar]"); if (p) { $("#lab-guia").hidden = true; $("#term-i").value = p.dataset.probar; $("#term-i").focus(); $("#c-pista").innerHTML = "💡 Pulsa <b>Enter</b> para ejecutar el comando."; }
+};
+alSalir.push(d => { if (!d.contains($("#lab2"))) $("#lab-guia").hidden = true; });
+labReset();
+
+/* ---------- funciones ---------- */
 const FN = [
-  ["🧠", "Procesos", "Decide qué programa usa el procesador y por cuánto tiempo. Así puedes escuchar música mientras escribes.", "la enfermera que organiza los turnos de atención.", "Abrir el Administrador de tareas y ver qué programas están corriendo."],
-  ["💭", "Memoria", "Reparte la RAM entre los programas abiertos y la recupera cuando los cierras.", "asignar camas: cuando un paciente se va, la cama queda libre para otro.", "Cerrar apps del celular que no usas para que vaya más rápido."],
-  ["📁", "Archivos", "Guarda, organiza, copia, mueve y borra archivos y carpetas en el disco.", "el archivo de historias clínicas, ordenado por servicio y por paciente.", "Crear una carpeta “Enfermería” y guardar ahí tus informes."],
-  ["🖨️", "Dispositivos", "Controla los periféricos usando controladores: impresora, mouse, cámara, parlantes…", "coordinar los equipos del servicio: monitores, bombas, oxímetros.", "Conectar un USB y que aparezca solo en tu computadora."],
-  ["🖱️", "Interfaz", "Te muestra ventanas, íconos y menús para que puedas darle órdenes sin saber programar.", "el tablero de la estación de enfermería donde todos ven la información.", "El escritorio de Windows o la pantalla de inicio de tu celular."],
-  ["🔐", "Seguridad", "Controla quién entra, qué puede hacer cada app y protege tus datos.", "la credencial para entrar a UCI o a la farmacia.", "El PIN de tu celular o los permisos de la cámara."],
+  ["🧠", "Procesos", "Decide qué programa usa el procesador y por cuánto tiempo. El procesador hace una sola cosa a la vez, pero el SO le da a cada programa un turno tan cortito (miles por segundo) que parece que todo pasa al mismo tiempo.", "Escuchar música mientras escribes un informe y te llegan mensajes."],
+  ["💭", "Memoria", "Reparte la RAM entre los programas abiertos, la recupera cuando los cierras y, si se llena, mueve cosas al disco o cierra apps que no estás usando.", "Lo verás en la siguiente diapositiva."],
+  ["📁", "Archivos", "Guarda, organiza, copia, mueve y borra archivos y carpetas en el disco, y recuerda dónde está cada uno.", "Crear la carpeta «Enfermería» y guardar ahí tus informes."],
+  ["🖨️", "Dispositivos", "Reconoce lo que conectas (USB, audífonos, impresora, cámara) y decide qué programa puede usarlo en cada momento.", "Conectar una memoria USB y que aparezca sola en tu computadora."],
+  ["🖱️", "Interfaz", "Te muestra ventanas, íconos, menús y botones para que le des órdenes sin saber programar. Antes había que escribir comandos.", "El escritorio de Windows o la pantalla de inicio de tu celular."],
+  ["🔐", "Seguridad", "Controla quién entra, qué puede hacer cada app y te avisa de los peligros. Pero la última decisión siempre es tuya.", "El PIN de tu celular, los permisos de la cámara y las actualizaciones."],
 ];
 $("#fn-b").innerHTML = FN.map((f, k) => `<button class="chip" data-k="${k}">${f[0]} ${f[1]}</button>`).join("");
 function fnVer(k) {
   const f = FN[k];
   $$("#fn-b .chip").forEach((c, j) => { c.classList.toggle("on", j === k); if (j === k) c.classList.add("visto"); });
-  $("#fn-p").innerHTML = `<span class="emo">${f[0]}</span><div><h3>${f[1]}</h3><p>${f[2]}</p><p class="analog">${f[3]}</p><p class="peq"><b>Ejemplo:</b> ${f[4]}</p></div>`;
+  $("#fn-p").innerHTML = `<span class="emo">${f[0]}</span><div><h3>${f[1]}</h3><p>${f[2]}</p><p class="peq"><b>Ejemplo:</b> ${f[3]}</p></div>`;
 }
 $("#fn-b").onclick = e => { const c = e.target.closest(".chip"); if (c) fnVer(+c.dataset.k); };
 fnVer(0);
 
-/* ---------- 12 · multitarea ---------- */
-const PROC0 = [["🎵", "Música", "#2f7d4a"], ["💬", "WhatsApp", "#2f6f4f"], ["📝", "Documento", "#2f63e0"], ["🌐", "Navegador", "#b3752c"]];
-let procs, mtOn = false, mtCual = -1, mtTurnos = 0, mtTimer = null;
-function mtReset() {
-  clearTimeout(mtTimer); mtOn = false; mtCual = -1; mtTurnos = 0;
-  procs = PROC0.map(p => ({ e: p[0], n: p[1], c: p[2], v: 0 }));
-  $("#mt-go").textContent = "▶ Iniciar"; $("#mt-add").disabled = false; mtPintar();
-}
-function mtPintar() {
-  $("#mt-procs").innerHTML = procs.map((p, k) => `<div class="proc ${k === mtCual ? "act" : ""}" style="--c:${p.c}"><b>${p.e} ${p.n}</b><div class="bar"><i style="width:${p.v}%"></i></div><span>${Math.floor(p.v)}%</span></div>`).join("");
-  $("#mt-turno").textContent = mtCual < 0 ? "—" : procs[mtCual].e + " " + procs[mtCual].n;
-  $("#mt-n").textContent = "Turnos dados: " + mtTurnos;
-}
-function mtPaso() {
-  if (!mtOn) return;
-  const vivos = procs.map((p, k) => k).filter(k => procs[k].v < 100);
-  if (!vivos.length) { mtOn = false; mtCual = -1; mtPintar(); $("#mt-turno").textContent = "¡Todo listo! ✔"; $("#mt-go").textContent = "▶ Iniciar"; return; }
-  const sig = vivos.find(k => k > mtCual); mtCual = sig === undefined ? vivos[0] : sig;
-  procs[mtCual].v = Math.min(100, procs[mtCual].v + 3 + Math.random() * 3); mtTurnos++;
-  $("#mt-chip").classList.toggle("pulso");
-  if (VEL <= .5) tono(300 + mtCual * 90, .06);
-  mtPintar();
-  mtTimer = setTimeout(mtPaso, 650 / (VEL * VEL * VEL));
-}
-$("#mt-go").onclick = () => { mtOn = !mtOn; $("#mt-go").textContent = mtOn ? "⏸ Pausa" : "▶ Seguir"; if (mtOn) mtPaso(); else clearTimeout(mtTimer); };
-$("#mt-add").onclick = () => { procs.push({ e: "📹", n: "Videollamada", c: "#b3362c", v: 0 }); $("#mt-add").disabled = true; mtPintar(); };
-$("#mt-re").onclick = mtReset;
-mtReset();
-alSalir.push(d => { if (!d.contains($("#mt-procs")) && mtOn) { mtOn = false; clearTimeout(mtTimer); $("#mt-go").textContent = "▶ Seguir"; } });
-
-/* ---------- 13 · RAM ---------- */
-const APPS = [["⚙️", "Sistema operativo", 4, "#b3752c", true], ["💬", "WhatsApp", 1, "#25a35a"], ["🌐", "Chrome (10 pestañas)", 4, "#2f63e0"], ["📘", "Facebook", 2, "#3b5bdb"], ["🎮", "Juego", 5, "#b3362c"], ["🎵", "TikTok", 3, "#0e7490"], ["📷", "Cámara", 2, "#6b4a8f"], ["🗺️", "Maps", 2, "#2f7d4a"]];
-let ramAbiertas = [0];                 // índices en orden de uso (el último es el más reciente)
-const CELDAS = 16;
+/* ---------- RAM: lenta y luego el SO cierra apps ---------- */
+const APPS = [["⚙️", "Sistema operativo", 4, "#b3752c"], ["💬", "WhatsApp", 1, "#25a35a"], ["🌐", "Chrome (10 pestañas)", 4, "#2f63e0"], ["📘", "Facebook", 2, "#3b5bdb"], ["🎮", "Juego", 5, "#b3362c"], ["🎵", "TikTok", 3, "#0e7490"], ["📷", "Cámara", 2, "#6b4a8f"], ["🗺️", "Maps", 2, "#2f7d4a"]];
+const CELDAS = 16, VIRTUAL = 4;
+let ramAbiertas = [0];
+function ramLog(t) { const l = $("#ram-log"); l.insertAdjacentHTML("afterbegin", `<div>${t}</div>`); while (l.children.length > 2) l.lastChild.remove(); }
 function ramPintar() {
+  // si no alcanza ni con la memoria virtual, el SO cierra la app usada hace más tiempo
+  const total = () => ramAbiertas.reduce((a, k) => a + APPS[k][2], 0);
+  while (total() > CELDAS + VIRTUAL) {
+    const victima = ramAbiertas.find(k => k);
+    ramAbiertas = ramAbiertas.filter(k => k !== victima);
+    ramLog(`🤖 El SO cerró <b>${APPS[victima][1]}</b> para liberar RAM (era la que usaste hace más tiempo).`);
+    tono(260, .25, 0, "square");
+  }
   let usadas = 0; const enRam = [], enDisco = [];
-  // los más recientes se quedan en la RAM; el SO siempre se queda
   const orden = [0, ...ramAbiertas.filter(k => k).reverse()];
   orden.forEach(k => { const n = APPS[k][2]; if (usadas + n <= CELDAS) { usadas += n; enRam.push(k); } else enDisco.push(k); });
   const cel = []; enRam.forEach(k => { for (let j = 0; j < APPS[k][2]; j++) cel.push(k); });
   $("#ram-c").innerHTML = Array.from({ length: CELDAS }, (_, j) => cel[j] === undefined ? '<div class="celda"></div>' : `<div class="celda" style="background:${APPS[cel[j]][3]}" title="${APPS[cel[j]][1]}">${j === cel.indexOf(cel[j]) ? APPS[cel[j]][0] : ""}</div>`).join("");
   $("#ram-d").innerHTML = '<small>💾 MEMORIA VIRTUAL (EN EL DISCO) · MUCHO MÁS LENTA</small>' + enDisco.map(k => `<div class="celda" style="background:${APPS[k][3]};opacity:.7" title="${APPS[k][1]}">${APPS[k][0]}</div>`).join("");
   $("#ram-uso").textContent = (usadas / 2) + " / 8 GB";
-  const [em, tx] = enDisco.length === 0 ? (usadas >= 14 ? ["🐇", "Rápido, pero casi lleno"] : ["🐇", "Todo va rápido"]) : enDisco.length === 1 ? ["🐢", "Más lento: el SO está usando el disco"] : ["🐌", "Muy lento: ¡cierra apps que no uses!"];
+  const [em, tx] = enDisco.length === 0 ? (usadas >= 14 ? ["🐇", "Rápido, pero casi lleno"] : ["🐇", "Todo va rápido"]) : enDisco.length === 1 ? ["🐢", "Más lento: el SO está usando el disco"] : ["🐌", "Muy lento: ¡el SO está al límite!"];
   $("#ram-em").textContent = em; $("#ram-txt").textContent = tx;
   $$("#ram-apps .app-b").forEach(b => b.classList.toggle("on", ramAbiertas.includes(+b.dataset.k)));
 }
+const ramCerradasPorSO = new Set();
 $("#ram-apps").innerHTML = APPS.map((a, k) => k ? `<button class="app-b" data-k="${k}" style="--c:${a[3]}">${a[0]} ${a[1]}<small>${a[2] / 2} GB</small></button>` : "").join("");
 $("#ram-apps").onclick = e => {
   const b = e.target.closest(".app-b"); if (!b) return; const k = +b.dataset.k;
   if (ramAbiertas.includes(k)) { ramAbiertas = ramAbiertas.filter(x => x !== k); tono(330, .12); }
-  else { ramAbiertas.push(k); tono(520, .12); }
+  else {
+    const antes = new Set(ramAbiertas); ramAbiertas.push(k); tono(520, .12);
+    if (ramCerradasPorSO.has(k)) { ramLog(`🔄 <b>${APPS[k][1]}</b> se vuelve a cargar desde cero: el SO la había cerrado.`); ramCerradasPorSO.delete(k); }
+    ramPintar(); antes.forEach(x => { if (!ramAbiertas.includes(x)) ramCerradasPorSO.add(x); }); return;
+  }
   ramPintar();
 };
-$("#ram-cerrar").onclick = () => { ramAbiertas = [0]; ramPintar(); };
+$("#ram-cerrar").onclick = () => { ramAbiertas = [0]; ramCerradasPorSO.clear(); $("#ram-log").innerHTML = ""; ramPintar(); };
 ramPintar();
 
-/* ---------- 14 · explorador ---------- */
+/* ---------- explorador (con las carpetas del propio SO) ---------- */
 const FS = { n: "Este equipo", e: "💻", h: [
   { n: "Disco local (C:)", e: "💽", h: [
     { n: "Usuarios", e: "📁", h: [
@@ -1256,12 +1860,24 @@ const FS = { n: "Este equipo", e: "💻", h: [
         { n: "Imágenes", e: "📁", h: [{ n: "Foto de grupo.jpg" }, { n: "Captura de pantalla.png" }] },
         { n: "Música", e: "📁", h: [{ n: "Canción favorita.mp3" }] },
         { n: "Descargas", e: "📁", h: [{ n: "Video de la clase.mp4" }, { n: "Instalar programa.exe" }, { n: "Fotos del paseo.zip" }] } ] } ] },
-    { n: "Windows", e: "📁", h: [{ n: "System32", e: "🔒", h: [] }] } ] } ] };
+    { n: "Archivos de programa", e: "📁", h: [
+      { n: "Google Chrome", e: "📁", h: [{ n: "chrome.exe", i: "Es Google Chrome. Cuando tocas su ícono, el SO abre este archivo." }, { n: "chrome.dll", i: "Una pieza de Chrome que el programa usa mientras funciona." }] },
+      { n: "WhatsApp", e: "📁", h: [{ n: "WhatsApp.exe", i: "Es la app de WhatsApp para computadora: un archivo más que el SO sabe abrir." }] } ] },
+    { n: "Windows", e: "🔒", h: [
+      { n: "System32", e: "🔒", h: [
+        { n: "ntoskrnl.exe", i: "¡El núcleo (kernel) de Windows! El corazón del SO: controla el procesador, la memoria y todo lo demás. Si se daña, la PC no enciende." },
+        { n: "winload.efi", i: "El archivo de arranque: al encender, busca al núcleo y lo carga en la RAM." },
+        { n: "svchost.exe", i: "Ejecuta los servicios del SO que trabajan en segundo plano: red, sonido, actualizaciones…" },
+        { n: "notepad.exe", i: "El Bloc de notas que viene con Windows." },
+        { n: "calc.exe", i: "La Calculadora de Windows." } ] },
+      { n: "explorer.exe", i: "Dibuja tu escritorio, la barra de tareas y esta misma ventana de carpetas." },
+      { n: "Fonts", e: "🔒", h: [{ n: "arial.ttf", i: "Un tipo de letra. Todas las letras que ves en pantalla también son archivos." }] } ] } ] } ] };
 const EXT = {
   docx: ["📘", "Word o Google Docs", "Documento de texto"], xlsx: ["📗", "Excel o Google Sheets", "Hoja de cálculo"], pptx: ["📙", "PowerPoint o Google Slides", "Presentación"],
-  pdf: ["📕", "un lector de PDF o el navegador", "Documento PDF (no se edita fácilmente)"], txt: ["🗒️", "el Bloc de notas", "Texto simple, sin formato"],
+  pdf: ["📕", "un lector de PDF o el navegador", "Documento PDF"], txt: ["🗒️", "el Bloc de notas", "Texto simple, sin formato"],
   jpg: ["🖼️", "el visor de Fotos", "Imagen (fotografía)"], png: ["🖼️", "el visor de Fotos", "Imagen (capturas, dibujos)"], mp3: ["🎵", "el reproductor de música", "Audio"],
-  mp4: ["🎬", "el reproductor de video", "Video"], exe: ["⚙️", "el propio SO: es un programa que se instala", "Programa ejecutable. ¡Cuidado si no sabes de dónde viene!"], zip: ["🗜️", "el descompresor", "Carpeta comprimida"],
+  mp4: ["🎬", "el reproductor de video", "Video"], exe: ["⚙️", "el propio SO: es un programa", "Programa ejecutable"], zip: ["🗜️", "el descompresor", "Carpeta comprimida"],
+  dll: ["🧩", "nadie: lo usan otros programas por dentro", "Biblioteca (pieza de un programa)"], efi: ["🚀", "la computadora al encender", "Archivo de arranque"], ttf: ["🔤", "el SO, para dibujar letras", "Tipo de letra"],
 };
 let exRuta = [FS, FS.h[0], FS.h[0].h[0], FS.h[0].h[0].h[0], FS.h[0].h[0].h[0].h[0]];
 function exPintar(sel) {
@@ -1270,201 +1886,142 @@ function exPintar(sel) {
   const plano = []; (function rec(n, d, camino) { if (!n.h) return; plano.push([n, d, camino]); n.h.forEach(x => rec(x, d + 1, [...camino, x])); })(FS, 0, [FS]);
   $("#ex-arbol").innerHTML = plano.filter(([n, d]) => d <= 5).map(([n, d], k) => `<button data-a="${k}" class="${n === act ? "on" : ""}" style="padding-left:${6 + d * 10}px">${n.e} ${n.n}</button>`).join("");
   $("#ex-arbol").plano = plano;
-  $("#ex-arch").innerHTML = act.h.length ? act.h.map((x, k) => {
+  $("#ex-arch").innerHTML = act.h.map((x, k) => {
     if (x.h) return `<button class="arch" data-d="${k}"><span class="emo">${x.e}</span>${x.n}</button>`;
     const ext = x.n.split(".").pop(), info = EXT[ext];
     return `<button class="arch ${sel === k ? "on" : ""}" data-f="${k}"><span class="emo">${info[0]}</span>${x.n.replace("." + ext, "")}<span class="ext">.${ext}</span></button>`;
-  }).join("") : '<p class="peq">🔒 Carpeta del sistema: mejor no tocar nada aquí.</p>';
+  }).join("");
 }
 $("#ex-ruta").onclick = e => { const b = e.target.closest("button"); if (!b) return; exRuta = exRuta.slice(0, +b.dataset.k + 1); exPintar(); };
 $("#ex-arbol").onclick = e => { const b = e.target.closest("button"); if (!b) return; exRuta = $("#ex-arbol").plano[+b.dataset.a][2]; exPintar(); };
 $("#ex-arch").onclick = e => {
   const b = e.target.closest(".arch"); if (!b) return; const act = exRuta[exRuta.length - 1];
-  if (b.dataset.d !== undefined) { exRuta = [...exRuta, act.h[+b.dataset.d]]; exPintar(); tono(440, .08); return; }
+  if (b.dataset.d !== undefined) {
+    exRuta = [...exRuta, act.h[+b.dataset.d]]; exPintar(); tono(440, .08);
+    const n = exRuta[exRuta.length - 1].n;
+    if (n === "Windows" || n === "System32") $("#ex-abre").innerHTML = `<span class="emo">🔒</span><span>Estás dentro del <b>sistema operativo</b>. Aquí viven los archivos que hacen funcionar la computadora. ¡Nunca borres nada de aquí!</span>`;
+    if (n === "Archivos de programa") $("#ex-abre").innerHTML = `<span class="emo">🧩</span><span>Aquí se instalan las <b>aplicaciones</b>. Cada app es una carpeta llena de archivos.</span>`;
+    return;
+  }
   const k = +b.dataset.f, f = act.h[k], ext = f.n.split(".").pop(), info = EXT[ext];
   exPintar(k); tono(600, .1);
-  $("#ex-abre").innerHTML = `<span class="emo">${info[0]}</span><span><b>.${ext}</b> → ${info[2]}. El SO lo abre con <b>${info[1]}</b>.<br><span style="opacity:.75;font-size:.85em">Ruta: ${exRuta.map((c, j) => j === 0 ? "" : j === 1 ? "C:" : c.n).filter(Boolean).join("\\")}\\${f.n}</span></span>`;
+  $("#ex-abre").innerHTML = `<span class="emo">${info[0]}</span><span><b>.${ext}</b> → ${info[2]}. ${f.i ? f.i : "El SO lo abre con <b>" + info[1] + "</b>."}<br><span style="opacity:.75;font-size:.85em">Ruta: ${exRuta.map((c, j) => j === 0 ? "" : j === 1 ? "C:" : c.n).filter(Boolean).join("\\")}\\${f.n}</span></span>`;
 };
 exPintar();
 
-/* ---------- 15 · controladores ---------- */
-const DRV = [["impresora", "Impresora", "🖨️"], ["webcam", "Cámara web", "📷"], ["mouse", "Mouse", "🖱️"], ["usb", "Memoria USB", "💾"]];
-$("#drv").innerHTML = DRV.map((d, k) => `<div class="disp" data-k="${k}"><img src="${IMG(d[0])}" alt="${d[1]}"><h3>${d[1]}</h3><div class="mini-bar"><i></i></div><span class="est">Desconectado</span><button class="bt sec conec">🔌 Conectar</button></div>`).join("");
-$("#drv").onclick = e => {
-  const b = e.target.closest(".conec"); if (!b) return;
-  const c = b.closest(".disp"), k = c.dataset.k, sin = $("#drv-sin").checked, est = $(".est", c), bar = $(".mini-bar i", c), key = "drv" + k;
-  if (c.classList.contains("ok") || c.classList.contains("mal")) { parar(key); c.className = "disp"; est.textContent = "Desconectado"; bar.style.width = 0; b.textContent = "🔌 Conectar"; return; }
-  parar(key); c.className = "disp busca"; b.textContent = "⏏ Desconectar"; tono(700, .08);
-  est.textContent = "Nuevo dispositivo detectado… ¿qué es esto?"; bar.style.width = "15%";
-  luego(key, () => { est.textContent = "Buscando su controlador…"; bar.style.width = "55%"; }, 1200);
-  luego(key, () => {
-    bar.style.width = "100%";
-    if (sin) { c.className = "disp mal"; est.textContent = "⚠ Dispositivo desconocido: no hay controlador"; tono(180, .4, 0, "square"); }
-    else { c.className = "disp ok"; est.textContent = "✔ Controlador instalado. ¡Listo para usar!"; tono(660, .15); setTimeout(() => tono(880, .2), 150); }
-  }, 2600);
-};
-alSalir.push(d => { if (!d.contains($("#drv"))) DRV.forEach((_, k) => parar("drv" + k)); });
-
-/* ---------- 16 · interfaz gráfica y terminal ---------- */
-const GUI = {
-  doc: ["📁 Documentos", "📁 Enfermería<br>📕 CV Ana Quispe.pdf<br>🗒️ Notas.txt"],
-  img: ["🖼️ Imágenes", "🖼️ Foto de grupo.jpg<br>🖼️ Captura de pantalla.png"],
-  hora: ["🕒 Reloj", () => `<b style="font-size:1.6rem">${new Date().toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" })}</b><br>${new Date().toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" })}`],
-};
-$("#gui").onclick = e => {
-  const ic = e.target.closest(".ico"); if (!ic) return;
-  const g = GUI[ic.dataset.v]; $("#gui-t").textContent = g[0]; $("#gui-c").innerHTML = typeof g[1] === "function" ? g[1]() : g[1];
-  $("#gui-v").classList.add("on"); tono(520, .08);
-};
-$("#gui-x").onclick = e => { e.stopPropagation(); $("#gui-v").classList.remove("on"); };
-let termDir = "Ana";
-const TDIR = { Ana: ["Documentos", "Imágenes", "Música", "Descargas"], Documentos: ["Enfermería", "CV Ana Quispe.pdf", "Notas.txt"], "Imágenes": ["Foto de grupo.jpg", "Captura de pantalla.png"], "Música": ["Canción favorita.mp3"], Descargas: ["Video de la clase.mp4", "Instalar programa.exe"], "Enfermería": ["Informe de práctica.docx", "Signos vitales.xlsx"] };
-const PADRE = { Documentos: "Ana", "Imágenes": "Ana", "Música": "Ana", Descargas: "Ana", "Enfermería": "Documentos" };
-function prompt_() { const r = { Ana: "C:\\Usuarios\\Ana", Documentos: "C:\\Usuarios\\Ana\\Documentos", "Enfermería": "C:\\Usuarios\\Ana\\Documentos\\Enfermería" }; return (r[termDir] || "C:\\Usuarios\\Ana\\" + termDir) + ">"; }
-function termOut(h) { $("#term-s").insertAdjacentHTML("beforeend", h + "\n"); $("#term-s").scrollTop = 1e6; }
-function termRun(c) {
-  const raw = c.trim(); if (!raw) return;
-  termOut(`<span class="cmd">${prompt_()} ${raw.replace(/</g, "&lt;")}</span>`);
-  const [cmd, ...args] = raw.split(/\s+/), a = args.join(" "), cm = cmd.toLowerCase();
-  const fecha = new Date();
-  if (cm === "ayuda" || cm === "help") termOut("Comandos: dir · cd carpeta · cd .. · fecha · hora · ver · echo texto · mkdir nombre · cls");
-  else if (cm === "dir" || cm === "ls") termOut(" Contenido de " + prompt_().slice(0, -1) + "\n" + (TDIR[termDir] || []).map(x => (x.includes(".") ? "   " : " &lt;DIR&gt; ") + x).join("\n"));
-  else if (cm === "cd") {
-    if (a === ".." ) { if (PADRE[termDir]) termDir = PADRE[termDir]; }
-    else { const h = (TDIR[termDir] || []).find(x => x.toLowerCase() === a.toLowerCase() && !x.includes(".")); if (h) { termDir = h; TDIR[h] = TDIR[h] || []; PADRE[h] = PADRE[h] || termDir; } else termOut('<span class="er">El sistema no puede encontrar la ruta especificada.</span>'); }
-    $("#term .lin-in span").textContent = prompt_();
-  }
-  else if (cm === "fecha" || cm === "date") termOut("La fecha de hoy es: " + fecha.toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }));
-  else if (cm === "hora" || cm === "time") termOut("La hora actual es: " + fecha.toLocaleTimeString("es-PE"));
-  else if (cm === "ver") termOut("AulaOS [Versión 2.0 · Herramientas Informáticas]");
-  else if (cm === "echo") termOut(a.replace(/</g, "&lt;"));
-  else if (cm === "mkdir" || cm === "md") { if (a) { (TDIR[termDir] = TDIR[termDir] || []).push(a); TDIR[a] = []; PADRE[a] = termDir; termOut("Carpeta creada: " + a.replace(/</g, "&lt;")); } else termOut('<span class="er">Falta el nombre de la carpeta.</span>'); }
-  else if (cm === "cls" || cm === "clear") $("#term-s").innerHTML = "";
-  else termOut(`<span class="er">"${cmd.replace(/</g, "&lt;")}" no se reconoce como un comando. Escribe "ayuda".</span>`);
-  tono(cm === "cls" ? 300 : 500, .05);
-}
-$("#term-i").addEventListener("keydown", e => { if (e.key === "Enter") { termRun(e.target.value); e.target.value = ""; } });
-$("#term").onclick = () => $("#term-i").focus();
-$("#term-sug").innerHTML = ["ayuda", "dir", "cd Documentos", "dir", "fecha", "hora", "mkdir Prácticas", "cd ..", "cls"].map(c => `<button type="button">${c}</button>`).join("");
-$("#term-sug").onclick = e => { const b = e.target.closest("button"); if (b) termRun(b.textContent); };
-termOut("AulaOS [Versión 2.0]\nEscribe un comando o toca uno de abajo. Prueba con: ayuda");
-
-/* ---------- 17 · permisos ---------- */
-const PERM = [
-  ["🔦", "Linterna", "📇 tus contactos", false, "¡Bien! Una linterna solo necesita encender el flash. No tiene por qué ver tus contactos."],
-  ["🗺️", "Google Maps", "📍 tu ubicación", true, "Tiene sentido: necesita saber dónde estás para darte la ruta."],
-  ["🧮", "Calculadora", "🎙️ el micrófono", false, "Correcto: una calculadora no necesita escucharte."],
-  ["💬", "WhatsApp", "📷 la cámara", true, "Tiene sentido: la usa para fotos y videollamadas."],
-  ["🎮", "Juego gratis", "💬 tus mensajes SMS", false, "¡Muy bien! Un juego que pide leer tus SMS es sospechoso: podría robar códigos de tu banco."],
+/* ---------- la cadena de archivos ---------- */
+const CAD = [
+  ["⏻", "Botón", "", "Presionas el botón. La placa madre revisa que el hardware esté bien y busca en el disco el primer archivo del SO."],
+  ["🚀", "Arranque", "winload.efi", "El archivo de arranque busca al núcleo del SO en el disco y lo copia a la RAM."],
+  ["🧠", "Núcleo", "ntoskrnl.exe", "El núcleo (kernel) toma el control del procesador, la memoria y todo el hardware. Desde aquí, el SO manda."],
+  ["⚙️", "Servicios", "svchost.exe", "El núcleo enciende los servicios que trabajan en segundo plano: Wi-Fi, sonido, impresión, actualizaciones…"],
+  ["🖥️", "Escritorio", "explorer.exe", "Se dibujan el escritorio, la barra de tareas y las carpetas. Recién aquí ves algo en pantalla."],
+  ["🌐", "Tu app", "chrome.exe", "Tocas el ícono de Chrome: el SO busca ese archivo, lo carga en la RAM y le da turnos en el procesador."],
+  ["📘", "Tu archivo", "informe.docx", "Abres tu informe: es un archivo de datos que Word sabe leer. El SO lo trae del disco y lo guarda cuando terminas."],
 ];
-let pi = 0;
-function permPintar() {
-  if (pi >= PERM.length) { $("#perm").innerHTML = `<div class="app-ic">🛡️</div><b>¡Terminamos!</b><p class="peq">Revisa los permisos de tus apps en Ajustes → Aplicaciones → Permisos.</p><button class="bt sec" id="perm-re">↺ De nuevo</button>`; $("#perm-re").onclick = () => { pi = 0; permPintar(); }; return; }
-  const p = PERM[pi];
-  $("#perm").innerHTML = `<div class="app-ic">${p[0]}</div><b>${p[1]}</b><div class="dialogo">¿Permitir que <b>${p[1]}</b> acceda a ${p[2]}?<div class="fila"><button class="no-b" data-r="0">Rechazar</button><button class="si-b" data-r="1">Permitir</button></div></div><div id="perm-v"></div>`;
+$("#cad").innerHTML = CAD.map(c => `<div class="eslabon"><span class="emo">${c[0]}</span><h3>${c[1]}</h3>${c[2] ? `<code>${c[2]}</code>` : ""}</div>`).join("");
+let cadN = -1;
+function cadMostrar(n) {
+  cadN = n;
+  $$(".eslabon").forEach((p, k) => { p.classList.toggle("act", k === n); p.classList.toggle("hecho", k < n); });
+  if (n < 0) return;
+  const c = CAD[n];
+  $("#cad-x").innerHTML = `<span class="emo">${c[0]}</span><p><small>Eslabón ${n + 1} de ${CAD.length}${c[2] ? " · " + c[2] : ""}</small>${c[3]}</p>`;
+  tono(330 + n * 60, .15);
+  $("#cad-paso").textContent = n >= CAD.length - 1 ? "↺ Reiniciar" : "Paso a paso ▸";
 }
-$("#perm").onclick = e => {
-  const b = e.target.closest("[data-r]"); if (b) {
-    const p = PERM[pi], ok = (b.dataset.r === "1") === p[3];
-    $("#perm-v").innerHTML = `<div class="veredicto ${ok ? "ok" : "mal"}">${ok ? "✔ " + p[4] : "✘ Piénsalo: " + p[4].replace(/^¡?[^!.:]*[!.:]\s*/, "")}</div><button class="bt" id="perm-sig" style="margin-top:8px">Siguiente →</button>`;
-    $$("#perm [data-r]").forEach(x => x.disabled = true); tono(ok ? 660 : 200, .2, 0, ok ? "sine" : "sawtooth");
+$("#cad-paso").onclick = () => { parar("cad"); cadMostrar(cadN >= CAD.length - 1 ? 0 : cadN + 1); };
+$("#cad-go").onclick = () => { parar("cad"); CAD.forEach((_, k) => luego("cad", () => cadMostrar(k), k * 2600)); };
+alSalir.push(d => { if (!d.contains($("#cad"))) parar("cad"); });
+
+/* ---------- seguridad: casos reales ---------- */
+const SEG = [
+  { tipo: "sms", de: "BANCO-INFO", hora: "9:14", txt: 'Estimado cliente: su cuenta será BLOQUEADA hoy. Actualice sus datos aquí: <a>bit.ly/actualiza-cuenta-pe</a>',
+    ops: [["Abrir el enlace y actualizar mis datos", false], ["Borrar el mensaje y llamar al número oficial del banco", true]],
+    mal: "La página era idéntica a la de tu banco. Escribiste tu número de tarjeta y tu clave… y en minutos te vaciaron la cuenta.", bien: "¡Bien! Los bancos nunca piden tu clave por mensaje. El enlace llevaba a una página falsa.",
+    so: "El SO solo vio que abriste una página web. No puede saber que vas a escribir tu clave en el lugar equivocado." },
+  { tipo: "chat", de: "+51 9•• ••• 418", txt: "Hola tía, soy Luis 😊 Este es mi número nuevo. Estoy en un apuro, ¿me transfieres S/ 300? Mañana te devuelvo, porfa 🙏",
+    ops: [["Transferirle, es mi sobrino", false], ["Llamar a Luis a su número de siempre antes de hacer nada", true]],
+    mal: "No era Luis. Era un estafador que copió su foto. Los S/ 300 no regresan.", bien: "¡Exacto! Luis estaba en clases y nunca cambió de número.",
+    so: "El SO entregó el mensaje como cualquier otro. Ningún sistema puede saber si quien escribe dice la verdad." },
+  { tipo: "chat", de: "Rosa (compañera)", txt: "Amiga, perdón 😅 te llegó un código de 6 números por error, es mío. ¿Me lo pasas porfa?", extra: "🔢 Tu código de WhatsApp es: 482-913. No lo compartas con nadie.",
+    ops: [["Pasarle el código, es mi amiga", false], ["No dárselo: los códigos son solo míos", true]],
+    mal: "Con ese código entraron a tu WhatsApp y les pidieron dinero a todos tus contactos. A Rosa también le habían robado el suyo.", bien: "¡Muy bien! Quien te pide un código quiere entrar a tu cuenta, aunque escriba desde el número de alguien conocido.",
+    so: "El mismo mensaje del código te avisaba: «No lo compartas con nadie». El SO te lo mostró… pero la decisión era tuya." },
+  { tipo: "so", tit: "⚠️ Instalación bloqueada", txt: "Por tu seguridad, tu teléfono no puede instalar apps de esta fuente: <b>WhatsApp-Plus-GRATIS.apk</b>",
+    ops: [["Ir a Ajustes y permitir apps de origen desconocido", false], ["Cancelar e instalar apps solo desde la tienda oficial", true]],
+    mal: "La app tenía un programa espía: leía tus mensajes y tus fotos y los enviaba a desconocidos.", bien: "¡Correcto! El SO bloqueó la instalación para protegerte. Las apps falsas suelen esconder virus.",
+    so: "El SO bloqueó la app y te advirtió. Para que entre el virus, alguien tenía que desactivar esa protección a mano." },
+  { tipo: "so", tit: "🔦 Linterna Pro", txt: "¿Permitir que <b>Linterna Pro</b> acceda a tus <b>contactos</b>, tus <b>SMS</b> y tu <b>ubicación</b>?",
+    ops: [["Permitir todo, si no, no funciona", false], ["Rechazar: una linterna solo necesita el flash", true]],
+    mal: "La “linterna” vendía tus contactos y leía tus SMS, incluidos los códigos de tu banco.", bien: "¡Bien! Si un permiso no tiene nada que ver con lo que hace la app, se rechaza.",
+    so: "El SO te preguntó antes de darle permiso. Su trabajo es preguntar; el tuyo es decidir." },
+  { tipo: "so", tit: "🔐 Crea una contraseña para tu correo", txt: "¿Cuál eliges?",
+    ops: [["123456", false], ["Ana2005", false], ["MiGato-Come3Pescados!", true]],
+    mal: "Esa contraseña aparece en las listas que usan los delincuentes: la adivinan en segundos.", bien: "¡Excelente! Larga, con mayúsculas, números y símbolos, y fácil de recordar para ti.",
+    so: "El SO guarda tu contraseña cifrada y bloquea los intentos repetidos, pero no puede elegirla por ti." },
+  { tipo: "so", tit: "🔄 Actualización de seguridad disponible", txt: "Esta actualización corrige un error que permite a los virus entrar en tu equipo. Tamaño: 350 MB.",
+    ops: [["Recordármelo en un mes", false], ["Instalarla esta noche con el cargador conectado", true]],
+    mal: "Dos semanas después, un virus entró justo por ese error que la actualización iba a corregir.", bien: "¡Perfecto! Actualizar es la forma más fácil de cerrarles la puerta a los virus.",
+    so: "El SO ya tenía la solución lista. Solo faltaba que tú la instalaras." },
+  { tipo: "so", tit: "📶 WiFi_GRATIS_Centro_Comercial", txt: "Te conectaste a una red Wi-Fi abierta, sin contraseña. Quieres revisar tu cuenta del banco…",
+    ops: [["Entrar al banco por ese Wi-Fi", false], ["Esperar o usar mis datos móviles", true]],
+    mal: "La red la había creado un delincuente para espiar lo que escriben quienes se conectan.", bien: "¡Bien pensado! En redes públicas no hagas nada importante: ni bancos ni contraseñas.",
+    so: "El SO te marcó la red como «no segura». Igual decidiste conectarte." },
+];
+let si = 0, segRes = [];
+function segMarcador() { $("#seg-m").innerHTML = SEG.map((_, k) => `<i class="${segRes[k] === true ? "ok" : segRes[k] === false ? "mal" : k === si ? "act" : ""}"></i>`).join(""); $("#seg-ant").disabled = si === 0; }
+function segPintar() {
+  segMarcador();
+  if (si >= SEG.length) {
+    const ok = segRes.filter(Boolean).length;
+    $("#seg").innerHTML = `<div class="seg-top"><span>10:30</span><span>📶 🔋</span></div><div class="alerta-so" style="margin-top:20px"><b style="font-size:2rem">${ok === SEG.length ? "🏆" : "🛡️"}</b><b>${ok} de ${SEG.length} decisiones seguras</b>En todos los casos el SO hizo su parte: avisó, preguntó o bloqueó.<br><br><b>El que decide eres tú.</b></div><div class="seg-ops"><button id="seg-otra">↺ Volver a empezar</button></div>`;
+    $("#seg-otra").onclick = () => { si = 0; segRes = []; segPintar(); };
     return;
   }
-  if (e.target.closest("#perm-sig")) { pi++; permPintar(); }
+  const c = SEG[si];
+  let cuerpo;
+  if (c.tipo === "sms") cuerpo = `<div class="seg-top"><span>${c.hora}</span><span>📶 🔋</span></div><div class="sms"><div class="de"><span>💬 ${c.de}</span><span>ahora</span></div>${c.txt}</div>`;
+  else if (c.tipo === "chat") cuerpo = `<div class="chat-cab"><span>👤</span><b>${c.de}</b></div>${c.extra ? `<div class="sms"><div class="de"><span>💬 Mensajes</span><span>ahora</span></div>${c.extra}</div>` : ""}<div class="burbuja">${c.txt}<small>10:31</small></div>`;
+  else cuerpo = `<div class="seg-top"><span>10:30</span><span>📶 🔋</span></div><div class="alerta-so" style="margin-top:14px"><b>${c.tit}</b>${c.txt}</div>`;
+  $("#seg").innerHTML = `${cuerpo}<p class="peq" style="margin:4px 0 0 !important;text-align:center">Caso ${si + 1} de ${SEG.length} · ¿Qué harías?</p><div class="seg-ops">${c.ops.map((o, k) => `<button data-k="${k}">${escH(o[0])}</button>`).join("")}</div>`;
+}
+$("#seg").onclick = e => {
+  const b = e.target.closest("[data-k]"); if (!b || si >= SEG.length) return;
+  const c = SEG[si], ok = c.ops[+b.dataset.k][1]; segRes[si] = ok;
+  $(".seg-ops", $("#seg")).outerHTML = `<div class="seg-res ${ok ? "ok" : "mal"}"><b>${ok ? "✔ Decisión segura" : "✘ ¿Qué pasó después?"}</b>${ok ? c.bien : c.mal}<span class="so">🛡️ <b>Lo que hizo el SO:</b> ${c.so}</span></div><div class="seg-ops"><button id="seg-sig">${si === SEG.length - 1 ? "Ver resultado →" : "Siguiente caso →"}</button></div>`;
+  tono(ok ? 660 : 180, .25, 0, ok ? "sine" : "sawtooth"); segMarcador();
+  $("#seg-sig").onclick = () => { si++; segPintar(); };
 };
-permPintar();
+$("#seg-ant").onclick = () => { if (si > 0) { si--; segRes.length = si; segPintar(); } };
+$("#seg-re").onclick = () => { si = 0; segRes = []; segPintar(); };
+segPintar();
 
-/* ---------- 19 · galería de SO ---------- */
+/* ---------- galería de SO ---------- */
 const SO = [
-  { n: "Windows", emo: "🪟", t: "pc", d: "De Microsoft. El más usado en computadoras de casa, oficinas y hospitales. Es propietario y de pago (suele venir incluido al comprar la PC).", v: "Versión actual: Windows 11" },
-  { n: "macOS", logo: "apple", c: "#555", t: "pc", d: "De Apple. Solo funciona en computadoras Mac (MacBook, iMac). Es propietario.", v: "Muy usado en diseño y edición de video" },
-  { n: "Linux", logo: "linux", c: "#222", t: "pc", d: "Libre y gratuito. Hay muchas versiones llamadas “distribuciones”. Domina los servidores de internet.", v: "Su mascota es el pingüino Tux 🐧" },
-  { n: "Ubuntu", logo: "ubuntu", c: "#e95420", t: "pc", d: "Una de las distribuciones de Linux más populares y fáciles de usar. Se puede descargar gratis.", v: "Muy usada en universidades" },
+  { n: "Windows", emo: "🪟", t: "pc", d: "De Microsoft. El más usado en computadoras de casa, oficinas, colegios y hospitales. Suele venir instalado al comprar la PC.", v: "Versión actual: Windows 11" },
+  { n: "macOS", logo: "apple", c: "#555", t: "pc", d: "De Apple. Solo funciona en sus computadoras Mac (MacBook, iMac).", v: "Muy usado en diseño y edición de video" },
+  { n: "Linux", logo: "linux", c: "#222", t: "pc", d: "Creado en 1991. Tiene muchas versiones llamadas «distribuciones». Hace funcionar la mayoría de los servidores de internet.", v: "Su mascota es el pingüino Tux 🐧" },
+  { n: "Ubuntu", logo: "ubuntu", c: "#e95420", t: "pc", d: "Una de las versiones (distribuciones) de Linux más populares y fáciles de usar para computadoras personales.", v: "Muy usada en universidades" },
   { n: "ChromeOS", logo: "googlechrome", c: "#1a73e8", t: "pc", d: "De Google. Viene en las laptops Chromebook. Casi todo funciona dentro del navegador y en la nube.", v: "Muy usado en colegios" },
-  { n: "Android", logo: "android", c: "#3ddc84", t: "mov", d: "De Google, basado en Linux. Lo usan Samsung, Xiaomi, Motorola, Honor y muchos más.", v: "8 de cada 10 celulares en Perú" },
-  { n: "iOS", logo: "apple", c: "#111", t: "mov", d: "De Apple. Solo funciona en el iPhone (y su pariente iPadOS en el iPad). Es propietario.", v: "Cerca de 2 de cada 10 celulares en Perú" },
-  { n: "HarmonyOS", logo: "harmonyos", c: "#c7000b", t: "mov", d: "De Huawei. Lo traen sus celulares, relojes y tablets más recientes.", v: "Antes Huawei usaba EMUI sobre Android" },
+  { n: "Android", logo: "android", c: "#3ddc84", t: "mov", d: "De Google. Lo usan Samsung, Xiaomi, Motorola, Honor y muchas marcas más.", v: "8 de cada 10 celulares en Perú" },
+  { n: "iOS", logo: "apple", c: "#111", t: "mov", d: "De Apple. Solo funciona en el iPhone (y su pariente iPadOS en el iPad).", v: "Cerca de 2 de cada 10 celulares en Perú" },
+  { n: "HarmonyOS", logo: "harmonyos", c: "#c7000b", t: "mov", d: "De Huawei. Lo traen sus celulares, relojes y tablets más recientes.", v: "Antes Huawei usaba EMUI, basado en Android" },
 ];
 $("#so-gal").innerHTML = SO.map(s => `<button class="carta so-tj" data-revela>${s.logo ? `<span class="logo" style="--m:url(recursos/m1c2/${s.logo}.svg);--c:${s.c}"></span>` : `<span class="logo-emo">${s.emo}</span>`}<h3>${s.n}</h3><span class="etiq ${s.t}">${s.t === "pc" ? "💻 Computadora" : "📱 Celular"}</span><div class="atras">${s.d}<br><b>${s.v}</b></div></button>`).join("");
 
-/* ---------- 21 · línea de tiempo ---------- */
-const LT = [
-  ["1946", "Sin sistema operativo", "La ENIAC, una de las primeras computadoras, ocupaba un salón entero. Para cambiar de tarea había que <b>reconectar cables a mano</b>: no existía el SO.", { img: "Classic_shot_of_the_ENIAC.jpg" }],
-  ["1950s", "Tarjetas perforadas", "Los programas se escribían haciendo <b>agujeros en tarjetas de cartón</b>. Aparecen los primeros programas que organizaban el trabajo: el abuelo del SO.", { img: "PunchCardDecks.agr.jpg" }],
-  ["1969", "Nace Unix", "En los laboratorios Bell crean <b>Unix</b>, un SO tan bien pensado que sus ideas siguen vivas en Linux, macOS, Android e iOS.", { emo: "🧬" }],
-  ["1981", "MS-DOS", "Llega a las computadoras personales. Pantalla negra y <b>solo comandos escritos</b>: había que memorizarlos.", { txt: "C:\\&gt; dir\n\n INFORME  DOC\n NOTAS    TXT\n\nC:\\&gt; _" }],
-  ["1984", "Ventanas y mouse", "La computadora Macintosh de Apple populariza la <b>interfaz gráfica</b>: íconos, ventanas y el mouse.", { emo: "🖱️" }],
-  ["1985", "Windows 1.0", "Microsoft lanza <b>Windows</b>: ventanas encima de MS-DOS.", { emo: "🪟" }],
-  ["1991", "Linux", "Un estudiante finlandés crea <b>Linux</b> y lo comparte gratis por internet para que todos lo mejoren.", { logo: "linux" }],
-  ["1995", "El botón Inicio", "Windows 95 trae el <b>botón Inicio</b> y la barra de tareas que usamos hasta hoy.", { emo: "▶️" }],
-  ["2007", "El iPhone y iOS", "Apple presenta el iPhone: un SO pensado para <b>tocar la pantalla con los dedos</b>.", { logo: "apple" }],
-  ["2008", "Android", "Sale el primer celular con <b>Android</b>. Hoy es el SO más usado del mundo.", { logo: "android", c: "#3ddc84" }],
-  ["2021", "Windows 11", "La versión actual de Windows. Pide hardware más moderno y seguro.", { emo: "💻" }],
-  ["Hoy", "SO con inteligencia artificial", "Los SO ya incluyen <b>asistentes con IA</b> que entienden lo que les pides con tu voz o por escrito.", { emo: "🤖" }],
-];
-$("#lt-r").max = LT.length - 1;
-$("#lt-m").innerHTML = LT.map((l, k) => `<button data-k="${k}">${l[0]}</button>`).join("");
-function ltVer(k) {
-  k = Math.max(0, Math.min(LT.length - 1, k)); $("#lt-r").value = k;
-  const [a, t, x, m] = LT[k];
-  $("#lt-anio").textContent = a; $("#lt-tit").textContent = t; $("#lt-txt").innerHTML = x;
-  const f = $("#lt-foto");
-  if (m.img) { f.innerHTML = `<img data-commons="${m.img}" data-w="800" data-emo="🗄️" alt="${t}">`; cargarWeb($("img", f)); }
-  else if (m.logo) f.innerHTML = `<span class="logo" style="--m:url(recursos/m1c2/${m.logo}.svg);--c:${m.c || "#222"};width:46%;height:60%"></span>`;
-  else if (m.txt) f.innerHTML = `<div class="demo-txt" style="background:#000;color:#cfd8d3">${m.txt}</div>`;
-  else f.innerHTML = `<span class="big">${m.emo}</span>`;
-  $$("#lt-m button").forEach((b, j) => b.classList.toggle("on", j === k));
-  $("#lt-ant").disabled = k === 0; $("#lt-sig").disabled = k === LT.length - 1;
-}
-$("#lt-r").oninput = e => ltVer(+e.target.value);
-$("#lt-m").onclick = e => { const b = e.target.closest("button"); if (b) ltVer(+b.dataset.k); };
-$("#lt-ant").onclick = () => ltVer(+$("#lt-r").value - 1);
-$("#lt-sig").onclick = () => ltVer(+$("#lt-r").value + 1);
-ltVer(0);
-
-/* ---------- 24 · conteo ---------- */
-const CT = [["Android", "android", "#3ddc84"], ["iPhone (iOS)", "apple", "#111"], ["Huawei (HarmonyOS)", "harmonyos", "#c7000b"], ["Otro", null, "#7c7763"]];
-let cuenta = [0, 0, 0, 0];
-try { const g = JSON.parse(localStorage.getItem("m1c2-conteo")); if (Array.isArray(g) && g.length === 4) cuenta = g; } catch (_) {}
-function ctPintar() {
-  const tot = cuenta.reduce((a, b) => a + b, 0), max = Math.max(1, ...cuenta);
-  $("#ct").innerHTML = CT.map((c, k) => `<div class="fila-c"><b>${c[1] ? `<span class="logo" style="--m:url(recursos/m1c2/${c[1]}.svg);--c:${c[2]}"></span>` : "❔"}${c[0]}</b><div class="barra-g"><i style="--c:${c[2]};width:${cuenta[k] ? Math.max(30, cuenta[k] / max * 100) : 0}%;padding-right:${cuenta[k] ? 10 : 0}px">${cuenta[k] ? cuenta[k] + (tot ? " · " + Math.round(cuenta[k] / tot * 100) + "%" : "") : ""}</i></div><div class="mas-menos"><button data-k="${k}" data-d="-1">−</button><button data-k="${k}" data-d="1">＋</button></div></div>`).join("");
-  $("#ct-tot").textContent = tot ? "· " + tot + " respuestas" : "";
-  try { localStorage.setItem("m1c2-conteo", JSON.stringify(cuenta)); } catch (_) {}
-}
-$("#ct").onclick = e => { const b = e.target.closest("[data-d]"); if (!b) return; const k = +b.dataset.k; cuenta[k] = Math.max(0, cuenta[k] + +b.dataset.d); tono(+b.dataset.d > 0 ? 620 : 380, .07); ctPintar(); };
-$("#ct-re").onclick = () => { cuenta = [0, 0, 0, 0]; ctPintar(); };
-ctPintar();
-
-/* ---------- 25 · actualización ---------- */
-let upPct = 0, upOn = false;
-const UPM = [[0, "Descargando la actualización…"], [35, "Instalando… no apagues tu equipo."], [70, "Reiniciando y configurando…"], [100, "¡Listo! Tu sistema está actualizado y más seguro."]];
-function upPaso() {
-  if (!upOn) return;
-  upPct = Math.min(100, upPct + 1);
-  $("#up-pct").textContent = upPct + "%"; $("#up-b").style.width = upPct + "%";
-  $("#up-m").textContent = [...UPM].reverse().find(m => upPct >= m[0])[1];
-  if (upPct >= 100) { upOn = false; $("#up-pct").textContent = "✓"; $("#up-corte").disabled = true; $("#up-go").disabled = false; tono(660, .2); setTimeout(() => tono(880, .3), 160); return; }
-  luego("up", upPaso, 90);
-}
-$("#up-go").onclick = () => { parar("up"); upPct = 0; upOn = true; $("#upd").classList.remove("roto"); $("#up-go").disabled = true; $("#up-corte").disabled = false; upPaso(); };
-$("#up-corte").onclick = () => {
-  parar("up"); upOn = false; $("#up-corte").disabled = true; $("#up-go").disabled = false; tono(150, .6, 0, "square");
-  $("#upd").classList.add("roto"); $("#up-b").style.width = "0";
-  $("#up-pct").textContent = "⚠"; $("#up-m").innerHTML = "Se cortó la luz a la mitad.<br>El sistema quedó incompleto y puede que <b>ya no arranque</b>.";
-};
-alSalir.push(d => { if (!d.contains($("#upd")) && upOn) { parar("up"); upOn = false; $("#up-go").disabled = false; $("#up-corte").disabled = true; $("#up-m").textContent = "Actualización en pausa."; } });
-
 /* ---------- quiz ---------- */
 const QZ = [
-  ["¿Qué es lo primero que se carga al encender la computadora (después de la revisión de la BIOS)?", ["WhatsApp", "El sistema operativo", "El antivirus", "Google Chrome"], 1, "El SO se carga primero; sin él no se abre ningún otro programa."],
+  ["¿Qué es lo primero que se carga al encender la computadora (después de la revisión inicial)?", ["WhatsApp", "El sistema operativo", "El antivirus", "Google Chrome"], 1, "El SO se carga primero; sin él no se abre ningún otro programa."],
   ["¿Cuál de estos NO es un sistema operativo?", ["Android", "Linux", "Microsoft Word", "iOS"], 2, "Word es software de aplicación: funciona encima del SO."],
-  ["Al encender la PC, el sistema operativo se copia del disco a…", ["La memoria RAM", "La impresora", "El monitor", "La memoria USB"], 0, "Desde la RAM el procesador trabaja mucho más rápido."],
-  ["Si abres muchas apps a la vez, el celular se pone lento porque…", ["Se gasta la pantalla", "Se llena la RAM y el SO usa el disco", "Se borra el SO", "El Wi-Fi se apaga"], 1, "Con la RAM llena, el SO usa memoria virtual en el disco, que es más lenta."],
-  ["El pequeño programa que le enseña al SO a usar una impresora se llama…", ["Controlador (driver)", "Navegador", "Extensión", "Escritorio"], 0, "El controlador traduce entre el aparato y el SO."],
+  ["En 1981, con MS-DOS, ¿cómo se le daban órdenes a la computadora?", ["Tocando la pantalla", "Escribiendo comandos", "Hablándole", "Con ventanas e íconos"], 1, "Había que escribir y memorizar comandos como DIR, CD o MD."],
+  ["En la línea de comandos, ¿qué comando crea una carpeta?", ["DEL", "TYPE", "MD", "CLS"], 2, "MD viene de make directory: crear directorio (carpeta)."],
+  ["Si borras un archivo con DEL en la línea de comandos…", ["Va a la Papelera", "Se borra para siempre", "Se copia", "Se imprime"], 1, "En MS-DOS no existía la Papelera: DEL borra para siempre."],
+  ["Tu celular cerró solo una app que tenías abierta. ¿Por qué?", ["Se malogró", "Para liberar memoria RAM", "Por un virus", "Para ahorrar datos"], 1, "Cuando la RAM no alcanza, el SO cierra la app que usaste hace más tiempo."],
+  ["El sistema operativo, en realidad, es…", ["Magia dentro del procesador", "Un conjunto de miles de archivos que trabajan en cadena", "Un cable especial", "Una pieza de la placa madre"], 1, "Archivo de arranque, núcleo, servicios, escritorio… cada uno llama al siguiente."],
   ["El archivo «informe.pdf» tiene la extensión…", ["informe", ".pdf", "Documentos", "C:"], 1, "La extensión va después del punto y le dice al SO con qué programa abrirlo."],
-  ["¿Qué sistema operativo es libre y gratuito?", ["Windows", "macOS", "iOS", "Linux"], 3, "El código de Linux es público: cualquiera puede verlo, usarlo y mejorarlo."],
-  ["Una app de linterna pide acceso a tus contactos. ¿Qué haces?", ["Permitir, siempre", "Rechazar: no lo necesita", "Apagar el celular", "Desinstalar Android"], 1, "Si el permiso no tiene que ver con lo que hace la app, recházalo."],
+  ["Te escriben: «te mandé un código por error, ¿me lo pasas?». ¿Qué haces?", ["Lo paso, es un amigo", "No lo doy nunca", "Lo publico en un estado", "Apago el Wi-Fi"], 1, "Los códigos que te llegan son solo tuyos: quien los pide quiere entrar a tu cuenta."],
+  ["Según lo que vimos, ¿cuál es el mayor riesgo para la seguridad de tu celular?", ["El sistema operativo", "La batería", "Las decisiones del propio usuario", "La pantalla"], 2, "El SO avisa, pregunta y bloquea; pero si la persona abre la puerta, el delincuente entra."],
 ];
 let qi = 0, qpts = 0, qres = [];
 function pintarQuiz() {
@@ -1472,7 +2029,7 @@ function pintarQuiz() {
   $("#qz-sig").style.display = "none"; $("#qz-fb").textContent = ""; $("#qz-fb").className = "feedback";
   if (qi >= QZ.length) {
     $("#qz-num").textContent = "Resultado";
-    $("#qz-p").textContent = qpts + " de " + QZ.length + " correctas " + (qpts === QZ.length ? "🏆" : qpts >= 6 ? "👏" : "💪");
+    $("#qz-p").textContent = qpts + " de " + QZ.length + " correctas " + (qpts === QZ.length ? "🏆" : qpts >= 7 ? "👏" : "💪");
     $("#qz-a").innerHTML = "";
     $("#qz-sig").textContent = "Intentar de nuevo ↺"; $("#qz-sig").style.display = ""; return;
   }
@@ -1501,13 +2058,9 @@ pintarQuiz();
 const CRED = [
   ["ENIAC", "Ejército de EE. UU.", "Dominio público", "Classic_shot_of_the_ENIAC.jpg"],
   ["Tarjetas perforadas", "Arnold Reinhold", "CC BY-SA 2.5", "PunchCardDecks.agr.jpg"],
-  ["Monitor de signos vitales", "Wikimedia Commons", "ver licencia", "Monitor_(medical).jpg"],
+  ["Monitor de signos vitales", "Wikimedia Commons", "ver licencia en la fuente", "Monitor_(medical).jpg"],
   ["Laptop", "André Karwath (Aka)", "CC BY-SA 4.0", "IBM_Thinkpad_R51.jpg"],
   ["Servidores", "Wilweterings", "Dominio público", "Datacenter.jpg"],
-  ["Impresora", "Tim Walker", "CC BY 2.0", "HP_LaserJet_4100TN_and_scanner_Canon_LiDE_35.jpg"],
-  ["Cámara web", "Peterhcharlton", "CC BY 4.0", "Webcam_on_computer_screen.jpg"],
-  ["Mouse", "Pixloom", "CC BY-SA 4.0", "A_wireless_computer_mouse.jpg"],
-  ["Memoria USB", "Dmitry Makeev", "CC BY-SA 4.0", "Kingston_Technology_DataTraveler_G4_USB_flash_drive_USB_3.0_32_Gb.jpg"],
 ];
 $("#creditos").innerHTML = CRED.map(([f, a, l, u]) => `<div><a href="https://commons.wikimedia.org/wiki/File:${u}" target="_blank" rel="noopener">${f}</a> · ${a} · ${l}</div>`).join("") + '<div><a href="https://simpleicons.org" target="_blank" rel="noopener">Logotipos</a> · Simple Icons · CC0</div>';
 
