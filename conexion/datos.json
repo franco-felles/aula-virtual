@@ -1,0 +1,27 @@
+{
+ "generado": "2026-11-11T02:03:12.044Z",
+ "v": 1,
+ "clases": [
+  {
+   "id": "u1c1",
+   "tipo": "Clase",
+   "unidad": 1,
+   "n": 1,
+   "tema": "LA COMPUTADORA",
+   "publicada": true,
+   "conCopias": false
+  },
+  {
+   "id": "u1c2",
+   "tipo": "Clase",
+   "unidad": 1,
+   "n": 2,
+   "tema": "EL SISTEMA OPERATIVO",
+   "publicada": true,
+   "conCopias": false
+  }
+ ],
+ "enlaces": {},
+ "materiales": {},
+ "quizzes": []
+}
