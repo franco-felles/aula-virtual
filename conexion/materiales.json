@@ -33,6 +33,22 @@
       "tipo": "presentacion",
       "descripcion": "Presentación interactiva: qué es el sistema operativo, cómo arranca la computadora, sus seis tareas, los SO que usamos y cómo cuidarlo, con demostraciones en vivo.",
       "orden": 1
+    },
+    {
+      "archivo": "m2c2.html",
+      "ruta": "clases/u1c2/material/m2c2.html",
+      "titulo": "Simulador AulaOS",
+      "tipo": "interactivo",
+      "descripcion": "Una computadora de práctica: enciéndela, inicia sesión, abre programas, guarda archivos, mira el administrador de tareas y descubre qué pasa si la desenchufas.",
+      "orden": 2
+    },
+    {
+      "archivo": "m3c2.html",
+      "ruta": "clases/u1c2/material/m3c2.html",
+      "titulo": "Reto del sistema operativo",
+      "tipo": "juego",
+      "descripcion": "Juego para el celular: tres rondas rápidas sobre el sistema operativo. Al final toma captura de tu nota y envíala al chat.",
+      "orden": 3
     }
   ]
 }
