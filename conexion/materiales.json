@@ -24,5 +24,15 @@
       "descripcion": "Presentación interactiva: qué es una computadora, sus componentes internos y los periféricos de entrada y salida, con experimentos, laboratorios y retos.",
       "orden": 3
     }
+  ],
+  "u1c2": [
+    {
+      "archivo": "m1c2.html",
+      "ruta": "clases/u1c2/material/m1c2.html",
+      "titulo": "El sistema operativo",
+      "tipo": "presentacion",
+      "descripcion": "Presentación interactiva: qué es el sistema operativo, cómo arranca la computadora, sus seis tareas, los SO que usamos y cómo cuidarlo, con demostraciones en vivo.",
+      "orden": 1
+    }
   ]
 }
