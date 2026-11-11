@@ -39,16 +39,8 @@
       "ruta": "clases/u1c2/material/m2c2.html",
       "titulo": "Simulador AulaOS",
       "tipo": "interactivo",
-      "descripcion": "Una computadora de práctica: enciéndela, inicia sesión, abre programas, guarda archivos, mira el administrador de tareas y descubre qué pasa si la desenchufas.",
+      "descripcion": "Una computadora de práctica: enciéndela, abre programas, guarda archivos y mira el administrador de tareas. Incluye la historia guiada «Necesito Word»: qué pasa si pirateas un programa y cuál es la solución gratis y legal.",
       "orden": 2
-    },
-    {
-      "archivo": "m3c2.html",
-      "ruta": "clases/u1c2/material/m3c2.html",
-      "titulo": "Reto del sistema operativo",
-      "tipo": "juego",
-      "descripcion": "Juego para el celular: tres rondas rápidas sobre el sistema operativo. Al final toma captura de tu nota y envíala al chat.",
-      "orden": 3
     }
   ]
 }
