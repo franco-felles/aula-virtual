@@ -219,24 +219,21 @@
   .lista-trampas li { font-size: clamp(.8rem, calc(var(--vw) * 1.4), .92rem) !important; line-height: 1.4; animation: entra .3s ease both; }
   .contador { font: 700 1rem "IBM Plex Mono", monospace; color: var(--bad); }
 
-  /* instalador pirata */
-  .inst-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: stretch; }
-  .instalador { background: #f0f0f0; border: 1px solid #999; border-radius: 8px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,.2); font-family: "Segoe UI", Arial, sans-serif; display: flex; flex-direction: column; }
-  .inst-tit { background: linear-gradient(90deg, #7e22ce, #db2777); color: #fff; font-size: .8rem; padding: 6px 10px; display: flex; justify-content: space-between; }
-  .inst-cuerpo { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-  .inst-cuerpo h4 { margin: 0; font-size: 1.05rem; }
-  .inst-logo { display: flex; gap: 12px; align-items: center; }
-  .inst-barra { height: 18px; background: #ddd; border: 1px solid #aaa; border-radius: 3px; overflow: hidden; }
-  .inst-barra i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(45deg, #22c55e 0 10px, #16a34a 10px 20px); transition: width .4s; }
-  .inst-estado { font-size: .82rem; color: #333; min-height: 1.4em; }
-  .inst-ok { font-weight: 700; color: #15803d; font-size: .95rem; }
-  .detras { background: #10231c; color: #9fe0b5; border-radius: 12px; padding: 10px 12px; font: 500 .76rem/1.55 "IBM Plex Mono", monospace; overflow: hidden; display: flex; flex-direction: column; }
-  .detras h3 { font: 600 .74rem "IBM Plex Mono", monospace; color: #f0c27b; letter-spacing: .05em; text-transform: uppercase; }
-  .detras .lin { animation: entra .25s ease both; }
-  .detras .lin.mal { color: #fca5a5; }
-  .detras.tapado .lin { filter: blur(5px); opacity: .5; }
-  .detras .tapa-msg { display: none; color: #cfd8d3; margin-top: auto; font-family: "IBM Plex Sans", sans-serif; font-size: .82rem; }
-  .detras.tapado .tapa-msg { display: block; }
+  /* nube */
+  .nube-esc { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .nube-esc .bt.on { background: var(--amber); border-color: var(--amber); color: #fff; }
+  .nube { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .nube > * { min-width: 0; }
+  .zona { background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 10px 14px; transition: border-color .3s, background .3s; }
+  .zona h3 { display: flex; gap: 8px; align-items: center; }
+  .zona .peq { margin: 0 0 6px !important; }
+  .zona .arch-n { display: flex; gap: 8px; align-items: center; background: var(--soft); border-radius: 8px; padding: 5px 9px; margin-top: 5px; font-size: .86rem; transition: opacity .3s, filter .3s; }
+  .zona .arch-n .ap { width: 26px; height: 26px; border-radius: 7px; font-size: .75rem; }
+  .zona-res { min-height: 3em; margin: 8px 0 0 !important; font-weight: 600; font-size: clamp(.84rem, calc(var(--vw) * 1.5), .98rem) !important; }
+  .zona.ok { border-color: var(--ok); background: #eaf4ec; } .zona.ok .zona-res { color: var(--ok); }
+  .zona.mal { border-color: var(--bad); background: #f8e9e6; } .zona.mal .zona-res { color: var(--bad); }
+  .zona.perdido .arch-n { opacity: .4; filter: grayscale(1); text-decoration: line-through; }
+  .zona.medio { border-color: var(--amber); background: #fbf1e2; } .zona.medio .zona-res { color: #8a5a1f; }
 
   /* qué harías */
   .esc-caja { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
@@ -272,10 +269,10 @@
   .creditos div { break-inside: avoid; margin-bottom: 3px; }
   .creditos a { color: var(--moss); }
 
-  .dos > *, .lab-nav > *, .tarea-wrap > *, .inst-wrap > *, .rej > * { min-width: 0; }
+  .dos > *, .lab-nav > *, .tarea-wrap > *, .rej > * { min-width: 0; }
   @media (max-width: 760px) {
     .control { gap: 6px; } .control button { padding: 8px 10px; }
-    .dos, .dos.ancho, .dos.angosto, .lab-nav, .tarea-wrap, .inst-wrap, .imp { grid-template-columns: 1fr; gap: 14px; }
+    .dos, .dos.ancho, .dos.angosto, .lab-nav, .tarea-wrap, .nube, .imp { grid-template-columns: 1fr; gap: 14px; }
     .rej.c3, .rej.c4, .tipos, .alts-t { grid-template-columns: 1fr 1fr; }
     .tareas { grid-template-columns: 1fr 1fr; }
     .quiz .alts { grid-template-columns: 1fr; }
@@ -383,6 +380,42 @@
       <button class="carta" data-revela data-ok="no" style="--c:#111"><span class="emo">🏴‍☠️</span><h3>¿Y el «crack»?</h3><div class="atras"><span class="sello no">No es una licencia</span><br>Es un programa de pago <b>alterado</b> por desconocidos para saltarse el pago. Es ilegal y peligroso.</div></button>
     </div>
     <p class="nota peq" style="margin-top:10px">Pagar no es el único camino legal… pero piratear <b>nunca</b> lo es.</p>
+  </section>
+
+  <!-- NUBE -->
+  <section class="diapo">
+    <p class="eti">Experimento · ¿dónde queda guardado tu trabajo?</p>
+    <h2 style="margin-bottom:6px">Apps en tu aparato o apps en la nube</h2>
+    <p class="peq" style="margin-bottom:8px!important">La <b>nube</b> son computadoras de una empresa (Google, Microsoft, Apple) donde se guardan tus archivos; entras a ellas por internet. Elijan qué pasa:</p>
+    <div class="nube-esc" id="nube-esc">
+      <button class="bt sec" data-e="disco">💥 Se malogra la laptop</button>
+      <button class="bt sec" data-e="robo">📱 Te roban el celular</button>
+      <button class="bt sec" data-e="red">📶 Te quedas sin internet</button>
+      <button class="bt sec" data-e="clave">🔑 Alguien adivina tu contraseña</button>
+      <button class="bt sec" data-e="grupo">🤝 Trabajo en grupo</button>
+    </div>
+    <div class="nube">
+      <div class="zona" id="z-local">
+        <h3>💻 Solo en tu aparato</h3>
+        <p class="peq">Apps instaladas que guardan en el disco: LibreOffice, Word de escritorio, la Galería sin respaldo…</p>
+        <div class="arch-n"><span class="ap" style="--c:#18a303"><i style="--m:url(recursos/m1c4/libreoffice.svg)"></i></span>informe_practica.odt</div>
+        <div class="arch-n"><span class="ap" style="--c:#7c7763">🖼</span>Fotos de la feria de salud (solo en el celular)</div>
+        <p class="zona-res" id="r-local"></p>
+      </div>
+      <div class="zona" id="z-nube">
+        <h3>☁️ En la nube</h3>
+        <p class="peq">Apps web o con respaldo: Google Drive, OneDrive, iCloud, Word para la web, Google Fotos…</p>
+        <div class="arch-n"><span class="ap" style="--c:#4285f4"><i style="--m:url(recursos/m1c4/googledrive.svg)"></i></span>informe_practica.docx (en Drive)</div>
+        <div class="arch-n"><span class="ap" style="--c:#0078d4">☁</span>Fotos de la feria de salud (con respaldo)</div>
+        <p class="zona-res" id="r-nube"></p>
+      </div>
+    </div>
+    <p class="nota peq" style="margin-top:10px">💡 Ninguna opción es perfecta. Lo más seguro: <b>dos lugares</b>. Trabaja en la nube y guarda una copia en tu PC (o al revés). Como la historia clínica electrónica: no vive en una sola computadora.</p>
+    <details class="mas">
+      <summary>Para saber más</summary>
+      <p>Espacio gratis aproximado: <b>Google Drive 15 GB</b> (compartido con Gmail y Fotos), <b>OneDrive 5 GB</b>, <b>iCloud 5 GB</b>. Muchas instituciones dan más espacio con la cuenta del instituto.</p>
+      <p>Google Drive y OneDrive permiten marcar archivos como <b>«disponibles sin conexión»</b> para abrirlos aunque no haya internet.</p>
+    </details>
   </section>
 
   <section class="diapo seccion">
@@ -566,32 +599,10 @@
         <div class="fila" style="margin-top:8px"><button class="bt sec" id="tr-todas">Mostrar todas</button><button class="bt sec" id="tr-re">↺ Reiniciar</button></div>
       </div>
     </div>
-  </section>
-
-  <!-- INSTALADOR PIRATA -->
-  <section class="diapo">
-    <p class="eti">Simulación · ¿qué hace un crack mientras «instala»?</p>
-    <h2 style="margin-bottom:10px">Por delante te activa Office… por detrás te roba</h2>
-    <div class="inst-wrap">
-      <div class="instalador">
-        <div class="inst-tit"><span>Office 2025 FULL · Activador by xXcrackXx</span><span>— ☐ ✕</span></div>
-        <div class="inst-cuerpo">
-          <div class="inst-logo"><span class="ap xl" style="--c:#c43e1c">O</span><div><h4>Microsoft Office 2025 Pro Plus</h4><span class="peq">Versión «full» · Activación permanente</span></div></div>
-          <div class="inst-barra"><i id="inst-b"></i></div>
-          <div class="inst-estado" id="inst-e">Listo para instalar.</div>
-          <div class="fila"><button class="bt" id="inst-go">▶ Instalar</button><button class="bt sec" id="inst-ver">👁️ Ver lo que pasa por detrás</button></div>
-        </div>
-      </div>
-      <div class="detras tapado" id="detras">
-        <h3>Lo que no se ve</h3>
-        <div id="detras-l"></div>
-        <p class="tapa-msg">🙈 Esto es lo que el usuario nunca ve. Toquen «Ver lo que pasa por detrás».</p>
-      </div>
-    </div>
     <details class="mas">
-      <summary>¿Es delito? Para saber más</summary>
-      <p>Sí. En el Perú los programas están protegidos por la <b>Ley sobre el Derecho de Autor (Decreto Legislativo N.° 822)</b>, y el Código Penal sanciona su copia y venta sin autorización. INDECOPI supervisa y multa a empresas e instituciones que usan software ilegal.</p>
-      <p>Los programas que roban datos (en inglés, <i>infostealers</i>) se esconden muy seguido en cracks y «activadores». Copian las contraseñas guardadas en el navegador y las sesiones abiertas de correo, redes y banca.</p>
+      <summary>¿Y si igual lo instalo? ¿Es delito? Para saber más</summary>
+      <p>Mientras el crack «activa» Office, por detrás suele <b>desactivar el antivirus</b>, <b>copiar las contraseñas guardadas</b> en el navegador y las sesiones de correo, redes y banca, instalar un <b>«minero»</b> que pone lenta la PC y dejar un <b>acceso remoto</b> escondido. El Word funciona… y tú no te enteras de nada.</p>
+      <p>Y sí, es delito: en el Perú los programas están protegidos por la <b>Ley sobre el Derecho de Autor (Decreto Legislativo N.° 822)</b>, y el Código Penal sanciona su copia y venta sin autorización. INDECOPI supervisa y multa a empresas e instituciones que usan software ilegal.</p>
     </details>
   </section>
 
@@ -630,6 +641,7 @@
       <li>Para cada tarea hay <b>varias aplicaciones</b>: si la famosa es de pago, busca una alternativa <b>gratis, libre o incluida</b>.</li>
       <li>El <b>navegador</b> abre PDF, fotos, audio, video y texto, y con Drive u OneDrive también Word, Excel y PowerPoint.</li>
       <li>Con <kbd>Ctrl</kbd>+<kbd>P</kbd> → <b>Guardar como PDF</b> conviertes cualquier página en un PDF.</li>
+      <li>Lo que está <b>solo en tu aparato</b> se pierde si se malogra; lo que está <b>en la nube</b> necesita internet y una buena contraseña. Lo ideal: <b>dos lugares</b>.</li>
       <li>Los datos de tus pacientes son <b>confidenciales</b>: no los subas a páginas desconocidas.</li>
       <li>Un <b>crack</b> es como un medicamento falsificado: ilegal, sin garantía y con «sorpresas» dentro. <b>Siempre hay otra opción.</b></li>
     </ul>
@@ -1028,38 +1040,22 @@ $("#tr-todas").onclick = () => { TRAMPAS.forEach((_, k) => trVistas.add(k)); pin
 $("#tr-re").onclick = () => { trVistas.clear(); pintarTr(); };
 pintarTr();
 
-/* ---------- instalador pirata ---------- */
-const PASOS = [
-  [8, "Extrayendo archivos…", "Copiando «activador.exe» a una carpeta oculta del sistema", 0],
-  [18, "Preparando instalación…", "Desactivando Microsoft Defender y las actualizaciones de Windows", 1],
-  [32, "Instalando Word…", "Leyendo las contraseñas guardadas en el navegador: 23 encontradas", 1],
-  [46, "Instalando Excel…", "Copiando las sesiones abiertas de Gmail, Facebook y WhatsApp Web", 1],
-  [60, "Instalando PowerPoint…", "Enviando todo a un servidor desconocido en otro país", 1],
-  [74, "Configurando…", "Instalando un «minero»: usará tu procesador para ganar dinero para otro (la PC se pondrá lenta)", 1],
-  [88, "Activando licencia…", "Creando un acceso remoto escondido para volver cuando quieran", 1],
-  [100, "", "Borrando las huellas del instalador", 0],
-];
-let instT = [];
-function pararInst() { instT.forEach(clearTimeout); instT = []; }
-function resetInst() {
-  pararInst();
-  $("#inst-b").style.width = "0"; $("#inst-e").textContent = "Listo para instalar."; $("#detras-l").innerHTML = "";
-  $("#inst-go").disabled = false; $("#inst-go").textContent = "▶ Instalar";
-}
-$("#inst-go").onclick = () => {
-  resetInst(); $("#inst-go").disabled = true;
-  PASOS.forEach(([p, est, det, mal], k) => instT.push(setTimeout(() => {
-    $("#inst-b").style.width = p + "%";
-    $("#inst-e").innerHTML = p === 100 ? '<span class="inst-ok">✔ ¡Office activado para siempre! Disfrútalo 😉</span>' : est;
-    $("#detras-l").insertAdjacentHTML("beforeend", `<div class="lin ${mal ? "mal" : ""}">${mal ? "⚠" : "›"} ${det}</div>`);
-    if (mal && !$("#detras").classList.contains("tapado")) tono(180, .12, "square");
-    if (p === 100) {
-      $("#detras-l").insertAdjacentHTML("beforeend", `<div class="lin" style="color:#f0c27b;margin-top:6px">El Word funciona… y tú no te enteraste de nada de esto.</div>`);
-      $("#inst-go").disabled = false; $("#inst-go").textContent = "↺ Repetir";
-    }
-  }, 900 + k * 1300)));
+/* ---------- nube o aparato ---------- */
+const NUBE = {
+  disco: [["mal perdido", "❌ Se perdió todo lo que estaba solo en ese disco."], ["ok", "✅ Entras desde otra PC o tu celular y ahí está todo."]],
+  robo: [["mal perdido", "❌ Las fotos se fueron con el celular."], ["ok", "✅ Siguen en tu cuenta. Cambia tu contraseña y listo."]],
+  red: [["ok", "✅ Lo abres igual: está en tu disco."], ["medio", "⚠️ No lo ves… salvo que lo hayas marcado como «disponible sin conexión»."]],
+  clave: [["ok", "✅ No le llega: tendría que tener tu aparato en la mano."], ["mal", "❌ Puede ver tus archivos. Usa una contraseña fuerte y la verificación en dos pasos."]],
+  grupo: [["medio", "⚠️ Se pasan USB y correos: «informe_final_FINAL2.docx» 😵"], ["ok", "✅ Todos editan el mismo archivo, al mismo tiempo."]],
 };
-$("#inst-ver").onclick = () => { const d = $("#detras").classList.toggle("tapado"); $("#inst-ver").textContent = d ? "👁️ Ver lo que pasa por detrás" : "🙈 Ocultar"; };
+$("#nube-esc").addEventListener("click", e => {
+  const b = e.target.closest("[data-e]"); if (!b) return;
+  $$("#nube-esc .bt").forEach(x => x.classList.toggle("on", x === b));
+  const [[cl, tl], [cn, tn]] = NUBE[b.dataset.e];
+  $("#z-local").className = "zona " + cl; $("#r-local").textContent = tl;
+  $("#z-nube").className = "zona " + cn; $("#r-nube").textContent = tn;
+  tono(cl.startsWith("mal") || cn === "mal" ? 330 : 560, .15);
+});
 
 /* ---------- ¿qué harías? ---------- */
 const ESC = [
@@ -1119,6 +1115,7 @@ const QZ = [
   ["¿Qué puedes abrir con el navegador sin instalar ningún programa?", ["Un PDF", "Un instalador .exe", "Un juego de PlayStation", "Ninguno"], 0, "El navegador trae su propio lector de PDF, además de fotos, audio, video y texto."],
   ["«Software libre» significa que el programa…", ["Es pirata pero funciona", "Es gratis solo 30 días", "Es gratis y su código está abierto para todos", "Se puede usar sin computadora"], 2, "Libre: gratis y con el código abierto. Ej.: LibreOffice, GIMP, VLC."],
   ["¿Por qué es peligroso instalar un programa crackeado?", ["Porque ocupa mucho espacio", "Porque puede traer virus que roban tus contraseñas", "Porque solo funciona en inglés", "No es peligroso"], 1, "Los cracks suelen traer programas que roban datos. Además, es ilegal."],
+  ["Se malogró tu laptop. ¿Qué trabajo NO perdiste?", ["El que estaba en el Escritorio", "El que guardaste en Google Drive u OneDrive", "El que tenías abierto sin guardar", "Ninguno"], 1, "Lo que está en la nube se abre desde cualquier otra computadora o celular."],
   ["En el navegador, Ctrl + P también sirve para…", ["Pegar texto", "Cerrar la pestaña", "Guardar la página como PDF", "Poner pantalla completa"], 2, "En «Destino» eliges «Guardar como PDF»."],
 ];
 let qi = 0, qpts = 0, qres = [];
@@ -1126,7 +1123,7 @@ function pintarQuiz() {
   $("#qz-prog").innerHTML = QZ.map((_, k) => `<i class="${qres[k] === undefined ? (k === qi ? "act" : "") : qres[k] ? "bien" : "malo"}"></i>`).join("");
   $("#qz-fb").textContent = ""; $("#qz-fb").className = "feedback"; $("#qz-sig").style.display = "none";
   if (qi >= QZ.length) {
-    $("#qz-num").textContent = "Resultado"; $("#qz-p").textContent = `${qpts} de ${QZ.length} correctas ${qpts >= 4 ? "🏆" : qpts >= 3 ? "👏" : "💪"}`;
+    $("#qz-num").textContent = "Resultado"; $("#qz-p").textContent = `${qpts} de ${QZ.length} correctas ${qpts >= 5 ? "🏆" : qpts >= 3 ? "👏" : "💪"}`;
     $("#qz-a").innerHTML = ""; $("#qz-sig").textContent = "↺ Intentar de nuevo"; $("#qz-sig").style.display = ""; return;
   }
   $("#qz-num").textContent = `Pregunta ${qi + 1} de ${QZ.length}`; $("#qz-p").textContent = QZ[qi][0]; $("#qz-a").innerHTML = "";
@@ -1150,7 +1147,6 @@ pintarQuiz();
 /* ---------- al cambiar de diapositiva: detener audio, voz y animaciones ---------- */
 alCambiar.push(d => {
   if (!d.contains($("#vista"))) { $$("#vista audio, #vista video").forEach(a => a.pause()); cancelAnimationFrame(ecgRaf); }
-  if (!d.contains($("#inst-go"))) resetInst();
   if ("speechSynthesis" in window) speechSynthesis.cancel();
 });
 
