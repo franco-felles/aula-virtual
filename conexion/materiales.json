@@ -42,5 +42,15 @@
       "descripcion": "Una computadora de práctica: enciéndela, abre programas, guarda archivos y mira el administrador de tareas. Incluye la historia guiada «Necesito Word»: qué pasa si pirateas un programa y cuál es la solución gratis y legal.",
       "orden": 2
     }
+  ],
+  "u1c4": [
+    {
+      "archivo": "m1c4.html",
+      "ruta": "clases/u1c4/material/m1c4.html",
+      "titulo": "Aplicaciones: siempre hay otra opción",
+      "tipo": "presentacion",
+      "descripcion": "Presentación interactiva: qué es una aplicación, alternativas gratis y legales para cada tarea, todo lo que puede abrir y hacer tu navegador web, y por qué piratear o crackear nunca es una opción. Incluye la tarea.",
+      "orden": 1
+    }
   ]
 }
