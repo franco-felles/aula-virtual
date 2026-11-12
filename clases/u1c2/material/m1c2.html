@@ -11,7 +11,7 @@
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <script src="../../../conexion/zoom.js" defer></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
 <style>
   :root { --vw: 1vw; }
   body.escalar { --vw: 11.4px; }
@@ -684,13 +684,49 @@
   /* tarea */
   .prohibidos { display: flex; gap: 8px; flex-wrap: wrap; }
   .prohibidos span { background: #f8e9e6; color: var(--bad); border-radius: 99px; padding: 4px 12px; font-weight: 700; text-decoration: line-through; }
-  .hoja { background: #fff; border-radius: 6px; padding: 18px 18px 18px 40px; box-shadow: 0 14px 30px rgba(0,0,0,.15); transform: rotate(1.5deg); background-image: repeating-linear-gradient(transparent 0 31px, #dbe7f3 31px 32px); position: relative; font-family: "IBM Plex Sans", sans-serif; }
+  .hoja { background: #fff; border-radius: 6px; padding: 14px 12px 12px 40px; box-shadow: 0 14px 30px rgba(0,0,0,.15); transform: rotate(.6deg); position: relative; font-family: "IBM Plex Sans", sans-serif; }
   .hoja::before { content: ""; position: absolute; left: 28px; top: 0; bottom: 0; width: 2px; background: #f0a3a3; }
-  .hoja b { display: block; font-size: .9rem; } .hoja small { display: block; color: var(--mut); margin-bottom: 8px; }
-  .renglon { display: grid; grid-template-columns: 28px 1fr 46px; align-items: end; gap: 8px; height: 40px; }
-  .renglon span { font-weight: 700; color: var(--moss); }
-  .renglon i { border-bottom: 2px dotted #9aa; height: 70%; }
-  .renglon em { border: 2px dashed #c9c3b3; border-radius: 6px; height: 34px; display: grid; place-items: center; font-style: normal; }
+  .hoja > b { display: block; font-size: .9rem; } .hoja > small { display: block; color: var(--mut); margin-bottom: 6px; font-size: .78rem; }
+  .t2-grid { grid-template-columns: .85fr 1.3fr; gap: 26px; align-items: start; }
+  .t2-grid > * { min-width: 0; }
+  .t2-pasos { list-style: none; padding: 0 !important; margin: 0 0 14px !important; counter-reset: p; display: grid; gap: 6px; }
+  .t2-pasos li { counter-increment: p; position: relative; padding: 7px 12px 7px 50px; border-radius: 12px; border: 2px solid transparent; margin: 0 !important;
+                 font-size: clamp(.88rem, calc(var(--vw) * 1.55), 1.03rem) !important; line-height: 1.35 !important; transition: background .3s, border-color .3s, opacity .3s; opacity: .55; }
+  .t2-pasos li::before { content: counter(p); position: absolute; left: 10px; top: 50%; translate: 0 -50%; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+                         background: var(--line); color: var(--ink); font: 700 .9rem "IBM Plex Mono", monospace; transition: background .3s; }
+  .t2-pasos li.t2-act { background: #fff; border-color: var(--amber); opacity: 1; box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+  .t2-pasos li.t2-act::before { background: var(--amber); color: #fff; }
+  .t2-pasos li.t2-ok { opacity: 1; } .t2-pasos li.t2-ok::before { content: "✓"; background: var(--ok); color: #fff; }
+  .t2-bts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .t2-hoja table { width: 100%; border-collapse: collapse; }
+  .t2-hoja th { text-align: left; padding: 3px 6px; border-bottom: 2px solid #9aa; font: 600 .6rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; }
+  .t2-hoja td { padding: 1px 6px; border-bottom: 1px dotted #9aa; height: 23px; vertical-align: middle; transition: background .4s; }
+  .t2-hoja td:first-child { width: 34px; white-space: nowrap; color: var(--mut); font: 600 .68rem "IBM Plex Mono", monospace; }
+  .t2-hoja td:last-child { width: 96px; }
+  .t2-hoja .t2-cuadro { display: block; height: 17px; border: 1.5px dashed #c9c3b3; border-radius: 5px; }
+  .t2-hoja #t2-fila td { height: 64px; }
+  .t2-letra { font: 600 1.2rem/1.1 "Caveat", cursive; color: #1d3f9e; }
+  .t2-letra.t2-tacha { color: var(--bad); text-decoration: line-through 2px; animation: t2-sacude .4s; }
+  .t2-letra.t2-tacha::after { content: " ✗ ¡no vale!"; font-size: .95rem; text-decoration: none; display: inline-block; margin-left: 4px; }
+  @keyframes t2-sacude { 25% { translate: -4px 0; } 75% { translate: 4px 0; } }
+  .t2-cursor::after { content: "|"; color: var(--amber); font-family: "IBM Plex Sans", sans-serif; font-weight: 400; animation: t2-parpadea .7s steps(1) infinite; }
+  @keyframes t2-parpadea { 50% { opacity: 0; } }
+  .t2-dib { width: 84px; height: 58px; display: block; }
+  .t2-dib * { fill: none; stroke: #1d3f9e; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .t2-dib.t2-ver * { stroke-dashoffset: 0; transition: stroke-dashoffset .7s ease; }
+  .t2-dib.t2-ver *:nth-child(2) { transition-delay: .6s; } .t2-dib.t2-ver *:nth-child(3) { transition-delay: 1s; } .t2-dib.t2-ver *:nth-child(4) { transition-delay: 1.3s; } .t2-dib.t2-ver *:nth-child(5) { transition-delay: 1.6s; }
+  .t2-dib.t2-ya * { transition: none !important; }
+  .t2-hoja tr.t2-brilla td { background: #fbf1e2; }
+  .t2-hoja tr.t2-brilla td:first-child::after { content: " ✏️"; }
+  .t2-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+  .t2-chips span { background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; font-size: .85rem; }
+  .t2-revisa { display: grid; gap: 7px; }
+  .t2-revisa button { display: flex; gap: 10px; align-items: center; text-align: left; width: 100%; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 9px 12px;
+                      font: 600 clamp(.88rem, calc(var(--vw) * 1.55), 1rem) "IBM Plex Sans", sans-serif; color: var(--ink); cursor: pointer; transition: border-color .2s, background .2s; }
+  .t2-revisa button::before { content: ""; flex: none; width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--mut); display: grid; place-items: center; font-size: .85rem; }
+  .t2-revisa button.ver { border-color: var(--ok); background: #eaf4ec; } .t2-revisa button.ver::before { content: "✓"; background: var(--ok); border-color: var(--ok); color: #fff; }
+  .t2-novale { background: #f8e9e6; border-left: 5px solid var(--bad); padding: 8px 12px; border-radius: 8px; color: var(--ink) !important; }
+  @media (max-width: 760px) { .t2-grid { grid-template-columns: 1fr; gap: 14px; } }
 
   @media (max-width: 760px) {
     .cadena2 { grid-template-columns: repeat(2, 1fr); } .eslabon::after { display: none; }
@@ -1070,29 +1106,74 @@
   </section>
 
 
-  <section class="diapo">
-    <p class="eti">Tarea para la próxima clase ✍️</p>
-    <div class="dos ancho" style="gap:26px">
+  <!-- TAREA (1): demostración animada de cómo se llena la hoja -->
+  <section class="diapo" id="d-tarea2">
+    <p class="eti">Tarea ✍️ · mira cómo se completa</p>
+    <h2>10 sistemas operativos que no sean los de siempre</h2>
+    <div class="dos t2-grid">
       <div>
-        <h2>10 sistemas operativos que no sean los de siempre</h2>
-        <p>En una hoja, haz una lista de <b>10 sistemas operativos diferentes</b> a:</p>
-        <div class="prohibidos"><span>Windows</span><span>macOS</span><span>iOS</span><span>Android</span></div>
-        <p style="margin-top:12px">Para cada uno escribe:</p>
-        <ul>
-          <li>✏️ Su <b>nombre</b>.</li>
-          <li>📱 En qué <b>aparato</b> se usa (computadora, reloj, televisor, auto, consola, servidor…).</li>
-          <li>🎨 Un <b>dibujo</b>: su logo o el aparato donde funciona.</li>
-        </ul>
-        <p class="nota peq" style="margin-top:12px">Pista: busca en internet qué SO usan los relojes inteligentes, los televisores, las consolas, los autos o los servidores.</p>
+        <ol class="t2-pasos" id="t2-pasos">
+          <li data-p="1">🚫 Que <b>no</b> sea Windows, macOS, iOS ni Android.</li>
+          <li data-p="2">✏️ Escribe el <b>nombre</b> del sistema operativo.</li>
+          <li data-p="3">📱 Escribe en qué <b>aparato</b> se usa.</li>
+          <li data-p="4">🎨 Haz un <b>dibujo</b>: su logo o el aparato.</li>
+          <li data-p="5">🔁 Repite hasta completar <b>10</b>.</li>
+        </ol>
+        <div class="t2-bts">
+          <button class="bt" id="t2-play" type="button">↺ Ver de nuevo</button>
+          <button class="bt sec" id="t2-fin" type="button">⏭ Ver completo</button>
+        </div>
       </div>
-      <div class="hoja">
+      <div class="hoja t2-hoja">
         <b>Herramientas Informáticas · Tarea 2</b>
-        <small>Nombre: __________________</small>
-        <div class="renglon"><span>1.</span><i></i><em>🎨</em></div>
-        <div class="renglon"><span>2.</span><i></i><em>🎨</em></div>
-        <div class="renglon"><span>3.</span><i></i><em>🎨</em></div>
-        <div class="renglon"><span>…</span><i></i><em></em></div>
-        <div class="renglon"><span>10.</span><i></i><em>🎨</em></div>
+        <small>Nombre: <span class="t2-letra" style="font-size:1.05rem">Ana Quispe</span> <span style="opacity:.6">(ejemplo)</span></small>
+        <table>
+          <thead><tr><th>#</th><th>Sistema operativo</th><th>¿En qué aparato?</th><th>Dibujo</th></tr></thead>
+          <tbody>
+          <tr id="t2-fila"><td>1</td><td><span class="t2-letra" id="t2-so"></span></td><td><span class="t2-letra" id="t2-ap"></span></td>
+            <td><svg class="t2-dib" id="t2-dib" viewBox="0 0 84 58" aria-label="Dibujo de un televisor">
+              <rect pathLength="1" x="6" y="5" width="72" height="38" rx="4"/>
+              <path pathLength="1" d="M12 11 Q42 8 72 11 L72 37 Q42 40 12 37 Z"/>
+              <path pathLength="1" d="M42 43 L42 51"/>
+              <path pathLength="1" d="M28 52 Q42 50 56 52"/>
+              <path pathLength="1" d="M33 24 Q42 30 51 24"/>
+            </svg></td></tr>
+          <tr><td>2</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>3</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>4</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>5</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>6</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>7</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>8</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>9</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          <tr><td>10</td><td></td><td></td><td><span class="t2-cuadro"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAREA (2): pistas y lista para revisar -->
+  <section class="diapo">
+    <p class="eti">Tarea ✍️ · antes de entregar</p>
+    <div class="dos" style="gap:28px; align-items:start">
+      <div>
+        <h2>Pistas para tu lista</h2>
+        <h3>🔎 ¿Dónde busco?</h3>
+        <p class="peq" style="margin-bottom:6px!important">Piensa en otros aparatos que también tienen sistema operativo y busca en internet, por ejemplo: <code>sistema operativo de los televisores</code>.</p>
+        <div class="t2-chips"><span>⌚ Relojes inteligentes</span><span>📺 Televisores</span><span>🎮 Consolas</span><span>🚗 Autos</span><span>🖥️ Servidores</span><span>💻 Otras computadoras</span><span>📱 Otros celulares</span></div>
+        <p class="t2-novale peq">🚫 <b>No vale:</b> Windows, macOS, iOS ni Android, <b>ni sus versiones</b> (Windows 10, Android de Samsung… siguen siendo los mismos).</p>
+        <p class="nota peq" style="margin-top:10px; color:var(--ink)!important">✍️ Se hace <b>a mano</b>, en una hoja, con tu nombre arriba.</p>
+      </div>
+      <div>
+        <h3>☑️ Revisa antes de entregar <span class="peq">(toca cada una)</span></h3>
+        <div class="t2-revisa">
+          <button type="button" data-revela>10 sistemas operativos distintos</button>
+          <button type="button" data-revela>Ninguno es Windows, macOS, iOS ni Android</button>
+          <button type="button" data-revela>Cada uno con el aparato donde se usa</button>
+          <button type="button" data-revela>Cada uno con su dibujo (logo o aparato)</button>
+          <button type="button" data-revela>Mi nombre está en la hoja</button>
+        </div>
       </div>
     </div>
   </section>
@@ -2063,6 +2144,51 @@ const CRED = [
   ["Servidores", "Wilweterings", "Dominio público", "Datacenter.jpg"],
 ];
 $("#creditos").innerHTML = CRED.map(([f, a, l, u]) => `<div><a href="https://commons.wikimedia.org/wiki/File:${u}" target="_blank" rel="noopener">${f}</a> · ${a} · ${l}</div>`).join("") + '<div><a href="https://simpleicons.org" target="_blank" rel="noopener">Logotipos</a> · Simple Icons · CC0</div>';
+
+/* ---------- tarea: la hoja se llena sola ---------- */
+const T2 = { mal: "Android", so: "Tizen", ap: "Televisor Samsung" };
+let t2Tok = 0;
+const t2Espera = (ms, tok) => new Promise((ok, no) => setTimeout(() => tok === t2Tok ? ok() : no("parado"), ms));
+async function t2Teclea(el, txt, tok) {
+  el.classList.add("t2-cursor");
+  try { for (const c of txt) { el.textContent += c; await t2Espera(60, tok); } } finally { el.classList.remove("t2-cursor"); }
+}
+const t2Paso = n => $$("#t2-pasos li").forEach(li => { const p = +li.dataset.p; li.classList.toggle("t2-act", p === n); li.classList.toggle("t2-ok", p < n); });
+const t2Filas = () => $$("#d-tarea2 tbody tr:not(#t2-fila)");
+function t2Limpiar() {
+  $("#t2-so").textContent = ""; $("#t2-so").classList.remove("t2-tacha"); $("#t2-ap").textContent = "";
+  $("#t2-dib").classList.remove("t2-ver", "t2-ya");
+  t2Filas().forEach(r => r.classList.remove("t2-brilla"));
+  t2Paso(0);
+}
+async function t2Correr() {
+  const tok = ++t2Tok; t2Limpiar();
+  const so = $("#t2-so");
+  try {
+    await t2Espera(600, tok); t2Paso(1); await t2Teclea(so, T2.mal, tok);
+    await t2Espera(400, tok); so.classList.add("t2-tacha"); tono(220, .25, 0, "square");
+    await t2Espera(1600, tok); so.classList.remove("t2-tacha"); so.textContent = "";
+    await t2Espera(300, tok); t2Paso(2); await t2Teclea(so, T2.so, tok);
+    await t2Espera(800, tok); t2Paso(3); await t2Teclea($("#t2-ap"), T2.ap, tok);
+    await t2Espera(800, tok); t2Paso(4); $("#t2-dib").classList.add("t2-ver");
+    await t2Espera(2600, tok); t2Paso(5);
+    for (const r of t2Filas()) { r.classList.add("t2-brilla"); await t2Espera(220, tok); }
+    await t2Espera(1200, tok); t2Paso(6);
+  } catch (_) {}
+}
+function t2Fin() {
+  ++t2Tok; t2Limpiar();
+  $("#t2-so").textContent = T2.so; $("#t2-ap").textContent = T2.ap;
+  $("#t2-dib").classList.add("t2-ver", "t2-ya");
+  t2Filas().forEach(r => r.classList.add("t2-brilla"));
+  t2Paso(6);
+}
+$("#t2-play").onclick = t2Correr;
+$("#t2-fin").onclick = t2Fin;
+alSalir.push(d => {
+  if (d.id !== "d-tarea2") { t2Tok++; return; }
+  matchMedia("(prefers-reduced-motion: reduce)").matches ? t2Fin() : t2Correr();
+});
 
 ir(i);
 </script>
