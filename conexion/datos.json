@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-11T02:03:12.044Z",
+ "generado": "2026-11-12T01:53:14.149Z",
  "v": 1,
  "clases": [
   {
@@ -17,6 +17,15 @@
    "unidad": 1,
    "n": 2,
    "tema": "EL SISTEMA OPERATIVO",
+   "publicada": true,
+   "conCopias": false
+  },
+  {
+   "id": "u1c4",
+   "tipo": "Clase",
+   "unidad": 1,
+   "n": 4,
+   "tema": "APLICACIONES",
    "publicada": true,
    "conCopias": false
   }
