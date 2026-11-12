@@ -287,6 +287,8 @@
   .hoja.demo .bd, .hoja.demo .don { opacity: 0; scale: .4; transition: opacity .25s, scale .35s cubic-bezier(.3,1.6,.5,1); }
   .hoja.demo .don { font-size: .82rem; letter-spacing: 1px; }
   .hoja.demo .pop .bd, .hoja.demo .pop .don { opacity: 1; scale: 1; }
+  .hoja.demo .imp-t { font-weight: 600; color: var(--ink); font-size: .78rem; line-height: 1.25; padding-top: 6px; }
+  .hoja.demo .imp-t.marca { background: #ffe3a8 !important; box-shadow: inset 0 0 0 2px var(--amber); }
   .hoja.demo tr.brilla td { background: #fbf1e2; }
   .hoja.demo tr.brilla td:first-child::after { content: " ✏️"; }
   .cursor::after { content: "|"; color: var(--amber); font-family: "IBM Plex Sans", sans-serif; font-weight: 400; animation: parpadea .7s steps(1) infinite; }
@@ -691,11 +693,11 @@
     <div class="dos tarea-grid">
       <div>
         <ol class="pasos" id="pasos">
-          <li data-p="1">🧰 <b>Elige una tarea</b> que haces en la computadora o el celular.</li>
+          <li data-p="1">🧰 Lee la <b>tarea</b> de la fila (ya viene escrita).</li>
           <li data-p="2">💳 Escribe la app <b>famosa</b> (o la que usabas).</li>
           <li data-p="3">✅ Propón <b>hasta 4 alternativas</b> gratis y legales.</li>
           <li data-p="4">🏷️ A cada una ponle su <b>licencia</b> y <b>dónde funciona</b>.</li>
-          <li data-p="5">🔁 Repite hasta completar <b>5 tareas</b>.</li>
+          <li data-p="5">🔁 Haz lo mismo con las <b>4 tareas que faltan</b>.</li>
         </ol>
         <div class="demo-bts">
           <button class="bt" id="demo-play" type="button">↺ Ver de nuevo</button>
@@ -708,11 +710,11 @@
         <table>
           <thead><tr><th>#</th><th>Tarea</th><th>App famosa</th><th>Alternativas gratis y legales <small>(hasta 4)</small></th></tr></thead>
           <tbody>
-          <tr id="dm-fila"><td>1</td><td class="mano" id="dm-t"></td><td class="mano" id="dm-f"></td><td><ul id="dm-a"></ul></td></tr>
-          <tr><td>2</td><td></td><td></td><td></td></tr>
-          <tr><td>3</td><td></td><td></td><td></td></tr>
-          <tr><td>4</td><td></td><td></td><td></td></tr>
-          <tr><td>5</td><td></td><td></td><td></td></tr>
+          <tr id="dm-fila"><td>1</td><td class="imp-t" id="dm-t">📝 Redactar documentos</td><td class="mano" id="dm-f"></td><td><ul id="dm-a"></ul></td></tr>
+          <tr><td>2</td><td class="imp-t">📊 Hacer tablas o un balance hídrico</td><td></td><td></td></tr>
+          <tr><td>3</td><td class="imp-t">🎤 Preparar una exposición</td><td></td><td></td></tr>
+          <tr><td>4</td><td class="imp-t">📄 Leer, rellenar o firmar un PDF</td><td></td><td></td></tr>
+          <tr><td>5</td><td class="imp-t">🖼️ Editar una foto o un afiche</td><td></td><td></td></tr>
           </tbody>
         </table>
         <div class="leyenda"><span>📍 💻 se instala</span><span>🌐 en el navegador</span><span>📱 en el celular</span></div>
@@ -726,8 +728,8 @@
     <div class="dos" style="gap:28px; align-items:start">
       <div>
         <h2>Pistas para tu tabla</h2>
-        <h3>💡 Ideas de tareas</h3>
-        <div class="ideas"><span>📝 Redactar documentos</span><span>📊 Hacer tablas</span><span>🎤 Preparar exposiciones</span><span>📄 Leer o firmar PDF</span><span>🖼️ Editar fotos o afiches</span><span>🎬 Editar videos</span><span>🗜️ Comprimir archivos</span></div>
+        <h3>📋 Las tareas de tu tabla</h3>
+        <div class="ideas"><span style="opacity:.6">1 · 📝 Redactar documentos (ejemplo)</span><span>2 · 📊 Hacer tablas o un balance hídrico</span><span>3 · 🎤 Preparar una exposición</span><span>4 · 📄 Leer, rellenar o firmar un PDF</span><span>5 · 🖼️ Editar una foto o un afiche</span></div>
         <h3>🔎 ¿Dónde encuentro alternativas?</h3>
         <p class="peq" style="margin-bottom:6px!important">En el explorador «Una tarea, muchas aplicaciones» de esta presentación, o buscando en internet: <code>alternativa gratis a Photoshop</code>.</p>
         <div class="bds" style="margin-bottom:12px"><span class="bd gratis">🆓 Gratis</span> <span class="bd libre">🕊️ Libre</span> <span class="bd incluido">✅ Incluido</span> <span class="bd freemium">🎁 Freemium</span></div>
@@ -736,7 +738,7 @@
       <div>
         <h3>☑️ Revisa antes de entregar <span class="peq">(toca cada una)</span></h3>
         <div class="revisa">
-          <button type="button" data-revela>5 tareas distintas</button>
+          <button type="button" data-revela>Las 4 tareas que faltan (filas 2 a 5)</button>
           <button type="button" data-revela>Cada tarea con su app famosa</button>
           <button type="button" data-revela>Hasta 4 alternativas por tarea (al menos 1)</button>
           <button type="button" data-revela>Cada alternativa con su licencia y 📍 dónde funciona</button>
@@ -1215,7 +1217,7 @@ $("#qz-sig").onclick = () => { if (qi >= QZ.length) { qi = 0; qpts = 0; qres = [
 pintarQuiz();
 
 /* ---------- tarea: la tabla se llena sola ---------- */
-const DEMO = { t: "Redactar documentos", f: "Microsoft Word", a: [
+const DEMO = { f: "Microsoft Word", a: [
   ["Google Docs", "gratis", ["web", "cel"]], ["Word para la web", "gratis", ["web"]],
   ["LibreOffice Writer", "libre", ["pc"]], ["ONLYOFFICE", "libre", ["pc", "cel"]] ] };
 const DON = { pc: "💻", web: "🌐", cel: "📱" };
@@ -1228,7 +1230,7 @@ async function teclea(el, txt, tok) {
 const paso = n => $$("#pasos li").forEach(li => { const p = +li.dataset.p; li.classList.toggle("act", p === n); li.classList.toggle("ok", p < n); });
 const filasVacias = () => $$("#d-tarea tbody tr:not(#dm-fila)");
 function demoLimpiar() {
-  $("#dm-t").textContent = ""; $("#dm-f").textContent = "";
+  $("#dm-t").classList.remove("marca"); $("#dm-f").textContent = "";
   $("#dm-a").innerHTML = DEMO.a.map(([, lic, don]) => `<li><span class="mano"></span><span class="bd ${lic}">${LIC[lic]}</span><span class="don">${don.map(d => DON[d]).join("")}</span></li>`).join("");
   filasVacias().forEach(r => r.classList.remove("brilla"));
   paso(0);
@@ -1237,7 +1239,7 @@ async function demoCorrer() {
   const tok = ++demoTok; demoLimpiar();
   const alts = $$("#dm-a li");
   try {
-    await espera(600, tok); paso(1); await teclea($("#dm-t"), DEMO.t, tok);
+    await espera(600, tok); paso(1); $("#dm-t").classList.add("marca"); await espera(1400, tok); $("#dm-t").classList.remove("marca");
     await espera(800, tok); paso(2); await teclea($("#dm-f"), DEMO.f, tok);
     await espera(800, tok); paso(3);
     for (const [k, li] of alts.entries()) { await teclea($(".mano", li), DEMO.a[k][0], tok); await espera(250, tok); }
@@ -1250,7 +1252,7 @@ async function demoCorrer() {
 }
 function demoFin() {
   ++demoTok; demoLimpiar();
-  $("#dm-t").textContent = DEMO.t; $("#dm-f").textContent = DEMO.f;
+  $("#dm-f").textContent = DEMO.f;
   $$("#dm-a li").forEach((li, k) => { $(".mano", li).textContent = DEMO.a[k][0]; li.classList.add("pop"); });
   filasVacias().forEach(r => r.classList.add("brilla"));
   paso(6);
