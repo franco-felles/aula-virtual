@@ -1,0 +1,1167 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
+<meta name="material-titulo" content="Aplicaciones: siempre hay otra opción">
+<meta name="material-tipo" content="presentacion">
+<meta name="material-descripcion" content="Presentación interactiva: qué es una aplicación, alternativas gratis y legales para cada tarea, todo lo que puede abrir y hacer tu navegador web, y por qué piratear o crackear nunca es una opción. Incluye la tarea.">
+<title>Aplicaciones: siempre hay otra opción</title>
+<script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
+<script src="../../../conexion/zoom.js" defer></script>
+<link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  :root { --vw: 1vw; }
+  body.escalar { --vw: 11.4px; }
+  :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #7c7763;
+          --soft: #ece8dc; --ok: #2f7d4a; --bad: #b3362c; --azul: #2f63e0; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; height: 100%; background: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); }
+  .escena { position: fixed; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px 16px 72px; }
+  .diapo { display: none; width: min(1140px, 100%); aspect-ratio: 16 / 9; max-height: calc(100vh - 100px); background: var(--paper);
+           border-radius: 18px; padding: clamp(18px, calc(var(--vw) * 3.6), 44px); overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.35); position: relative; }
+  .diapo.on { display: flex; flex-direction: column; justify-content: center; animation: entra .35s ease both; }
+  .diapo > * { flex-shrink: 0; }
+  @keyframes entra { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+  body.escalar .escena { display: block; padding: 0; }
+  body.escalar .diapo { position: absolute; left: 50%; top: calc((100% - 64px) / 2); width: 1140px; height: 641px; max-height: none; aspect-ratio: auto; transform: translate(-50%, -50%) scale(var(--s, 1)); }
+  .diapo h1 { font-size: clamp(1.8rem, calc(var(--vw) * 5), 3.4rem); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 14px; }
+  .diapo h2 { font-size: clamp(1.3rem, calc(var(--vw) * 3), 2.05rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.01em; }
+  .diapo h3 { font-size: clamp(.98rem, calc(var(--vw) * 1.8), 1.15rem); margin: 0 0 4px; }
+  .diapo p, .diapo li { font-size: clamp(.95rem, calc(var(--vw) * 1.8), 1.2rem); line-height: 1.5; margin: 0 0 10px; }
+  .diapo ul { margin: 0; padding-left: 1.2em; } .diapo li + li { margin-top: 6px; } .diapo li { margin-bottom: 0; }
+  .peq { font-size: clamp(.8rem, calc(var(--vw) * 1.45), .95rem) !important; color: var(--mut); }
+  .eti { font-family: "IBM Plex Mono", monospace; font-size: .82rem !important; letter-spacing: .08em; text-transform: uppercase; color: var(--moss); margin: 0 0 8px !important; }
+  .portada { background: var(--moss); color: #fff; } .portada .eti { color: #cfe3d3; }
+  .portada .txt { max-width: 58%; }
+  .portada .foto-portada { position: absolute; right: 5%; top: 50%; translate: 0 -50%; height: 78%; border-radius: 14px; transform: rotate(3deg); box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+  .seccion { background: var(--ink); color: var(--paper); } .seccion .eti { color: #e0b177; }
+  .seccion .num { font-family: "IBM Plex Mono", monospace; font-size: clamp(3rem, calc(var(--vw) * 9), 6rem); color: var(--amber); line-height: 1; margin: 0 0 6px; }
+  .seccion .sub { color: #cfd8d3; max-width: 70%; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+  .dos.ancho { grid-template-columns: 1.25fr 1fr; } .dos.angosto { grid-template-columns: 1fr 1.35fr; }
+  .nota { background: #fbf1e2; border-left: 5px solid var(--amber); padding: 10px 14px; border-radius: 8px; }
+  .def { font-size: clamp(1.05rem, calc(var(--vw) * 2.2), 1.45rem) !important; line-height: 1.4 !important; border-left: 6px solid var(--moss); padding-left: 16px; }
+  b.k { color: var(--moss); }
+  kbd { font: 600 .82em "IBM Plex Mono", monospace; background: #fff; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 6px; padding: 1px 6px; white-space: nowrap; }
+  code { font-family: "IBM Plex Mono", monospace; font-size: .9em; background: var(--soft); padding: 1px 6px; border-radius: 5px; }
+
+  .lee { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px 6px; }
+  .lee::before { content: "📖 Un alumno lee en voz alta"; display: block; font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+  .pregunta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--soft); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
+  .pregunta > span { font-weight: 600; font-size: clamp(.92rem, calc(var(--vw) * 1.7), 1.08rem); }
+  .pregunta > span::before { content: "🤔 "; }
+  .pregunta .resp { display: none; flex-basis: 100%; color: var(--moss); font-weight: 600; margin: 0 !important; }
+  .pregunta.ver .resp { display: block; } .pregunta.ver .bt { display: none; }
+
+  .bt { font: 600 clamp(.82rem, calc(var(--vw) * 1.5), .98rem) "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 16px; cursor: pointer; transition: transform .1s, filter .2s; }
+  .bt:hover { filter: brightness(1.15); } .bt:active { transform: scale(.96); }
+  .bt.sec { background: #fff; color: var(--moss); border: 2px solid var(--moss); }
+  .bt.amb { background: var(--amber); }
+  .bt:disabled { opacity: .4; cursor: default; }
+  .fila { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .rej { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .rej.c2 { grid-template-columns: repeat(2, 1fr); } .rej.c3 { grid-template-columns: repeat(3, 1fr); } .rej.c4 { grid-template-columns: repeat(4, 1fr); }
+  .tj { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .tj p { font-size: clamp(.82rem, calc(var(--vw) * 1.45), .97rem) !important; margin: 0 !important; line-height: 1.4 !important; color: #3d4a43; }
+  .carta { font: inherit; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; position: relative; transition: border-color .2s, background .2s; color: var(--ink); }
+  .carta:hover { border-color: var(--moss); }
+  .carta .emo { font-size: 2rem; display: block; line-height: 1.1; margin-bottom: 4px; }
+  .carta h3 { margin: 0; }
+  .carta .atras { display: none; font-size: clamp(.8rem, calc(var(--vw) * 1.4), .93rem); line-height: 1.38; margin-top: 6px; }
+  .carta.ver .atras { display: block; }
+  .carta:not(.ver)::after { content: "toca"; position: absolute; top: 8px; right: 10px; font: 600 .65rem "IBM Plex Mono", monospace; color: var(--mut); text-transform: uppercase; letter-spacing: .06em; }
+  .carta.ver[data-ok="si"] { border-color: var(--ok); background: #eaf4ec; }
+  .carta.ver[data-ok="no"] { border-color: var(--bad); background: #f8e9e6; }
+  .carta.ver[data-ok="casi"] { border-color: var(--amber); background: #fbf1e2; }
+  .sello { font: 700 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; display: inline-block; padding: 2px 8px; border-radius: 99px; color: #fff; margin-bottom: 4px; }
+  .sello.si { background: var(--ok); } .sello.no { background: var(--bad); } .sello.casi { background: var(--amber); }
+  .mas { margin-top: 8px; border-top: 1px dashed var(--line); padding-top: 6px; }
+  .mas summary { cursor: pointer; font-weight: 700; color: var(--amber); font-size: .92rem; list-style: none; }
+  .mas summary::-webkit-details-marker { display: none; }
+  .mas summary::before { content: "▸ "; } .mas[open] summary::before { content: "▾ "; }
+  .mas p { font-size: clamp(.8rem, calc(var(--vw) * 1.4), .92rem) !important; color: #3d4a43; margin: 6px 0 0 !important; }
+
+  /* logos y mosaicos de apps */
+  .ap { width: 40px; height: 40px; flex: none; border-radius: 10px; background: var(--c, var(--ink)); color: #fff; display: grid; place-items: center; font: 700 1.05rem "IBM Plex Sans", sans-serif; letter-spacing: -.02em; box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
+  .ap i { width: 62%; height: 62%; background: #fff; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+  .ap.xl { width: 58px; height: 58px; border-radius: 14px; font-size: 1.5rem; }
+  .bd { font: 700 .64rem "IBM Plex Mono", monospace; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: var(--soft); color: var(--mut); display: inline-block; white-space: nowrap; }
+  .bd.pago { background: #f8e9e6; color: var(--bad); } .bd.prueba { background: #fbf1e2; color: #8a5a1f; }
+  .bd.freemium { background: #f3ecfb; color: #6b4a8f; } .bd.gratis { background: #e9effc; color: var(--azul); }
+  .bd.libre { background: #eaf4ec; color: var(--ok); } .bd.incluido { background: #e4f3f1; color: #17766c; }
+
+  /* tipos de aplicación */
+  .tipos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+  .tipo { background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--c); border-radius: 12px; padding: 10px 12px; }
+  .tipo .ej { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .tipo .ej .ap { width: 30px; height: 30px; border-radius: 8px; font-size: .8rem; }
+
+  /* misma tarea, otras apps */
+  .tarea-wrap { display: grid; grid-template-columns: 250px 1fr; gap: 16px; align-items: start; }
+  .tareas { display: grid; gap: 6px; }
+  .chip-t { font: 600 .9rem "IBM Plex Sans", sans-serif; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 7px 10px; cursor: pointer; color: var(--ink); display: flex; gap: 8px; align-items: center; }
+  .chip-t:hover { border-color: var(--moss); }
+  .chip-t.on { background: var(--moss); border-color: var(--moss); color: #fff; }
+  .chip-t.visto:not(.on)::after { content: "✓"; margin-left: auto; color: var(--ok); }
+  .famosa { display: flex; gap: 12px; align-items: center; background: #fff; border: 2px dashed #e2b8b2; border-radius: 12px; padding: 8px 12px; margin-bottom: 8px; }
+  .famosa h3 { margin: 0; } .famosa p { margin: 0 !important; font-size: .9rem !important; color: var(--mut); }
+  .alts-t { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .alt { display: flex; gap: 10px; align-items: flex-start; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--ok); border-radius: 12px; padding: 8px 10px; animation: entra .3s ease both; }
+  .alt h3 { margin: 0 0 2px; font-size: .98rem; }
+  .alt p { margin: 3px 0 0 !important; font-size: .82rem !important; line-height: 1.35 !important; color: #3d4a43; }
+  .alt .bds { display: flex; gap: 4px; flex-wrap: wrap; }
+  .vacio { color: var(--mut); background: var(--soft); border-radius: 12px; padding: 30px; text-align: center; }
+
+  /* licencias */
+  .lic .carta { border-top-width: 5px; border-top-color: var(--c); }
+
+  /* navegadores */
+  .navs .carta { text-align: center; }
+  .navs .ap { margin: 4px auto 8px; }
+
+  /* navegador simulado */
+  .lab-nav { display: grid; grid-template-columns: 220px 1fr; gap: 14px; align-items: stretch; min-height: 0; }
+  .descargas { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .descargas h3 { font: 600 .74rem "IBM Plex Mono", monospace; letter-spacing: .05em; color: var(--mut); text-transform: uppercase; margin: 0 0 2px; }
+  .arch { display: flex; gap: 8px; align-items: center; width: 100%; text-align: left; font: 600 .86rem "IBM Plex Sans", sans-serif; background: var(--soft); border: 2px solid transparent; border-radius: 8px; padding: 6px 8px; cursor: pointer; color: var(--ink); }
+  .arch:hover { border-color: var(--moss); }
+  .arch.on { border-color: var(--amber); background: #fbf1e2; }
+  .arch .ext { font: 700 .6rem "IBM Plex Mono", monospace; color: #fff; background: var(--c); border-radius: 4px; padding: 3px 4px; min-width: 34px; text-align: center; }
+  .arch small { display: block; font-weight: 400; color: var(--mut); font-size: .72rem; }
+  .arch.mio { border: 2px dashed var(--moss); background: #fff; }
+  .ventana { background: #dee1e6; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 12px 30px rgba(0,0,0,.18); min-height: 0; position: relative; }
+  .pestanas { display: flex; align-items: flex-end; gap: 4px; padding: 8px 10px 0; }
+  .pest { background: #fff; border-radius: 10px 10px 0 0; padding: 7px 12px; font: 500 .78rem "IBM Plex Sans", sans-serif; display: flex; gap: 8px; align-items: center; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pest b { font-weight: 400; color: #666; margin-left: 6px; }
+  .pest-mas { padding: 6px 8px; color: #555; font-size: .9rem; }
+  .barra-dir { background: #fff; display: flex; gap: 10px; align-items: center; padding: 6px 10px; border-bottom: 1px solid #e3e3e3; font-size: .9rem; color: #555; }
+  .dir { flex: 1; background: #f1f3f4; border-radius: 99px; padding: 5px 14px; font: 500 .8rem "IBM Plex Mono", monospace; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dir .gris { color: #888; }
+  .vista { flex: 1; background: #fff; position: relative; min-height: 370px; display: grid; place-items: center; overflow: hidden; }
+  .vista.oscura { background: #525659; }
+  .vista iframe, .vista video { width: 100%; height: 100%; border: 0; position: absolute; inset: 0; background: #fff; }
+  .vista.oscura iframe { background: #525659; }
+  .vista img.ver-img { max-width: 100%; max-height: 100%; object-fit: contain; position: absolute; inset: 0; margin: auto; }
+  .vista.arrastre { outline: 4px dashed var(--amber); outline-offset: -10px; }
+  .inicio-nav { text-align: center; color: #555; padding: 20px; }
+  .inicio-nav .g { font: 700 2.4rem "IBM Plex Sans", sans-serif; letter-spacing: -.03em; margin-bottom: 8px; }
+  .inicio-nav .g span:nth-child(1) { color: #4285f4; } .inicio-nav .g span:nth-child(2) { color: #ea4335; } .inicio-nav .g span:nth-child(3) { color: #fbbc05; }
+  .inicio-nav .g span:nth-child(4) { color: #4285f4; } .inicio-nav .g span:nth-child(5) { color: #34a853; } .inicio-nav .g span:nth-child(6) { color: #ea4335; }
+  .reproductor { text-align: center; color: #fff; display: grid; gap: 12px; justify-items: center; padding: 16px; }
+  .reproductor .corazon { font-size: 3.4rem; animation: late .83s ease-in-out infinite; }
+  .reproductor audio { width: min(360px, 90%); }
+  @keyframes late { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.18); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } }
+  .ecg { width: min(420px, 92%); height: 70px; display: block; }
+  .no-abre { text-align: left; padding: 20px 26px; max-width: 520px; }
+  .no-abre h3 { color: var(--bad); }
+  .no-abre ol { padding-left: 1.2em; margin: 6px 0 0; } .no-abre li { font-size: .92rem !important; }
+  .bajada { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ddd; padding: 8px 12px; display: flex; gap: 10px; align-items: center; font-size: .85rem; animation: entra .3s ease both; z-index: 2; }
+  .bajada .ext { font: 700 .6rem "IBM Plex Mono", monospace; color: #fff; background: #2b579a; border-radius: 4px; padding: 3px 5px; }
+  .explica { margin-top: 10px; min-height: 2.8em; }
+  .explica p { margin: 0 !important; font-size: clamp(.86rem, calc(var(--vw) * 1.55), 1rem) !important; }
+
+  /* superpoderes */
+  .poderes .carta .emo { font-size: 1.7rem; }
+  .poderes .carta h3 { font-size: .98rem; }
+  .poderes .atras .bt { margin-top: 6px; }
+
+  /* diálogo de imprimir */
+  .imp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,.2); border: 1px solid #ddd; }
+  .imp-prev { background: #e8eaed; display: grid; place-items: center; padding: 18px; }
+  .pag { background: #fff; width: 210px; aspect-ratio: 1 / 1.41; box-shadow: 0 4px 14px rgba(0,0,0,.18); padding: 14px; font-size: .5rem; line-height: 1.5; color: #333; transition: transform .3s, aspect-ratio .3s, width .3s; }
+  .pag.hor { aspect-ratio: 1.41 / 1; width: 260px; }
+  .pag b { display: block; font-size: .72rem; color: var(--moss); margin-bottom: 4px; }
+  .pag .ln { height: 5px; background: #e6e6e6; border-radius: 3px; margin: 5px 0; }
+  .pag table { font-size: .48rem; margin-top: 6px; } .pag td, .pag th { padding: 2px 3px; }
+  .imp-op { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .imp-op h3 { font-size: 1.2rem; font-weight: 600; margin: 0; }
+  .imp-op label { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: center; gap: 8px; font-size: .88rem; color: #444; }
+  .imp-op select { width: 100%; min-width: 0; font: 500 .88rem "IBM Plex Sans", sans-serif; padding: 6px 8px; border: 1px solid #bbb; border-radius: 6px; background: #fff; }
+  .imp-op select.ojo { outline: 3px solid var(--amber); outline-offset: 2px; }
+  .imp-msg { min-height: 3.2em; font-weight: 600; font-size: .92rem !important; margin: 0 !important; }
+  .imp-msg.ok { color: var(--ok); } .imp-msg.mal { color: var(--bad); }
+
+  /* foto medicamentos */
+  .medic { position: relative; border-radius: 14px; overflow: hidden; }
+  .medic img { width: 100%; display: block; }
+  .medic .elige { position: absolute; top: 0; bottom: 0; width: 50%; border: 0; background: transparent; cursor: pointer; font: 700 1rem "IBM Plex Sans", sans-serif; color: #fff; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; }
+  .medic .elige span { background: rgba(16,35,28,.8); padding: 4px 12px; border-radius: 99px; }
+  .medic .elige:hover span { background: var(--amber); }
+  .medic .elige.a { left: 0; } .medic .elige.b { right: 0; }
+  .medic.listo .elige { pointer-events: none; }
+  .medic.listo .elige.a span { background: var(--bad); } .medic.listo .elige.b span { background: var(--ok); }
+  .compara td { font-size: clamp(.8rem, calc(var(--vw) * 1.42), .95rem); }
+  table { border-collapse: collapse; width: 100%; font-size: clamp(.82rem, calc(var(--vw) * 1.5), 1rem); }
+  th, td { text-align: left; padding: 6px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: "IBM Plex Mono", monospace; font-size: .76em; letter-spacing: .06em; text-transform: uppercase; color: var(--moss); }
+
+  /* web trampa */
+  .web-trampa { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,.2); border: 1px solid #ccc; font-family: Arial, sans-serif; }
+  .web-trampa .barra-dir { background: #f1f3f4; }
+  .noseg { color: var(--bad); font-weight: 700; font-family: "IBM Plex Sans", sans-serif; font-size: .78rem; }
+  .wt-cuerpo { background: #111; color: #fff; padding: 12px 16px 14px; display: grid; grid-template-columns: 1fr 150px; gap: 12px; }
+  .wt-cuerpo h4 { margin: 0 0 8px; font-size: 1.15rem; color: #fde047; line-height: 1.2; }
+  .wt-cuerpo p { font-size: .8rem !important; margin: 0 0 6px !important; color: #ddd; line-height: 1.35 !important; }
+  .trampa { font: inherit; color: inherit; background: transparent; border: 2px solid transparent; border-radius: 6px; padding: 2px 4px; cursor: pointer; text-align: left; position: relative; display: inline-block; }
+  .trampa:hover { border-color: rgba(253,224,71,.6); }
+  .trampa.vista-t { border-color: #ef4444; background: rgba(239,68,68,.15); }
+  .trampa.vista-t::after { content: attr(data-n); position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; border-radius: 50%; background: #ef4444; color: #fff; font: 700 .7rem "IBM Plex Mono", monospace; display: grid; place-items: center; }
+  .btn-falso { display: block; width: 100%; background: #16a34a; color: #fff; font-weight: 700; border-radius: 6px; padding: 8px; text-align: center; margin-bottom: 6px; font-size: .82rem; }
+  .btn-falso.r { background: #dc2626; } .btn-falso.n { background: #ea580c; }
+  .coment { font-size: .74rem; color: #bbb; border-top: 1px solid #333; padding-top: 6px; margin-top: 6px; }
+  .lista-trampas { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; min-height: 100%; }
+  .lista-trampas ol { margin: 6px 0 0; padding-left: 1.3em; }
+  .lista-trampas li { font-size: clamp(.8rem, calc(var(--vw) * 1.4), .92rem) !important; line-height: 1.4; animation: entra .3s ease both; }
+  .contador { font: 700 1rem "IBM Plex Mono", monospace; color: var(--bad); }
+
+  /* instalador pirata */
+  .inst-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: stretch; }
+  .instalador { background: #f0f0f0; border: 1px solid #999; border-radius: 8px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,.2); font-family: "Segoe UI", Arial, sans-serif; display: flex; flex-direction: column; }
+  .inst-tit { background: linear-gradient(90deg, #7e22ce, #db2777); color: #fff; font-size: .8rem; padding: 6px 10px; display: flex; justify-content: space-between; }
+  .inst-cuerpo { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .inst-cuerpo h4 { margin: 0; font-size: 1.05rem; }
+  .inst-logo { display: flex; gap: 12px; align-items: center; }
+  .inst-barra { height: 18px; background: #ddd; border: 1px solid #aaa; border-radius: 3px; overflow: hidden; }
+  .inst-barra i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(45deg, #22c55e 0 10px, #16a34a 10px 20px); transition: width .4s; }
+  .inst-estado { font-size: .82rem; color: #333; min-height: 1.4em; }
+  .inst-ok { font-weight: 700; color: #15803d; font-size: .95rem; }
+  .detras { background: #10231c; color: #9fe0b5; border-radius: 12px; padding: 10px 12px; font: 500 .76rem/1.55 "IBM Plex Mono", monospace; overflow: hidden; display: flex; flex-direction: column; }
+  .detras h3 { font: 600 .74rem "IBM Plex Mono", monospace; color: #f0c27b; letter-spacing: .05em; text-transform: uppercase; }
+  .detras .lin { animation: entra .25s ease both; }
+  .detras .lin.mal { color: #fca5a5; }
+  .detras.tapado .lin { filter: blur(5px); opacity: .5; }
+  .detras .tapa-msg { display: none; color: #cfd8d3; margin-top: auto; font-family: "IBM Plex Sans", sans-serif; font-size: .82rem; }
+  .detras.tapado .tapa-msg { display: block; }
+
+  /* qué harías */
+  .esc-caja { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
+  .esc-caja .situ { font-size: clamp(1rem, calc(var(--vw) * 2), 1.3rem) !important; font-weight: 700; margin: 4px 0 12px !important; }
+  .ops { display: grid; gap: 8px; }
+  .ops button { font: 600 clamp(.88rem, calc(var(--vw) * 1.6), 1.02rem) "IBM Plex Sans", sans-serif; text-align: left; background: var(--paper); border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; cursor: pointer; color: var(--ink); }
+  .ops button:hover:not(:disabled) { border-color: var(--moss); }
+  .ops button:disabled { cursor: default; }
+  .ops button.bien { background: #eaf4ec; border-color: var(--ok); } .ops button.malo { background: #f8e9e6; border-color: var(--bad); } .ops button.casi { background: #fbf1e2; border-color: var(--amber); }
+  .feedback { min-height: 3em; font-weight: 600; margin-top: 10px !important; }
+  .feedback.ok { color: var(--ok); } .feedback.mal { color: var(--bad); } .feedback.casi { color: #8a5a1f; }
+
+  /* quiz */
+  .quiz { max-width: 760px; width: 100%; margin: 0 auto; }
+  .quiz .preg { font-size: clamp(1.1rem, calc(var(--vw) * 2.4), 1.5rem) !important; font-weight: 700; margin: 6px 0 14px !important; }
+  .quiz .alts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quiz .alts button { font: 600 clamp(.92rem, calc(var(--vw) * 1.7), 1.08rem) "IBM Plex Sans", sans-serif; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; cursor: pointer; color: var(--ink); }
+  .quiz .alts button:hover:not(:disabled) { border-color: var(--moss); }
+  .quiz .alts button.bien { background: #eaf4ec; border-color: var(--ok); }
+  .quiz .alts button.malo { background: #f8e9e6; border-color: var(--bad); }
+  .quiz .alts button:disabled { cursor: default; }
+  .progreso { display: flex; gap: 5px; margin-bottom: 6px; }
+  .progreso i { flex: 1; height: 6px; border-radius: 99px; background: var(--line); }
+  .progreso i.bien { background: var(--ok); } .progreso i.malo { background: var(--bad); } .progreso i.act { background: var(--amber); }
+
+  /* tarea */
+  .hoja { background: #fff; border-radius: 6px; padding: 16px 16px 14px 40px; box-shadow: 0 14px 30px rgba(0,0,0,.15); transform: rotate(1.2deg); position: relative; }
+  .hoja::before { content: ""; position: absolute; left: 28px; top: 0; bottom: 0; width: 2px; background: #f0a3a3; }
+  .hoja b { display: block; font-size: .9rem; } .hoja small { display: block; color: var(--mut); margin-bottom: 8px; }
+  .hoja table { font-size: .74rem; } .hoja th { font-size: .62rem; } .hoja td { height: 30px; border-bottom: 1px dotted #9aa; color: var(--mut); }
+
+  .creditos { columns: 2; column-gap: 28px; font-size: .78rem; line-height: 1.5; color: var(--mut); }
+  .creditos div { break-inside: avoid; margin-bottom: 3px; }
+  .creditos a { color: var(--moss); }
+
+  .dos > *, .lab-nav > *, .tarea-wrap > *, .inst-wrap > *, .rej > * { min-width: 0; }
+  @media (max-width: 760px) {
+    .control { gap: 6px; } .control button { padding: 8px 10px; }
+    .dos, .dos.ancho, .dos.angosto, .lab-nav, .tarea-wrap, .inst-wrap, .imp { grid-template-columns: 1fr; gap: 14px; }
+    .rej.c3, .rej.c4, .tipos, .alts-t { grid-template-columns: 1fr 1fr; }
+    .tareas { grid-template-columns: 1fr 1fr; }
+    .quiz .alts { grid-template-columns: 1fr; }
+    .portada .foto-portada { display: none; } .portada .txt { max-width: none; }
+    .wt-cuerpo { grid-template-columns: 1fr; }
+    .diapo { aspect-ratio: auto; min-height: 60vh; justify-content: flex-start !important; }
+    .creditos { columns: 1; }
+  }
+  @media (max-width: 480px) { .tipos, .alts-t, .rej.c3, .rej.c4 { grid-template-columns: 1fr; } }
+  .control { position: fixed; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); color: #f6f4ee; font: 600 .85rem "IBM Plex Mono", monospace; }
+  .control button { background: rgba(246,244,238,.14); color: #f6f4ee; border: 0; border-radius: 10px; padding: 9px 16px; font: inherit; cursor: pointer; }
+  .control button:hover { background: rgba(246,244,238,.28); }
+  .control button:disabled { opacity: .35; cursor: default; }
+  .barra { position: fixed; left: 0; top: 0; height: 4px; background: var(--amber); transition: width .3s; }
+</style>
+</head>
+<body>
+<div class="barra" id="barra"></div>
+<main class="escena">
+
+  <!-- PORTADA -->
+  <section class="diapo portada">
+    <div class="txt">
+      <p class="eti">Herramientas Informáticas · Clase 4</p>
+      <h1>Aplicaciones:<br>siempre hay<br>otra opción</h1>
+      <p>Para cada tarea existe una aplicación gratis y legal. Y muchas ya las tienes: empiezan en tu navegador.</p>
+      <p class="peq" style="color:#cfe3d3;margin-top:22px">Ing. Fernando F. Huamani Felles</p>
+    </div>
+    <img class="foto-portada" src="recursos/m1c4/enfermera.jpg" data-hd="recursos/m1c4/hd/enfermera.jpg" alt="Enfermera registrando datos en una computadora junto a la cama del paciente">
+  </section>
+
+  <!-- DILEMA INICIAL -->
+  <section class="diapo">
+    <p class="eti">Para empezar · respondan con la letra en el chat</p>
+    <h2>Mañana debes entregar un informe de práctica… y tu laptop no tiene Word 😰</h2>
+    <p>¿Qué haces? Sean sinceros: nadie va a juzgar.</p>
+    <div class="rej c2">
+      <button class="carta" data-revela data-ok="no"><h3>A · Busco «Word full crack» en YouTube</h3><div class="atras"><span class="sello no">Riesgoso</span><br>Es lo más común… y lo más peligroso. Hoy veremos qué trae escondido un crack.</div></button>
+      <button class="carta" data-revela data-ok="no"><h3>B · Le pido a un amigo su «Office activado» en USB</h3><div class="atras"><span class="sello no">Riesgoso</span><br>Es el mismo crack, solo que llega por otro camino. Si su PC estaba infectada, la tuya también lo estará.</div></button>
+      <button class="carta" data-revela data-ok="si"><h3>C · Uso una alternativa gratis y legal</h3><div class="atras"><span class="sello si">La mejor</span><br>Google Docs, Word para la web, LibreOffice… existen varias, y algunas ni siquiera se instalan.</div></button>
+      <button class="carta" data-revela data-ok="casi"><h3>D · Lo hago en el celular o no lo entrego</h3><div class="atras"><span class="sello casi">Hay algo mejor</span><br>El celular sirve (también tiene apps gratis), pero en la computadora existen opciones más cómodas.</div></button>
+    </div>
+    <div class="pregunta" data-revela>
+      <span>¿Hacía falta piratear para entregar el informe?</span>
+      <button class="bt sec">Ver respuesta</button>
+      <p class="resp">No. Para casi todo lo que hace un programa de pago existe una opción gratis y legal. Hoy aprendemos a encontrarla.</p>
+    </div>
+  </section>
+
+  <section class="diapo seccion">
+    <p class="num">01</p>
+    <p class="eti">Primera parte</p>
+    <h1>¿Qué es una aplicación?</h1>
+    <p class="sub">Y por qué casi nunca hay una sola.</p>
+  </section>
+
+  <!-- DEFINICIÓN -->
+  <section class="diapo">
+    <p class="eti">Definición</p>
+    <div class="dos ancho" style="align-items:start">
+      <div>
+        <h2>La aplicación (app)</h2>
+        <div class="lee">
+          <p class="def">Es un <b class="k">programa</b> que usamos para hacer <b class="k">una tarea concreta</b>: escribir, calcular, ver un PDF, editar una foto, chatear… Funciona <b class="k">encima del sistema operativo</b>.</p>
+        </div>
+        <div class="tipos">
+          <div class="tipo" style="--c:#6b4a8f"><h3>💻 De escritorio</h3><p class="peq" style="margin:0!important">Se <b>instala</b> en la computadora.</p>
+            <div class="ej"><span class="ap" style="--c:#18a303"><i style="--m:url(recursos/m1c4/libreoffice.svg)"></i></span><span class="ap" style="--c:#ff8800"><i style="--m:url(recursos/m1c4/vlcmediaplayer.svg)"></i></span><span class="ap" style="--c:#5c5543"><i style="--m:url(recursos/m1c4/gimp.svg)"></i></span></div></div>
+          <div class="tipo" style="--c:#2f7d4a"><h3>📱 Móvil</h3><p class="peq" style="margin:0!important">Se baja de la <b>tienda</b> del celular.</p>
+            <div class="ej"><span class="ap" style="--c:#25d366">💬</span><span class="ap" style="--c:#00c4cc"><i style="--m:url(recursos/m1c4/canva.svg)"></i></span><span class="ap" style="--c:#ec1c24"><i style="--m:url(recursos/m1c4/adobeacrobatreader.svg)"></i></span></div></div>
+          <div class="tipo" style="--c:#2f63e0"><h3>🌐 Web</h3><p class="peq" style="margin:0!important">Se usa <b>desde el navegador</b>. No se instala.</p>
+            <div class="ej"><span class="ap" style="--c:#4285f4"><i style="--m:url(recursos/m1c4/googledocs.svg)"></i></span><span class="ap" style="--c:#2b579a">W</span><span class="ap" style="--c:#18a497"><i style="--m:url(recursos/m1c4/photopea.svg)"></i></span></div></div>
+        </div>
+      </div>
+      <div>
+        <img src="recursos/m1c4/enfermera.jpg" data-hd="recursos/m1c4/hd/enfermera.jpg" alt="Enfermera usando un carro con computadora junto a la cama" style="width:100%;height:330px;object-fit:cover;object-position:50% 35%;border-radius:14px;display:block">
+        <p class="peq" style="margin-top:8px!important">En el hospital también se trabaja con aplicaciones: la <b>historia clínica electrónica</b>, el <b>kardex</b>, el sistema de <b>farmacia</b>, las <b>citas</b>…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISMA TAREA, OTRAS APPS -->
+  <section class="diapo">
+    <p class="eti">Explorador · elige una tarea</p>
+    <h2 style="margin-bottom:10px">Una tarea, muchas aplicaciones</h2>
+    <div class="tarea-wrap">
+      <div class="tareas" id="tareas"></div>
+      <div id="tarea-panel"><div class="vacio">☝️ Elige una tarea de la izquierda: verás la aplicación «famosa» y sus alternativas legales.</div></div>
+    </div>
+  </section>
+
+  <!-- LICENCIAS -->
+  <section class="diapo">
+    <p class="eti">¿Gratis o de pago? · toquen cada tarjeta</p>
+    <h2>Las «reglas de uso» de cada aplicación (licencias)</h2>
+    <p class="peq">Cada programa trae una <b>licencia</b>: un contrato que dice si puedes usarlo, gratis o pagando, y cómo.</p>
+    <div class="rej c4 lic">
+      <button class="carta" data-revela style="--c:var(--bad)"><span class="emo">💳</span><h3>De pago</h3><div class="atras">Compras una licencia o pagas una <b>suscripción</b> mensual o anual. <i>Ej.: Microsoft 365, Photoshop.</i></div></button>
+      <button class="carta" data-revela style="--c:#b3752c"><span class="emo">⏳</span><h3>De prueba</h3><div class="atras">Gratis por unos días (7, 30, 40…). Después debes pagar o desinstalar. <i>Ej.: WinRAR, antivirus de prueba.</i></div></button>
+      <button class="carta" data-revela style="--c:#6b4a8f"><span class="emo">🎁</span><h3>Freemium</h3><div class="atras">Lo básico es <b>gratis</b>; las funciones extra se pagan. <i>Ej.: Canva, CapCut, Spotify.</i></div></button>
+      <button class="carta" data-revela style="--c:var(--azul)"><span class="emo">🆓</span><h3>Gratuito</h3><div class="atras">No cuesta nada, aunque a veces muestra anuncios. <i>Ej.: Acrobat Reader, Google Docs, Photopea.</i></div></button>
+      <button class="carta" data-revela style="--c:var(--ok)"><span class="emo">🕊️</span><h3>Software libre</h3><div class="atras">Gratis <b>y</b> con el código abierto: cualquiera puede revisarlo y mejorarlo. <i>Ej.: LibreOffice, GIMP, VLC, Firefox, 7-Zip.</i></div></button>
+      <button class="carta" data-revela style="--c:#17766c"><span class="emo">✅</span><h3>Ya viene incluido</h3><div class="atras">Llega con el sistema operativo. <i>Ej.: el navegador, Microsoft Defender, Fotos, Bloc de notas, Clipchamp.</i></div></button>
+      <button class="carta" data-revela style="--c:var(--moss)"><span class="emo">🎓</span><h3>Licencia educativa</h3><div class="atras">Algunas instituciones dan a sus alumnos cuentas con Office o Google gratis. <b>Pregunta en tu instituto.</b></div></button>
+      <button class="carta" data-revela data-ok="no" style="--c:#111"><span class="emo">🏴‍☠️</span><h3>¿Y el «crack»?</h3><div class="atras"><span class="sello no">No es una licencia</span><br>Es un programa de pago <b>alterado</b> por desconocidos para saltarse el pago. Es ilegal y peligroso.</div></button>
+    </div>
+    <p class="nota peq" style="margin-top:10px">Pagar no es el único camino legal… pero piratear <b>nunca</b> lo es.</p>
+  </section>
+
+  <section class="diapo seccion">
+    <p class="num">02</p>
+    <p class="eti">Segunda parte</p>
+    <h1>El navegador: mucho más que páginas web</h1>
+    <p class="sub">La aplicación más poderosa que tienes… y ya viene instalada.</p>
+  </section>
+
+  <!-- NAVEGADORES -->
+  <section class="diapo">
+    <p class="eti">Los navegadores · toca cada uno</p>
+    <h2>¿Cuál usas tú? Todos son gratis</h2>
+    <div class="rej c3 navs">
+      <button class="carta" data-revela><span class="ap xl" style="--c:#4285f4"><i style="--m:url(recursos/m1c4/googlechrome.svg)"></i></span><h3>Google Chrome</h3><div class="atras">De Google. El más usado del mundo. Viene en casi todos los celulares Android.</div></button>
+      <button class="carta" data-revela><span class="ap xl" style="--c:#0c59a4">e</span><h3>Microsoft Edge</h3><div class="atras">De Microsoft. <b>Ya viene en Windows.</b> Su lector de PDF permite resaltar, escribir y leer en voz alta.</div></button>
+      <button class="carta" data-revela><span class="ap xl" style="--c:#ff7139"><i style="--m:url(recursos/m1c4/firefoxbrowser.svg)"></i></span><h3>Mozilla Firefox</h3><div class="atras"><b>Software libre</b>, de una fundación sin fines de lucro. Permite escribir y firmar sobre los PDF.</div></button>
+      <button class="carta" data-revela><span class="ap xl" style="--c:#006cff"><i style="--m:url(recursos/m1c4/safari.svg)"></i></span><h3>Safari</h3><div class="atras">De Apple. Viene en el iPhone, el iPad y las Mac.</div></button>
+      <button class="carta" data-revela><span class="ap xl" style="--c:#ff1b2d"><i style="--m:url(recursos/m1c4/opera.svg)"></i></span><h3>Opera</h3><div class="atras">Trae un bloqueador de anuncios y un modo para ahorrar datos.</div></button>
+      <button class="carta" data-revela><span class="ap xl" style="--c:#fb542b"><i style="--m:url(recursos/m1c4/brave.svg)"></i></span><h3>Brave</h3><div class="atras">Bloquea anuncios y rastreadores desde el inicio. Pensado para la privacidad.</div></button>
+    </div>
+    <div class="pregunta" data-revela>
+      <span>Si todos son gratis, ¿quién les paga a sus creadores?</span>
+      <button class="bt sec">Ver respuesta</button>
+      <p class="resp">Sobre todo la publicidad y los buscadores (que pagan por aparecer como buscador principal). Por eso conviene revisar su configuración de privacidad.</p>
+    </div>
+  </section>
+
+  <!-- LAB NAVEGADOR -->
+  <section class="diapo">
+    <p class="eti">Experimento · ábrelo con el navegador, sin instalar nada</p>
+    <div class="lab-nav">
+      <div class="descargas">
+        <h3>📁 Descargas</h3>
+        <button class="arch" data-f="pdf"><span class="ext" style="--c:#d93025">PDF</span><span>signos_vitales.pdf<small>Hoja de control</small></span></button>
+        <button class="arch" data-f="jpg"><span class="ext" style="--c:#188038">JPG</span><span>foto_turno.jpg<small>Foto</small></span></button>
+        <button class="arch" data-f="wav"><span class="ext" style="--c:#8430ce">WAV</span><span>latido.wav<small>Audio</small></span></button>
+        <button class="arch" data-f="txt"><span class="ext" style="--c:#5f6368">TXT</span><span>notas_turno.txt<small>Texto</small></span></button>
+        <button class="arch" data-f="docx"><span class="ext" style="--c:#2b579a">DOCX</span><span>informe.docx<small>Documento de Word</small></span></button>
+        <button class="arch mio" data-f="mio"><span class="ext" style="--c:var(--amber)">📂</span><span>Abrir uno de mi PC<small>o arrástralo al navegador</small></span></button>
+        <input type="file" id="mi-arch" hidden>
+      </div>
+      <div class="ventana">
+        <div class="pestanas"><div class="pest"><span id="pest-ico">🌐</span><span id="pest-t">Nueva pestaña</span><b>✕</b></div><span class="pest-mas">＋</span></div>
+        <div class="barra-dir"><span>← → ↻</span><div class="dir" id="dir"><span class="gris">Busca en Google o escribe una URL</span></div><span>⋮</span></div>
+        <div class="vista" id="vista" data-noswipe></div>
+      </div>
+    </div>
+    <div class="explica" id="explica"><p>👈 Toca un archivo. El navegador lo abrirá por sí solo, <b>sin instalar ningún programa</b>.</p></div>
+  </section>
+
+  <!-- SUPERPODERES -->
+  <section class="diapo">
+    <p class="eti">Superpoderes del navegador · toquen cada tarjeta</p>
+    <h2>Lo que tu navegador ya sabe hacer</h2>
+    <div class="rej c4 poderes">
+      <button class="carta" data-revela><span class="emo">📄</span><h3>Leer, rellenar y firmar PDF</h3><div class="atras">Arrastra el PDF a la ventana. En <b>Edge</b> y <b>Firefox</b> puedes resaltar, escribir encima y firmar.</div></button>
+      <button class="carta" data-revela><span class="emo">🔊</span><h3>Leer en voz alta</h3><div class="atras">Edge: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>. Chrome: «Modo de lectura». Ideal para repasar.<br><span class="bt amb" id="voz" role="button">▶ Escuchar ejemplo</span></div></button>
+      <button class="carta" data-revela><span class="emo">🌍</span><h3>Traducir una página</h3><div class="atras">Clic derecho → <b>Traducir al español</b>. Útil para guías y artículos en inglés.</div></button>
+      <button class="carta" data-revela><span class="emo">🖨️</span><h3>Guardar como PDF</h3><div class="atras"><kbd>Ctrl</kbd>+<kbd>P</kbd> y en «Destino» eliges <b>Guardar como PDF</b>. Lo probamos en la siguiente diapositiva.</div></button>
+      <button class="carta" data-revela><span class="emo">🔍</span><h3>Buscar una palabra</h3><div class="atras"><kbd>Ctrl</kbd>+<kbd>F</kbd> y escribes, por ejemplo, «dosis». La encuentra en segundos, incluso dentro de un PDF de 80 páginas.</div></button>
+      <button class="carta" data-revela><span class="emo">🔎</span><h3>Agrandar la letra</h3><div class="atras"><kbd>Ctrl</kbd>+<kbd>+</kbd> agranda, <kbd>Ctrl</kbd>+<kbd>-</kbd> achica y <kbd>Ctrl</kbd>+<kbd>0</kbd> vuelve al tamaño normal.</div></button>
+      <button class="carta" data-revela><span class="emo">☁️</span><h3>Abrir Word, Excel y PowerPoint</h3><div class="atras">Sube el archivo a <b>Google Drive</b> o <b>OneDrive</b> y ábrelo con Docs o con Word para la web.</div></button>
+      <button class="carta" data-revela><span class="emo">🧰</span><h3>Usar aplicaciones completas</h3><div class="atras">Docs, Hojas de cálculo, Presentaciones, Word para la web, Canva, Photopea… <b>sin instalar nada</b>.</div></button>
+    </div>
+  </section>
+
+  <!-- IMPRIMIR COMO PDF -->
+  <section class="diapo">
+    <p class="eti">Truco · Ctrl + P</p>
+    <div class="dos angosto">
+      <div>
+        <h2>«Imprime» sin impresora: guárdalo como PDF</h2>
+        <p>Abriste tus <b>resultados de laboratorio</b> en una página web y quieres enviarlos al docente. Presiona <kbd>Ctrl</kbd>+<kbd>P</kbd>…</p>
+        <p class="peq">Funciona con cualquier página, correo o documento abierto en el navegador. El PDF se ve igual en cualquier computadora o celular.</p>
+        <div class="pregunta" data-revela>
+          <span>¿Y en el celular?</span>
+          <button class="bt sec">Ver respuesta</button>
+          <p class="resp">También: en Chrome toca ⋮ → Compartir → Imprimir → «Guardar como PDF».</p>
+        </div>
+      </div>
+      <div class="imp">
+        <div class="imp-prev"><div class="pag" id="pag">
+          <b>Laboratorio clínico · Resultados</b>
+          <div>Paciente: Ana Torres (ficticio)</div>
+          <table><tr><th>Prueba</th><th>Resultado</th><th>Referencia</th></tr><tr><td>Hemoglobina</td><td>13,2 g/dL</td><td>12–16</td></tr><tr><td>Leucocitos</td><td>7 800 /mm³</td><td>4 500–11 000</td></tr><tr><td>Plaquetas</td><td>250 000</td><td>150 000–450 000</td></tr><tr><td>Glucosa</td><td>92 mg/dL</td><td>70–100</td></tr></table>
+          <div class="ln"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div>
+        </div></div>
+        <div class="imp-op">
+          <h3>Imprimir</h3>
+          <p class="peq" id="imp-hojas" style="margin:0!important">1 hoja de papel</p>
+          <label>Destino <select id="imp-dest" class="ojo"><option value="hp">🖨️ Impresora · Estación de enfermería</option><option value="pdf">📄 Guardar como PDF</option></select></label>
+          <label>Páginas <select><option>Todas</option><option>Solo la página 1</option></select></label>
+          <label>Diseño <select id="imp-dis"><option value="v">Vertical</option><option value="h">Horizontal</option></select></label>
+          <div class="fila" style="justify-content:flex-end"><button class="bt amb" id="imp-ok">Imprimir</button></div>
+          <p class="imp-msg" id="imp-msg"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACIDAD -->
+  <section class="diapo">
+    <p class="eti">Cuidado con los datos de tus pacientes · ¿seguro o riesgoso?</p>
+    <h2>No todo lo que es gratis en internet es buena idea</h2>
+    <div class="rej c3">
+      <button class="carta" data-revela data-ok="si"><span class="emo">📄</span><h3>Abrir el PDF de resultados directamente en el navegador</h3><div class="atras"><span class="sello si">Seguro</span><br>El archivo <b>no sale de tu computadora</b>: el navegador lo abre ahí mismo.</div></button>
+      <button class="carta" data-revela data-ok="no"><span class="emo">🌐</span><h3>Subir la historia clínica a «convertir-pdf-gratis.xyz»</h3><div class="atras"><span class="sello no">Riesgoso</span><br>No sabes quién guarda ese archivo ni qué hace con él. Los datos de salud son <b>confidenciales</b>.</div></button>
+      <button class="carta" data-revela data-ok="no"><span class="emo">📸</span><h3>Mandar por tu WhatsApp personal la foto de la herida de un paciente</h3><div class="atras"><span class="sello no">Riesgoso</span><br>Rompe la confidencialidad. Usa solo los canales que autoriza el establecimiento y con consentimiento.</div></button>
+      <button class="carta" data-revela data-ok="si"><span class="emo">🖨️</span><h3>Usar «Guardar como PDF» en lugar de un convertidor en línea</h3><div class="atras"><span class="sello si">Seguro</span><br>Lo hace tu propio navegador, sin subir nada a internet.</div></button>
+      <button class="carta" data-revela data-ok="no"><span class="emo">🧩</span><h3>Instalar la extensión «Descarga videos GRATIS» de una página desconocida</h3><div class="atras"><span class="sello no">Riesgoso</span><br>Las extensiones pueden leer todo lo que haces en el navegador. Instálalas solo desde la tienda oficial.</div></button>
+      <button class="carta" data-revela data-ok="si"><span class="emo">🎓</span><h3>Guardar tus trabajos en la cuenta de tu instituto (Drive u OneDrive)</h3><div class="atras"><span class="sello si">Recomendado</span><br>Cuenta con contraseña y respaldo. Activa la verificación en dos pasos.</div></button>
+    </div>
+    <details class="mas">
+      <summary>Para saber más</summary>
+      <p>En el Perú, la <b>Ley N.° 29733 de Protección de Datos Personales</b> considera los datos de salud como <b>datos sensibles</b>. Además, el personal de salud está obligado a guardar el <b>secreto profesional</b>.</p>
+    </details>
+  </section>
+
+  <section class="diapo seccion">
+    <p class="num">03</p>
+    <p class="eti">Tercera parte</p>
+    <h1>¿Y si lo pirateo?</h1>
+    <p class="sub">Lo «gratis» que termina saliendo caro.</p>
+  </section>
+
+  <!-- MEDICAMENTO FALSO -->
+  <section class="diapo">
+    <p class="eti">Piénsalo como enfermera o enfermero</p>
+    <div class="dos">
+      <div>
+        <h2>¿Cuál de los dos frascos es falsificado?</h2>
+        <div class="medic" id="medic">
+          <img src="recursos/m1c4/falsos.jpg" data-hd="recursos/m1c4/hd/falsos.jpg" alt="Dos frascos de un medicamento: uno original y uno falsificado, vistos con una luz especial">
+          <button class="elige a" data-m="a"><span>Frasco A</span></button>
+          <button class="elige b" data-m="b"><span>Frasco B</span></button>
+        </div>
+        <p class="peq" id="medic-r" style="margin-top:8px!important">Toquen el frasco que creen que es el falso.</p>
+      </div>
+      <div>
+        <table class="compara">
+          <tr><th>💊 Medicamento «bamba»</th><th>💿 Programa crackeado</th></tr>
+          <tr><td>Por fuera se ve igual al original</td><td>Se ve y funciona igual que el original</td></tr>
+          <tr><td>No tiene registro sanitario</td><td>No tiene la firma digital del fabricante</td></tr>
+          <tr><td>Nadie sabe qué tiene dentro</td><td>Puede traer virus escondidos</td></tr>
+          <tr><td>Si te hace daño, no hay a quién reclamar</td><td>Sin soporte ni actualizaciones de seguridad</td></tr>
+          <tr><td>Venderlo es un delito</td><td>Copiarlo y distribuirlo también</td></tr>
+        </table>
+        <div class="pregunta" data-revela>
+          <span>¿Le darías a un paciente un medicamento sin registro «porque era más barato»?</span>
+          <button class="bt sec">Ver respuesta</button>
+          <p class="resp">Nunca. Con los programas es igual: si no sabes de dónde viene, no lo instales.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEB TRAMPA -->
+  <section class="diapo">
+    <p class="eti">Reto · encuentren las 7 señales de peligro (toquen la página)</p>
+    <div class="dos ancho" style="align-items:stretch">
+      <div class="web-trampa" data-noswipe>
+        <div class="barra-dir"><span>← → ↻</span><div class="dir"><button class="trampa" data-t="0"><span class="noseg">⚠ No seguro</span> descargas-full-gratis.xyz/word-2025-crack</button></div></div>
+        <div class="wt-cuerpo">
+          <div>
+            <button class="trampa" data-t="1"><h4>✅✅ WORD 2025 FULL CRACK ESPAÑOL 100% SIN VIRUS ✅✅ ACTIVADO PARA SIEMPRE!!!</h4></button>
+            <p>Descarga Office completo gratis, sin pagar nunca. Funciona en Windows 10 y 11.</p>
+            <button class="trampa" data-t="2"><p>⚠️ IMPORTANTE: <b>desactiva tu antivirus</b> antes de instalar, porque detecta el activador como «falso positivo».</p></button>
+            <button class="trampa" data-t="3"><p>📦 Archivo: <b>Office_2025_Full_Activador.exe</b> · Tamaño: <b>2,4 MB</b></p></button>
+            <button class="trampa" data-t="4"><p>🔑 Contraseña del ZIP: <b>1234</b></p></button>
+            <button class="trampa" data-t="5"><div class="coment">💬 <b>Juan_23:</b> funciona!! gracias crack 😍😍<br>💬 <b>Maria.K:</b> 100% real no fake, el mejor<br>💬 <b>Pedro:</b> excelente aporte bro 🔥</div></button>
+          </div>
+          <button class="trampa" data-t="6" style="align-self:start">
+            <span class="btn-falso">⬇ DESCARGAR</span><span class="btn-falso r">⬇ DESCARGA DIRECTA</span><span class="btn-falso n">▶ INICIAR DESCARGA</span><span class="btn-falso">⬇ MEGA</span>
+          </button>
+        </div>
+      </div>
+      <div class="lista-trampas">
+        <p style="margin:0!important"><span class="contador" id="tr-n">0 / 7</span> señales encontradas</p>
+        <ol id="tr-l"></ol>
+        <div class="fila" style="margin-top:8px"><button class="bt sec" id="tr-todas">Mostrar todas</button><button class="bt sec" id="tr-re">↺ Reiniciar</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALADOR PIRATA -->
+  <section class="diapo">
+    <p class="eti">Simulación · ¿qué hace un crack mientras «instala»?</p>
+    <h2 style="margin-bottom:10px">Por delante te activa Office… por detrás te roba</h2>
+    <div class="inst-wrap">
+      <div class="instalador">
+        <div class="inst-tit"><span>Office 2025 FULL · Activador by xXcrackXx</span><span>— ☐ ✕</span></div>
+        <div class="inst-cuerpo">
+          <div class="inst-logo"><span class="ap xl" style="--c:#c43e1c">O</span><div><h4>Microsoft Office 2025 Pro Plus</h4><span class="peq">Versión «full» · Activación permanente</span></div></div>
+          <div class="inst-barra"><i id="inst-b"></i></div>
+          <div class="inst-estado" id="inst-e">Listo para instalar.</div>
+          <div class="fila"><button class="bt" id="inst-go">▶ Instalar</button><button class="bt sec" id="inst-ver">👁️ Ver lo que pasa por detrás</button></div>
+        </div>
+      </div>
+      <div class="detras tapado" id="detras">
+        <h3>Lo que no se ve</h3>
+        <div id="detras-l"></div>
+        <p class="tapa-msg">🙈 Esto es lo que el usuario nunca ve. Toquen «Ver lo que pasa por detrás».</p>
+      </div>
+    </div>
+    <details class="mas">
+      <summary>¿Es delito? Para saber más</summary>
+      <p>Sí. En el Perú los programas están protegidos por la <b>Ley sobre el Derecho de Autor (Decreto Legislativo N.° 822)</b>, y el Código Penal sanciona su copia y venta sin autorización. INDECOPI supervisa y multa a empresas e instituciones que usan software ilegal.</p>
+      <p>Los programas que roban datos (en inglés, <i>infostealers</i>) se esconden muy seguido en cracks y «activadores». Copian las contraseñas guardadas en el navegador y las sesiones abiertas de correo, redes y banca.</p>
+    </details>
+  </section>
+
+  <!-- QUÉ HARÍAS -->
+  <section class="diapo">
+    <p class="eti">¿Qué harías tú? · voten en el chat y luego elijan</p>
+    <div class="esc-caja">
+      <div class="progreso" id="es-prog"></div>
+      <p class="peq" id="es-num" style="margin:0!important"></p>
+      <p class="situ" id="es-s"></p>
+      <div class="ops" id="es-o"></div>
+      <p class="feedback" id="es-fb"></p>
+      <button class="bt amb" id="es-sig" style="display:none">Siguiente situación →</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="diapo">
+    <p class="eti">Reto final · respondan con la letra en el chat</p>
+    <div class="quiz">
+      <div class="progreso" id="qz-prog"></div>
+      <p class="peq" id="qz-num"></p>
+      <p class="preg" id="qz-p"></p>
+      <div class="alts" id="qz-a"></div>
+      <p class="feedback" id="qz-fb"></p>
+      <button class="bt amb" id="qz-sig" style="display:none">Siguiente →</button>
+    </div>
+  </section>
+
+  <!-- PARA RECORDAR -->
+  <section class="diapo">
+    <p class="eti">Para recordar</p>
+    <h2>Lo más importante de hoy</h2>
+    <ul>
+      <li>Una <b>aplicación</b> es un programa para una tarea concreta. Puede ser <b>de escritorio</b>, <b>móvil</b> o <b>web</b>.</li>
+      <li>Para cada tarea hay <b>varias aplicaciones</b>: si la famosa es de pago, busca una alternativa <b>gratis, libre o incluida</b>.</li>
+      <li>El <b>navegador</b> abre PDF, fotos, audio, video y texto, y con Drive u OneDrive también Word, Excel y PowerPoint.</li>
+      <li>Con <kbd>Ctrl</kbd>+<kbd>P</kbd> → <b>Guardar como PDF</b> conviertes cualquier página en un PDF.</li>
+      <li>Los datos de tus pacientes son <b>confidenciales</b>: no los subas a páginas desconocidas.</li>
+      <li>Un <b>crack</b> es como un medicamento falsificado: ilegal, sin garantía y con «sorpresas» dentro. <b>Siempre hay otra opción.</b></li>
+    </ul>
+  </section>
+
+  <!-- TAREA -->
+  <section class="diapo">
+    <p class="eti">Tarea ✍️</p>
+    <div class="dos ancho" style="gap:26px">
+      <div>
+        <h2>Mi botiquín de aplicaciones legales</h2>
+        <p>Completa una tabla con <b>5 tareas</b> que haces en la computadora o el celular (escribir, ver PDF, editar fotos, hacer exposiciones, comprimir archivos…). Para cada una escribe:</p>
+        <ul>
+          <li>🧰 La <b>tarea</b>.</li>
+          <li>💳 La aplicación <b>famosa</b> (o la que usabas).</li>
+          <li>✅ Una <b>alternativa gratis y legal</b> y su licencia (gratuita, libre, incluida…).</li>
+          <li>📍 Dónde funciona: 💻 se instala, 🌐 en el navegador o 📱 celular.</li>
+        </ul>
+        <p class="nota peq" style="margin-top:12px">Extra: abre un PDF con tu navegador y prueba escribir o resaltar algo encima (en Edge o Firefox). Escribe en una línea qué pudiste hacer.</p>
+      </div>
+      <div class="hoja">
+        <b>Herramientas Informáticas · Tarea 4</b>
+        <small>Nombre: __________________</small>
+        <table>
+          <tr><th>Tarea</th><th>Famosa</th><th>Alternativa legal</th><th>📍</th></tr>
+          <tr><td>Escribir</td><td>Word</td><td>…</td><td>🌐</td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CIERRE -->
+  <section class="diapo portada">
+    <p class="eti">Herramientas Informáticas</p>
+    <h1>¡Gracias!</h1>
+    <p>Recuerda: antes de buscar un crack, busca una alternativa. <b>Siempre hay otra opción.</b></p>
+  </section>
+
+  <!-- CRÉDITOS -->
+  <section class="diapo">
+    <p class="eti">Créditos de las imágenes</p>
+    <p class="peq">Fotografías de Wikimedia Commons, usadas según sus licencias. Logotipos de Simple Icons (CC0); las marcas pertenecen a sus dueños. Los mosaicos de Word, Excel, PowerPoint y Edge son recreaciones sencillas. La hoja de signos vitales y los resultados de laboratorio son ficticios.</p>
+    <div class="creditos" id="creditos"></div>
+  </section>
+</main>
+<nav class="control">
+  <button id="ini" type="button" title="Volver a la primera diapositiva">⏮ Inicio</button>
+  <button id="ant" type="button">← Anterior</button>
+  <span id="pos"></span>
+  <button id="sig" type="button">Siguiente →</button>
+  <button id="full" type="button" title="Pantalla completa (F)">⛶</button>
+</nav>
+<script>
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const R = "recursos/m1c4/";
+const escH = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------- escala: la diapositiva llena la pantalla o el proyector ---------- */
+function ajustar() {
+  const grande = innerWidth >= 760 && innerHeight >= 430;
+  document.body.classList.toggle("escalar", grande);
+  const s = grande ? Math.min((innerWidth - 32) / 1140, (innerHeight - 88) / 641) : 1;
+  document.documentElement.style.setProperty("--s", s);
+}
+addEventListener("resize", ajustar); document.addEventListener("fullscreenchange", ajustar); ajustar();
+
+/* ---------- navegación ---------- */
+const D = $$(".diapo");
+const alCambiar = [];
+let i = Math.max(0, Math.min(D.length - 1, Number(location.hash.slice(1)) - 1 || 0));
+function ir(n) {
+  i = Math.max(0, Math.min(D.length - 1, n));
+  D.forEach((d, k) => d.classList.toggle("on", k === i));
+  $("#pos").textContent = (i + 1) + " / " + D.length;
+  $("#ant").disabled = i === 0;
+  $("#ini").disabled = i === 0;
+  $("#sig").textContent = i === D.length - 1 ? "↺ Volver al inicio" : "Siguiente →";
+  $("#barra").style.width = ((i + 1) / D.length * 100) + "%";
+  history.replaceState(null, "", "#" + (i + 1));
+  alCambiar.forEach(f => f(D[i]));
+}
+$("#ant").onclick = () => ir(i - 1);
+$("#sig").onclick = () => ir(i === D.length - 1 ? 0 : i + 1);
+$("#ini").onclick = () => ir(0);
+$("#full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+addEventListener("keydown", e => {
+  if (e.target.closest("input, textarea, select")) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); ir(i === D.length - 1 ? 0 : i + 1); }
+  if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); ir(i - 1); }
+  if (e.key.toLowerCase() === "f") $("#full").click();
+  if (e.key === "Home") ir(0);
+});
+let x0 = null;
+addEventListener("touchstart", e => { x0 = e.target.closest("[data-noswipe], input, select, iframe") ? null : e.touches[0].clientX; }, { passive: true });
+addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 60) ir(i + (dx < 0 ? 1 : -1)); x0 = null; });
+
+/* ---------- tarjetas que se revelan ---------- */
+document.addEventListener("click", e => {
+  if (e.target.closest("#voz")) return;
+  const r = e.target.closest("[data-revela]"); if (r) r.classList.toggle("ver");
+});
+
+/* ---------- sonido ---------- */
+let AC = null;
+const audio = () => (AC = AC || new (window.AudioContext || window.webkitAudioContext)());
+function tono(f, dur = .3, tipo = "sine") {
+  try {
+    const ac = audio(), o = ac.createOscillator(), g = ac.createGain();
+    o.type = tipo; o.frequency.value = f;
+    g.gain.setValueAtTime(.0001, ac.currentTime); g.gain.exponentialRampToValueAtTime(.25, ac.currentTime + .02);
+    g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + dur);
+    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + dur + .05);
+  } catch (_) {}
+}
+
+/* ---------- mosaico de una app ---------- */
+const mosaico = (a, cls = "") => a.lg
+  ? `<span class="ap ${cls}" style="--c:${a.c}"><i style="--m:url(${R}${a.lg}.svg)"></i></span>`
+  : `<span class="ap ${cls}" style="--c:${a.c}">${a.l}</span>`;
+const LIC = { pago: "💳 De pago", prueba: "⏳ Prueba", freemium: "🎁 Freemium", gratis: "🆓 Gratis", libre: "🕊️ Libre", incluido: "✅ Incluido" };
+const DONDE = { pc: "💻 Se instala", web: "🌐 Navegador", cel: "📱 Celular" };
+const badges = a => `<span class="bd ${a.lic}">${LIC[a.lic]}</span>` + a.donde.map(d => `<span class="bd">${DONDE[d]}</span>`).join("");
+
+/* ---------- una tarea, muchas apps ---------- */
+const TAREAS = [
+  { e: "📝", n: "Escribir un informe",
+    f: { n: "Microsoft Word", l: "W", c: "#2b579a", lic: "pago", donde: ["pc"], d: "Parte de Microsoft 365: suscripción mensual o anual." },
+    a: [
+      { n: "Google Docs", lg: "googledocs", c: "#4285f4", lic: "gratis", donde: ["web", "cel"], d: "Solo necesitas una cuenta de Google. Se guarda solo en la nube." },
+      { n: "Word para la web", l: "W", c: "#2b579a", lic: "gratis", donde: ["web"], d: "El mismo Word, gratis en el navegador con una cuenta Microsoft." },
+      { n: "LibreOffice Writer", lg: "libreoffice", c: "#18a303", lic: "libre", donde: ["pc"], d: "Abre y guarda archivos .docx. Funciona sin internet." },
+      { n: "ONLYOFFICE", lg: "onlyoffice", c: "#444", lic: "libre", donde: ["pc", "cel"], d: "Se ve muy parecido a Word." } ] },
+  { e: "📊", n: "Hacer una tabla o un balance hídrico",
+    f: { n: "Microsoft Excel", l: "X", c: "#217346", lic: "pago", donde: ["pc"], d: "Parte de Microsoft 365." },
+    a: [
+      { n: "Hojas de cálculo de Google", lg: "googlesheets", c: "#34a853", lic: "gratis", donde: ["web", "cel"], d: "Fórmulas, gráficos y trabajo en equipo en tiempo real." },
+      { n: "Excel para la web", l: "X", c: "#217346", lic: "gratis", donde: ["web"], d: "Gratis en el navegador con una cuenta Microsoft." },
+      { n: "LibreOffice Calc", lg: "libreoffice", c: "#18a303", lic: "libre", donde: ["pc"], d: "Abre y guarda archivos .xlsx." } ] },
+  { e: "🎤", n: "Preparar una exposición",
+    f: { n: "Microsoft PowerPoint", l: "P", c: "#c43e1c", lic: "pago", donde: ["pc"], d: "Parte de Microsoft 365." },
+    a: [
+      { n: "Presentaciones de Google", lg: "googleslides", c: "#f4b400", lic: "gratis", donde: ["web", "cel"], d: "Pueden editarla varios compañeros a la vez." },
+      { n: "Canva", lg: "canva", c: "#00c4cc", lic: "freemium", donde: ["web", "cel"], d: "Miles de plantillas listas. Lo básico es gratis." },
+      { n: "PowerPoint para la web", l: "P", c: "#c43e1c", lic: "gratis", donde: ["web"], d: "Gratis con una cuenta Microsoft." },
+      { n: "LibreOffice Impress", lg: "libreoffice", c: "#18a303", lic: "libre", donde: ["pc"], d: "Abre y guarda archivos .pptx." } ] },
+  { e: "📄", n: "Leer, rellenar o firmar un PDF",
+    f: { n: "Adobe Acrobat Pro", lg: "adobeacrobatreader", c: "#b30b00", lic: "pago", donde: ["pc"], d: "Para editar el PDF por completo. Suscripción." },
+    a: [
+      { n: "Tu navegador", l: "🌐", c: "#2f63e0", lic: "incluido", donde: ["pc", "cel"], d: "Chrome, Edge y Firefox abren PDF. Edge y Firefox permiten escribir y firmar." },
+      { n: "Adobe Acrobat Reader", lg: "adobeacrobatreader", c: "#ec1c24", lic: "gratis", donde: ["pc", "cel"], d: "La versión gratuita: leer, rellenar y firmar." },
+      { n: "LibreOffice Draw", lg: "libreoffice", c: "#18a303", lic: "libre", donde: ["pc"], d: "Permite cambiar textos e imágenes de un PDF." } ] },
+  { e: "🖼️", n: "Editar una foto o un afiche",
+    f: { n: "Adobe Photoshop", lg: "adobephotoshop", c: "#001e36", lic: "pago", donde: ["pc"], d: "El más conocido. Suscripción." },
+    a: [
+      { n: "Canva", lg: "canva", c: "#00c4cc", lic: "freemium", donde: ["web", "cel"], d: "Afiches, infografías y tarjetas con plantillas." },
+      { n: "GIMP", lg: "gimp", c: "#5c5543", lic: "libre", donde: ["pc"], d: "Editor de fotos completo, gratis para siempre." },
+      { n: "Photopea", lg: "photopea", c: "#18a497", lic: "gratis", donde: ["web"], d: "Parecido a Photoshop, dentro del navegador. Tiene anuncios." },
+      { n: "Fotos de Windows", l: "🖼", c: "#0078d4", lic: "incluido", donde: ["pc"], d: "Recortar, enderezar y mejorar la luz. Ya viene instalado." } ] },
+  { e: "🎬", n: "Ver o editar un video",
+    f: { n: "Adobe Premiere Pro", l: "Pr", c: "#2a0a5e", lic: "pago", donde: ["pc"], d: "Editor profesional. Suscripción." },
+    a: [
+      { n: "VLC", lg: "vlcmediaplayer", c: "#ff8800", lic: "libre", donde: ["pc", "cel"], d: "Reproduce casi cualquier video o audio." },
+      { n: "Clipchamp", l: "C", c: "#7a3fe4", lic: "incluido", donde: ["pc", "web"], d: "Editor de video que ya viene con Windows 11." },
+      { n: "CapCut", l: "✂", c: "#111", lic: "freemium", donde: ["cel", "pc"], d: "Muy usado en el celular para cortar y subtitular." },
+      { n: "Shotcut", l: "S", c: "#115c9e", lic: "libre", donde: ["pc"], d: "Editor completo y gratis." } ] },
+  { e: "🗜️", n: "Comprimir o abrir un .zip / .rar",
+    f: { n: "WinRAR", l: "R", c: "#6b2e8f", lic: "prueba", donde: ["pc"], d: "Prueba de 40 días; luego pide comprar la licencia." },
+    a: [
+      { n: "El propio Windows", l: "⊞", c: "#0078d4", lic: "incluido", donde: ["pc"], d: "Clic derecho → Comprimir. Windows 11 ya abre .zip, .rar y .7z." },
+      { n: "7-Zip", lg: "7zip", c: "#111", lic: "libre", donde: ["pc"], d: "Abre casi cualquier archivo comprimido." } ] },
+  { e: "🛡️", n: "Proteger la computadora",
+    f: { n: "Antivirus de pago", l: "🛡", c: "#7c7763", lic: "pago", donde: ["pc"], d: "Suscripción anual." },
+    a: [
+      { n: "Microsoft Defender", l: "🛡", c: "#0078d4", lic: "incluido", donde: ["pc"], d: "Ya viene en Windows 10 y 11 y protege bien si lo mantienes actualizado." },
+      { n: "Tu sentido común", l: "🧠", c: "#35513f", lic: "gratis", donde: ["pc", "cel"], d: "No instalar cracks ni abrir enlaces raros evita la mayoría de los problemas." } ] },
+];
+$("#tareas").innerHTML = TAREAS.map((t, k) => `<button class="chip-t" data-k="${k}"><span>${t.e}</span>${t.n}</button>`).join("");
+function verTarea(b, sonar = true) {
+  const t = TAREAS[b.dataset.k];
+  $$(".chip-t").forEach(x => x.classList.toggle("on", x === b)); b.classList.add("visto");
+  $("#tarea-panel").innerHTML = `<p class="eti" style="margin-bottom:6px!important">La famosa</p>
+    <div class="famosa">${mosaico(t.f, "xl")}<div><h3>${t.f.n}</h3><div class="bds">${badges(t.f)}</div><p>${t.f.d}</p></div></div>
+    <p class="eti" style="margin:6px 0!important">Alternativas legales</p>
+    <div class="alts-t">${t.a.map((a, j) => `<div class="alt" style="animation-delay:${j * .08}s">${mosaico(a)}<div><h3>${a.n}</h3><div class="bds">${badges(a)}</div><p>${a.d}</p></div></div>`).join("")}</div>`;
+  if (sonar) tono(660, .12);
+}
+$("#tareas").addEventListener("click", e => { const b = e.target.closest(".chip-t"); if (b) verTarea(b); });
+verTarea($(".chip-t"), false);
+
+/* ---------- navegador simulado ---------- */
+function wavLatido() {
+  const sr = 22050, dur = 6, n = sr * dur, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+  const w = (o, s) => [...s].forEach((c, k) => v.setUint8(o + k, c.charCodeAt(0)));
+  w(0, "RIFF"); v.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, n * 2, true);
+  const T = 60 / 72;
+  for (let k = 0; k < n; k++) {
+    const t = k / sr, f = t % T; let s = 0;
+    if (f < .12) s += Math.sin(2 * Math.PI * 55 * f) * Math.exp(-f * 30);                    // «lub»
+    if (f > .28 && f < .38) s += .8 * Math.sin(2 * Math.PI * 75 * (f - .28)) * Math.exp(-(f - .28) * 35); // «dub»
+    if (f < .09) s += .25 * Math.sin(2 * Math.PI * 1000 * t);                                  // bip del monitor
+    v.setInt16(44 + k * 2, Math.max(-1, Math.min(1, s)) * 26000, true);
+  }
+  return new Blob([buf], { type: "audio/wav" });
+}
+const NOTAS = `NOTAS DEL TURNO NOCHE — Servicio de Medicina (datos ficticios)
+==============================================================
+
+Cama 12-B · María Q.
+- 22:00 Descansa tranquila. SatO2 97 %.
+- 02:00 Refiere dolor leve (3/10). Se reposiciona.
+- 05:30 Control de funciones vitales: estable.
+
+Cama 14-A · Jorge R.
+- 23:00 Balance hídrico: ingresos 1 800 mL / egresos 1 500 mL.
+- 04:00 Glucosa capilar: 110 mg/dL.
+
+Pendientes para el turno mañana:
+[ ] Curación de la cama 14-A
+[ ] Recoger resultados de laboratorio
+
+Este archivo es de texto simple (.txt): lo abre cualquier navegador,
+celular o computadora, sin programas especiales.`;
+let urlAct = null;
+const vista = $("#vista");
+function soltarUrl() { if (urlAct) { URL.revokeObjectURL(urlAct); urlAct = null; } }
+function inicioNav() {
+  soltarUrl(); vista.className = "vista";
+  vista.innerHTML = `<div class="inicio-nav"><div class="g"><span>B</span><span>u</span><span>s</span><span>c</span><span>a</span><span>r</span></div><p class="peq">Elige un archivo de la izquierda o arrastra uno de tu computadora aquí.</p></div>`;
+  $("#pest-ico").textContent = "🌐"; $("#pest-t").textContent = "Nueva pestaña";
+  $("#dir").innerHTML = `<span class="gris">Busca en Google o escribe una URL</span>`;
+}
+function pintarDir(nombre) {
+  $("#dir").innerHTML = `<span class="gris">file:///C:/Users/Alumno/Descargas/</span>${escH(nombre)}`;
+  $("#pest-t").textContent = nombre;
+}
+function explica(html) { $("#explica").innerHTML = `<p>${html}</p>`; }
+const EXT = n => (n.split(".").pop() || "").toLowerCase();
+function mostrar({ nombre, url, tipo, propio }) {
+  vista.className = "vista"; pintarDir(nombre);
+  if (tipo === "pdf") {
+    vista.classList.add("oscura"); $("#pest-ico").textContent = "📄";
+    vista.innerHTML = `<iframe src="${url}" title="${escH(nombre)}"></iframe>`;
+    explica(`📄 El navegador trae su <b>propio lector de PDF</b>: zoom, buscar (<kbd>Ctrl</kbd>+<kbd>F</kbd>), imprimir y descargar. <a href="${url}" target="_blank" rel="noopener">¿No se ve? Ábrelo en una pestaña nueva ↗</a>`);
+  } else if (tipo === "img") {
+    $("#pest-ico").textContent = "🖼️"; vista.style.background = "#0e0e0e";
+    vista.innerHTML = `<img class="ver-img" src="${url}" alt="${escH(nombre)}">`;
+    explica(`🖼️ Las <b>fotos</b> (JPG, PNG, GIF, WEBP) se ven directamente. Con <kbd>Ctrl</kbd>+<kbd>+</kbd> haces zoom.`);
+  } else if (tipo === "audio") {
+    $("#pest-ico").textContent = "🔊"; vista.classList.add("oscura");
+    vista.innerHTML = `<div class="reproductor">${propio ? "<span style='font-size:3rem'>🎵</span>" : "<span class='corazon'>❤️</span><canvas class='ecg' id='ecg' width='420' height='70'></canvas>"}<audio controls src="${url}"></audio><span class="peq" style="color:#ddd">${propio ? "Tu audio" : "72 latidos por minuto · con el «bip» del monitor"}</span></div>`;
+    const au = $("audio", vista); au.play().catch(() => {});
+    if (!propio) ecg();
+    explica(`🔊 El navegador también es un <b>reproductor de audio y video</b> (MP3, WAV, MP4, WEBM…).`);
+  } else if (tipo === "video") {
+    $("#pest-ico").textContent = "🎬"; vista.style.background = "#000";
+    vista.innerHTML = `<video controls src="${url}"></video>`;
+    explica(`🎬 Tu video se reproduce en el navegador, sin instalar ningún reproductor.`);
+  } else if (tipo === "txt") {
+    $("#pest-ico").textContent = "📃";
+    vista.innerHTML = `<iframe src="${url}" title="${escH(nombre)}"></iframe>`;
+    explica(`📃 Los archivos de <b>texto simple</b> (.txt, .csv) se leen sin ningún programa.`);
+  } else {
+    $("#pest-ico").textContent = "⬇️";
+    const ex = EXT(nombre);
+    const office = ["doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods", "odp"].includes(ex);
+    vista.innerHTML = `<div class="no-abre"><h3>😕 El navegador no muestra este archivo por sí solo</h3>
+      <p class="peq" style="margin:0!important">Lo que hace es <b>descargarlo</b>. ${office ? "Pero sigues sin necesitar Office pirata:" : "Busca una aplicación gratis y legal que lo abra."}</p>
+      ${office ? `<ol><li>Súbelo a <b>Google Drive</b> → doble clic → se abre con Google Docs, Hojas o Presentaciones.</li><li>Súbelo a <b>OneDrive</b> → se abre con Word, Excel o PowerPoint para la web.</li><li>O instálale <b>LibreOffice</b>, gratis y libre.</li></ol>` : ""}</div>
+      <div class="bajada"><span class="ext">${escH(ex.toUpperCase() || "?")}</span><b>${escH(nombre)}</b><span class="peq" style="margin-left:auto">Descarga completa · Abrir en la carpeta</span></div>`;
+    explica(office ? `📘 Word, Excel y PowerPoint no se abren solos… pero <b>el navegador + Drive u OneDrive</b> sí los abren, gratis y sin instalar nada.` : `⬇️ Este tipo de archivo se descarga. ¡Pero nada salió de tu computadora: no se subió a internet!`);
+  }
+}
+let ecgRaf = 0;
+function ecg() {
+  cancelAnimationFrame(ecgRaf);
+  const c = $("#ecg"); if (!c) return; const g = c.getContext("2d"); let x = 0, t0 = performance.now(), py = 40;
+  g.fillStyle = "#525659"; g.fillRect(0, 0, c.width, c.height);
+  (function paso(ts) {
+    if (!document.body.contains(c)) return;
+    const t = (ts - t0) / 1000, f = t % (60 / 72);
+    let y = 40;
+    if (f > .02 && f < .06) y = 40 - (f - .02) * 120;
+    else if (f >= .06 && f < .09) y = 35 + (f - .06) * -900;
+    else if (f >= .09 && f < .13) y = 8 + (f - .09) * 1500;
+    else if (f >= .13 && f < .16) y = 68 - (f - .13) * 930;
+    else if (f > .32 && f < .44) y = 40 - Math.sin((f - .32) / .12 * Math.PI) * 8;
+    g.fillStyle = "#525659"; g.fillRect(x + 1, 0, 14, c.height);
+    g.strokeStyle = "#4ade80"; g.lineWidth = 2; g.beginPath(); g.moveTo(x - 2, py); g.lineTo(x, y); g.stroke();
+    py = y; x = (x + 2) % c.width; if (x === 0) py = 40;
+    ecgRaf = requestAnimationFrame(paso);
+  })(t0);
+}
+const EJEMPLOS = {
+  pdf: () => ({ nombre: "signos_vitales.pdf", url: R + "signos_vitales.pdf", tipo: "pdf" }),
+  jpg: () => ({ nombre: "foto_turno.jpg", url: R + "hd/enfermera.jpg", tipo: "img" }),
+  wav: () => { soltarUrl(); urlAct = URL.createObjectURL(wavLatido()); return { nombre: "latido.wav", url: urlAct, tipo: "audio" }; },
+  txt: () => { soltarUrl(); urlAct = URL.createObjectURL(new Blob([NOTAS], { type: "text/plain;charset=utf-8" })); return { nombre: "notas_turno.txt", url: urlAct, tipo: "txt" }; },
+  docx: () => ({ nombre: "informe.docx", url: "", tipo: "otro" }),
+};
+function tipoDe(f) {
+  const t = f.type || "", ex = EXT(f.name);
+  if (t === "application/pdf" || ex === "pdf") return "pdf";
+  if (t.startsWith("image/") && !["tif", "tiff", "heic"].includes(ex)) return "img";
+  if (t.startsWith("audio/")) return "audio";
+  if (t.startsWith("video/")) return "video";
+  if (t.startsWith("text/") || ["txt", "csv", "json", "md"].includes(ex)) return "txt";
+  return "otro";
+}
+function abrirPropio(f) {
+  if (!f) return;
+  soltarUrl(); urlAct = URL.createObjectURL(f);
+  $$(".arch").forEach(x => x.classList.toggle("on", x.dataset.f === "mio"));
+  vista.style.background = "";
+  mostrar({ nombre: f.name, url: urlAct, tipo: tipoDe(f), propio: true });
+  $("#explica").insertAdjacentHTML("beforeend", `<p class="peq">🔒 Tu archivo <b>no se subió a internet</b>: lo abrió tu propio navegador, dentro de tu computadora.</p>`);
+}
+$$(".arch").forEach(b => b.onclick = () => {
+  if (b.dataset.f === "mio") { $("#mi-arch").click(); return; }
+  $$(".arch").forEach(x => x.classList.toggle("on", x === b));
+  vista.style.background = ""; cancelAnimationFrame(ecgRaf);
+  mostrar(EJEMPLOS[b.dataset.f]());
+  tono(520, .1);
+});
+$("#mi-arch").onchange = e => { abrirPropio(e.target.files[0]); e.target.value = ""; };
+vista.addEventListener("dragover", e => { e.preventDefault(); vista.classList.add("arrastre"); });
+vista.addEventListener("dragleave", () => vista.classList.remove("arrastre"));
+vista.addEventListener("drop", e => { e.preventDefault(); vista.classList.remove("arrastre"); abrirPropio(e.dataTransfer.files[0]); });
+addEventListener("dragover", e => e.preventDefault()); addEventListener("drop", e => e.preventDefault());
+inicioNav();
+
+/* ---------- leer en voz alta ---------- */
+$("#voz").addEventListener("click", e => {
+  e.stopPropagation();
+  if (!("speechSynthesis" in window)) { e.target.textContent = "Tu navegador no tiene voz 😕"; return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance("Hola. Soy tu navegador. Puedo leerte en voz alta tus guías de estudio, los artículos y hasta los PDF, mientras tú descansas la vista.");
+  u.lang = "es-PE";
+  const voz = speechSynthesis.getVoices().find(v => v.lang.startsWith("es"));
+  if (voz) u.voice = voz;
+  u.rate = .95; speechSynthesis.speak(u);
+});
+
+/* ---------- imprimir como PDF ---------- */
+const impDest = $("#imp-dest");
+function pintarImp() {
+  const pdf = impDest.value === "pdf";
+  $("#imp-ok").textContent = pdf ? "Guardar" : "Imprimir";
+  $("#imp-hojas").textContent = pdf ? "1 página" : "1 hoja de papel";
+  $("#imp-msg").textContent = ""; $("#imp-msg").className = "imp-msg";
+  impDest.classList.remove("ojo");
+}
+impDest.onchange = pintarImp;
+$("#imp-dis").onchange = e => $("#pag").classList.toggle("hor", e.target.value === "h");
+$("#imp-ok").onclick = () => {
+  const m = $("#imp-msg");
+  if (impDest.value === "pdf") { m.className = "imp-msg ok"; m.innerHTML = "✔ Se guardó <b>resultados_laboratorio.pdf</b> en Descargas. Ya puedes enviarlo por correo o subirlo al aula virtual."; tono(780, .2); }
+  else { m.className = "imp-msg mal"; m.textContent = "🖨️ «La impresora no tiene papel» 😅 ¿Y si cambias el Destino a «Guardar como PDF»?"; impDest.classList.add("ojo"); tono(200, .25, "sawtooth"); }
+};
+
+/* ---------- medicamento falso ---------- */
+$$(".elige").forEach(b => b.onclick = () => {
+  const ok = b.dataset.m === "a";
+  $("#medic").classList.add("listo");
+  $(".elige.a span").textContent = "A · FALSIFICADO"; $(".elige.b span").textContent = "B · Original";
+  $("#medic-r").innerHTML = (ok ? "✔ ¡Bien visto! " : "✘ Era el otro. ") + "El <b>A</b> es falsificado. Solo se notó con la luz especial de un detector de la FDA (la agencia de medicamentos de EE. UU.): <b>a simple vista eran casi iguales</b>.";
+  tono(ok ? 660 : 200, .25, ok ? "sine" : "sawtooth");
+});
+
+/* ---------- web trampa ---------- */
+const TRAMPAS = [
+  "🔓 <b>«No seguro» y dominio raro</b> (.xyz, .top, .click): no es la página oficial de Microsoft.",
+  "📢 <b>MAYÚSCULAS, emojis y «100 % sin virus»</b>: nadie serio necesita gritar que no tiene virus.",
+  "🛑 <b>«Desactiva tu antivirus»</b>: la señal más grave. Te piden apagar la alarma para entrar.",
+  "📦 <b>Un .exe de 2,4 MB</b>: Office real pesa varios gigabytes. Eso no es Office: es otro programa.",
+  "🔑 <b>ZIP con contraseña</b>: así evitan que el antivirus revise lo que hay dentro.",
+  "💬 <b>Comentarios falsos</b>: todos iguales, con emojis y sin detalles. Los escribe el mismo estafador.",
+  "🎯 <b>Muchos botones de «Descargar»</b>: casi todos son anuncios que llevan a más programas maliciosos.",
+];
+const trVistas = new Set();
+function pintarTr() {
+  $("#tr-n").textContent = trVistas.size + " / 7";
+  $("#tr-l").innerHTML = [...trVistas].map(k => `<li value="${k + 1}">${TRAMPAS[k]}</li>`).join("");
+  $$(".trampa").forEach(t => { const k = +t.dataset.t; t.classList.toggle("vista-t", trVistas.has(k)); t.dataset.n = k + 1; });
+  if (trVistas.size === 7) $("#tr-l").insertAdjacentHTML("afterend", '<p id="tr-fin" class="peq" style="color:var(--ok);font-weight:700;margin-top:6px!important">🏆 ¡Las encontraron todas! Si ven una sola de estas señales, cierren la página.</p>');
+  else $("#tr-fin")?.remove();
+}
+$$(".trampa").forEach(t => t.onclick = () => { if (!trVistas.has(+t.dataset.t)) { trVistas.add(+t.dataset.t); tono(300 + trVistas.size * 60, .15); pintarTr(); } });
+$("#tr-todas").onclick = () => { TRAMPAS.forEach((_, k) => trVistas.add(k)); pintarTr(); };
+$("#tr-re").onclick = () => { trVistas.clear(); pintarTr(); };
+pintarTr();
+
+/* ---------- instalador pirata ---------- */
+const PASOS = [
+  [8, "Extrayendo archivos…", "Copiando «activador.exe» a una carpeta oculta del sistema", 0],
+  [18, "Preparando instalación…", "Desactivando Microsoft Defender y las actualizaciones de Windows", 1],
+  [32, "Instalando Word…", "Leyendo las contraseñas guardadas en el navegador: 23 encontradas", 1],
+  [46, "Instalando Excel…", "Copiando las sesiones abiertas de Gmail, Facebook y WhatsApp Web", 1],
+  [60, "Instalando PowerPoint…", "Enviando todo a un servidor desconocido en otro país", 1],
+  [74, "Configurando…", "Instalando un «minero»: usará tu procesador para ganar dinero para otro (la PC se pondrá lenta)", 1],
+  [88, "Activando licencia…", "Creando un acceso remoto escondido para volver cuando quieran", 1],
+  [100, "", "Borrando las huellas del instalador", 0],
+];
+let instT = [];
+function pararInst() { instT.forEach(clearTimeout); instT = []; }
+function resetInst() {
+  pararInst();
+  $("#inst-b").style.width = "0"; $("#inst-e").textContent = "Listo para instalar."; $("#detras-l").innerHTML = "";
+  $("#inst-go").disabled = false; $("#inst-go").textContent = "▶ Instalar";
+}
+$("#inst-go").onclick = () => {
+  resetInst(); $("#inst-go").disabled = true;
+  PASOS.forEach(([p, est, det, mal], k) => instT.push(setTimeout(() => {
+    $("#inst-b").style.width = p + "%";
+    $("#inst-e").innerHTML = p === 100 ? '<span class="inst-ok">✔ ¡Office activado para siempre! Disfrútalo 😉</span>' : est;
+    $("#detras-l").insertAdjacentHTML("beforeend", `<div class="lin ${mal ? "mal" : ""}">${mal ? "⚠" : "›"} ${det}</div>`);
+    if (mal && !$("#detras").classList.contains("tapado")) tono(180, .12, "square");
+    if (p === 100) {
+      $("#detras-l").insertAdjacentHTML("beforeend", `<div class="lin" style="color:#f0c27b;margin-top:6px">El Word funciona… y tú no te enteraste de nada de esto.</div>`);
+      $("#inst-go").disabled = false; $("#inst-go").textContent = "↺ Repetir";
+    }
+  }, 900 + k * 1300)));
+};
+$("#inst-ver").onclick = () => { const d = $("#detras").classList.toggle("tapado"); $("#inst-ver").textContent = d ? "👁️ Ver lo que pasa por detrás" : "🙈 Ocultar"; };
+
+/* ---------- ¿qué harías? ---------- */
+const ESC = [
+  { s: "📄 El docente envió la guía de práctica en PDF y tu laptop no tiene Adobe.",
+    o: [["Busco «Adobe Acrobat Pro full crack»", "no", "Totalmente innecesario: arriesgas tu PC por algo que ya tienes gratis."],
+        ["La abro con el navegador (Chrome, Edge o Firefox)", "si", "¡Exacto! El navegador ya trae un lector de PDF. Sin instalar nada."],
+        ["Le pido a alguien que me la imprima", "casi", "Funciona, pero gastas papel y dinero. El navegador lo resuelve en segundos."]] },
+  { s: "📝 Debes hacer un informe con tablas y tu computadora no trae Word.",
+    o: [["Uso un «activador de Office» que vi en un video", "no", "Los activadores son la forma más común de infectarse con programas que roban contraseñas."],
+        ["Uso Google Docs, Word para la web o LibreOffice", "si", "¡Bien! Las tres son gratis y legales, y guardan en formato .docx."],
+        ["Lo escribo a mano y le tomo foto", "casi", "Se puede entregar, pero no se ve profesional ni se puede corregir fácilmente."]] },
+  { s: "🗜️ Te mandaron un archivo .rar con las lecturas del curso.",
+    o: [["Descargo WinRAR crackeado", "no", "No hace falta: Windows 11 ya abre los .rar, y 7-Zip es gratis y libre."],
+        ["Lo subo a una página «descomprimir online» que no conozco", "casi", "Puede funcionar, pero subes tus archivos a un sitio desconocido. Mejor hazlo en tu PC."],
+        ["Lo abro con Windows 11 o instalo 7-Zip", "si", "¡Correcto! Gratis, legal y sin subir nada a internet."]] },
+  { s: "🧼 Quieres hacer un afiche sobre el lavado de manos para tu práctica comunitaria.",
+    o: [["Uso Canva o GIMP", "si", "¡Perfecto! Canva tiene plantillas listas y GIMP es un editor completo y libre."],
+        ["Busco «Photoshop gratis full» en una página de descargas", "no", "Esas páginas son exactamente las que acabamos de analizar: llenas de trampas."],
+        ["Descargo una «plantilla gratis» que viene como archivo .exe", "no", "Una plantilla nunca es un .exe. Un .exe es un programa: podría ser un virus."]] },
+  { s: "🛡️ Se venció tu antivirus de prueba y por WhatsApp te ofrecen una «licencia de por vida» a S/ 10.",
+    o: [["La compro: está baratísima", "no", "Son claves robadas o falsas. Y te pueden pedir datos de tu tarjeta."],
+        ["Activo Microsoft Defender, que ya viene en Windows", "si", "¡Así es! Es gratis, ya está instalado y se actualiza solo."],
+        ["Me quedo sin protección, total no pasa nada", "no", "Sin protección, cualquier USB o descarga puede infectar tu PC."]] },
+];
+let ei = 0, eres = [];
+function pintarEsc() {
+  $("#es-prog").innerHTML = ESC.map((_, k) => `<i class="${eres[k] === undefined ? (k === ei ? "act" : "") : eres[k] ? "bien" : "malo"}"></i>`).join("");
+  $("#es-fb").textContent = ""; $("#es-fb").className = "feedback"; $("#es-sig").style.display = "none";
+  if (ei >= ESC.length) {
+    const b = eres.filter(Boolean).length;
+    $("#es-num").textContent = "Resultado"; $("#es-s").textContent = `Elegiste la mejor opción en ${b} de ${ESC.length} situaciones ${b >= 4 ? "🏆" : "💪"}`;
+    $("#es-o").innerHTML = `<p>¿Notaste el patrón? <b>En todas había una opción gratis y legal.</b> Siempre hay otra opción.</p>`;
+    $("#es-sig").textContent = "↺ Empezar de nuevo"; $("#es-sig").style.display = ""; return;
+  }
+  const e = ESC[ei];
+  $("#es-num").textContent = `Situación ${ei + 1} de ${ESC.length}`; $("#es-s").textContent = e.s; $("#es-o").innerHTML = "";
+  e.o.forEach(([t, ok, fb], k) => {
+    const b = document.createElement("button"); b.textContent = String.fromCharCode(65 + k) + ") " + t;
+    b.onclick = () => {
+      eres[ei] = ok === "si";
+      $$("#es-o button").forEach((x, j) => { x.disabled = true; if (e.o[j][1] === "si") x.classList.add("bien"); });
+      if (ok !== "si") b.classList.add(ok === "no" ? "malo" : "casi");
+      $("#es-fb").className = "feedback " + (ok === "si" ? "ok" : ok === "no" ? "mal" : "casi");
+      $("#es-fb").textContent = (ok === "si" ? "✔ " : ok === "no" ? "✘ " : "≈ ") + fb;
+      tono(ok === "si" ? 660 : ok === "no" ? 200 : 420, .25, ok === "no" ? "sawtooth" : "sine");
+      $("#es-sig").textContent = ei === ESC.length - 1 ? "Ver resultado →" : "Siguiente situación →"; $("#es-sig").style.display = "";
+    };
+    $("#es-o").append(b);
+  });
+}
+$("#es-sig").onclick = () => { if (ei >= ESC.length) { ei = 0; eres = []; } else ei++; pintarEsc(); };
+pintarEsc();
+
+/* ---------- quiz ---------- */
+const QZ = [
+  ["¿Cuál de estas es una aplicación web (se usa desde el navegador)?", ["Bloc de notas", "Google Docs", "Paint", "7-Zip"], 1, "Google Docs funciona dentro del navegador: no se instala."],
+  ["¿Qué puedes abrir con el navegador sin instalar ningún programa?", ["Un PDF", "Un instalador .exe", "Un juego de PlayStation", "Ninguno"], 0, "El navegador trae su propio lector de PDF, además de fotos, audio, video y texto."],
+  ["«Software libre» significa que el programa…", ["Es pirata pero funciona", "Es gratis solo 30 días", "Es gratis y su código está abierto para todos", "Se puede usar sin computadora"], 2, "Libre: gratis y con el código abierto. Ej.: LibreOffice, GIMP, VLC."],
+  ["¿Por qué es peligroso instalar un programa crackeado?", ["Porque ocupa mucho espacio", "Porque puede traer virus que roban tus contraseñas", "Porque solo funciona en inglés", "No es peligroso"], 1, "Los cracks suelen traer programas que roban datos. Además, es ilegal."],
+  ["En el navegador, Ctrl + P también sirve para…", ["Pegar texto", "Cerrar la pestaña", "Guardar la página como PDF", "Poner pantalla completa"], 2, "En «Destino» eliges «Guardar como PDF»."],
+];
+let qi = 0, qpts = 0, qres = [];
+function pintarQuiz() {
+  $("#qz-prog").innerHTML = QZ.map((_, k) => `<i class="${qres[k] === undefined ? (k === qi ? "act" : "") : qres[k] ? "bien" : "malo"}"></i>`).join("");
+  $("#qz-fb").textContent = ""; $("#qz-fb").className = "feedback"; $("#qz-sig").style.display = "none";
+  if (qi >= QZ.length) {
+    $("#qz-num").textContent = "Resultado"; $("#qz-p").textContent = `${qpts} de ${QZ.length} correctas ${qpts >= 4 ? "🏆" : qpts >= 3 ? "👏" : "💪"}`;
+    $("#qz-a").innerHTML = ""; $("#qz-sig").textContent = "↺ Intentar de nuevo"; $("#qz-sig").style.display = ""; return;
+  }
+  $("#qz-num").textContent = `Pregunta ${qi + 1} de ${QZ.length}`; $("#qz-p").textContent = QZ[qi][0]; $("#qz-a").innerHTML = "";
+  QZ[qi][1].forEach((t, k) => {
+    const b = document.createElement("button"); b.textContent = String.fromCharCode(65 + k) + ") " + t;
+    b.onclick = () => {
+      const ok = k === QZ[qi][2]; qres[qi] = ok; if (ok) qpts++;
+      $$("#qz-a button").forEach((x, j) => { x.disabled = true; if (j === QZ[qi][2]) x.classList.add("bien"); });
+      if (!ok) b.classList.add("malo");
+      $("#qz-fb").className = "feedback " + (ok ? "ok" : "mal");
+      $("#qz-fb").textContent = (ok ? "✔ ¡Correcto! " : "✘ No. ") + QZ[qi][3];
+      tono(ok ? 660 : 200, .25, ok ? "sine" : "sawtooth");
+      $("#qz-sig").textContent = qi === QZ.length - 1 ? "Ver resultado →" : "Siguiente →"; $("#qz-sig").style.display = "";
+    };
+    $("#qz-a").append(b);
+  });
+}
+$("#qz-sig").onclick = () => { if (qi >= QZ.length) { qi = 0; qpts = 0; qres = []; } else qi++; pintarQuiz(); };
+pintarQuiz();
+
+/* ---------- al cambiar de diapositiva: detener audio, voz y animaciones ---------- */
+alCambiar.push(d => {
+  if (!d.contains($("#vista"))) { $$("#vista audio, #vista video").forEach(a => a.pause()); cancelAnimationFrame(ecgRaf); }
+  if (!d.contains($("#inst-go"))) resetInst();
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+});
+
+/* ---------- créditos ---------- */
+const CRED = [
+  ["Enfermera con estación de trabajo móvil", "Kgbo", "CC BY-SA 4.0", "Princess_Alexandra_Hospital_nurse_with_mobile_computer_work_station.jpg"],
+  ["Medicamento original y falsificado (detector CD-3)", "U.S. Food and Drug Administration", "Dominio público", "CD-3-_Fighting_Counterfeit_Drugs_(8674379559).jpg"],
+];
+$("#creditos").innerHTML = CRED.map(([f, a, l, u]) => `<div><a href="https://commons.wikimedia.org/wiki/File:${u}" target="_blank" rel="noopener">${f}</a> · ${a} · ${l}</div>`).join("") + '<div><a href="https://simpleicons.org" target="_blank" rel="noopener">Logotipos</a> · Simple Icons · CC0</div>';
+
+ir(i);
+</script>
+</body>
+</html>
