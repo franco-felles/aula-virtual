@@ -11,7 +11,7 @@
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <script src="../../../conexion/zoom.js" defer></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
 <style>
   :root { --vw: 1vw; }
   body.escalar { --vw: 11.4px; }
@@ -265,14 +265,51 @@
   .hoja b { display: block; font-size: .9rem; } .hoja small { display: block; color: var(--mut); margin-bottom: 8px; }
   .hoja table { font-size: .74rem; } .hoja th { font-size: .62rem; } .hoja td { height: 30px; border-bottom: 1px dotted #9aa; color: var(--mut); }
 
+  /* tarea: demostración animada */
+  .tarea-grid { grid-template-columns: .85fr 1.3fr; gap: 26px; align-items: start; }
+  .pasos { list-style: none; padding: 0 !important; margin: 0 0 14px !important; counter-reset: p; display: grid; gap: 7px; }
+  .pasos li { counter-increment: p; position: relative; padding: 8px 12px 8px 50px; border-radius: 12px; border: 2px solid transparent; margin: 0 !important;
+              font-size: clamp(.9rem, calc(var(--vw) * 1.6), 1.06rem) !important; line-height: 1.35 !important; transition: background .3s, border-color .3s, opacity .3s; opacity: .55; }
+  .pasos li::before { content: counter(p); position: absolute; left: 10px; top: 50%; translate: 0 -50%; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+                      background: var(--line); color: var(--ink); font: 700 .9rem "IBM Plex Mono", monospace; transition: background .3s; }
+  .pasos li.act { background: #fff; border-color: var(--amber); opacity: 1; box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+  .pasos li.act::before { background: var(--amber); color: #fff; }
+  .pasos li.ok { opacity: 1; } .pasos li.ok::before { content: "✓"; background: var(--ok); color: #fff; }
+  .hoja.demo { transform: rotate(.6deg); padding-right: 12px; }
+  .hoja.demo table { width: 100%; border-collapse: collapse; }
+  .hoja.demo th { text-align: left; padding: 4px 6px; border-bottom: 2px solid #9aa; vertical-align: bottom; }
+  .hoja.demo th small { display: inline; font-weight: 400; color: var(--mut); margin: 0; }
+  .hoja.demo td { padding: 3px 6px; vertical-align: top; height: 28px; transition: background .4s; }
+  .hoja.demo td:first-child { width: 34px; white-space: nowrap; color: var(--mut); font: 600 .7rem "IBM Plex Mono", monospace; padding-top: 7px; }
+  .hoja.demo .mano { font: 600 1.18rem/1.15 "Caveat", cursive; color: #1d3f9e; }
+  .hoja.demo ul { list-style: none; padding: 0; margin: 0; }
+  .hoja.demo li { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin: 0 0 2px !important; min-height: 24px; font-size: inherit !important; line-height: 1.15 !important; }
+  .hoja.demo .bd, .hoja.demo .don { opacity: 0; scale: .4; transition: opacity .25s, scale .35s cubic-bezier(.3,1.6,.5,1); }
+  .hoja.demo .don { font-size: .82rem; letter-spacing: 1px; }
+  .hoja.demo .pop .bd, .hoja.demo .pop .don { opacity: 1; scale: 1; }
+  .hoja.demo tr.brilla td { background: #fbf1e2; }
+  .hoja.demo tr.brilla td:first-child::after { content: " ✏️"; }
+  .cursor::after { content: "|"; color: var(--amber); font-family: "IBM Plex Sans", sans-serif; font-weight: 400; animation: parpadea .7s steps(1) infinite; }
+  @keyframes parpadea { 50% { opacity: 0; } }
+  .leyenda { font-size: .72rem; color: var(--mut); margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .demo-bts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ideas { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+  .ideas span { background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; font-size: .85rem; }
+  .revisa { display: grid; gap: 7px; }
+  .revisa button { display: flex; gap: 10px; align-items: center; text-align: left; width: 100%; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 9px 12px;
+                   font: 600 clamp(.88rem, calc(var(--vw) * 1.55), 1rem) "IBM Plex Sans", sans-serif; color: var(--ink); cursor: pointer; transition: border-color .2s, background .2s; }
+  .revisa button::before { content: ""; flex: none; width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--mut); display: grid; place-items: center; font-size: .85rem; }
+  .revisa button.ver { border-color: var(--ok); background: #eaf4ec; } .revisa button.ver::before { content: "✓"; background: var(--ok); border-color: var(--ok); color: #fff; }
+  .no-vale { background: #f8e9e6; border-left: 5px solid var(--bad); padding: 8px 12px; border-radius: 8px; }
+
   .creditos { columns: 2; column-gap: 28px; font-size: .78rem; line-height: 1.5; color: var(--mut); }
   .creditos div { break-inside: avoid; margin-bottom: 3px; }
   .creditos a { color: var(--moss); }
 
-  .dos > *, .lab-nav > *, .tarea-wrap > *, .rej > * { min-width: 0; }
+  .dos > *, .tarea-grid > *, .lab-nav > *, .tarea-wrap > *, .rej > * { min-width: 0; }
   @media (max-width: 760px) {
     .control { gap: 6px; } .control button { padding: 8px 10px; }
-    .dos, .dos.ancho, .dos.angosto, .lab-nav, .tarea-wrap, .nube, .imp { grid-template-columns: 1fr; gap: 14px; }
+    .dos, .dos.ancho, .dos.angosto, .tarea-grid, .lab-nav, .tarea-wrap, .nube, .imp { grid-template-columns: 1fr; gap: 14px; }
     .rej.c3, .rej.c4, .tipos, .alts-t { grid-template-columns: 1fr 1fr; }
     .tareas { grid-template-columns: 1fr 1fr; }
     .quiz .alts { grid-template-columns: 1fr; }
@@ -336,7 +373,7 @@
       <div>
         <h2>La aplicación (app)</h2>
         <div class="lee">
-          <p class="def">Es un <b class="k">programa</b> que usamos para hacer <b class="k">una tarea concreta</b>: escribir, calcular, ver un PDF, editar una foto, chatear… Funciona <b class="k">encima del sistema operativo</b>.</p>
+          <p class="def">Es un <b class="k">programa</b> que usamos para hacer <b class="k">una tarea concreta</b>: redactar documentos, calcular, ver un PDF, editar una foto, chatear… Funciona <b class="k">encima del sistema operativo</b>.</p>
         </div>
         <div class="tipos">
           <div class="tipo" style="--c:#6b4a8f"><h3>💻 De escritorio</h3><p class="peq" style="margin:0!important">Se <b>instala</b> en la computadora.</p>
@@ -647,32 +684,65 @@
     </ul>
   </section>
 
-  <!-- TAREA -->
-  <section class="diapo">
-    <p class="eti">Tarea ✍️</p>
-    <div class="dos ancho" style="gap:26px">
+  <!-- TAREA (1): demostración animada de cómo se llena la tabla -->
+  <section class="diapo" id="d-tarea">
+    <p class="eti">Tarea ✍️ · mira cómo se completa</p>
+    <h2>Mi botiquín de aplicaciones legales</h2>
+    <div class="dos tarea-grid">
       <div>
-        <h2>Mi botiquín de aplicaciones legales</h2>
-        <p>Completa una tabla con <b>5 tareas</b> que haces en la computadora o el celular (escribir, ver PDF, editar fotos, hacer exposiciones, comprimir archivos…). Para cada una escribe:</p>
-        <ul>
-          <li>🧰 La <b>tarea</b>.</li>
-          <li>💳 La aplicación <b>famosa</b> (o la que usabas).</li>
-          <li>✅ Una <b>alternativa gratis y legal</b> y su licencia (gratuita, libre, incluida…).</li>
-          <li>📍 Dónde funciona: 💻 se instala, 🌐 en el navegador o 📱 celular.</li>
-        </ul>
-        <p class="nota peq" style="margin-top:12px">Extra: abre un PDF con tu navegador y prueba escribir o resaltar algo encima (en Edge o Firefox). Escribe en una línea qué pudiste hacer.</p>
+        <ol class="pasos" id="pasos">
+          <li data-p="1">🧰 <b>Elige una tarea</b> que haces en la computadora o el celular.</li>
+          <li data-p="2">💳 Escribe la app <b>famosa</b> (o la que usabas).</li>
+          <li data-p="3">✅ Propón <b>hasta 4 alternativas</b> gratis y legales.</li>
+          <li data-p="4">🏷️ A cada una ponle su <b>licencia</b> y <b>dónde funciona</b>.</li>
+          <li data-p="5">🔁 Repite hasta completar <b>5 tareas</b>.</li>
+        </ol>
+        <div class="demo-bts">
+          <button class="bt" id="demo-play" type="button">↺ Ver de nuevo</button>
+          <button class="bt sec" id="demo-fin" type="button">⏭ Ver completo</button>
+        </div>
       </div>
-      <div class="hoja">
+      <div class="hoja demo">
         <b>Herramientas Informáticas · Tarea 4</b>
-        <small>Nombre: __________________</small>
+        <small>Nombre: <span class="mano">Ana Quispe</span> <span style="opacity:.6">(ejemplo)</span></small>
         <table>
-          <tr><th>Tarea</th><th>Famosa</th><th>Alternativa legal</th><th>📍</th></tr>
-          <tr><td>Escribir</td><td>Word</td><td>…</td><td>🌐</td></tr>
-          <tr><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td></tr>
+          <thead><tr><th>#</th><th>Tarea</th><th>App famosa</th><th>Alternativas gratis y legales <small>(hasta 4)</small></th></tr></thead>
+          <tbody>
+          <tr id="dm-fila"><td>1</td><td class="mano" id="dm-t"></td><td class="mano" id="dm-f"></td><td><ul id="dm-a"></ul></td></tr>
+          <tr><td>2</td><td></td><td></td><td></td></tr>
+          <tr><td>3</td><td></td><td></td><td></td></tr>
+          <tr><td>4</td><td></td><td></td><td></td></tr>
+          <tr><td>5</td><td></td><td></td><td></td></tr>
+          </tbody>
         </table>
+        <div class="leyenda"><span>📍 💻 se instala</span><span>🌐 en el navegador</span><span>📱 en el celular</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAREA (2): pistas y lista para revisar -->
+  <section class="diapo">
+    <p class="eti">Tarea ✍️ · antes de entregar</p>
+    <div class="dos" style="gap:28px; align-items:start">
+      <div>
+        <h2>Pistas para tu tabla</h2>
+        <h3>💡 Ideas de tareas</h3>
+        <div class="ideas"><span>📝 Redactar documentos</span><span>📊 Hacer tablas</span><span>🎤 Preparar exposiciones</span><span>📄 Leer o firmar PDF</span><span>🖼️ Editar fotos o afiches</span><span>🎬 Editar videos</span><span>🗜️ Comprimir archivos</span></div>
+        <h3>🔎 ¿Dónde encuentro alternativas?</h3>
+        <p class="peq" style="margin-bottom:6px!important">En el explorador «Una tarea, muchas aplicaciones» de esta presentación, o buscando en internet: <code>alternativa gratis a Photoshop</code>.</p>
+        <div class="bds" style="margin-bottom:12px"><span class="bd gratis">🆓 Gratis</span> <span class="bd libre">🕊️ Libre</span> <span class="bd incluido">✅ Incluido</span> <span class="bd freemium">🎁 Freemium</span></div>
+        <p class="no-vale peq" style="color:var(--ink)!important">🚫 <b>No vale:</b> versiones crackeadas, «Word full gratis» de páginas raras ni pruebas que caducan (⏳).</p>
+      </div>
+      <div>
+        <h3>☑️ Revisa antes de entregar <span class="peq">(toca cada una)</span></h3>
+        <div class="revisa">
+          <button type="button" data-revela>5 tareas distintas</button>
+          <button type="button" data-revela>Cada tarea con su app famosa</button>
+          <button type="button" data-revela>Hasta 4 alternativas por tarea (al menos 1)</button>
+          <button type="button" data-revela>Cada alternativa con su licencia y 📍 dónde funciona</button>
+          <button type="button" data-revela>Ninguna es pirata ni crackeada</button>
+        </div>
+        <p class="nota peq" style="margin-top:12px; color:var(--ink)!important">⭐ Extra: abre un PDF con tu navegador y prueba escribir o resaltar algo encima (en Edge o Firefox). Escribe en una línea qué pudiste hacer.</p>
       </div>
     </div>
   </section>
@@ -773,7 +843,7 @@ const badges = a => `<span class="bd ${a.lic}">${LIC[a.lic]}</span>` + a.donde.m
 
 /* ---------- una tarea, muchas apps ---------- */
 const TAREAS = [
-  { e: "📝", n: "Escribir un informe",
+  { e: "📝", n: "Redactar documentos",
     f: { n: "Microsoft Word", l: "W", c: "#2b579a", lic: "pago", donde: ["pc"], d: "Parte de Microsoft 365: suscripción mensual o anual." },
     a: [
       { n: "Google Docs", lg: "googledocs", c: "#4285f4", lic: "gratis", donde: ["web", "cel"], d: "Solo necesitas una cuenta de Google. Se guarda solo en la nube." },
@@ -1143,6 +1213,54 @@ function pintarQuiz() {
 }
 $("#qz-sig").onclick = () => { if (qi >= QZ.length) { qi = 0; qpts = 0; qres = []; } else qi++; pintarQuiz(); };
 pintarQuiz();
+
+/* ---------- tarea: la tabla se llena sola ---------- */
+const DEMO = { t: "Redactar documentos", f: "Microsoft Word", a: [
+  ["Google Docs", "gratis", ["web", "cel"]], ["Word para la web", "gratis", ["web"]],
+  ["LibreOffice Writer", "libre", ["pc"]], ["ONLYOFFICE", "libre", ["pc", "cel"]] ] };
+const DON = { pc: "💻", web: "🌐", cel: "📱" };
+let demoTok = 0;
+const espera = (ms, tok) => new Promise((ok, no) => setTimeout(() => tok === demoTok ? ok() : no("parado"), ms));
+async function teclea(el, txt, tok) {
+  el.classList.add("cursor");
+  try { for (const c of txt) { el.textContent += c; await espera(55, tok); } } finally { el.classList.remove("cursor"); }
+}
+const paso = n => $$("#pasos li").forEach(li => { const p = +li.dataset.p; li.classList.toggle("act", p === n); li.classList.toggle("ok", p < n); });
+const filasVacias = () => $$("#d-tarea tbody tr:not(#dm-fila)");
+function demoLimpiar() {
+  $("#dm-t").textContent = ""; $("#dm-f").textContent = "";
+  $("#dm-a").innerHTML = DEMO.a.map(([, lic, don]) => `<li><span class="mano"></span><span class="bd ${lic}">${LIC[lic]}</span><span class="don">${don.map(d => DON[d]).join("")}</span></li>`).join("");
+  filasVacias().forEach(r => r.classList.remove("brilla"));
+  paso(0);
+}
+async function demoCorrer() {
+  const tok = ++demoTok; demoLimpiar();
+  const alts = $$("#dm-a li");
+  try {
+    await espera(600, tok); paso(1); await teclea($("#dm-t"), DEMO.t, tok);
+    await espera(800, tok); paso(2); await teclea($("#dm-f"), DEMO.f, tok);
+    await espera(800, tok); paso(3);
+    for (const [k, li] of alts.entries()) { await teclea($(".mano", li), DEMO.a[k][0], tok); await espera(250, tok); }
+    await espera(600, tok); paso(4);
+    for (const li of alts) { li.classList.add("pop"); tono(700, .08); await espera(600, tok); }
+    await espera(700, tok); paso(5);
+    for (const r of filasVacias()) { r.classList.add("brilla"); await espera(350, tok); }
+    await espera(1200, tok); paso(6);
+  } catch (_) {}
+}
+function demoFin() {
+  ++demoTok; demoLimpiar();
+  $("#dm-t").textContent = DEMO.t; $("#dm-f").textContent = DEMO.f;
+  $$("#dm-a li").forEach((li, k) => { $(".mano", li).textContent = DEMO.a[k][0]; li.classList.add("pop"); });
+  filasVacias().forEach(r => r.classList.add("brilla"));
+  paso(6);
+}
+$("#demo-play").onclick = demoCorrer;
+$("#demo-fin").onclick = demoFin;
+alCambiar.push(d => {
+  if (d.id !== "d-tarea") { demoTok++; return; }
+  matchMedia("(prefers-reduced-motion: reduce)").matches ? demoFin() : demoCorrer();
+});
 
 /* ---------- al cambiar de diapositiva: detener audio, voz y animaciones ---------- */
 alCambiar.push(d => {
