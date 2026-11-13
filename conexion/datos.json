@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-12T02:00:18.386Z",
+ "generado": "2026-11-13T15:29:04.232Z",
  "v": 1,
  "clases": [
   {
@@ -28,9 +28,27 @@
    "tema": "APLICACIONES",
    "publicada": true,
    "conCopias": false
+  },
+  {
+   "id": "u1c5",
+   "tipo": "Clase",
+   "unidad": 1,
+   "n": 5,
+   "tema": "Google DOCS",
+   "publicada": true,
+   "conCopias": false
   }
  ],
- "enlaces": {},
+ "enlaces": {
+  "u1c5": [
+   {
+    "titulo": "Google DOCS",
+    "url": "https://docs.google.com/document/d/1rs9Lwb5XqeigIZfyPJgLtbkdF8TYbrJmeuEROktYwYI/edit?usp=drivesdk",
+    "tipo": "documento",
+    "para": "Todos"
+   }
+  ]
+ },
  "materiales": {
   "u1c1": [
    {
