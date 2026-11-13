@@ -52,5 +52,15 @@
       "descripcion": "Presentación interactiva: qué es una aplicación, alternativas gratis y legales para cada tarea, todo lo que puede abrir y hacer tu navegador web, y por qué piratear o crackear nunca es una opción. Incluye la tarea.",
       "orden": 1
     }
+  ],
+  "u1c5": [
+    {
+      "archivo": "m1c5.html",
+      "ruta": "clases/u1c5/material/m1c5.html",
+      "titulo": "Google Docs: ordena tu documento",
+      "tipo": "lectura",
+      "descripcion": "Guía en PDF con capturas paso a paso: encabezados, viñetas y numeración, tablas, números de página e índice automático. Termina con un reto: armar tu informe de práctica clínica.",
+      "orden": 1
+    }
   ]
 }
