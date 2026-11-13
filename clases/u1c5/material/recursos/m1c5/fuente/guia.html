@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Google Docs: ordena tu documento</title>
+<!-- Fuente del PDF. Para regenerarlo: ver LEEME en esta misma carpeta. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Roboto:wght@400;500&family=Caveat:wght@600&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --moss-bg: #eef3ec; --amber: #b3752c; --amber-bg: #fbf1e2;
+          --line: #d8d3c4; --mut: #6f6a57; --err: #a3312a; --err-bg: #fbeceb; --mark: #e8710a; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; background: #888; }
+  body { font-family: "IBM Plex Sans", sans-serif; color: var(--ink); font-size: 10.6pt; line-height: 1.45; }
+  .pag { width: 210mm; height: 297mm; background: var(--paper); margin: 0 auto 10mm; padding: 15mm 16mm 13mm; position: relative; overflow: hidden; page-break-after: always; break-after: page; display: flex; flex-direction: column; }
+  @media print { html, body { background: none; } .pag { margin: 0; } }
+  .pie { position: absolute; left: 16mm; right: 16mm; bottom: 7mm; display: flex; justify-content: space-between; font: 500 7.5pt "IBM Plex Mono", monospace; color: var(--mut); letter-spacing: .05em; text-transform: uppercase; }
+  h1 { font-size: 30pt; line-height: 1.05; letter-spacing: -.02em; margin: 0 0 10px; }
+  h2 { font-size: 19pt; line-height: 1.1; letter-spacing: -.01em; margin: 0 0 8px; }
+  h3 { font-size: 12pt; margin: 14px 0 5px; }
+  p { margin: 0 0 7px; }
+  ul, ol { margin: 0 0 8px; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+  .eti { font: 600 8pt "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--moss); margin: 0 0 6px; }
+  .num-sec { font: 600 40pt "IBM Plex Mono", monospace; color: var(--amber); line-height: 1; position: absolute; top: 13mm; right: 16mm; opacity: .9; }
+  .lead { font-size: 11.5pt; color: #2c3a33; }
+  kbd { font: 600 8.5pt "IBM Plex Mono", monospace; background: #fff; border: 1px solid var(--line); border-bottom-width: 2.5px; border-radius: 5px; padding: 0 5px; white-space: nowrap; }
+  .menu-ruta { font: 600 9pt "IBM Plex Mono", monospace; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; white-space: nowrap; }
+  .caja { border-radius: 10px; padding: 9px 12px; margin: 8px 0; font-size: 9.8pt; }
+  .caja b:first-child { display: block; font: 600 7.8pt "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 2px; }
+  .ojo { background: var(--amber-bg); border-left: 5px solid var(--amber); }
+  .ojo b:first-child { color: var(--amber); }
+  .tip { background: var(--moss-bg); border-left: 5px solid var(--moss); }
+  .tip b:first-child { color: var(--moss); }
+  .mal { background: var(--err-bg); border-left: 5px solid var(--err); }
+  .mal b:first-child { color: var(--err); }
+  .pasos { list-style: none; padding: 0; counter-reset: p; margin: 6px 0 8px; }
+  .pasos li { counter-increment: p; position: relative; padding-left: 28px; margin-bottom: 6px; }
+  .pasos li::before { content: counter(p); position: absolute; left: 0; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--mark); color: #fff; font: 700 9pt Roboto, sans-serif; display: grid; place-items: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .apila > ol:last-child { margin-top: 16px; }
+  .apila > div:last-child { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; align-items: start; margin-top: 6px; }
+  .apila > div:last-child > .caja { margin-top: 0; }
+  .cols-3 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; align-items: start; }
+  .pie-foto { font-size: 8.3pt; color: var(--mut); margin: 4px 2px 0; font-style: italic; }
+  .mano { font: 600 15pt Caveat, cursive; color: var(--mark); }
+  .crece { flex: 1; }
+
+  /* ====== Recreaciones de la interfaz de Google Docs ====== */
+  .cap { font-family: Roboto, Arial, sans-serif; color: #1f1f1f; font-size: 13px; line-height: 1.3; }
+  .cap * { box-sizing: border-box; }
+  .marco { border-radius: 10px; overflow: visible; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 6px 18px rgba(16,35,28,.14); background: #f9fbfd; border: 1px solid #d3d7dc; position: relative; }
+  .ms { font-family: "Material Symbols Outlined"; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; display: inline-block; vertical-align: middle; color: #444746; font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20; white-space: nowrap; direction: ltr; -webkit-font-smoothing: antialiased; }
+  .ms.f { font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 20; }
+  .barra-sup { display: flex; align-items: center; gap: 8px; padding: 8px 12px 2px; }
+  .logo-doc { width: 26px; height: 34px; flex: none; }
+  .titulo-doc { font-size: 17px; }
+  .titulo-doc .ms { font-size: 18px; margin-left: 6px; }
+  .menus { display: flex; gap: 2px; font-size: 13.5px; margin-top: 1px; }
+  .menus span { padding: 2px 6px; border-radius: 4px; }
+  .menus span.act { background: #d3e3fd; }
+  .der { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .compartir { background: #c2e7ff; border-radius: 99px; padding: 8px 16px 8px 12px; font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 6px; color: #001d35; }
+  .compartir .ms { font-size: 18px; color: #001d35; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: #35513f; color: #fff; display: grid; place-items: center; font-weight: 500; font-size: 14px; }
+  .herr { display: flex; align-items: center; gap: 2px; background: #edf2fa; border-radius: 24px; margin: 6px 10px 8px; padding: 3px 10px; height: 38px; white-space: nowrap; }
+  .herr .ms { padding: 4px 4px; border-radius: 4px; }
+  .sep { width: 1px; height: 20px; background: #c7c7c7; margin: 0 5px; flex: none; }
+  .desp { display: inline-flex; align-items: center; gap: 2px; padding: 3px 4px 3px 7px; border-radius: 4px; font-size: 13.5px; }
+  .desp .ms { padding: 0; font-size: 20px; }
+  .tam { display: inline-flex; align-items: center; gap: 2px; }
+  .tam b { font-weight: 400; border: 1px solid #747775; border-radius: 4px; padding: 1px 6px; font-size: 13px; }
+  .cuerpo { display: flex; border-top: 1px solid #e3e3e3; background: #f9fbfd; border-radius: 0 0 10px 10px; }
+  .lateral { width: 200px; flex: none; padding: 12px 10px; font-size: 12.5px; color: #444746; }
+  .lateral .cab { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #1f1f1f; margin-bottom: 12px; }
+  .pestana { background: #d3e3fd; border-radius: 99px; padding: 6px 10px; display: flex; align-items: center; gap: 6px; color: #041e49; font-weight: 500; }
+  .pestana .ms { font-size: 18px; color: #041e49; }
+  .esq { padding: 4px 0 0 18px; }
+  .esq div { padding: 3px 6px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .esq .n2 { padding-left: 18px; }
+  .esq .n3 { padding-left: 30px; }
+  .esq .on { color: #0b57d0; font-weight: 500; }
+  .lienzo { flex: 1; padding: 10px 18px 0; overflow: hidden; position: relative; }
+  .regla { height: 18px; background: #fff; border-bottom: 1px solid #e3e3e3; margin: 0 auto 10px; width: 92%; font-size: 9px; color: #80868b; display: flex; justify-content: space-around; align-items: center; }
+  .hoja { background: #fff; width: 92%; margin: 0 auto; box-shadow: 0 0 0 1px #e3e3e3, 0 1px 3px rgba(60,64,67,.15); padding: 26px 34px 14px; font-family: Arial, sans-serif; color: #000; font-size: 11px; min-height: 80px; }
+  .hoja .t { font-size: 22px; margin: 0 0 2px; }
+  .hoja .st { font-size: 13px; color: #666; margin: 0 0 12px; }
+  .hoja .h1 { font-size: 17px; margin: 12px 0 5px; }
+  .hoja .h2 { font-size: 14px; margin: 9px 0 4px; }
+  .hoja .h3 { font-size: 12.5px; color: #434343; margin: 8px 0 3px; }
+  .hoja p { margin: 0 0 5px; line-height: 1.45; }
+  .hoja ol, .hoja ul { margin: 0 0 5px; padding-left: 24px; line-height: 1.5; }
+  .hoja li { margin: 0; }
+  .falso-b { font-weight: 700; font-size: 14px; }
+
+  /* menús desplegables */
+  .menu { background: #fff; border-radius: 6px; box-shadow: 0 2px 6px 2px rgba(60,64,67,.15), 0 1px 2px rgba(60,64,67,.3); padding: 6px 0; font-size: 13.5px; min-width: 190px; position: relative; }
+  .menu .it { display: flex; align-items: center; gap: 12px; padding: 5px 14px 5px 12px; white-space: nowrap; }
+  .menu .it .ms { font-size: 19px; width: 20px; }
+  .menu .it .atajo { margin-left: auto; color: #5f6368; font-size: 12px; padding-left: 18px; }
+  .menu .it .flecha { margin-left: auto; padding-left: 18px; }
+  .menu .it.on { background: #e8eaed; }
+  .menu .it.vacio .ms { visibility: hidden; }
+  .menu .div { height: 1px; background: #e3e3e3; margin: 5px 0; }
+  .menu .it.check .ms { color: #1f1f1f; }
+
+  /* marca de paso */
+  .mk { position: relative; outline: 2.5px solid var(--mark); outline-offset: 1px; border-radius: 6px; }
+  .mk[data-n]::after { content: attr(data-n); position: absolute; top: -12px; right: -12px; width: 21px; height: 21px; border-radius: 50%; background: var(--mark); color: #fff; font: 700 12px/21px Roboto, sans-serif; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.35); z-index: 5; }
+  .mk.izq[data-n]::after { right: auto; left: -12px; }
+  .mk.abajo[data-n]::after { top: auto; bottom: -12px; }
+  .cursor { position: absolute; width: 20px; height: 24px; z-index: 6; }
+  .zoom { zoom: .72; }
+  .zoom-s { zoom: .8; }
+
+  /* tabla del documento */
+  .tbl { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 10.5px; }
+  .tbl td, .tbl th { border: 1px solid #000; padding: 4px 5px; text-align: left; vertical-align: top; }
+  .tbl th { background: #d9ead3; font-weight: 700; }
+  .tbl .sel { background: #c2dbff; }
+  .rejilla { display: grid; grid-template-columns: repeat(10, 15px); gap: 3px; padding: 6px 14px 4px; }
+  .rejilla i { width: 15px; height: 15px; border: 1px solid #dadce0; background: #fff; }
+  .rejilla i.on { background: #c2dbff; border-color: #4285f4; }
+  .rejilla-pie { text-align: center; font-size: 13px; padding-bottom: 4px; }
+
+  /* índice */
+  .toc div { display: flex; gap: 4px; font-family: Arial, sans-serif; font-size: 11px; margin: 2px 0; }
+  .toc div::after { content: ""; order: 1; flex: 1; border-bottom: 1.5px dotted #666; margin-bottom: 4px; }
+  .toc div span:last-child { order: 2; }
+  .toc .n2 { padding-left: 16px; }
+  .toc-azul div { font-family: Arial, sans-serif; font-size: 11px; color: #1155cc; text-decoration: underline; margin: 2px 0; }
+  .toc-azul .n2 { padding-left: 16px; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15); padding: 4px 6px; }
+  .chip .ms { padding: 3px; }
+
+  /* miniaturas de números de página */
+  .mini { display: flex; gap: 10px; padding: 6px 14px 8px; }
+  .mini > div { width: 42px; height: 54px; border: 1px solid #c7c7c7; background: #fff; position: relative; border-radius: 2px; }
+  .mini > div::before { content: ""; position: absolute; left: 7px; right: 7px; top: 16px; height: 22px; background: repeating-linear-gradient(#e3e3e3 0 2px, transparent 2px 6px); }
+  .mini b { position: absolute; right: 4px; font: 500 8px Roboto, sans-serif; color: #0b57d0; }
+  .mini .ar b { top: 3px; } .mini .ab b { bottom: 3px; }
+  .mini .on { outline: 2.5px solid var(--mark); outline-offset: 2px; }
+
+  .antes-despues { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ad-tit { font: 600 8pt "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 4px; }
+  .atajos { width: 100%; border-collapse: collapse; font-size: 9.8pt; }
+  .atajos td { padding: 5px 6px; border-bottom: 1px solid var(--line); }
+  .atajos td:first-child { white-space: nowrap; width: 1%; padding-right: 14px; }
+  .check { list-style: none; padding: 0; }
+  .check li { padding-left: 26px; position: relative; margin-bottom: 7px; }
+  .check li::before { content: ""; position: absolute; left: 0; top: 2px; width: 14px; height: 14px; border: 2px solid var(--moss); border-radius: 3px; background: #fff; }
+</style>
+</head>
+<body>
+
+<!-- SVG reutilizables -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="doc" viewBox="0 0 26 34">
+      <path d="M2 0h15l9 9v22a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V2a2 2 0 0 1 2-2z" fill="#4285f4"/>
+      <path d="M17 0l9 9h-7a2 2 0 0 1-2-2z" fill="#a1c2fa"/>
+      <rect x="6" y="15" width="14" height="2" fill="#fff"/><rect x="6" y="19" width="14" height="2" fill="#fff"/>
+      <rect x="6" y="23" width="14" height="2" fill="#fff"/><rect x="6" y="27" width="9" height="2" fill="#fff"/>
+    </symbol>
+    <symbol id="flecha" viewBox="0 0 20 24">
+      <path d="M2 1l15 13.5-6.5.7 3.8 7.6-2.9 1.4-3.7-7.7L2 21z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ 1. PORTADA ============ -->
+<section class="pag">
+  <p class="eti">Herramientas Informáticas · Guía práctica</p>
+  <h1>Google Docs:<br>ordena tu documento</h1>
+  <p class="lead">Un informe de enfermería se lee como una historia clínica: hay que encontrar rápido cada parte. En esta guía vas a aprender las cuatro herramientas que convierten un texto largo en un documento ordenado y profesional.</p>
+
+  <div class="cols" style="margin-top:10px">
+    <div class="caja tip" style="margin:0"><b>📌 Encabezados</b>Marcan los títulos de cada sección. Son la base de todo lo demás.</div>
+    <div class="caja tip" style="margin:0"><b>🔢 Viñetas y numeración</b>Listas de materiales y pasos de un procedimiento, en orden.</div>
+    <div class="caja tip" style="margin:0"><b>▦ Tablas</b>Registros como los signos vitales, en filas y columnas.</div>
+    <div class="caja tip" style="margin:0"><b>📑 Números de página e índice</b>Para que quien lea encuentre cada parte en segundos.</div>
+  </div>
+
+  <h3 style="margin-top:16px">El documento que vamos a armar</h3>
+  <p>Todas las capturas de esta guía usan el mismo ejemplo: un <b>informe de práctica clínica</b> sobre el control de signos vitales. Al final de la guía lo vas a hacer tú.</p>
+
+  <div class="cap marco zoom" style="margin-top:6px">
+    <div class="barra-sup">
+      <svg class="logo-doc"><use href="#doc"/></svg>
+      <div>
+        <div class="titulo-doc">Informe de práctica – Signos vitales <span class="ms">star</span><span class="ms">drive_file_move</span><span class="ms">cloud_done</span></div>
+        <div class="menus"><span>Archivo</span><span>Editar</span><span>Ver</span><span>Insertar</span><span>Formato</span><span>Herramientas</span><span>Extensiones</span><span>Ayuda</span></div>
+      </div>
+      <div class="der"><span class="ms">history</span><span class="ms">chat</span><span class="compartir"><span class="ms f">lock</span>Compartir</span><span class="avatar">A</span></div>
+    </div>
+    <div class="herr">
+      <span class="ms">search</span><span class="ms">undo</span><span class="ms">redo</span><span class="desp">100%<span class="ms">arrow_drop_down</span></span><span class="sep"></span>
+      <span class="desp">Texto normal<span class="ms">arrow_drop_down</span></span><span class="sep"></span><span class="desp">Arial<span class="ms">arrow_drop_down</span></span><span class="sep"></span>
+      <span class="tam"><span class="ms">remove</span><b>11</b><span class="ms">add</span></span><span class="sep"></span>
+      <span class="ms">format_bold</span><span class="ms">format_italic</span><span class="ms">format_underlined</span><span class="ms">format_color_text</span><span class="sep"></span>
+      <span class="ms">link</span><span class="sep"></span><span class="ms">format_align_left</span><span class="ms">format_line_spacing</span><span class="ms">checklist</span><span class="ms">format_list_bulleted</span><span class="ms">format_list_numbered</span>
+    </div>
+    <div class="cuerpo">
+      <div class="lateral">
+        <div class="cab"><span class="ms">arrow_back</span>Pestañas del documento</div>
+        <div class="pestana"><span class="ms">description</span>Pestaña 1</div>
+        <div class="esq">
+          <div>Índice</div><div>1. Introducción</div><div>2. Objetivos</div><div class="n2">2.1 Objetivo general</div><div class="n2">2.2 Objetivos específicos</div><div>3. Procedimiento</div><div>4. Registro de signos vitales</div><div>5. Conclusiones</div>
+        </div>
+      </div>
+      <div class="lienzo">
+        <div class="hoja">
+          <p class="t">Informe de práctica clínica</p>
+          <p class="st">Control de signos vitales en el servicio de Medicina</p>
+          <p style="font-weight:700;font-size:13px;margin-bottom:4px">Índice</p>
+          <div class="toc">
+            <div><span>1. Introducción</span><span>1</span></div><div><span>2. Objetivos</span><span>1</span></div><div class="n2"><span>2.1 Objetivo general</span><span>1</span></div>
+            <div><span>3. Procedimiento</span><span>2</span></div><div><span>4. Registro de signos vitales</span><span>2</span></div><div><span>5. Conclusiones</span><span>3</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="pie-foto">Recreación de la pantalla de Google Docs. Los colores y la posición de algunos botones pueden variar un poco en tu computadora.</p>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>1</span></div>
+</section>
+
+<!-- ============ 2. LA PANTALLA ============ -->
+<section class="pag">
+  <p class="eti">Antes de empezar</p>
+  <h2>Conoce la pantalla</h2>
+  <p>Entra a <b>docs.google.com</b> (o desde Drive: <span class="menu-ruta">Nuevo › Documentos de Google</span>). Ubica estas zonas, las vas a usar en toda la guía:</p>
+
+  <div class="cap marco zoom" style="margin:14px 0 6px">
+    <div class="barra-sup">
+      <svg class="logo-doc"><use href="#doc"/></svg>
+      <div>
+        <div class="titulo-doc"><span class="mk" data-n="1" style="padding:0 4px">Informe de práctica – Signos vitales</span> <span class="ms">star</span><span class="ms">cloud_done</span></div>
+        <div class="menus mk" data-n="2" style="display:inline-flex"><span>Archivo</span><span>Editar</span><span>Ver</span><span>Insertar</span><span>Formato</span><span>Herramientas</span><span>Extensiones</span><span>Ayuda</span></div>
+      </div>
+      <div class="der"><span class="ms">history</span><span class="ms">chat</span><span class="compartir mk" data-n="6"><span class="ms f">lock</span>Compartir</span><span class="avatar">A</span></div>
+    </div>
+    <div class="herr mk" data-n="3" style="outline-offset:2px">
+      <span class="ms">search</span><span class="ms">undo</span><span class="ms">redo</span><span class="desp">100%<span class="ms">arrow_drop_down</span></span><span class="sep"></span>
+      <span class="desp mk abajo" data-n="4" style="outline-color:#0b57d0">Texto normal<span class="ms">arrow_drop_down</span></span><span class="sep"></span><span class="desp">Arial<span class="ms">arrow_drop_down</span></span><span class="sep"></span>
+      <span class="tam"><span class="ms">remove</span><b>11</b><span class="ms">add</span></span><span class="sep"></span>
+      <span class="ms">format_bold</span><span class="ms">format_italic</span><span class="ms">format_underlined</span><span class="ms">format_color_text</span><span class="sep"></span>
+      <span class="ms">link</span><span class="sep"></span><span class="ms">format_align_left</span><span class="ms">format_line_spacing</span>
+      <span class="mk abajo" data-n="7" style="outline-color:#0b57d0;display:inline-flex"><span class="ms">checklist</span><span class="ms">format_list_bulleted</span><span class="ms">format_list_numbered</span></span>
+    </div>
+    <div class="cuerpo">
+      <div class="lateral mk izq" data-n="5" style="outline-offset:-3px">
+        <div class="cab"><span class="ms">arrow_back</span>Pestañas del documento</div>
+        <div class="pestana"><span class="ms">description</span>Pestaña 1</div>
+        <div class="esq"><div>1. Introducción</div><div>2. Objetivos</div><div class="n2">2.1 Objetivo general</div><div>3. Procedimiento</div></div>
+      </div>
+      <div class="lienzo">
+        <div class="regla"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+        <div class="hoja" style="min-height:150px">
+          <p class="h1">1. Introducción</p>
+          <p>Los signos vitales son la primera información que obtenemos del paciente: presión arterial, frecuencia cardiaca, frecuencia respiratoria, temperatura y saturación de oxígeno…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols" style="margin-top:12px">
+    <ol class="pasos" style="margin:0">
+      <li><b>Nombre del documento.</b> Haz clic y escribe un nombre claro. Se guarda solo en Drive (la nube ☁ lo confirma).</li>
+      <li><b>Barra de menús.</b> Aquí están <i>todas</i> las opciones. Vamos a usar mucho <b>Insertar</b> y <b>Formato</b>.</li>
+      <li><b>Barra de herramientas.</b> Los botones más usados, a un clic.</li>
+      <li><b>Estilos de párrafo.</b> Dice «Texto normal». Aquí se eligen los <b>encabezados</b>.</li>
+    </ol>
+    <ol class="pasos" style="margin:0" start="5">
+      <li style="counter-set:p 5"><b>Pestañas del documento.</b> Panel de la izquierda: muestra los títulos del documento como un mapa. Si no lo ves: <span class="menu-ruta">Ver › Mostrar pestañas</span>.</li>
+      <li><b>Compartir.</b> Para enviar el documento a tu docente o a tu grupo.</li>
+      <li><b>Listas.</b> Casillas, viñetas y numeración.</li>
+    </ol>
+  </div>
+
+  <div class="caja ojo"><b>¿No ves algún botón?</b>Si la ventana es angosta, Google Docs esconde los últimos botones detrás de <span class="ms" style="font-size:16px">more_vert</span> (tres puntitos) al final de la barra. También puedes alejar el navegador con <kbd>Ctrl</kbd> + <kbd>−</kbd>.</div>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>2</span></div>
+</section>
+
+<!-- ============ 3. ENCABEZADOS (1) ============ -->
+<section class="pag">
+  <span class="num-sec">01</span>
+  <p class="eti">Herramienta 1</p>
+  <h2>Encabezados de texto</h2>
+  <p class="lead">Un encabezado no es «texto en negrita y más grande». Es una etiqueta que le dice a Google Docs: <b>aquí empieza una sección</b>.</p>
+  <p>Se parece a los apartados de una historia clínica: <i>Anamnesis, Examen físico, Diagnóstico, Plan</i>. Cada apartado tiene su título, y algunos tienen subapartados.</p>
+
+  <h3>Los niveles</h3>
+  <div class="cols-3">
+    <div class="cap" style="position:relative;padding:4px 0 0">
+      <div class="herr zoom-s" style="margin:0 0 4px;width:max-content"><span class="ms">format_paint</span><span class="desp">100%<span class="ms">arrow_drop_down</span></span><span class="sep"></span><span class="desp mk" data-n="2" style="background:#d3e3fd">Encabezado 1<span class="ms">arrow_drop_down</span></span><span class="sep"></span><span class="desp">Arial<span class="ms">arrow_drop_down</span></span></div>
+      <div class="menu zoom-s" style="width:300px;margin-left:58px">
+        <div class="it"><span style="font-family:Arial;font-size:13px">Texto normal</span><span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span style="font-family:Arial;font-size:25px">Título</span><span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span style="font-family:Arial;font-size:17px;color:#666">Subtítulo</span><span class="flecha ms">arrow_right</span></div>
+        <div class="it on mk" data-n="3" style="outline-offset:-2px"><span style="font-family:Arial;font-size:20px">Encabezado 1</span><span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span style="font-family:Arial;font-size:16px">Encabezado 2</span><span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span style="font-family:Arial;font-size:14px;color:#434343">Encabezado 3</span><span class="flecha ms">arrow_right</span></div>
+        <div class="div"></div>
+        <div class="it"><span>Opciones</span><span class="flecha ms">arrow_right</span></div>
+      </div>
+      <svg class="cursor" style="left:150px;top:150px"><use href="#flecha"/></svg>
+    </div>
+    <div>
+      <table class="atajos">
+        <tr><td><b>Título</b></td><td>El nombre del documento. Uno solo, arriba.</td></tr>
+        <tr><td><b>Subtítulo</b></td><td>Opcional: aclara el título.</td></tr>
+        <tr><td><b>Encabezado 1</b></td><td>Secciones grandes: <i>1. Introducción</i>.</td></tr>
+        <tr><td><b>Encabezado 2</b></td><td>Partes de una sección: <i>2.1 Objetivo general</i>.</td></tr>
+        <tr><td><b>Encabezado 3</b></td><td>Partes más pequeñas, si hacen falta.</td></tr>
+        <tr><td><b>Texto normal</b></td><td>Todo lo demás: los párrafos.</td></tr>
+      </table>
+      <div class="caja ojo"><b>Según tu idioma</b>En algunas computadoras los niveles se llaman <b>Título 1, Título 2…</b> Son lo mismo.</div>
+    </div>
+  </div>
+
+  <h3>Cómo se aplica</h3>
+  <ol class="pasos">
+    <li>Escribe el título de la sección en su propia línea (por ejemplo, <i>Introducción</i>) y deja el cursor en esa línea. No hace falta seleccionarla toda.</li>
+    <li>Abre el menú de estilos, el que dice <b>Texto normal</b>.</li>
+    <li>Elige el nivel: <b>Encabezado 1</b> para una sección, <b>Encabezado 2</b> para una parte dentro de ella.</li>
+    <li>Presiona <kbd>Enter</kbd> y sigue escribiendo: la línea siguiente vuelve sola a <b>Texto normal</b>.</li>
+  </ol>
+
+  <div class="caja tip"><b>Más rápido con el teclado</b><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>1</kbd> pone Encabezado 1, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>2</kbd> Encabezado 2… y <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>0</kbd> regresa a Texto normal.</div>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>3</span></div>
+</section>
+
+<!-- ============ 4. ENCABEZADOS (2) ============ -->
+<section class="pag">
+  <p class="eti">Herramienta 1 · continúa</p>
+  <h2>¿Por qué no basta con poner negrita?</h2>
+  <p>A simple vista se ven parecidos. Pero mira el panel de la izquierda en cada caso:</p>
+
+  <div class="antes-despues" style="margin-top:8px">
+    <div>
+      <p class="ad-tit" style="color:var(--err)">✗ Negrita y tamaño 14 «a mano»</p>
+      <div class="cap marco zoom" style="display:flex">
+        <div class="lateral" style="width:170px;border-right:1px solid #e3e3e3">
+          <div class="cab"><span class="ms">arrow_back</span>Pestañas</div>
+          <div class="pestana"><span class="ms">description</span>Pestaña 1</div>
+          <div class="esq" style="color:#80868b;font-style:italic;padding-top:10px">Los encabezados que agregues al documento aparecerán aquí.</div>
+        </div>
+        <div class="lienzo" style="padding:12px 10px">
+          <div class="hoja" style="width:100%;padding:16px 18px;min-height:250px">
+            <p class="falso-b">Introducción</p><p>Los signos vitales son…</p>
+            <p class="falso-b">Objetivos</p><p>Aprender a medir…</p>
+            <p class="falso-b">Procedimiento</p><p>Primero se explica…</p>
+          </div>
+        </div>
+      </div>
+      <p class="pie-foto">El panel está vacío: Google Docs no sabe dónde empieza cada sección.</p>
+    </div>
+    <div>
+      <p class="ad-tit" style="color:var(--moss)">✓ Con Encabezado 1</p>
+      <div class="cap marco zoom" style="display:flex">
+        <div class="lateral mk izq" data-n="✓" style="width:170px;border-right:1px solid #e3e3e3;outline-color:#188038;outline-offset:-3px">
+          <div class="cab"><span class="ms">arrow_back</span>Pestañas</div>
+          <div class="pestana"><span class="ms">description</span>Pestaña 1</div>
+          <div class="esq"><div class="on">Introducción</div><div>Objetivos</div><div>Procedimiento</div></div>
+        </div>
+        <div class="lienzo" style="padding:12px 10px">
+          <div class="hoja" style="width:100%;padding:16px 18px;min-height:250px">
+            <p class="h1">Introducción</p><p>Los signos vitales son…</p>
+            <p class="h1">Objetivos</p><p>Aprender a medir…</p>
+            <p class="h1">Procedimiento</p><p>Primero se explica…</p>
+          </div>
+        </div>
+      </div>
+      <p class="pie-foto">Cada título aparece en el panel. Un clic y saltas a esa sección.</p>
+    </div>
+  </div>
+
+  <h3>Lo que ganas al usar encabezados</h3>
+  <ul>
+    <li><b>Navegar:</b> en un informe de 15 páginas, saltas a «Conclusiones» con un clic desde el panel.</li>
+    <li><b>Crear el índice automático</b> (herramienta 4). Sin encabezados, el índice sale vacío.</li>
+    <li><b>Cambiar el diseño de una sola vez:</b> si quieres todos tus Encabezado 1 en verde, cambias uno y actualizas el resto.</li>
+  </ul>
+
+  <h3>Cambiar el aspecto de todos los encabezados a la vez</h3>
+  <div class="apila">
+    <div class="cap">
+      <div class="menu zoom-s" style="width:340px">
+        <div class="it"><span style="font-family:Arial;font-size:20px">Encabezado 1</span><span class="flecha ms">arrow_right</span></div>
+        <div style="position:absolute;left:250px;top:-2px;width:390px" class="menu">
+          <div class="it">Aplicar «Encabezado 1»<span class="atajo">Ctrl+Alt+1</span></div>
+          <div class="it on mk" data-n="2" style="outline-offset:-2px">Actualizar «Encabezado 1» para que coincida</div>
+        </div>
+        <div class="it"><span style="font-family:Arial;font-size:16px">Encabezado 2</span><span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span style="font-family:Arial;font-size:14px;color:#434343">Encabezado 3</span><span class="flecha ms">arrow_right</span></div>
+      </div>
+    </div>
+    <ol class="pasos" style="margin:0">
+      <li>Cambia <b>un</b> Encabezado 1: color, tamaño o letra.</li>
+      <li>Con el cursor en ese encabezado, abre el menú de estilos, pasa por la flechita de <b>Encabezado 1</b> y elige <b>Actualizar «Encabezado 1» para que coincida</b>.</li>
+      <li>Todos los Encabezado 1 del documento cambian igual.</li>
+    </ol>
+  </div>
+  <div class="crece"></div>
+  <div class="caja mal"><b>Error frecuente</b>Poner un encabezado a un párrafo entero. El encabezado es solo la línea del título; el texto de abajo va en Texto normal.</div>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>4</span></div>
+</section>
+
+<!-- ============ 5. LISTAS ============ -->
+<section class="pag">
+  <span class="num-sec">02</span>
+  <p class="eti">Herramienta 2</p>
+  <h2>Viñetas y numeración</h2>
+  <p class="lead">Usa <b>viñetas</b> cuando el orden no importa (materiales) y <b>numeración</b> cuando sí importa (pasos de un procedimiento).</p>
+
+  <div class="cap" style="margin:8px 0 2px">
+    <div class="herr zoom-s" style="margin:0;width:max-content">
+      <span class="ms">format_align_left</span><span class="ms">format_line_spacing</span><span class="sep"></span>
+      <span class="mk abajo" data-n="A" style="display:inline-flex"><span class="ms">checklist</span></span><span style="width:8px"></span>
+      <span class="mk abajo" data-n="B" style="display:inline-flex"><span class="ms">format_list_bulleted</span><span class="ms">arrow_drop_down</span></span><span style="width:8px"></span>
+      <span class="mk abajo" data-n="C" style="display:inline-flex;background:#d3e3fd;border-radius:4px"><span class="ms">format_list_numbered</span><span class="ms">arrow_drop_down</span></span><span style="width:8px"></span>
+      <span class="mk abajo" data-n="D" style="display:inline-flex"><span class="ms">format_indent_decrease</span><span class="ms">format_indent_increase</span></span>
+      <span class="ms">format_clear</span>
+    </div>
+  </div>
+  <table class="atajos" style="margin:8px 0">
+    <tr><td><b>A · Lista de verificación</b></td><td>Casillas para marcar ✓. Útil para un checklist de turno.</td></tr>
+    <tr><td><b>B · Viñetas</b></td><td>Puntos. La flechita ▾ deja elegir otra forma (●, ➢, ■).</td></tr>
+    <tr><td><b>C · Numeración</b></td><td>1, 2, 3… La flechita ▾ deja elegir 1. / a. / i. / A.</td></tr>
+    <tr><td><b>D · Sangría</b></td><td>Mueve el renglón a la izquierda o a la derecha (sube o baja de nivel).</td></tr>
+  </table>
+
+  <div class="cols-3">
+    <div class="cap marco zoom" style="padding:12px">
+      <div class="hoja" style="width:100%;padding:18px 22px">
+        <p class="h1">3. Procedimiento</p>
+        <p class="h3" style="margin-top:4px">Materiales</p>
+        <ul><li>Tensiómetro (esfigmomanómetro)</li><li>Estetoscopio</li><li>Termómetro y pulsioxímetro</li><li>Hoja de registro</li></ul>
+        <p class="h3">Medición de la presión arterial</p>
+        <ol>
+          <li>Lavarse las manos.</li>
+          <li>Explicar el procedimiento al paciente.</li>
+          <li>Colocar al paciente sentado, con el brazo apoyado a la altura del corazón.</li>
+          <li>Colocar el manguito 2–3 cm sobre el pliegue del codo.
+            <ol type="a" style="padding-left:22px"><li class="mk" data-n="⇥" style="outline-offset:0;border-radius:3px">Ubicar la arteria braquial.</li><li>Colocar el estetoscopio sobre ella.</li></ol>
+          </li>
+          <li>Inflar, desinflar despacio y registrar.</li>
+        </ol>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Cómo se hace</h3>
+      <ol class="pasos">
+        <li>Selecciona los renglones (o colócate en uno vacío).</li>
+        <li>Haz clic en <b>viñetas</b> o en <b>numeración</b>.</li>
+        <li>Al presionar <kbd>Enter</kbd> aparece el siguiente punto o número. Para terminar la lista, presiona <kbd>Enter</kbd> dos veces.</li>
+      </ol>
+      <h3>Subniveles (1 → a)</h3>
+      <p>Al inicio del renglón presiona <kbd>Tab</kbd>: baja un nivel y el «5» se convierte en «a». Con <kbd>Shift</kbd> + <kbd>Tab</kbd> regresa.</p>
+      <div class="caja tip"><b>Atajos</b><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>7</kbd> numeración<br><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>8</kbd> viñetas<br><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>9</kbd> casillas</div>
+    </div>
+  </div>
+
+  <div class="crece"></div>
+  <div class="cols">
+    <div class="caja mal" style="margin:0"><b>No escribas los números a mano</b>Si escribes «1.», «2.», «3.» y luego agregas un paso en medio, tienes que renumerar todo. Con numeración automática se reordena sola.</div>
+    <div class="caja ojo" style="margin:0"><b>¿La lista empezó en 6 y no en 1?</b>Clic derecho sobre el número › <b>Reiniciar numeración</b>. Al revés, para seguir la anterior: <b>Continuar numeración anterior</b>.</div>
+  </div>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>5</span></div>
+</section>
+
+<!-- ============ 6. TABLAS (1) ============ -->
+<section class="pag">
+  <span class="num-sec">03</span>
+  <p class="eti">Herramienta 3</p>
+  <h2>Tablas</h2>
+  <p class="lead">Una tabla ordena datos en <b>filas</b> (horizontales) y <b>columnas</b> (verticales). Es lo que usas en la hoja de control de signos vitales.</p>
+
+  <h3>Insertar una tabla</h3>
+  <div class="apila">
+    <div class="cap" style="position:relative;height:225px">
+      <div class="menus zoom-s" style="background:#f9fbfd;border-radius:6px;padding:3px;width:max-content"><span>Archivo</span><span>Editar</span><span>Ver</span><span class="act mk" data-n="1">Insertar</span><span>Formato</span></div>
+      <div class="menu zoom-s" style="position:absolute;left:105px;top:30px;width:230px">
+        <div class="it"><span class="ms">image</span>Imagen<span class="flecha ms">arrow_right</span></div>
+        <div class="it on mk" data-n="2" style="outline-offset:-2px"><span class="ms">table</span>Tabla<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">widgets</span>Bloques de compilación<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">alternate_email</span>Chips inteligentes<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">link</span>Vínculo<span class="atajo">Ctrl+K</span></div>
+        <div class="it"><span class="ms">draw</span>Dibujo<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">insert_chart</span>Gráfico<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">emoji_symbols</span>Símbolos<span class="flecha ms">arrow_right</span></div>
+        <div class="div"></div>
+        <div class="it"><span class="ms">horizontal_rule</span>Línea horizontal</div>
+      </div>
+      <div class="menu zoom-s" style="position:absolute;left:275px;top:58px;min-width:0;width:auto">
+        <div class="it" style="padding-bottom:2px"><span class="ms">table_view</span>Plantillas de tablas<span class="flecha ms">arrow_right</span></div>
+        <div class="div"></div>
+        <div class="rejilla mk abajo" data-n="3" style="outline-offset:0;margin:4px 8px">
+          <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
+          <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
+          <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
+          <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="rejilla-pie">7 × 4</div>
+      </div>
+      <svg class="cursor" style="left:400px;top:178px"><use href="#flecha"/></svg>
+    </div>
+    <div>
+      <ol class="pasos">
+        <li>Pon el cursor donde irá la tabla y abre el menú <b>Insertar</b>.</li>
+        <li>Pasa el mouse por <b>Tabla</b>.</li>
+        <li>Mueve el mouse sobre la cuadrícula hasta pintar el tamaño que quieres y haz clic. Abajo dice cuántas: <b>columnas × filas</b>.</li>
+      </ol>
+      <div class="caja ojo"><b>Columnas × filas</b>«7 × 4» son 7 columnas y 4 filas. No te preocupes si te equivocas: se pueden agregar o quitar después.</div>
+    </div>
+  </div>
+
+  <h3>El resultado: una hoja de registro</h3>
+  <p>Escribe los títulos en la primera fila. Para pasar a la celda siguiente usa <kbd>Tab</kbd>; en la última celda, <kbd>Tab</kbd> crea una fila nueva.</p>
+  <div class="cap marco zoom" style="padding:14px;margin-top:4px">
+    <div class="hoja" style="width:100%;padding:18px 22px">
+      <p class="h1" style="margin-top:0">4. Registro de signos vitales</p>
+      <table class="tbl">
+        <tr><th>Paciente</th><th>Hora</th><th>PA (mmHg)</th><th>FC (lpm)</th><th>FR (rpm)</th><th>T (°C)</th><th>SatO₂ (%)</th></tr>
+        <tr><td>J. R. M.</td><td>08:00</td><td>120/80</td><td>76</td><td>16</td><td>36.8</td><td>97</td></tr>
+        <tr><td>L. C. P.</td><td>08:15</td><td>140/90</td><td>88</td><td>20</td><td>37.9</td><td>94</td></tr>
+        <tr><td>M. A. Q.</td><td>08:30</td><td>110/70</td><td>72</td><td>18</td><td>36.5</td><td>98</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="pie-foto">Primera fila con fondo de color y en negrita: así se distinguen los títulos de los datos. Las iniciales protegen la identidad del paciente.</p>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>6</span></div>
+</section>
+
+<!-- ============ 7. TABLAS (2) ============ -->
+<section class="pag">
+  <p class="eti">Herramienta 3 · continúa</p>
+  <h2>Modificar una tabla</h2>
+  <p>Casi todo se hace con <b>clic derecho</b> dentro de una celda. Llegó un paciente más y hay que agregar una fila:</p>
+
+  <div class="cols-3" style="margin-top:8px">
+    <div class="cap" style="position:relative;height:430px">
+      <div class="cap marco zoom" style="padding:10px;width:560px">
+        <div class="hoja" style="width:100%;padding:12px 14px">
+          <table class="tbl">
+            <tr><th>Paciente</th><th>Hora</th><th>PA</th><th>FC</th><th>T (°C)</th></tr>
+            <tr><td>J. R. M.</td><td>08:00</td><td>120/80</td><td>76</td><td>36.8</td></tr>
+            <tr><td class="sel">L. C. P.</td><td>08:15</td><td>140/90</td><td>88</td><td>37.9</td></tr>
+          </table>
+        </div>
+      </div>
+      <svg class="cursor" style="left:62px;top:84px"><use href="#flecha"/></svg>
+      <div class="menu zoom-s" style="position:absolute;left:80px;top:100px;width:330px">
+        <div class="it"><span class="ms">content_cut</span>Cortar<span class="atajo">Ctrl+X</span></div>
+        <div class="it"><span class="ms">content_copy</span>Copiar<span class="atajo">Ctrl+C</span></div>
+        <div class="it"><span class="ms">content_paste</span>Pegar<span class="atajo">Ctrl+V</span></div>
+        <div class="div"></div>
+        <div class="it"><span class="ms">add</span>Insertar fila arriba</div>
+        <div class="it on mk" data-n="1" style="outline-offset:-2px"><span class="ms">add</span>Insertar fila abajo</div>
+        <div class="it"><span class="ms">add</span>Insertar columna a la izquierda</div>
+        <div class="it"><span class="ms">add</span>Insertar columna a la derecha</div>
+        <div class="div"></div>
+        <div class="it"><span class="ms">delete</span>Eliminar fila</div>
+        <div class="it"><span class="ms">delete</span>Eliminar columna</div>
+        <div class="it"><span class="ms">delete</span>Eliminar tabla</div>
+        <div class="div"></div>
+        <div class="it mk" data-n="2" style="outline-offset:-2px"><span class="ms">push_pin</span>Fijar fila de encabezado</div>
+        <div class="it mk" data-n="3" style="outline-offset:-2px"><span class="ms">table</span>Propiedades de la tabla</div>
+      </div>
+    </div>
+    <div>
+      <ol class="pasos">
+        <li><b>Insertar fila abajo / arriba</b> o <b>columna</b> a un lado. También hay <b>Eliminar fila</b>, <b>columna</b> o la tabla entera.</li>
+        <li><b>Fijar fila de encabezado:</b> si la tabla sigue en la página siguiente, la fila de títulos se repite arriba. Así nadie se pierde en la columna.</li>
+        <li><b>Propiedades de la tabla:</b> color de bordes, color de fondo de la celda, alineación y tamaño de las columnas.</li>
+      </ol>
+      <div class="caja tip"><b>Ajustar el ancho</b>Acerca el mouse a la línea entre dos columnas: aparece <b>⟺</b>. Arrastra para hacer la columna más ancha o angosta.</div>
+    </div>
+  </div>
+
+  <h3>Darle formato a la fila de títulos</h3>
+  <div class="cols">
+    <ol class="pasos" style="margin:0">
+      <li>Selecciona la primera fila arrastrando el mouse sobre ella.</li>
+      <li>Ponla en <b>negrita</b> (<kbd>Ctrl</kbd>+<kbd>B</kbd>).</li>
+      <li>Clic derecho › <b>Propiedades de la tabla</b> › <b>Color</b> › <b>Color de fondo de la celda</b>, y elige un color suave.</li>
+    </ol>
+    <div class="cap">
+      <div class="marco zoom-s" style="padding:12px 14px;background:#fff;width:330px">
+        <div style="font-size:15px;margin-bottom:10px;display:flex;justify-content:space-between">Propiedades de la tabla <span class="ms">close</span></div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;font-size:13px;color:#444746"><span style="padding:4px 8px">Filas</span><span style="padding:4px 8px">Columnas</span><span style="padding:4px 8px">Tabla</span><span class="mk" style="padding:4px 8px;color:#0b57d0;font-weight:500">Color</span></div>
+        <div style="font-size:12px;color:#444746;margin-bottom:4px">Color de fondo de la celda</div>
+        <div style="display:flex;gap:5px">
+          <i style="width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #ccc"></i><i style="width:20px;height:20px;border-radius:50%;background:#fce8b2"></i><i class="mk" style="width:20px;height:20px;border-radius:50%;background:#d9ead3;outline-offset:2px"></i><i style="width:20px;height:20px;border-radius:50%;background:#cfe2f3"></i><i style="width:20px;height:20px;border-radius:50%;background:#f4cccc"></i><i style="width:20px;height:20px;border-radius:50%;background:#d9d2e9"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crece"></div>
+  <div class="caja mal"><b>Error frecuente</b>Hacer una «tabla» con espacios o con la tecla <kbd>Tab</kbd> fuera de una tabla. Se ve alineado en tu pantalla, pero se desordena en cuanto cambia la letra o alguien lo abre en otro aparato.</div>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>7</span></div>
+</section>
+
+<!-- ============ 8. NÚMEROS DE PÁGINA ============ -->
+<section class="pag">
+  <span class="num-sec">04</span>
+  <p class="eti">Herramienta 4 · parte A</p>
+  <h2>Números de página</h2>
+  <p class="lead">En un informe impreso, el índice dice «Conclusiones … pág. 3». Para eso, las páginas tienen que estar numeradas.</p>
+
+  <div class="apila" style="margin-top:6px">
+    <div class="cap" style="position:relative;height:290px">
+      <div class="menus zoom-s" style="background:#f9fbfd;border-radius:6px;padding:3px;width:max-content"><span>Archivo</span><span>Editar</span><span>Ver</span><span class="act mk" data-n="1">Insertar</span><span>Formato</span></div>
+      <div class="menu zoom-s" style="position:absolute;left:105px;top:30px;width:290px">
+        <div class="it"><span class="ms">image</span>Imagen<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">table</span>Tabla<span class="flecha ms">arrow_right</span></div>
+        <div class="it" style="color:#80868b">⋯</div>
+        <div class="div"></div>
+        <div class="it"><span class="ms">horizontal_rule</span>Línea horizontal</div>
+        <div class="it"><span class="ms">sentiment_satisfied</span>Emojis</div>
+        <div class="div"></div>
+        <div class="it"><span class="ms">call_to_action</span>Encabezados y pies de página<span class="flecha ms">arrow_right</span></div>
+        <div class="it on mk" data-n="2" style="outline-offset:-2px"><span class="ms">tag</span>Números de página<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">insert_page_break</span>Salto<span class="flecha ms">arrow_right</span></div>
+        <div class="div"></div>
+        <div class="it"><span class="ms">bookmark</span>Marcador</div>
+        <div class="it"><span class="ms">toc</span>Índice<span class="flecha ms">arrow_right</span></div>
+      </div>
+      <div class="menu zoom-s" style="position:absolute;left:345px;top:205px;min-width:0;width:auto">
+        <div class="it" style="font-size:12px;color:#444746;padding-bottom:0">Números de página</div>
+        <div class="mini">
+          <div class="ar"><b>1</b></div><div class="ab on"><b>1</b></div><div class="ar" style="opacity:.85"><b>2</b></div><div class="ab" style="opacity:.85"><b>2</b></div>
+        </div>
+        <div class="div"></div>
+        <div class="it">Más opciones</div>
+      </div>
+      <svg class="cursor" style="left:372px;top:272px"><use href="#flecha"/></svg>
+    </div>
+    <div>
+      <ol class="pasos">
+        <li>Abre el menú <b>Insertar</b>.</li>
+        <li>Pasa el mouse por <b>Números de página</b>.</li>
+        <li>Elige uno de los cuatro dibujos: el número <b>arriba</b> o <b>abajo</b> a la derecha, en todas las páginas o <b>sin contar la portada</b> (los dos últimos).</li>
+      </ol>
+      <div><p>Google Docs pone el número en el encabezado o en el pie de cada página, y lo actualiza solo cuando agregas páginas.</p>
+      <div class="caja tip" style="margin:0"><b>Recomendado para un informe</b>Abajo a la derecha, sin número en la portada.</div></div>
+    </div>
+  </div>
+
+  <div class="caja ojo" style="margin-top:4px"><b>Ojo con los nombres parecidos</b>
+    En español, Google Docs usa la palabra «encabezado» para dos cosas distintas:<br>
+    • <b>Encabezado 1, 2, 3</b> (menú de estilos): los <b>títulos de las secciones</b>. Herramienta 1.<br>
+    • <b>Encabezados y pies de página</b> (menú Insertar): la <b>franja de arriba y de abajo</b> que se repite en cada hoja. Ahí viven los números de página, el nombre de la institución o tu nombre.
+  </div>
+
+  <h3>Cómo se ve en la hoja</h3>
+  <div class="cap marco zoom" style="padding:14px;display:flex;gap:18px;justify-content:center;background:#f9fbfd">
+    <div class="hoja" style="width:230px;height:240px;margin:0;padding:18px 20px;position:relative">
+      <p class="t" style="font-size:16px">Informe de práctica clínica</p><p class="st" style="font-size:11px">Control de signos vitales</p>
+      <p style="position:absolute;bottom:10px;left:20px;font-size:9px;color:#888">(portada: sin número)</p>
+    </div>
+    <div class="hoja" style="width:230px;height:240px;margin:0;padding:18px 20px;position:relative">
+      <p class="h1" style="margin-top:0">1. Introducción</p><p style="color:#999">Los signos vitales son…</p>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:36px;border-top:1px dashed #4285f4"></div>
+      <span class="mk" style="position:absolute;right:20px;bottom:12px;padding:0 4px">2</span>
+    </div>
+    <div class="hoja" style="width:230px;height:240px;margin:0;padding:18px 20px;position:relative">
+      <p class="h1" style="margin-top:0">3. Procedimiento</p><p style="color:#999">Materiales…</p>
+      <span style="position:absolute;right:24px;bottom:12px">3</span>
+    </div>
+  </div>
+  <p class="pie-foto">Para editar el pie de página (por ejemplo, agregar tu nombre), haz doble clic en la parte de abajo de la hoja. Para salir, doble clic en el texto normal.</p>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>8</span></div>
+</section>
+
+<!-- ============ 9. ÍNDICE ============ -->
+<section class="pag">
+  <p class="eti">Herramienta 4 · parte B</p>
+  <h2>El índice automático</h2>
+  <p class="lead">Google Docs arma el índice <b>leyendo tus encabezados</b>. No se escribe a mano: si usaste encabezados, está a dos clics.</p>
+
+  <div class="apila" style="margin-top:6px">
+    <div class="cap" style="position:relative;height:200px">
+      <div class="menus zoom-s" style="background:#f9fbfd;border-radius:6px;padding:3px;width:max-content"><span>Archivo</span><span>Editar</span><span>Ver</span><span class="act mk" data-n="2">Insertar</span><span>Formato</span></div>
+      <div class="menu zoom-s" style="position:absolute;left:105px;top:30px;width:250px">
+        <div class="it" style="color:#80868b">⋯</div>
+        <div class="it"><span class="ms">tag</span>Números de página<span class="flecha ms">arrow_right</span></div>
+        <div class="it"><span class="ms">insert_page_break</span>Salto<span class="flecha ms">arrow_right</span></div>
+        <div class="div"></div>
+        <div class="it"><span class="ms">bookmark</span>Marcador</div>
+        <div class="it on mk" data-n="3" style="outline-offset:-2px"><span class="ms">toc</span>Índice<span class="flecha ms">arrow_right</span></div>
+      </div>
+      <div class="menu zoom-s" style="position:absolute;left:375px;top:70px;width:270px">
+        <div class="it mk" data-n="4" style="outline-offset:-2px;display:block;padding:8px 14px">
+          <div style="font-size:12px;color:#444746;margin-bottom:4px">Con números de página</div>
+          <div class="toc" style="width:200px"><div><span>Introducción</span><span>1</span></div><div class="n2"><span>Objetivo general</span><span>1</span></div></div>
+        </div>
+        <div class="div"></div>
+        <div class="it" style="display:block;padding:8px 14px">
+          <div style="font-size:12px;color:#444746;margin-bottom:4px">Con vínculos azules</div>
+          <div class="toc-azul"><div>Introducción</div><div class="n2">Objetivo general</div></div>
+        </div>
+      </div>
+      <svg class="cursor" style="left:520px;top:118px"><use href="#flecha"/></svg>
+    </div>
+    <div>
+      <ol class="pasos">
+        <li>Pon el cursor donde irá el índice: después de la portada, en una página propia.</li>
+        <li>Abre el menú <b>Insertar</b>.</li>
+        <li>Pasa el mouse por <b>Índice</b> (al final del menú).</li>
+        <li>Elige un estilo. Para un documento <b>impreso</b>: <b>con números de página</b>. Para leer en pantalla: <b>con vínculos azules</b>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3>¿Agregaste o cambiaste una sección? Actualiza el índice</h3>
+  <div class="cols-3">
+    <div class="cap marco zoom" style="padding:14px;position:relative">
+      <div class="hoja" style="width:100%;padding:16px 22px 18px;margin-top:34px">
+        <p style="font-weight:700;font-size:14px;margin:0 0 6px">Índice</p>
+        <div class="toc" style="outline:1.5px solid #c7c7c7;outline-offset:6px;border-radius:2px">
+          <div><span>1. Introducción</span><span>1</span></div>
+          <div><span>2. Objetivos</span><span>1</span></div>
+          <div class="n2"><span>2.1 Objetivo general</span><span>1</span></div>
+          <div class="n2"><span>2.2 Objetivos específicos</span><span>1</span></div>
+          <div><span>3. Procedimiento</span><span>2</span></div>
+          <div><span>4. Registro de signos vitales</span><span>2</span></div>
+          <div><span>5. Conclusiones</span><span>3</span></div>
+        </div>
+      </div>
+      <div class="chip" style="position:absolute;left:36px;top:12px">
+        <span class="ms mk" data-n="↻" style="color:#0b57d0">refresh</span><span class="ms">more_vert</span>
+      </div>
+    </div>
+    <div>
+      <p>El índice <b>no cambia solo</b>. Si agregas una sección nueva, cambias un título o el texto se corre a otra página:</p>
+      <ol class="pasos">
+        <li>Haz clic dentro del índice.</li>
+        <li>Aparece un botón flotante. Haz clic en <span class="ms" style="font-size:16px;color:#0b57d0">refresh</span> <b>Actualizar índice</b>.</li>
+      </ol>
+      <p>Con <span class="ms" style="font-size:16px">more_vert</span> › <b>Más opciones</b> puedes elegir qué niveles mostrar (solo Encabezado 1, o también el 2 y el 3).</p>
+    </div>
+  </div>
+
+  <div class="crece"></div>
+  <div class="caja mal"><b>¿El índice salió vacío o le falta una sección?</b>Esa sección tiene negrita a mano y no un encabezado. Ve a ese título, ponle <b>Encabezado 1</b> (o 2) y vuelve a actualizar el índice.</div>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>9</span></div>
+</section>
+
+<!-- ============ 10. RETO ============ -->
+<section class="pag">
+  <p class="eti">Ahora tú</p>
+  <h2>Reto: arma tu informe de práctica</h2>
+  <p class="lead">Crea un documento nuevo llamado <b>Informe de práctica – tu apellido</b> y ve marcando cada casilla.</p>
+
+  <div class="cols" style="margin-top:6px">
+    <div>
+      <h3 style="margin-top:4px">Portada y encabezados</h3>
+      <ul class="check">
+        <li>La primera línea tiene el estilo <b>Título</b>: <i>Informe de práctica clínica</i>.</li>
+        <li>Debajo, con estilo <b>Subtítulo</b>: <i>Control de signos vitales</i>, tu nombre y la fecha.</li>
+        <li>Cinco secciones con <b>Encabezado 1</b>: Introducción, Objetivos, Procedimiento, Registro de signos vitales y Conclusiones.</li>
+        <li>Dentro de Objetivos, dos partes con <b>Encabezado 2</b>: Objetivo general y Objetivos específicos.</li>
+        <li>Las siete secciones aparecen en el panel <b>Pestañas del documento</b>.</li>
+      </ul>
+      <h3>Listas</h3>
+      <ul class="check">
+        <li>En Procedimiento: una lista con <b>viñetas</b> de los materiales.</li>
+        <li>Una lista <b>numerada</b> con al menos 5 pasos para medir la presión arterial, y un paso con subpasos <b>a</b> y <b>b</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:4px">Tabla</h3>
+      <ul class="check">
+        <li>En Registro: una tabla de 7 columnas (Paciente, Hora, PA, FC, FR, T, SatO₂).</li>
+        <li>Tres pacientes con iniciales y valores inventados. Agrega la última fila con clic derecho.</li>
+        <li>La fila de títulos en negrita y con color de fondo.</li>
+      </ul>
+      <h3>Páginas e índice</h3>
+      <ul class="check">
+        <li>Un <b>salto de página</b> después de la portada (<span class="menu-ruta">Insertar › Salto › Salto de página</span> o <kbd>Ctrl</kbd>+<kbd>Enter</kbd>).</li>
+        <li><b>Números de página</b> abajo a la derecha, sin número en la portada.</li>
+        <li>Un <b>índice con números de página</b> en la segunda hoja.</li>
+        <li>Agrega una sección más al final (<i>6. Referencias</i>) y <b>actualiza el índice</b>. ¿Apareció?</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Atajos de esta guía</h3>
+  <table class="atajos">
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd></td><td>Encabezado 1, 2 o 3</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>0</kbd></td><td>Volver a Texto normal</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>7</kbd> / <kbd>8</kbd></td><td>Lista numerada / con viñetas</td></tr>
+    <tr><td><kbd>Tab</kbd> · <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Bajar / subir un nivel en la lista · celda siguiente / anterior en una tabla</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>Salto de página</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td>Negrita (para resaltar palabras, no para títulos)</td></tr>
+  </table>
+
+  <div class="crece"></div>
+  <div class="caja tip"><b>Para terminar</b>Revisa tu documento con esta pregunta: <i>si se lo doy a otra enfermera, ¿encuentra la tabla de signos vitales en menos de 10 segundos?</i> Si la respuesta es sí, lo ordenaste bien.</div>
+  <div class="pie"><span>Google Docs · Guía práctica</span><span>10</span></div>
+</section>
+
+</body>
+</html>
