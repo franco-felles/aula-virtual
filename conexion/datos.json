@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-16T16:13:25.818Z",
+ "generado": "2026-11-16T16:23:18.223Z",
  "v": 1,
  "clases": [
   {
@@ -44,6 +44,15 @@
    "unidad": 1,
    "n": 6,
    "tema": "INTERNET",
+   "publicada": true,
+   "conCopias": false
+  },
+  {
+   "id": "u1c3",
+   "tipo": "Clase",
+   "unidad": 1,
+   "n": 3,
+   "tema": "EC - revisión de tareas",
    "publicada": true,
    "conCopias": false
   }
