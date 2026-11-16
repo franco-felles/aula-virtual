@@ -213,7 +213,7 @@ function pintarPortal(r, s, docente) {
     return n ? el("span", "c-quiz", n > 1 ? n + " QUIZZES" : "QUIZ") : null;
   };
   // Orden real dentro de cada unidad: C1 · C2 · EC1 · C4 · C5 · EC2 · C7 · C8 · EC3  (la EC n ocupa el lugar 3n)
-  const lugar = c => c.tipo === "EC" ? c.n * 3 : c.n;
+  const lugar = c => c.tipo === "EC" ? c.n * 3 + 0.5 : c.n;   // si hay clase 3/6/9 normal, va antes que su EC
   const unidades = [...new Set(r.clases.map(c => Number(c.unidad)))].sort((a, b) => a - b);
   unidades.forEach(u => {
     const cartas = r.clases.filter(c => Number(c.unidad) === u).sort((a, b) => lugar(a) - lugar(b)).map(c => c.tipo === "EC"

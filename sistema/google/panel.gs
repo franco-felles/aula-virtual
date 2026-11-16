@@ -10,6 +10,7 @@
      · Importar alumnos (PDF) ...... lee los PDF de <MES>/LISTAS
      · Importar alumnos (texto) .... lee lo pegado en la pestaña "Importar"
      · Nueva clase / EC ............ crea la carpeta y su fila en "Clases"
+     · Compartir archivo ........... un archivo de Drive que TODOS ven (solo lectura), sin copia por alumno
      · Generar copias .............. copia la semilla de cada clase para cada alumno
      · Actualizar laboratorio ...... recalcula "Comparte con" y el mapa de PCs
      · Limpiar copias borradas ..... quita de Entregas lo que mandaste a la papelera
@@ -62,6 +63,7 @@ function onOpen() {
     .addItem("Asignar grupo a los seleccionados…", "asignarGrupoSeleccion")
     .addSeparator()
     .addItem("Nueva clase / EC…", "nuevaClase")
+    .addItem("Compartir archivo en una clase (sin copias)…", "compartirArchivo")
     .addItem("Generar copias", "generarCopias")
     .addItem("Limpiar copias borradas", "limpiarCopias")
     .addItem("Copiado automático (activar / desactivar)", "alternarCopiasAuto")
@@ -349,7 +351,8 @@ function nuevaClase() {
   const ui = SpreadsheetApp.getUi();
   const r1 = ui.prompt("Nueva clase o EC",
     "Escribe:\n  u1 4      → clase 4 de la unidad 1\n  u1 ec2    → evaluación continua 2 de la unidad 1\n\n" +
-    "Clases: 1, 2, 4, 5, 7, 8 · EC: 1, 2, 3 (van en el lugar de la 3, 6 y 9)", ui.ButtonSet.OK_CANCEL);
+    "Clases: 1, 2, 4, 5, 7, 8 · EC: 1, 2, 3 (van en el lugar de la 3, 6 y 9)\n" +
+    "También puedes crear una clase normal 3, 6 o 9 (te pedirá confirmar).", ui.ButtonSet.OK_CANCEL);
   if (r1.getSelectedButton() !== ui.Button.OK) return;
   const t = r1.getResponseText().toLowerCase().replace(/\s+/g, "");
   let m, info;
@@ -357,8 +360,13 @@ function nuevaClase() {
   else if ((m = /^u(\d)ec(\d)$/.exec(t))) info = { tipo: "EC", unidad: Number(m[1]), n: Number(m[2]) };
   else if ((m = /^ec(\d)u(\d)$/.exec(t))) info = { tipo: "EC", unidad: Number(m[2]), n: Number(m[1]) };
   else return aviso("No entendí «" + r1.getResponseText() + "». Ejemplos: u1 4  ·  u1 ec2");
-  if (info.tipo === "Clase" && (info.n % 3 === 0 || info.n < 1 || info.n > 8))
-    return aviso(info.n % 3 === 0 ? `La «clase ${info.n}» es la EC${info.n / 3}. Escribe: u${info.unidad} ec${info.n / 3}` : "Las clases van de la 1 a la 8 (sin 3 ni 6).");
+  if (info.tipo === "Clase" && (info.n < 1 || info.n > 9)) return aviso("Las clases van de la 1 a la 9.");
+  // 3, 6 y 9 suelen ser EC, pero se permite una clase normal en ese lugar (p. ej. u1 6) si se confirma.
+  if (info.tipo === "Clase" && info.n % 3 === 0 &&
+      ui.alert("¿Clase normal en el lugar de una EC?",
+        `La «clase ${info.n}» suele ser la EC${info.n / 3}.\n\n` +
+        `Sí → crear la clase normal u${info.unidad}c${info.n} (aparece junto a la EC${info.n / 3}, antes que ella).\n` +
+        `No → cancelar (para la evaluación escribe: u${info.unidad} ec${info.n / 3}).`, ui.ButtonSet.YES_NO) !== ui.Button.YES) return;
   if (info.tipo === "EC" && (info.n < 1 || info.n > 3)) return aviso("Las EC van de la 1 a la 3.");
   info.id = info.tipo === "EC" ? `ec${info.n}u${info.unidad}` : `u${info.unidad}c${info.n}`;
 
@@ -419,6 +427,80 @@ function etiquetaSemilla(f, idClase) {
 function carpetaDeClase(fila) {
   const m = /HYPERLINK\("[^"]*\/folders\/([\w-]+)/.exec(fila._formulas.CARPETA || "");
   return m ? DriveApp.getFolderById(m[1]) : null;
+}
+
+/* ======================= COMPARTIR (sin copias) =======================
+   Para material que todos ven igual (sílabo, PDF, PPT…): un solo archivo, solo lectura, nada de copias.
+   · Si el archivo YA está en la carpeta de la clase: se le quita «SEMILLA»/«profesor»/«_» del nombre
+     (así Generar copias lo ignora) y sale en «Material de clase».
+   · Si está en otro lado (BIBLIOTECA, Mi unidad…): no se mueve; se agrega a la pestaña Enlaces de esa clase
+     (sirve para reusar el mismo sílabo cada mes y para mostrarlo solo a un grupo). */
+
+const TIPO_ENLACE_MIME = { documento: "documento", hoja: "hoja", presentacion: "presentacion", encuesta: "encuesta",
+                           video: "video", pdf: "documento" };
+
+function compartirArchivo() {
+  const ui = SpreadsheetApp.getUi();
+  const r1 = ui.prompt("Compartir archivo (sin copias)",
+    "Pega el enlace del archivo de Drive (Compartir → Copiar enlace).\n" +
+    "Todos los alumnos lo verán en modo solo lectura; no se crea una copia por alumno.", ui.ButtonSet.OK_CANCEL);
+  if (r1.getSelectedButton() !== ui.Button.OK) return;
+  const m = /\/d\/([\w-]{20,})|[?&]id=([\w-]{20,})|^([\w-]{20,})$/.exec(r1.getResponseText().trim());
+  if (!m || /\/folders\//.test(r1.getResponseText())) return aviso("Eso no parece el enlace de un archivo de Drive (una carpeta no sirve).");
+  let f;
+  try { f = DriveApp.getFileById(m[1] || m[2] || m[3]); } catch (_) { return aviso("No pude abrir ese archivo. ¿Es tuyo o tienes acceso de edición?"); }
+
+  const tC = leerTabla(hoja(HOJA.clases), ["CARPETA"]);
+  const ids = tC.filas.filter(c => c.ID).map(c => c.ID);
+  const grupos = config().grupos;
+  const r2 = ui.prompt("¿En qué clase?",
+    `«${f.getName()}»\n\nEscribe la clase: ${ids.slice(0, 12).join(", ")}${ids.length > 12 ? "…" : ""}\n` +
+    `Para que solo lo vea un grupo, agrega el grupo: u1c1 ${grupos[0] || "G1"}`, ui.ButtonSet.OK_CANCEL);
+  if (r2.getSelectedButton() !== ui.Button.OK) return;
+  const partes = r2.getResponseText().trim().split(/\s+/);
+  const clase = tC.filas.find(c => c.ID && normId(c.ID) === normId(partes[0]));
+  if (!clase) return aviso(`No existe la clase «${partes[0] || ""}» en la pestaña Clases.`);
+  let para = "Todos";
+  if (partes[1]) {
+    const t = partes[1].toUpperCase();
+    para = grupos.find(x => x.toUpperCase() === t || x.toUpperCase() === "G" + t);
+    if (!para) return aviso(`«${partes[1]}» no es un grupo. Grupos válidos: ${grupos.join(", ")}.`);
+  }
+
+  f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  const carpeta = carpetaDeClase(clase);
+  let dentro = false;
+  if (carpeta) { const it = f.getParents(); while (it.hasNext()) if (it.next().getId() === carpeta.getId()) dentro = true; }
+  const titulo = f.getName().replace(/^(semilla|profesor)\b[\s\-–_:]*/i, "").replace(/^(profesor)\b[\s\-–_:]*/i, "").replace(/^_+\s*/, "").trim() || f.getName();
+  let hecho;
+
+  if (dentro && para === "Todos") {
+    if (titulo !== f.getName()) f.setName(titulo);          // sin «SEMILLA»: Generar copias ya no lo duplica
+    hecho = `Listo: «${titulo}» sale en «Material de clase» de ${clase.ID} (solo lectura, sin copias).`;
+  } else {
+    if (dentro) f.setName("_" + titulo);                    // «_» = la carpeta no lo muestra a todos; lo muestra el enlace de su grupo
+    const shE = hoja(HOJA.enlaces), tE = leerTabla(shE);
+    const url = f.getUrl();
+    if (tE.filas.some(e => normId(e.CLASE) === normId(clase.ID) && String(e.URL) === url && (e.PARA || "Todos") === para))
+      return aviso(`«${titulo}» ya estaba compartido en ${clase.ID}` + (para !== "Todos" ? ` para ${para}` : "") + ".");
+    const orden = tE.filas.filter(e => normId(e.CLASE) === normId(clase.ID)).reduce((mx, e) => Math.max(mx, Number(e.ORDEN) || 0), 0) + 1;
+    shE.appendRow(filaDesde(tE.cab, { CLASE: clase.ID, ORDEN: orden, TIPO: TIPO_ENLACE_MIME[tipoDeMime(f.getMimeType())] || "enlace",
+                                      TITULO: titulo, URL: url, PARA: para }));
+    hecho = `Listo: «${titulo}» sale en «Enlaces» de ${clase.ID}` + (para !== "Todos" ? `, solo para ${para}` : "") +
+            " (solo lectura, sin copias). El archivo no se movió.";
+  }
+
+  // ¿Ya se habían generado copias de este archivo como semilla?
+  const copias = leerTabla(hoja(HOJA.entregas)).filas.filter(e => String(e.SEMILLA) === f.getId()).length;
+  if (copias) hecho += `\n\n⚠ Antes se hicieron ${copias} copia(s) de este archivo para los alumnos. Si no las quieres, ` +
+                       "bórralas de la carpeta ALUMNOS y usa Aula → Limpiar copias borradas.";
+  if (clase.PUBLICADA !== true) hecho += `\n\n${clase.ID} aún no está PUBLICADA: los alumnos lo verán cuando la marques.`;
+
+  refrescarMemoria();
+  if (PropertiesService.getScriptProperties().getProperty("GITHUB_TOKEN")) {
+    try { anotarPublicacion(publicarWebNucleo(false)); } catch (e) { hecho += "\n\n(No se pudo actualizar la Web rápida: " + e.message + ")"; }
+  }
+  aviso(hecho);
 }
 
 /* ======================= COPIAS ======================= */

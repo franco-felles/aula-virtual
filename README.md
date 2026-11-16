@@ -47,7 +47,7 @@ En el Panel se crean con **Aula → Nueva clase / EC**: `u1 4` o `u1 ec2`.
 |---|---|
 | HTML propio: presentación, interactivo, juego, lectura… | `clases/<id>/material/m<#>c<#>.html` (EC: `eecc/<id>/material/m<#>ec<#>.html`) |
 | Imágenes / .js / .css de esos HTML | `…/material/recursos/` |
-| PPT, PDF, video o Form ya hecho | Carpeta de la clase en Drive |
+| PPT, PDF, video, Form o sílabo ya hecho (todos ven el mismo, sin copias) | Carpeta de la clase en Drive con un nombre normal, o **Aula → Compartir archivo en una clase (sin copias)** (sirve también para archivos de otra carpeta, como BIBLIOTECA) |
 | Documento que **cada alumno trabaja** (aunque esté vacío) | Drive, archivo que empieza por `SEMILLA` o `profesor` → **Aula → Generar copias**. Puede haber varias semillas (un Doc y un Sheet): el alumno ve una por una con su nombre (`SEMILLA - Práctica Excel` → «Práctica Excel»). Se pueden agregar después de crear la clase; Generar copias solo crea lo que falta |
 
 **Enlaces** (Doc o Sheet compartido, YouTube, una web, Kahoot…) van en el Panel, pestaña **Enlaces**.

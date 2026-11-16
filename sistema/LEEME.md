@@ -32,8 +32,9 @@ Pega el código nuevo y luego: **Implementar → Gestionar implementaciones → 
 |---|---|
 | Inicio de mes | `Config → MES` (ej. `DIC 2026`) → se crea la carpeta. PDF de la institución en `<MES>/LISTAS` → **Aula → Importar alumnos (PDF)** |
 | Primera clase | `Config → PCS` con las PC de la sede. En `Alumnos`, selecciona a los que llegaron (Shift/Ctrl para varios) → **Aula → Asignar grupo a los seleccionados** (quedan *Activos* y numerados). Luego la **PC** de cada uno (solo el número) |
-| Nueva clase | **Aula → Nueva clase / EC** (`u1 4` o `u1 ec2`) → edita la semilla en su carpeta |
+| Nueva clase | **Aula → Nueva clase / EC** (`u1 4` o `u1 ec2`) → edita la semilla en su carpeta. Una clase normal en el lugar de una EC (`u1 6`) se permite tras confirmar; en la web sale antes que la EC |
 | Antes de clase | Pon una o varias semillas en la carpeta de la clase (`SEMILLA - Práctica Excel`, `SEMILLA - Informe`…) → **Aula → Generar copias** (solo crea las que faltan; cubre tardíos y semillas nuevas) → marca **PUBLICADA** en `Clases` |
+| Compartir un archivo sin copias (sílabo, PDF, PPT…) | **Aula → Compartir archivo en una clase (sin copias)** → pega el enlace de Drive y escribe la clase (`u1c1`, o `u1c1 G1` para un solo grupo). Todos lo ven en solo lectura. Si el archivo está en la carpeta de la clase sale en *Material de clase* (se le quita «SEMILLA» del nombre); si está en otro lado (BIBLIOTECA…) no se mueve y sale en *Enlaces* |
 | Quiero que las copias se hagan solas | **Aula → Copiado automático** (una vez). Cada 15 min crea las copias que falten en las clases **PUBLICADAS**. Lo último que hizo: `Config → AUTO_COPIAS` |
 | Subí un archivo a Drive y no aparece | La web guarda la lista de archivos 5 min. Para verlo ya: **Aula → Actualizar web ahora** |
 | Borré copias o semillas en Drive | **Aula → Limpiar copias borradas** (quita de Entregas lo que está en la papelera; la web deja de mostrarlo) |
