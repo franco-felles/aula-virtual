@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- FICHA DEL MATERIAL: clase 5 (virtual) · internet, buscadores e información de salud confiable -->
-<meta name="material-titulo" content="Busca como profesional: información de salud confiable">
+<!-- FICHA DEL MATERIAL: clase 6 (virtual) · internet: cómo funciona, direcciones web, búsqueda e información de salud confiable -->
+<meta name="material-titulo" content="Internet: entiéndelo y busca como profesional">
 <meta name="material-tipo" content="presentacion">
-<meta name="material-descripcion" content="Presentación interactiva para la clase virtual: internet, web, navegador y buscador; trucos para buscar mejor desde tu celular; cómo saber si una información de salud es confiable, con retos en vivo y un juego. Sin tarea.">
-<title>Busca como profesional</title>
+<meta name="material-descripcion" content="Presentación interactiva para la clase virtual: cómo funciona internet (animado), las partes de una dirección web, qué son www y https, cómo leer un dominio para saber si es confiable, trucos de búsqueda, descargas seguras y un video para cerrar. Con retos en vivo y juegos. Sin tarea.">
+<title>Internet · Busca como profesional</title>
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
@@ -161,7 +161,89 @@
   .sintarea { background: #eaf4ec; border: 2px dashed var(--ok); border-radius: 14px; padding: 12px 16px; text-align: center; }
   .sintarea p { margin: 0 !important; font-weight: 700; color: var(--ok); font-size: clamp(1rem, calc(var(--vw) * 2), 1.3rem) !important; }
 
+  /* red animada: cómo funciona internet */
+  .red-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 16px; align-items: center; }
+  .red-wrap > * { min-width: 0; }
+  .red { width: 100%; height: auto; display: block; background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+  .red text { text-anchor: middle; dominant-baseline: central; }
+  .red .cable { stroke: #c9c3b1; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 260; stroke-dashoffset: 260; transition: stroke-dashoffset 1.1s ease, stroke .3s; }
+  .red.s1 .cable { stroke-dashoffset: 0; }
+  .red .cable.ruta { transition: stroke-dashoffset 1.1s ease, stroke .3s, stroke-width .3s; }
+  .red.viajando .cable.ruta { stroke: var(--amber); stroke-width: 5; }
+  .red .nodo { opacity: 0; transition: opacity .5s; }
+  .red.s0 .nodo { opacity: 1; }
+  .red .etq { font: 600 13px "IBM Plex Sans", sans-serif; fill: var(--mut); }
+  .red .arch { opacity: 0; transition: opacity .5s; font-size: 17px; }
+  .red.s2 .arch { opacity: 1; }
+  .red.s3 .arch:not(.pub) { opacity: .2; }
+  .red .halo { opacity: 0; fill: rgba(47,125,74,.14); stroke: var(--ok); stroke-width: 2; stroke-dasharray: 6 5; }
+  .red.s3 .halo { opacity: 1; animation: pulso 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes pulso { 50% { transform: scale(1.08); } }
+  .red .cartel { opacity: 0; transition: opacity .4s; }
+  .red.s3 .cartel.c3, .red .cartel.ver { opacity: 1; }
+  .red .cartel rect { fill: var(--ok); } .red .cartel text { fill: #fff; font: 700 12px "IBM Plex Sans", sans-serif; }
+  .pasos-red .n { font: 700 .74rem "IBM Plex Mono", monospace; color: var(--amber); letter-spacing: .06em; margin: 0 0 4px !important; }
+  .pasos-red h3 { font-size: clamp(1rem, calc(var(--vw) * 2), 1.3rem); margin-bottom: 6px; }
+  .pasos-red p { font-size: clamp(.9rem, calc(var(--vw) * 1.6), 1.05rem) !important; }
+  .puntitos { display: flex; gap: 6px; margin: 4px 0 10px; }
+  .puntitos i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .puntitos i.on { background: var(--amber); }
+
+  /* partes de una dirección */
+  .url-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; background: #fff; border: 1px solid #dfe1e5; border-radius: 14px; padding: 12px 16px; box-shadow: 0 1px 6px rgba(32,33,36,.15); font: 600 clamp(1.05rem, calc(var(--vw) * 2.6), 1.8rem) "IBM Plex Mono", monospace; }
+  .url-bar::before { content: "🔒"; font-size: .8em; margin-right: 8px; }
+  .up { font: inherit; background: none; border: 0; border-bottom: 4px solid var(--c); color: var(--c); padding: 2px 3px; cursor: pointer; border-radius: 4px 4px 0 0; transition: background .2s; }
+  .up:hover, .up.on { background: color-mix(in srgb, var(--c) 15%, transparent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .chip { font: 600 .82rem "IBM Plex Sans", sans-serif; border: 2px solid var(--c); color: var(--c); background: #fff; border-radius: 99px; padding: 4px 10px; cursor: pointer; }
+  .chip.on { background: var(--c); color: #fff; }
+  .parte { background: #fff; border: 1px solid var(--line); border-left: 6px solid var(--c, var(--moss)); border-radius: 12px; padding: 12px 16px; min-height: 118px; }
+  .parte h3 { color: var(--c); } .parte p { margin: 0 0 6px !important; }
+  .parte .casa { font-size: clamp(.82rem, calc(var(--vw) * 1.45), .95rem) !important; color: var(--mut); }
+
+  /* barras http / https */
+  .nav-bar { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #dfe1e5; border-radius: 99px; padding: 8px 14px; font: 500 clamp(.85rem, calc(var(--vw) * 1.6), 1.05rem) "IBM Plex Mono", monospace; margin: 6px 0; overflow: hidden; white-space: nowrap; }
+  .nav-bar .ins { font: 700 .75rem "IBM Plex Sans", sans-serif; color: var(--bad); background: #f8e9e6; border-radius: 99px; padding: 2px 8px; }
+
+  /* detector de dueños */
+  .det { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dueno { font: inherit; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 9px 12px; cursor: pointer; color: var(--ink); }
+  .dueno:hover { border-color: var(--moss); }
+  .dueno .u { font: 600 clamp(.78rem, calc(var(--vw) * 1.45), .95rem) "IBM Plex Mono", monospace; word-break: break-all; color: #3c4043; }
+  .dueno .u b { font-weight: 600; transition: background .2s; border-radius: 4px; }
+  .dueno.ver .u b { background: #ffe9a8; outline: 2px solid var(--amber); }
+  .dueno .r { display: none; font-size: clamp(.78rem, calc(var(--vw) * 1.38), .9rem); line-height: 1.35; margin-top: 5px; }
+  .dueno.ver .r { display: block; } .dueno.ver.ok { border-color: var(--ok); background: #f1f8f2; } .dueno.ver.no { border-color: var(--bad); background: #fcf2f0; }
+
+  /* página trampa de descargas */
+  .trampa { background: #1d1d2b; border-radius: 14px; overflow: hidden; color: #fff; font-family: Arial, sans-serif; }
+  .trampa .tb { background: #ececec; color: #333; font: 500 .8rem "IBM Plex Mono", monospace; padding: 6px 12px; display: flex; gap: 6px; align-items: center; }
+  .trampa .tb .ins { font: 700 .7rem "IBM Plex Sans", sans-serif; color: var(--bad); }
+  .trampa .cont { padding: 12px 14px; display: grid; gap: 8px; position: relative; }
+  .trampa .campo { background: #fff; color: #888; border-radius: 6px; padding: 7px 10px; font-size: .85rem; }
+  .tr { font: 700 .95rem Arial, sans-serif; border: 0; border-radius: 8px; padding: 10px; cursor: pointer; color: #fff; text-align: center; position: relative; }
+  .tr.verde { background: #19b34a; font-size: 1.15rem; animation: late 1.2s ease infinite; }
+  .tr.azul { background: #1f6fff; }
+  .tr.alerta { background: #d32222; text-align: left; font-size: .85rem; }
+  .tr.notif { background: #fff; color: #222; text-align: left; font: 500 .8rem Arial, sans-serif; border: 1px solid #ccc; }
+  .tr.mini { background: none; color: #9a9ab0; font: 400 .72rem Arial, sans-serif; text-decoration: underline; padding: 2px; justify-self: end; }
+  .tr .que { display: none; margin-top: 6px; font: 600 .82rem "IBM Plex Sans", sans-serif; background: #fff; color: var(--bad); border-radius: 6px; padding: 6px 8px; text-align: left; text-decoration: none; }
+  .tr.ver .que { display: block; } .tr.ver { animation: none; }
+  .op3 .tj h3 { font-size: clamp(.95rem, calc(var(--vw) * 1.7), 1.08rem); margin-bottom: 6px; }
+  .op3 .tj ul { padding-left: 1.05em; }
+  .op3 .tj li { font-size: clamp(.78rem, calc(var(--vw) * 1.36), .9rem) !important; line-height: 1.38 !important; color: #3d4a43; }
+  .op3 .tj li + li { margin-top: 4px; }
+  .op3 a { color: var(--azul); font-weight: 600; }
+
+  /* video */
+  .video { position: relative; width: min(100%, 700px); aspect-ratio: 16 / 9; margin: 0 auto; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+  .video iframe, .video button { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video button { cursor: pointer; background: #000 center / cover no-repeat; padding: 0; }
+  .video button::after { content: "▶"; position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 84px; height: 60px; border-radius: 16px; background: #e62117; color: #fff; font-size: 1.8rem; display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0,0,0,.4); transition: scale .15s; }
+  .video button:hover::after { scale: 1.08; }
+
   @media (max-width: 760px) {
+    .red-wrap, .det { grid-template-columns: 1fr; }
     .dos, .lab, .juego { grid-template-columns: 1fr; }
     .rej.c3, .rej.c4 { grid-template-columns: 1fr 1fr; }
     .pasos { grid-template-columns: 1fr; } .flecha { rotate: 90deg; justify-self: center; }
@@ -186,9 +268,9 @@
   <!-- 1 -->
   <section class="diapo portada">
     <div class="txt">
-      <p class="eti">Herramientas Informáticas · Clase 5 · Virtual</p>
-      <h1>Busca como profesional</h1>
-      <p>Internet, buscadores e información de salud confiable… todo desde el celular que tienes en la mano.</p>
+      <p class="eti">Herramientas Informáticas · Clase 6 · Virtual</p>
+      <h1>Internet</h1>
+      <p>Cómo funciona, cómo leer una dirección web y cómo buscar información de salud confiable… todo desde el celular que tienes en la mano.</p>
       <p class="peq" style="color:#cfe3d3">Hoy no hay tarea: todo lo hacemos aquí, en vivo. 📱</p>
     </div>
     <svg class="lupa" viewBox="0 0 200 200" aria-hidden="true">
@@ -215,7 +297,25 @@
     <p class="num">01</p>
     <p class="eti">Primera parte</p>
     <h1>¿Qué es internet?</h1>
-    <p class="sub">Cuatro palabras que usamos todos los días… y que casi siempre confundimos.</p>
+    <p class="sub">Lo usamos todo el día… pero ¿qué pasa realmente cuando abres una página?</p>
+  </section>
+
+  <!-- red animada -->
+  <section class="diapo" id="d-red">
+    <p class="eti">Así funciona · avanza paso a paso</p>
+    <div class="red-wrap">
+      <svg class="red" id="red" viewBox="0 0 640 360" role="img" aria-label="Animación: computadoras conectadas formando internet"></svg>
+      <div class="pasos-red">
+        <div class="puntitos" id="red-puntos"></div>
+        <p class="n" id="red-n"></p>
+        <h3 id="red-tit"></h3>
+        <p id="red-txt"></p>
+        <div class="fila" style="margin-top:8px">
+          <button class="bt sec" type="button" id="red-ant">◀</button>
+          <button class="bt" type="button" id="red-sig">Siguiente paso ▶</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- 4 -->
@@ -245,6 +345,41 @@
       <span>¿Google es un navegador o un buscador?</span>
       <button class="bt sec" type="button">Ver respuesta</button>
       <p class="resp">Google es el buscador. Chrome es el navegador. Son de la misma empresa, pero no son lo mismo: puedes usar Google dentro de Firefox o de Safari.</p>
+    </div>
+  </section>
+
+  <!-- partes de una dirección -->
+  <section class="diapo" id="d-url">
+    <p class="eti">Desarmemos una dirección web · toca cada parte</p>
+    <h2>Una dirección web es como la dirección de una casa</h2>
+    <div class="url-bar" id="url-bar"></div>
+    <div class="chips" id="url-chips"></div>
+    <div class="parte" id="url-parte"></div>
+    <p class="peq" style="margin-top:8px">La parte <b>essalud.gob.pe</b> se llama <b>dominio</b>: es el «nombre y apellido» de la página y es único en el mundo. La dirección completa se llama <b>URL</b>.</p>
+  </section>
+
+  <!-- www y https -->
+  <section class="diapo">
+    <p class="eti">Dos palabras que ves todos los días</p>
+    <div class="dos" style="align-items:start">
+      <div class="tj" style="padding:14px 16px">
+        <h3>🕸️ ¿Qué es WWW?</h3>
+        <p><b>World Wide Web</b>, «la telaraña mundial»: todas las páginas unidas por enlaces, saltando de una a otra como en una telaraña.</p>
+        <p style="margin-top:6px!important">La inventó <b>Tim Berners-Lee</b> en 1989. Internet ya existía; él creó la forma de publicar páginas encima de esa red.</p>
+        <p style="margin-top:6px!important">Hoy escribir <code>www.</code> es casi siempre <b>opcional</b>: <code>who.int</code> y <code>www.who.int</code> te llevan al mismo lugar.</p>
+      </div>
+      <div class="tj" style="padding:14px 16px">
+        <h3>🔒 ¿Qué es HTTPS?</h3>
+        <p>Es el «idioma» en que tu celular y la página se hablan. La <b>S</b> significa <b>seguro</b>: lo que envías viaja <b>cifrado</b>, como en un sobre cerrado.</p>
+        <div class="nav-bar"><span class="ins">⚠ No seguro</span>http://pagina-vieja.com</div>
+        <div class="nav-bar"><span>🔒</span>https://www.essalud.gob.pe</div>
+        <p class="peq" style="margin:4px 0 0!important">Sin la S, cualquiera en el mismo wifi podría leer lo que escribes. Nunca pongas contraseñas en una página <b>No segura</b>.</p>
+      </div>
+    </div>
+    <div class="pregunta" data-revela>
+      <span>Si una página tiene candado 🔒, ¿significa que dice la verdad?</span>
+      <button class="bt sec" type="button">Ver respuesta</button>
+      <p class="resp">No. El candado solo dice que la conversación va cifrada. Una página tramposa también puede tenerlo: te protege de los mirones, no de los mentirosos.</p>
     </div>
   </section>
 
@@ -371,19 +506,20 @@
   <!-- 13 -->
   <section class="diapo">
     <p class="eti">Pistas en la dirección</p>
-    <div class="dos">
+    <h2>¿Por qué un <code>.gob.pe</code> es más confiable que un <code>.com</code>?</h2>
+    <div class="dos" style="align-items:start">
       <div>
-        <h2>El final de la dirección web te da pistas</h2>
+        <p style="margin-bottom:8px!important">Porque <b>no cualquiera</b> puede tenerlo: alguien verifica quién eres antes de entregártelo.</p>
         <div class="dom">
-          <code>.gob.pe</code><p>Gobierno del Perú: MINSA, EsSalud, ministerios. Solo el Estado puede usarlo.</p>
-          <code>.edu.pe</code><p>Universidades e institutos del Perú.</p>
-          <code>.int</code><p>Organizaciones internacionales, como la OMS (<code>who.int</code>).</p>
-          <code>.org</code><p>Organizaciones… pero <b>cualquiera</b> puede comprar uno.</p>
-          <code>.com</code><p>Cualquiera: empresas, tiendas, blogs personales.</p>
+          <code>.gob.pe</code><p>✅ Solo entidades del <b>Estado peruano</b>, que deben demostrar que lo son (MINSA, EsSalud, ministerios).</p>
+          <code>.edu.pe</code><p>✅ Solo <b>instituciones educativas</b> del Perú, presentando documentos.</p>
+          <code>.int</code><p>✅ Solo organizaciones creadas por <b>acuerdos entre países</b>, como la OMS o la ONU.</p>
+          <code>.gov</code><p>✅ Solo el <b>gobierno de EE. UU.</b> (por eso MedlinePlus es <code>medlineplus.gov</code>).</p>
+          <code>.com .org .pe</code><p>🔍 <b>Cualquiera</b> que pague, en 5 minutos y sin verificar nada. No es malo, pero revisa más.</p>
         </div>
       </div>
       <div>
-        <p class="nota"><b>Cuidado con las imitaciones:</b> <code>minsa-salud-peru.com</code> o <code>noticias-verdad24.blogspot.com</code> pueden copiar logos y colores de una institución real. Lee la dirección completa, no solo el logo.</p>
+        <p class="nota"><b>¿Por qué la OMS es <code>who.int</code>?</b> 🤔<br><b>WHO</b> = <b>W</b>orld <b>H</b>ealth <b>O</b>rganization, el nombre de la OMS en inglés. Y <code>.int</code> = internacional. Igual pasa con la OPS: <code>paho.org</code> = <b>P</b>an <b>A</b>merican <b>H</b>ealth <b>O</b>rganization.</p>
         <div class="pregunta" data-revela>
           <span>¿Un <code>.com</code> siempre miente?</span>
           <button class="bt sec" type="button">Ver respuesta</button>
@@ -391,6 +527,14 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- detector de dueños -->
+  <section class="diapo">
+    <p class="eti">Detector de imitaciones · toca cada dirección</p>
+    <h2>¿De quién es <i>realmente</i> esta página?</h2>
+    <p class="nota" style="margin-bottom:10px"><b>La regla:</b> el dueño es lo que está <b>justo antes de la primera barra <code>/</code></b>. Lo que va a la izquierda lo puede inventar cualquiera para parecer serio.</p>
+    <div class="det" id="det"></div>
   </section>
 
   <!-- 14 -->
@@ -416,14 +560,76 @@
     </div>
   </section>
 
+  <!-- descargas: la página trampa -->
+  <section class="diapo">
+    <p class="eti">Una pregunta que llegó en clase</p>
+    <h2>«Profe, ¿y si quiero descargar un audio o video de YouTube?»</h2>
+    <div class="dos" style="align-items:start">
+      <div class="trampa" aria-label="Simulación de una página de descargas con trampas">
+        <div class="tb"><span class="ins">⚠ No seguro</span>convertidor-mp3-gratis.xyz</div>
+        <div class="cont">
+          <div class="campo">Pega aquí el enlace de YouTube…</div>
+          <button class="tr verde" type="button" data-revela>⬇ DESCARGAR AHORA<span class="que">🚩 Anuncio disfrazado. Te lleva a otra página o te instala una app basura.</span></button>
+          <button class="tr alerta" type="button" data-revela>⚠ ¡Tu celular tiene 3 virus! Toca aquí para limpiarlo<span class="que">🚩 Falso. Una página no puede revisar tu celular: quiere que instales algo dañino.</span></button>
+          <button class="tr notif" type="button" data-revela>🔔 convertidor-mp3-gratis.xyz quiere enviarte notificaciones · <b>Permitir</b><span class="que">🚩 Si aceptas, te llenará el celular de avisos falsos aunque cierres la página.</span></button>
+          <button class="tr azul" type="button" data-revela>▶ Download HD (rápido)<span class="que">🚩 Otro anuncio. Las páginas así tienen 3 o 4 botones falsos.</span></button>
+          <button class="tr mini" type="button" data-revela>descargar mp3 (3,2 MB)<span class="que">🤷 Quizás este es el real… pero viene de una página que vive de engañarte. ¿Vale la pena el riesgo?</span></button>
+        </div>
+      </div>
+      <div>
+        <p>Muchas páginas «gratis» para descargar están <b>llenas de trampas</b>. Toca cada botón de la página de la izquierda: ¿cuál es el de verdad?</p>
+        <div class="pregunta" data-revela>
+          <span>¿Por qué estas páginas son gratis?</span>
+          <button class="bt sec" type="button">Ver respuesta</button>
+          <p class="resp">Ganan dinero con anuncios engañosos, con tus datos o instalándote programas. Cuando algo es gratis y nadie sabe quién lo hace, muchas veces el producto eres tú.</p>
+        </div>
+        <div class="chat"><p>¿Alguna vez te salió un aviso de «tienes virus»? ¿Qué hiciste? Cuéntalo en el chat.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- descargas: opciones seguras -->
+  <section class="diapo">
+    <p class="eti">Entonces, ¿qué uso?</p>
+    <h2>Opciones más seguras para ver o escuchar sin internet</h2>
+    <div class="rej c3 op3">
+      <div class="tj" style="border-top:5px solid var(--ok)">
+        <h3>✅ Lo oficial (lo más seguro)</h3>
+        <ul>
+          <li><b>YouTube Premium</b>: botón <b>Descargar</b> dentro de la app para ver sin internet.</li>
+          <li><b>YouTube Music</b> o <b>Spotify</b>: guardan la música para escucharla sin conexión con su plan.</li>
+          <li>Gratis: escuchar en línea con anuncios. Muchos planes tienen precio de estudiante.</li>
+        </ul>
+      </div>
+      <div class="tj" style="border-top:5px solid var(--azul)">
+        <h3>🛠️ Si no puedes o no quieres pagar</h3>
+        <ul>
+          <li>Usa apps de <b>código abierto</b>: gratis, sin anuncios y revisadas por miles de personas.</li>
+          <li>📱 Android: <a href="https://newpipe.net" target="_blank" rel="noopener">NewPipe</a> o <a href="https://github.com/JunkFood02/Seal" target="_blank" rel="noopener">Seal</a>, instaladas desde <a href="https://f-droid.org" target="_blank" rel="noopener">F-Droid</a> (una tienda de apps libres).</li>
+          <li>💻 Computadora: <a href="https://github.com/yt-dlp/yt-dlp" target="_blank" rel="noopener">yt-dlp</a> (para curiosos: se usa escribiendo órdenes).</li>
+          <li>🍎 iPhone: no hay una opción libre confiable; mejor la oficial.</li>
+        </ul>
+      </div>
+      <div class="tj" style="border-top:5px solid var(--amber)">
+        <h3>⚖️ Reglas de oro</h3>
+        <ul>
+          <li>Descarga programas <b>solo de su página oficial</b> o de una tienda conocida, nunca de «páginas de APK».</li>
+          <li>No instales extensiones «descargador» ni aceptes notificaciones.</li>
+          <li>Si una página dice «tienes virus», <b>ciérrala</b>.</li>
+          <li>Solo para <b>uso personal</b>: no vuelvas a subir ni vendas lo que no es tuyo.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- 15 -->
   <section class="diapo">
     <p class="eti">Guárdalas en tu celular ⭐</p>
     <h2>Fuentes de salud confiables para tu carrera</h2>
     <div class="rej c3">
       <a class="fuente" style="--c:#c8102e" href="https://www.gob.pe/minsa" target="_blank" rel="noopener"><h3>🇵🇪 MINSA</h3><small>gob.pe/minsa</small><p>Ministerio de Salud del Perú: normas técnicas, campañas y alertas.</p></a>
-      <a class="fuente" style="--c:#0093d5" href="https://www.who.int/es" target="_blank" rel="noopener"><h3>🌍 OMS</h3><small>who.int/es</small><p>Organización Mundial de la Salud: guías y hojas informativas.</p></a>
-      <a class="fuente" style="--c:#00539b" href="https://www.paho.org/es" target="_blank" rel="noopener"><h3>🌎 OPS</h3><small>paho.org/es</small><p>Organización Panamericana de la Salud: información para las Américas.</p></a>
+      <a class="fuente" style="--c:#0093d5" href="https://www.who.int/es" target="_blank" rel="noopener"><h3>🌍 OMS</h3><small>who.int/es</small><p>Organización Mundial de la Salud (en inglés, <b>WHO</b>): guías y hojas informativas.</p></a>
+      <a class="fuente" style="--c:#00539b" href="https://www.paho.org/es" target="_blank" rel="noopener"><h3>🌎 OPS</h3><small>paho.org/es</small><p>Organización Panamericana de la Salud (en inglés, <b>PAHO</b>): información para las Américas.</p></a>
       <a class="fuente" style="--c:#2f7d4a" href="https://medlineplus.gov/spanish/" target="_blank" rel="noopener"><h3>📘 MedlinePlus</h3><small>medlineplus.gov/spanish</small><p>Enfermedades, medicamentos y exámenes explicados en lenguaje sencillo.</p></a>
       <a class="fuente" style="--c:#b3752c" href="https://scielo.org/es/" target="_blank" rel="noopener"><h3>📚 SciELO</h3><small>scielo.org</small><p>Artículos científicos gratis de universidades de Latinoamérica.</p></a>
       <a class="fuente" style="--c:#4285f4" href="https://scholar.google.com/?hl=es" target="_blank" rel="noopener"><h3>🎓 Google Académico</h3><small>scholar.google.com</small><p>Un Google solo para estudios y tesis. Ideal para tus trabajos.</p></a>
@@ -471,19 +677,31 @@
     <p class="eti">Para recordar</p>
     <h2>Lo más importante de hoy</h2>
     <ul>
-      <li><b class="k">Internet</b> es la red, la <b class="k">web</b> son las páginas, el <b class="k">navegador</b> las abre y el <b class="k">buscador</b> las encuentra.</li>
-      <li>Busca con <b>palabras clave</b>, usa <code>"comillas"</code>, <code>-palabra</code>, <code>site:</code> y <code>filetype:pdf</code>.</li>
-      <li>El primer resultado no es el más verdadero: mira si dice <b>«Patrocinado»</b>.</li>
+      <li><b class="k">Internet</b> son millones de computadoras conectadas; los archivos que comparten en público son las <b class="k">páginas web</b>.</li>
+      <li>Lee la dirección: <code>https</code> = conexión cifrada (no verdad garantizada); el <b>dueño</b> es lo que va justo antes de la primera <code>/</code>.</li>
+      <li><code>.gob.pe</code>, <code>.edu.pe</code>, <code>.int</code> y <code>.gov</code> se verifican antes de entregarse; un <code>.com</code> lo compra cualquiera.</li>
+      <li>Busca con <b>palabras clave</b>, <code>"comillas"</code>, <code>-palabra</code>, <code>site:</code> y <code>filetype:pdf</code>. Mira si dice <b>«Patrocinado»</b>.</li>
       <li>Antes de creer, pregunta: <b>¿quién?, ¿cuándo?, ¿cómo lo sabe?, ¿para qué?</b></li>
     </ul>
-    <p class="nota" style="margin-top:14px">Como profesional de la salud, internet <b>te ayuda a informarte</b>, pero <b>no reemplaza</b> la indicación médica ni los protocolos de tu establecimiento.</p>
-    <div class="sintarea" style="margin-top:12px"><p>🎉 Hoy no hay tarea. Lo practicaste todo en clase.</p></div>
+    <p class="nota" style="margin-top:12px">Como profesional de la salud, internet <b>te ayuda a informarte</b>, pero <b>no reemplaza</b> la indicación médica ni los protocolos de tu establecimiento.</p>
+    <div class="sintarea" style="margin-top:10px"><p>🎉 Hoy no hay tarea. Lo practicaste todo en clase.</p></div>
+  </section>
+
+  <!-- video -->
+  <section class="diapo" id="d-video">
+    <p class="eti">Para cerrar · video</p>
+    <h2 style="text-align:center">El día que nació internet 🎬</h2>
+    <div class="video" id="video"><button type="button" id="video-play" aria-label="Reproducir el video aquí" style="background-image:url('https://i.ytimg.com/vi/o9y4sgV4oAE/hqdefault.jpg')"></button></div>
+    <div class="fila" style="justify-content:center;margin-top:12px">
+      <a class="bt sec" href="https://www.youtube.com/watch?v=o9y4sgV4oAE" target="_blank" rel="noopener">Abrir en YouTube ↗</a>
+      <span class="peq">Canal ElDiaQue · Mientras lo ves: ¿qué te sorprendió? Escríbelo en el chat.</span>
+    </div>
   </section>
 
   <!-- 19 -->
   <section class="diapo portada">
     <div class="txt">
-      <p class="eti">Herramientas Informáticas · Clase 5</p>
+      <p class="eti">Herramientas Informáticas · Clase 6</p>
       <h1>¡Gracias!</h1>
       <p>Comparte en el chat: ¿qué truco de búsqueda vas a usar desde hoy?</p>
       <p class="peq" style="color:#cfe3d3">Nos vemos en el laboratorio. 💻</p>
@@ -530,6 +748,7 @@ function ir(n) {
   $("#barra").style.width = ((i + 1) / D.length * 100) + "%";
   history.replaceState(null, "", "#" + (i + 1));
   D[i].scrollTop = 0;
+  alCambiar(D[i].id);
 }
 $("#ant").onclick = () => ir(i - 1);
 $("#sig").onclick = () => ir(i === D.length - 1 ? 0 : i + 1);
@@ -583,6 +802,127 @@ $$("[data-iniciar]").forEach(b => {
     }, 1000);
   };
 });
+
+/* ---------- red animada: cómo funciona internet ---------- */
+const NODOS = [
+  { x: 70, y: 280, e: "📱", t: "Tú" }, { x: 170, y: 100, e: "💻" }, { x: 225, y: 290, e: "💻" },
+  { x: 320, y: 190, e: "🖥️" }, { x: 330, y: 60, e: "📱" }, { x: 445, y: 95, e: "🖥️" },
+  { x: 460, y: 280, e: "💻" }, { x: 580, y: 300, e: "🖥️" }, { x: 570, y: 110, e: "🗄️", t: "Servidor", srv: true }
+];
+const CABLES = [[0,1],[0,2],[1,3],[1,4],[2,3],[2,6],[3,4],[3,5],[3,6],[4,5],[5,8],[6,7],[6,8],[7,8]];
+const IDA = [0, 2, 3, 5, 8], VUELTA = [8, 6, 2, 0];
+const PASOS_RED = [
+  { t: "Millones de computadoras", d: "En todo el mundo hay computadoras, celulares y tablets. Cada una, sola, no puede hablar con las demás." },
+  { t: "Se conectan entre sí", d: "Con cables, wifi y antenas de celular se unen unas con otras. Esa red gigante de computadoras conectadas es <b>internet</b>." },
+  { t: "Cada una guarda archivos", d: "Igual que tu celular guarda fotos y documentos, cada computadora tiene sus propios archivos." },
+  { t: "Algunas los hacen públicos", d: "Cuando una computadora deja sus archivos abiertos para que cualquiera entre, a eso le llamamos <b>página web</b>. Esa computadora se llama <b>servidor</b>." },
+  { t: "Tú entras como visitante", d: "Escribes la dirección, tu pedido viaja por la red hasta el servidor y la página regresa a tu celular… en menos de un segundo." }
+];
+const enRuta = (a, b) => [IDA, VUELTA].some(r => r.some((n, k) => k && ((r[k - 1] === a && n === b) || (r[k - 1] === b && n === a))));
+const svgRed = $("#red");
+svgRed.innerHTML =
+  CABLES.map(([a, b]) => `<line class="cable${enRuta(a, b) ? " ruta" : ""}" x1="${NODOS[a].x}" y1="${NODOS[a].y}" x2="${NODOS[b].x}" y2="${NODOS[b].y}"/>`).join("") +
+  NODOS.map((n, k) => `<g class="nodo" style="transition-delay:${k * 90}ms">
+      ${n.srv ? `<circle class="halo" cx="${n.x}" cy="${n.y}" r="44"/>` : ""}
+      <circle cx="${n.x}" cy="${n.y}" r="27" fill="#f6f4ee" stroke="${n.srv ? "#2f7d4a" : "#d8d3c4"}" stroke-width="2"/>
+      <text x="${n.x}" y="${n.y + 1}" font-size="28">${n.e}</text>
+      ${n.t ? `<text class="etq" x="${n.x}" y="${n.y + (n.srv ? 58 : 42)}">${n.t}</text>` : ""}
+      <text class="arch${n.srv ? " pub" : ""}" x="${n.x + 26}" y="${n.y - 24}">${n.srv ? "🗂️" : "📄"}</text>
+    </g>`).join("") +
+  `<g class="cartel c3"><rect x="486" y="22" width="148" height="24" rx="12"/><text x="560" y="34">Página web pública</text></g>
+   <g class="cartel" id="red-ok"><rect x="8" y="200" width="124" height="24" rx="12"/><text x="70" y="212">¡Página abierta! ✅</text></g>
+   <g id="paq" opacity="0"><circle r="17" fill="#b3752c"/><text font-size="17" y="1">✉️</text></g>`;
+$("#red-puntos").innerHTML = PASOS_RED.map(() => "<i></i>").join("");
+let redK = 0, redTok = 0;
+function mover(ruta, emo, ms) {
+  const paq = $("#paq"), pts = ruta.map(n => NODOS[n]), tok = redTok;
+  const lens = pts.slice(1).map((p, k) => Math.hypot(p.x - pts[k].x, p.y - pts[k].y)), total = lens.reduce((a, b) => a + b, 0);
+  paq.querySelector("text").textContent = emo; paq.setAttribute("opacity", 1);
+  return new Promise(fin => {
+    const t0 = performance.now();
+    (function cuadro(t) {
+      if (tok !== redTok) return fin(false);
+      let d = Math.min(1, (t - t0) / ms) * total, k = 0;
+      while (k < lens.length - 1 && d > lens[k]) d -= lens[k++];
+      const f = Math.min(1, d / lens[k]), x = pts[k].x + (pts[k + 1].x - pts[k].x) * f, y = pts[k].y + (pts[k + 1].y - pts[k].y) * f;
+      paq.setAttribute("transform", `translate(${x} ${y})`);
+      if (t - t0 < ms) requestAnimationFrame(cuadro); else { paq.setAttribute("opacity", 0); fin(true); }
+    })(t0);
+  });
+}
+async function viaje() {
+  const tok = ++redTok;
+  $("#red-ok").classList.remove("ver");
+  svgRed.classList.add("viajando");
+  if (!await mover(IDA, "✉️", 1700)) return;
+  tono(520, .15);
+  await new Promise(r => setTimeout(r, 450)); if (tok !== redTok) return;
+  if (!await mover(VUELTA, "📄", 1400)) return;
+  svgRed.classList.remove("viajando");
+  $("#red-ok").classList.add("ver"); bien();
+}
+function redPaso(k, reiniciar) {
+  redK = Math.max(0, Math.min(PASOS_RED.length - 1, k)); redTok++;
+  $("#paq").setAttribute("opacity", 0); $("#red-ok").classList.remove("ver");
+  if (reiniciar) { svgRed.setAttribute("class", "red"); svgRed.getBoundingClientRect(); }
+  svgRed.setAttribute("class", "red " + PASOS_RED.slice(0, redK + 1).map((_, j) => "s" + j).join(" "));
+  $$("#red-puntos i").forEach((p, j) => p.classList.toggle("on", j <= redK));
+  $("#red-n").textContent = `PASO ${redK + 1} DE ${PASOS_RED.length}`;
+  $("#red-tit").textContent = PASOS_RED[redK].t;
+  $("#red-txt").innerHTML = PASOS_RED[redK].d;
+  $("#red-ant").disabled = redK === 0;
+  $("#red-sig").textContent = redK === PASOS_RED.length - 1 ? "↺ Repetir el viaje" : "Siguiente paso ▶";
+  if (redK === PASOS_RED.length - 1) setTimeout(viaje, 250);
+}
+$("#red-sig").onclick = () => redPaso(redK + 1);
+$("#red-ant").onclick = () => redPaso(redK - 1);
+
+/* ---------- partes de una dirección ---------- */
+const PARTES = [
+  { s: "https://", n: "Protocolo", c: "#2f7d4a", d: "El «idioma» con que tu celular y la página se hablan. La <b>S</b> final significa <b>seguro</b>: lo que envías viaja cifrado.", casa: "Como el tipo de envío: carta en sobre cerrado en vez de postal." },
+  { s: "www.", n: "WWW", c: "#2f63e0", d: "<b>World Wide Web</b>. Una costumbre de los inicios de la web: hoy casi siempre es opcional.", casa: "Como poner «Sr.» o «Sra.» antes del nombre: casi siempre se puede omitir." },
+  { s: "essalud", n: "Nombre", c: "#b3752c", d: "El nombre que eligió el dueño. Es la parte que te dice <b>quién está detrás</b> de la página.", casa: "La casa: quién vive ahí." },
+  { s: ".gob", n: "Tipo", c: "#8a4fb3", d: "Qué clase de organización es: <code>.gob</code> gobierno · <code>.edu</code> educación · <code>.com</code> comercial · <code>.org</code> organización.", casa: "El barrio: el del gobierno, el de los colegios, el de las tiendas…" },
+  { s: ".pe", n: "País", c: "#c8102e", d: "<code>.pe</code> Perú · <code>.cl</code> Chile · <code>.mx</code> México · <code>.es</code> España. Algunos no tienen país, como <code>.com</code> o <code>.int</code>.", casa: "El país. Por eso el dominio se lee de derecha a izquierda, como un sobre: país → barrio → casa." },
+  { s: "/servicios/citas", n: "Ruta", c: "#5f6b66", d: "La <b>carpeta y el archivo</b> dentro del servidor, como en tu computadora: carpeta «servicios» → archivo «citas».", casa: "La habitación dentro de la casa." }
+];
+$("#url-bar").innerHTML = PARTES.map((p, k) => `<button class="up" type="button" data-k="${k}" style="--c:${p.c}">${escH(p.s)}</button>`).join("");
+$("#url-chips").innerHTML = PARTES.map((p, k) => `<button class="chip" type="button" data-k="${k}" style="--c:${p.c}">${escH(p.n)}</button>`).join("");
+function verParte(k) {
+  const p = PARTES[k];
+  $$("#d-url [data-k]").forEach(b => b.classList.toggle("on", Number(b.dataset.k) === k));
+  const c = $("#url-parte"); c.style.setProperty("--c", p.c);
+  c.innerHTML = `<h3>${escH(p.n)} · <code>${escH(p.s)}</code></h3><p>${p.d}</p><p class="casa">🏠 ${escH(p.casa)}</p>`;
+}
+$("#d-url").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b) verParte(Number(b.dataset.k)); });
+verParte(0);
+
+/* ---------- detector de dueños ---------- */
+const DUENOS = [
+  { a: "https://www.", b: "who.int", c: "/es/news-room", ok: 1, r: "✅ El dueño es who.int: la OMS de verdad." },
+  { a: "https://who.int.", b: "salud-gratis.com", c: "/vacunas", ok: 0, r: "🚩 El dueño es salud-gratis.com. El «who.int» de la izquierda es puro disfraz." },
+  { a: "https://www.", b: "gob.pe", c: "/minsa", ok: 1, r: "✅ El dueño es gob.pe, la plataforma del Estado. «/minsa» es la carpeta del MINSA dentro." },
+  { a: "http://", b: "minsa-gob-pe.com", c: "/bono-salud", ok: 0, r: "🚩 Un .com con guiones que imita al MINSA… y encima sin https." },
+  { a: "https://", b: "medlineplus.gov", c: "/spanish", ok: 1, r: "✅ Un .gov: gobierno de EE. UU. Confiable." },
+  { a: "https://essalud.gob.pe.", b: "citas-online.net", c: "/login", ok: 0, r: "🚩 El dueño es citas-online.net y te pide iniciar sesión: ¡quiere tu contraseña!" }
+];
+$("#det").innerHTML = DUENOS.map(d => `<button class="dueno ${d.ok ? "ok" : "no"}" type="button" data-revela>
+  <span class="u">${escH(d.a)}<b>${escH(d.b)}</b>${escH(d.c)}</span><span class="r">${escH(d.r)}</span></button>`).join("");
+$("#det").addEventListener("click", e => { const b = e.target.closest(".dueno"); if (b) setTimeout(() => b.classList.contains("ver") && (b.classList.contains("ok") ? bien() : mal()), 0); });
+
+/* ---------- video ---------- */
+const VIDEO_BTN = $("#video").innerHTML;
+$("#video").addEventListener("click", e => {
+  if (!e.target.closest("#video-play")) return;
+  $("#video").innerHTML = `<iframe src="https://www.youtube.com/embed/o9y4sgV4oAE?autoplay=1&rel=0" title="El día que nació internet" referrerpolicy="strict-origin-when-cross-origin"
+    allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+});
+
+/* ---------- al cambiar de diapositiva ---------- */
+function alCambiar(id) {
+  if (id === "d-red") redPaso(0, true); else redTok++;
+  if (id !== "d-video" && $("#video iframe")) $("#video").innerHTML = VIDEO_BTN;   // detiene el video al salir
+}
 
 /* ---------- laboratorio de búsqueda ---------- */
 const TRUCOS = [
@@ -670,6 +1010,10 @@ jPinta();
 
 /* ---------- repaso ---------- */
 const QUIZ = [
+  { p: "Internet es…", o: ["Una red gigante de computadoras conectadas", "Lo mismo que Google", "El wifi de tu casa"], c: 0, x: "Son millones de computadoras conectadas. Google es solo una página dentro de esa red." },
+  { p: "En https://www.essalud.gob.pe/citas, ¿qué indica .pe?", o: ["Que es una página pública", "Que es del Perú", "Que es una página de pediatría"], c: 1, x: ".pe es el código del Perú, como .cl de Chile o .mx de México." },
+  { p: "La S de https y el candado 🔒 significan que…", o: ["La página dice la verdad", "La conexión va cifrada", "La página es del gobierno"], c: 1, x: "Solo indica que lo que envías viaja cifrado. Una página tramposa también puede tener candado." },
+  { p: "¿De quién es realmente la página who.int.salud-gratis.com?", o: ["De la OMS", "De salud-gratis.com", "Del gobierno"], c: 1, x: "El dueño es lo que va justo antes de la primera barra: salud-gratis.com. Lo de la izquierda es disfraz." },
   { p: "Chrome, Safari y Firefox son…", o: ["Navegadores", "Buscadores", "Redes sociales"], c: 0, x: "Son navegadores: abren las páginas web. Google, Bing y DuckDuckGo son buscadores." },
   { p: "Quiero ver solo páginas del Estado peruano. ¿Qué agrego a mi búsqueda?", o: ["site:gob.pe", "filetype:gob", "\"gobierno\""], c: 0, x: "site:gob.pe limita la búsqueda a páginas que terminan en .gob.pe." },
   { p: "Necesito una norma técnica en documento. ¿Qué agrego?", o: ["-documento", "filetype:pdf", "site:pdf"], c: 1, x: "filetype:pdf trae solo archivos PDF." },
