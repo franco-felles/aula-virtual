@@ -366,7 +366,8 @@
         <h3>🕸️ ¿Qué es WWW?</h3>
         <p><b>World Wide Web</b>, «la telaraña mundial»: todas las páginas unidas por enlaces, saltando de una a otra como en una telaraña.</p>
         <p style="margin-top:6px!important">La inventó <b>Tim Berners-Lee</b> en 1989. Internet ya existía; él creó la forma de publicar páginas encima de esa red.</p>
-        <p style="margin-top:6px!important">Hoy escribir <code>www.</code> es casi siempre <b>opcional</b>: <code>who.int</code> y <code>www.who.int</code> te llevan al mismo lugar.</p>
+        <p style="margin-top:6px!important"><b>¿Por qué se escribía?</b> Antes, una institución tenía varias computadoras, cada una con su tarea: <code>www.</code> la de las páginas, <code>mail.</code> la del correo. El <code>www.</code> decía «llévame a la computadora de las páginas».</p>
+        <p style="margin-top:6px!important"><b>¿Y hoy?</b> Los navegadores ya saben que buscas una página, así que <code>who.int</code> y <code>www.who.int</code> te llevan al mismo lugar. Es <b>opcional</b>.</p>
       </div>
       <div class="tj" style="padding:14px 16px">
         <h3>🔒 ¿Qué es HTTPS?</h3>
@@ -381,6 +382,40 @@
       <button class="bt sec" type="button">Ver respuesta</button>
       <p class="resp">No. El candado solo dice que la conversación va cifrada. Una página tramposa también puede tenerlo: te protege de los mirones, no de los mentirosos.</p>
     </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="diapo">
+    <p class="eti">Pistas en la dirección</p>
+    <h2>¿Por qué un <code>.gob.pe</code> es más confiable que un <code>.com</code>?</h2>
+    <div class="dos" style="align-items:start">
+      <div>
+        <p style="margin-bottom:8px!important">Porque <b>no cualquiera</b> puede tenerlo: alguien verifica quién eres antes de entregártelo.</p>
+        <div class="dom">
+          <code>.gob.pe</code><p>✅ Solo entidades del <b>Estado peruano</b>, que deben demostrar que lo son (MINSA, EsSalud, ministerios).</p>
+          <code>.edu.pe</code><p>✅ Solo <b>instituciones educativas</b> del Perú, presentando documentos.</p>
+          <code>.int</code><p>✅ Solo organizaciones creadas por <b>acuerdos entre países</b>, como la OMS o la ONU.</p>
+          <code>.gov</code><p>✅ Solo el <b>gobierno de EE. UU.</b> (por eso MedlinePlus es <code>medlineplus.gov</code>).</p>
+          <code>.com .org .pe</code><p>🔍 <b>Cualquiera</b> que pague, en 5 minutos y sin verificar nada. No es malo, pero revisa más.</p>
+        </div>
+      </div>
+      <div>
+        <p class="nota"><b>¿Por qué la OMS es <code>who.int</code>?</b> 🤔<br><b>WHO</b> = <b>W</b>orld <b>H</b>ealth <b>O</b>rganization, el nombre de la OMS en inglés. Y <code>.int</code> = internacional. Igual pasa con la OPS: <code>paho.org</code> = <b>P</b>an <b>A</b>merican <b>H</b>ealth <b>O</b>rganization.</p>
+        <div class="pregunta" data-revela>
+          <span>¿Un <code>.com</code> siempre miente?</span>
+          <button class="bt sec" type="button">Ver respuesta</button>
+          <p class="resp">No. La dirección es una pista, no una prueba: muchas empresas y organizaciones serias usan .com u .org. Lo que importa es saber quién está detrás.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- detector de dueños -->
+  <section class="diapo">
+    <p class="eti">Detector de imitaciones · toca cada dirección</p>
+    <h2>¿De quién es <i>realmente</i> esta página?</h2>
+    <p class="nota" style="margin-bottom:10px"><b>La regla:</b> el dueño es lo que está <b>justo antes de la primera barra <code>/</code></b>. Lo que va a la izquierda lo puede inventar cualquiera para parecer serio.</p>
+    <div class="det" id="det"></div>
   </section>
 
   <!-- 5 -->
@@ -501,40 +536,6 @@
     <div class="lee" style="margin-top:12px">
       <p>Desconfía cuando leas: <b>«cura todo»</b>, <b>«100 % natural, sin efectos»</b>, <b>«los médicos no quieren que sepas»</b>, <b>«compártelo antes de que lo borren»</b>. Son frases para que actúes sin pensar.</p>
     </div>
-  </section>
-
-  <!-- 13 -->
-  <section class="diapo">
-    <p class="eti">Pistas en la dirección</p>
-    <h2>¿Por qué un <code>.gob.pe</code> es más confiable que un <code>.com</code>?</h2>
-    <div class="dos" style="align-items:start">
-      <div>
-        <p style="margin-bottom:8px!important">Porque <b>no cualquiera</b> puede tenerlo: alguien verifica quién eres antes de entregártelo.</p>
-        <div class="dom">
-          <code>.gob.pe</code><p>✅ Solo entidades del <b>Estado peruano</b>, que deben demostrar que lo son (MINSA, EsSalud, ministerios).</p>
-          <code>.edu.pe</code><p>✅ Solo <b>instituciones educativas</b> del Perú, presentando documentos.</p>
-          <code>.int</code><p>✅ Solo organizaciones creadas por <b>acuerdos entre países</b>, como la OMS o la ONU.</p>
-          <code>.gov</code><p>✅ Solo el <b>gobierno de EE. UU.</b> (por eso MedlinePlus es <code>medlineplus.gov</code>).</p>
-          <code>.com .org .pe</code><p>🔍 <b>Cualquiera</b> que pague, en 5 minutos y sin verificar nada. No es malo, pero revisa más.</p>
-        </div>
-      </div>
-      <div>
-        <p class="nota"><b>¿Por qué la OMS es <code>who.int</code>?</b> 🤔<br><b>WHO</b> = <b>W</b>orld <b>H</b>ealth <b>O</b>rganization, el nombre de la OMS en inglés. Y <code>.int</code> = internacional. Igual pasa con la OPS: <code>paho.org</code> = <b>P</b>an <b>A</b>merican <b>H</b>ealth <b>O</b>rganization.</p>
-        <div class="pregunta" data-revela>
-          <span>¿Un <code>.com</code> siempre miente?</span>
-          <button class="bt sec" type="button">Ver respuesta</button>
-          <p class="resp">No. La dirección es una pista, no una prueba. Por eso siempre haces las 4 preguntas.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- detector de dueños -->
-  <section class="diapo">
-    <p class="eti">Detector de imitaciones · toca cada dirección</p>
-    <h2>¿De quién es <i>realmente</i> esta página?</h2>
-    <p class="nota" style="margin-bottom:10px"><b>La regla:</b> el dueño es lo que está <b>justo antes de la primera barra <code>/</code></b>. Lo que va a la izquierda lo puede inventar cualquiera para parecer serio.</p>
-    <div class="det" id="det"></div>
   </section>
 
   <!-- 14 -->
@@ -880,7 +881,7 @@ $("#red-ant").onclick = () => redPaso(redK - 1);
 /* ---------- partes de una dirección ---------- */
 const PARTES = [
   { s: "https://", n: "Protocolo", c: "#2f7d4a", d: "El «idioma» con que tu celular y la página se hablan. La <b>S</b> final significa <b>seguro</b>: lo que envías viaja cifrado.", casa: "Como el tipo de envío: carta en sobre cerrado en vez de postal." },
-  { s: "www.", n: "WWW", c: "#2f63e0", d: "<b>World Wide Web</b>. Una costumbre de los inicios de la web: hoy casi siempre es opcional.", casa: "Como poner «Sr.» o «Sra.» antes del nombre: casi siempre se puede omitir." },
+  { s: "www.", n: "WWW", c: "#2f63e0", d: "<b>World Wide Web</b>. Antes indicaba cuál de las computadoras de la institución tenía las páginas (otra podía ser <code>mail.</code> para el correo). Hoy casi siempre es opcional.", casa: "Como indicar «puerta principal»: antes ayudaba a no equivocarse de entrada; hoy el navegador ya sabe por dónde entrar." },
   { s: "essalud", n: "Nombre", c: "#b3752c", d: "El nombre que eligió el dueño. Es la parte que te dice <b>quién está detrás</b> de la página.", casa: "La casa: quién vive ahí." },
   { s: ".gob", n: "Tipo", c: "#8a4fb3", d: "Qué clase de organización es: <code>.gob</code> gobierno · <code>.edu</code> educación · <code>.com</code> comercial · <code>.org</code> organización.", casa: "El barrio: el del gobierno, el de los colegios, el de las tiendas…" },
   { s: ".pe", n: "País", c: "#c8102e", d: "<code>.pe</code> Perú · <code>.cl</code> Chile · <code>.mx</code> México · <code>.es</code> España. Algunos no tienen país, como <code>.com</code> o <code>.int</code>.", casa: "El país. Por eso el dominio se lee de derecha a izquierda, como un sobre: país → barrio → casa." },
