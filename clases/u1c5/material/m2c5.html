@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- FICHA DEL MATERIAL: clase 5 (virtual) · internet, buscadores e información de salud confiable -->
+<meta name="material-titulo" content="Busca como profesional: información de salud confiable">
+<meta name="material-tipo" content="presentacion">
+<meta name="material-descripcion" content="Presentación interactiva para la clase virtual: internet, web, navegador y buscador; trucos para buscar mejor desde tu celular; cómo saber si una información de salud es confiable, con retos en vivo y un juego. Sin tarea.">
+<title>Busca como profesional</title>
+<script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  :root { --vw: 1vw; }
+  body.escalar { --vw: 11.4px; }
+  :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #7c7763;
+          --soft: #ece8dc; --ok: #2f7d4a; --bad: #b3362c; --azul: #2f63e0; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; height: 100%; background: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); }
+  .escena { position: fixed; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px 16px 72px; }
+  .diapo { display: none; width: min(1140px, 100%); aspect-ratio: 16 / 9; max-height: calc(100vh - 100px); background: var(--paper);
+           border-radius: 18px; padding: clamp(18px, calc(var(--vw) * 3.6), 44px); overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.35); position: relative; }
+  .diapo.on { display: flex; flex-direction: column; justify-content: center; animation: entra .35s ease both; }
+  .diapo > * { flex-shrink: 0; }
+  @keyframes entra { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+  body.escalar .escena { display: block; padding: 0; }
+  body.escalar .diapo { position: absolute; left: 50%; top: calc((100% - 64px) / 2); width: 1140px; height: 641px; max-height: none; aspect-ratio: auto; transform: translate(-50%, -50%) scale(var(--s, 1)); }
+  .diapo h1 { font-size: clamp(1.8rem, calc(var(--vw) * 5), 3.4rem); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 14px; }
+  .diapo h2 { font-size: clamp(1.3rem, calc(var(--vw) * 3), 2.05rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.01em; }
+  .diapo h3 { font-size: clamp(.98rem, calc(var(--vw) * 1.8), 1.15rem); margin: 0 0 4px; }
+  .diapo p, .diapo li { font-size: clamp(.95rem, calc(var(--vw) * 1.8), 1.2rem); line-height: 1.5; margin: 0 0 10px; }
+  .diapo ul { margin: 0; padding-left: 1.2em; } .diapo li + li { margin-top: 6px; } .diapo li { margin-bottom: 0; }
+  .peq { font-size: clamp(.8rem, calc(var(--vw) * 1.45), .95rem) !important; color: var(--mut); }
+  .eti { font-family: "IBM Plex Mono", monospace; font-size: .82rem !important; letter-spacing: .08em; text-transform: uppercase; color: var(--moss); margin: 0 0 8px !important; }
+  .portada { background: var(--moss); color: #fff; } .portada .eti { color: #cfe3d3; }
+  .portada .txt { max-width: 60%; }
+  .portada .lupa { position: absolute; right: 6%; top: 50%; translate: 0 -50%; width: 30%; }
+  .seccion { background: var(--ink); color: var(--paper); } .seccion .eti { color: #e0b177; }
+  .seccion .num { font-family: "IBM Plex Mono", monospace; font-size: clamp(3rem, calc(var(--vw) * 9), 6rem); color: var(--amber); line-height: 1; margin: 0 0 6px; }
+  .seccion .sub { color: #cfd8d3; max-width: 70%; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+  .nota { background: #fbf1e2; border-left: 5px solid var(--amber); padding: 10px 14px; border-radius: 8px; }
+  .def { font-size: clamp(1.05rem, calc(var(--vw) * 2.2), 1.45rem) !important; line-height: 1.4 !important; border-left: 6px solid var(--moss); padding-left: 16px; }
+  b.k { color: var(--moss); }
+  code { font-family: "IBM Plex Mono", monospace; font-size: .9em; background: var(--soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+
+  .lee { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px 6px; }
+  .lee::before { content: "📖 Un alumno lee en voz alta"; display: block; font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+  .chat { display: flex; gap: 10px; align-items: center; background: #e9effc; border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
+  .chat::before { content: "💬"; font-size: 1.4rem; }
+  .chat p { margin: 0 !important; font-weight: 600; color: #213f8f; }
+  .pregunta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--soft); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
+  .pregunta > span { font-weight: 600; font-size: clamp(.92rem, calc(var(--vw) * 1.7), 1.08rem); }
+  .pregunta > span::before { content: "🤔 "; }
+  .pregunta .resp { display: none; flex-basis: 100%; color: var(--moss); font-weight: 600; margin: 0 !important; }
+  .pregunta.ver .resp { display: block; } .pregunta.ver .bt { display: none; }
+
+  .bt { font: 600 clamp(.82rem, calc(var(--vw) * 1.5), .98rem) "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 16px; cursor: pointer; transition: transform .1s, filter .2s; text-decoration: none; display: inline-block; }
+  .bt:hover { filter: brightness(1.15); } .bt:active { transform: scale(.96); }
+  .bt.sec { background: #fff; color: var(--moss); border: 2px solid var(--moss); }
+  .bt.amb { background: var(--amber); }
+  .bt:disabled { opacity: .4; cursor: default; }
+  .fila { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .rej { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .rej.c2 { grid-template-columns: repeat(2, 1fr); } .rej.c3 { grid-template-columns: repeat(3, 1fr); } .rej.c4 { grid-template-columns: repeat(4, 1fr); }
+  .tj { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .tj p { font-size: clamp(.82rem, calc(var(--vw) * 1.45), .97rem) !important; margin: 0 !important; line-height: 1.4 !important; color: #3d4a43; }
+  .tj h3 { margin-bottom: 4px; }
+  .carta { font: inherit; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; position: relative; transition: border-color .2s, background .2s; color: var(--ink); }
+  .carta:hover { border-color: var(--moss); }
+  .carta .emo { font-size: 2rem; display: block; line-height: 1.1; margin-bottom: 4px; }
+  .carta h3 { margin: 0; }
+  .carta .como { font-size: clamp(.78rem, calc(var(--vw) * 1.35), .9rem); color: var(--amber); font-weight: 700; margin-top: 2px; }
+  .carta .atras { display: none; font-size: clamp(.8rem, calc(var(--vw) * 1.4), .93rem); line-height: 1.38; margin-top: 6px; }
+  .carta.ver .atras { display: block; } .carta.ver { border-color: var(--moss); background: #f1f6f2; }
+  .carta:not(.ver)::after { content: "toca"; position: absolute; top: 8px; right: 10px; font: 600 .65rem "IBM Plex Mono", monospace; color: var(--mut); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* pasos del buscador */
+  .pasos { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 6px 0 14px; }
+  .paso { background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--c); border-radius: 12px; padding: 12px 14px; }
+  .paso .n { font: 700 .74rem "IBM Plex Mono", monospace; color: var(--c); letter-spacing: .06em; }
+  .paso .emo { font-size: 1.9rem; display: block; margin: 2px 0; }
+  .paso p { font-size: clamp(.82rem, calc(var(--vw) * 1.45), .97rem) !important; margin: 0 !important; color: #3d4a43; line-height: 1.4 !important; }
+  .flecha { align-self: center; font-size: 1.6rem; color: var(--mut); }
+
+  /* resultados simulados */
+  .serp { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: grid; gap: 10px; }
+  .res { border-radius: 8px; padding: 6px 8px; }
+  .res .url { font-size: .78rem; color: #3c4043; }
+  .res .tit { color: #1a0dab; font-size: 1.02rem; font-weight: 600; }
+  .res .desc { font-size: .84rem; color: #4d5156; line-height: 1.35; }
+  .res .pat { font: 700 .72rem "IBM Plex Sans", sans-serif; color: #202124; }
+  .res.ad { background: #fff7e6; outline: 2px dashed var(--amber); }
+
+  /* laboratorio de búsqueda */
+  .lab { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: start; }
+  .lab > *, .dos > *, .juego > * { min-width: 0; }
+  .trucos { display: grid; gap: 6px; }
+  .truco { font: 600 .9rem "IBM Plex Sans", sans-serif; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 7px 10px; cursor: pointer; color: var(--ink); display: flex; gap: 8px; align-items: center; }
+  .truco:hover { border-color: var(--moss); }
+  .truco.on { background: var(--moss); border-color: var(--moss); color: #fff; }
+  .truco.visto:not(.on)::after { content: "✓"; margin-left: auto; color: var(--ok); }
+  .barra-g { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #dfe1e5; border-radius: 99px; padding: 10px 16px; box-shadow: 0 1px 6px rgba(32,33,36,.18); font: 500 clamp(.9rem, calc(var(--vw) * 1.7), 1.1rem) "IBM Plex Mono", monospace; overflow-x: auto; white-space: nowrap; }
+  .barra-g::before { content: "🔍"; }
+  .barra-g mark { background: #ffe9a8; border-radius: 4px; padding: 0 3px; }
+  .antes { color: var(--mut); text-decoration: line-through; font-size: .92rem; margin: 10px 0 4px !important; }
+  .expl { background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--moss); border-radius: 12px; padding: 10px 14px; margin: 10px 0; }
+  .expl p { margin: 0 0 6px !important; }
+
+  /* retos con reloj */
+  .reto { background: #fff; border: 2px solid var(--amber); border-radius: 14px; padding: 14px 18px; }
+  .reto h3 { font-size: clamp(1.05rem, calc(var(--vw) * 2.1), 1.35rem); }
+  .reloj { font: 700 clamp(1.6rem, calc(var(--vw) * 3.4), 2.4rem) "IBM Plex Mono", monospace; color: var(--amber); min-width: 4.2ch; }
+  .reloj.fin { color: var(--bad); animation: late .6s ease 3; }
+  @keyframes late { 50% { transform: scale(1.15); } }
+
+  /* dominios */
+  .dom { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: center; }
+  .dom code { font-size: 1rem; text-align: center; }
+  .dom p { margin: 0 !important; font-size: clamp(.85rem, calc(var(--vw) * 1.5), 1rem) !important; }
+
+  /* juego confiable o dudosa */
+  .juego { display: grid; grid-template-columns: 1fr 260px; gap: 18px; align-items: start; }
+  .post { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; box-shadow: 0 8px 20px rgba(0,0,0,.06); min-height: 150px; }
+  .post .de { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .post .av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 1.3rem; background: var(--soft); flex: none; }
+  .post .de b { display: block; font-size: .95rem; } .post .de small { color: var(--mut); font-size: .78rem; }
+  .post .cuerpo { font-size: clamp(.95rem, calc(var(--vw) * 1.75), 1.15rem); line-height: 1.45; }
+  .veredicto { margin-top: 10px; border-radius: 12px; padding: 10px 14px; animation: entra .3s ease both; }
+  .veredicto.ok { background: #eaf4ec; border-left: 5px solid var(--ok); }
+  .veredicto.mal { background: #f8e9e6; border-left: 5px solid var(--bad); }
+  .veredicto p { margin: 0 0 4px !important; font-size: clamp(.85rem, calc(var(--vw) * 1.5), 1rem) !important; }
+  .marcador { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center; }
+  .marcador .grande { font: 700 2.6rem "IBM Plex Mono", monospace; color: var(--moss); line-height: 1; }
+  .puntos { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; margin: 10px 0; }
+  .puntos i { width: 14px; height: 14px; border-radius: 50%; background: var(--soft); }
+  .puntos i.ok { background: var(--ok); } .puntos i.mal { background: var(--bad); } .puntos i.ya { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .elige { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .elige .bt { padding: 12px; font-size: 1rem; }
+  .bt.si { background: var(--ok); } .bt.no { background: var(--bad); }
+
+  /* fuentes */
+  .fuente { display: block; text-decoration: none; color: var(--ink); background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--c, var(--moss)); border-radius: 12px; padding: 9px 12px; transition: border-color .2s, transform .15s; }
+  .fuente:hover { transform: translateY(-2px); border-color: var(--moss); }
+  .fuente h3 { margin: 0 0 2px; }
+  .fuente small { font: 600 .74rem "IBM Plex Mono", monospace; color: var(--azul); }
+  .fuente p { margin: 4px 0 0 !important; font-size: clamp(.8rem, calc(var(--vw) * 1.4), .92rem) !important; line-height: 1.35 !important; color: #3d4a43; }
+
+  /* repaso */
+  .quiz { display: grid; gap: 10px; }
+  .qp { font-weight: 700; font-size: clamp(1rem, calc(var(--vw) * 2), 1.3rem); margin: 0 0 6px !important; }
+  .ops { display: grid; gap: 8px; }
+  .op { font: 600 clamp(.9rem, calc(var(--vw) * 1.6), 1.05rem) "IBM Plex Sans", sans-serif; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; cursor: pointer; color: var(--ink); }
+  .op:hover:not(:disabled) { border-color: var(--moss); }
+  .op.ok { border-color: var(--ok); background: #eaf4ec; } .op.mal { border-color: var(--bad); background: #f8e9e6; }
+  .op:disabled { cursor: default; }
+
+  .sintarea { background: #eaf4ec; border: 2px dashed var(--ok); border-radius: 14px; padding: 12px 16px; text-align: center; }
+  .sintarea p { margin: 0 !important; font-weight: 700; color: var(--ok); font-size: clamp(1rem, calc(var(--vw) * 2), 1.3rem) !important; }
+
+  @media (max-width: 760px) {
+    .dos, .lab, .juego { grid-template-columns: 1fr; }
+    .rej.c3, .rej.c4 { grid-template-columns: 1fr 1fr; }
+    .pasos { grid-template-columns: 1fr; } .flecha { rotate: 90deg; justify-self: center; }
+    .diapo { aspect-ratio: auto; min-height: 60vh; justify-content: flex-start !important; }
+    .portada .txt { max-width: 100%; } .portada .lupa { display: none; }
+    .seccion .sub { max-width: 100%; }
+  }
+  @media (max-width: 420px) { .rej.c2, .rej.c3, .rej.c4 { grid-template-columns: 1fr; } }
+
+  .control { position: fixed; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); color: #f6f4ee; font: 600 .85rem "IBM Plex Mono", monospace; }
+  .control button { background: rgba(246,244,238,.14); color: #f6f4ee; border: 0; border-radius: 10px; padding: 9px 16px; font: inherit; cursor: pointer; }
+  .control button:hover { background: rgba(246,244,238,.28); }
+  .control button:disabled { opacity: .35; cursor: default; }
+  .barra { position: fixed; left: 0; top: 0; height: 4px; background: var(--amber); transition: width .3s; z-index: 5; }
+  @media (max-width: 480px) { .control { gap: 6px; } .control button { padding: 9px 10px; } #ini { display: none; } }
+</style>
+</head>
+<body>
+<div class="barra" id="barra"></div>
+<main class="escena">
+
+  <!-- 1 -->
+  <section class="diapo portada">
+    <div class="txt">
+      <p class="eti">Herramientas Informáticas · Clase 5 · Virtual</p>
+      <h1>Busca como profesional</h1>
+      <p>Internet, buscadores e información de salud confiable… todo desde el celular que tienes en la mano.</p>
+      <p class="peq" style="color:#cfe3d3">Hoy no hay tarea: todo lo hacemos aquí, en vivo. 📱</p>
+    </div>
+    <svg class="lupa" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="82" cy="82" r="58" fill="rgba(255,255,255,.12)" stroke="#f6f4ee" stroke-width="14"/>
+      <line x1="125" y1="125" x2="180" y2="180" stroke="#b3752c" stroke-width="22" stroke-linecap="round"/>
+      <path d="M82 58v48M58 82h48" stroke="#f6f4ee" stroke-width="14" stroke-linecap="round"/>
+    </svg>
+  </section>
+
+  <!-- 2 -->
+  <section class="diapo">
+    <p class="eti">Para empezar</p>
+    <h2>En la práctica, un familiar del paciente te dice…</h2>
+    <div class="post" style="max-width:720px">
+      <div class="de"><span class="av">👵</span><div><b>Señora Rosa</b><small>familiar del paciente</small></div></div>
+      <p class="cuerpo">«Señorita, ya no le den la pastilla a mi esposo. Leí en un grupo de WhatsApp que el agua de limón con bicarbonato cura la gastritis, y que los doctores no quieren que lo sepamos».</p>
+    </div>
+    <div class="chat"><p>¿Qué le responderías? ¿Cómo sabrías si es verdad? Escríbelo en el chat.</p></div>
+    <p class="peq" style="margin-top:10px">Al final de la clase vas a tener las herramientas para responderle con seguridad.</p>
+  </section>
+
+  <!-- 3 -->
+  <section class="diapo seccion">
+    <p class="num">01</p>
+    <p class="eti">Primera parte</p>
+    <h1>¿Qué es internet?</h1>
+    <p class="sub">Cuatro palabras que usamos todos los días… y que casi siempre confundimos.</p>
+  </section>
+
+  <!-- 4 -->
+  <section class="diapo">
+    <p class="eti">No son lo mismo</p>
+    <h2>Internet, web, navegador y buscador</h2>
+    <p class="peq">Imagina un viaje: toca cada tarjeta.</p>
+    <div class="rej c4">
+      <button class="carta" type="button" data-revela>
+        <span class="emo">🌐</span><h3>Internet</h3><p class="como">= las carreteras</p>
+        <p class="atras">La red mundial que conecta millones de computadoras y celulares. Por ella viaja todo: páginas, mensajes, videollamadas.</p>
+      </button>
+      <button class="carta" type="button" data-revela>
+        <span class="emo">📄</span><h3>La web</h3><p class="como">= las tiendas del camino</p>
+        <p class="atras">Las páginas que visitas (las que empiezan con <code>www</code> o <code>https</code>). WhatsApp usa internet, pero no es una página web.</p>
+      </button>
+      <button class="carta" type="button" data-revela>
+        <span class="emo">🧭</span><h3>Navegador</h3><p class="como">= tu vehículo</p>
+        <p class="atras">El programa que abre las páginas: Chrome, Safari, Firefox, Edge, Brave. Lo vimos en la clase de aplicaciones.</p>
+      </button>
+      <button class="carta" type="button" data-revela>
+        <span class="emo">🔎</span><h3>Buscador</h3><p class="como">= el GPS</p>
+        <p class="atras">Una página que encuentra otras páginas por ti: Google, Bing, DuckDuckGo.</p>
+      </button>
+    </div>
+    <div class="pregunta" data-revela>
+      <span>¿Google es un navegador o un buscador?</span>
+      <button class="bt sec" type="button">Ver respuesta</button>
+      <p class="resp">Google es el buscador. Chrome es el navegador. Son de la misma empresa, pero no son lo mismo: puedes usar Google dentro de Firefox o de Safari.</p>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="diapo">
+    <p class="eti">Por dentro</p>
+    <h2>¿Cómo encuentra Google una página en menos de un segundo?</h2>
+    <div class="pasos">
+      <div class="paso" style="--c:var(--azul)"><span class="n">PASO 1</span><span class="emo">🕷️</span><h3>Rastrea</h3><p>Unos programas («arañas») recorren la web día y noche, saltando de enlace en enlace.</p></div>
+      <span class="flecha">➜</span>
+      <div class="paso" style="--c:var(--amber)"><span class="n">PASO 2</span><span class="emo">🗂️</span><h3>Guarda en un índice</h3><p>Anota qué dice cada página, como el archivo de historias clínicas de un hospital.</p></div>
+      <span class="flecha">➜</span>
+      <div class="paso" style="--c:var(--ok)"><span class="n">PASO 3</span><span class="emo">🏆</span><h3>Ordena</h3><p>Cuando buscas, no recorre internet: consulta su índice y pone primero lo que cree más útil para ti.</p></div>
+    </div>
+    <p class="nota"><b>Ojo:</b> que salga <b>primero</b> no significa que sea <b>verdad</b>. Significa que es popular, que coincide con tus palabras… o que alguien <b>pagó</b> para salir ahí.</p>
+  </section>
+
+  <!-- 6 -->
+  <section class="diapo">
+    <p class="eti">Mira bien los resultados</p>
+    <div class="dos">
+      <div>
+        <h2>¿Cuál de estos resultados es un anuncio?</h2>
+        <p>Los primeros resultados muchas veces son <b>publicidad</b>: empresas que pagan para aparecer arriba.</p>
+        <div class="pregunta" data-revela>
+          <span>¿Cómo los reconoces?</span>
+          <button class="bt sec" type="button">Ver respuesta</button>
+          <p class="resp">Llevan la palabra «Patrocinado» (o «Anuncio»). No siempre son malos, pero quieren venderte algo.</p>
+        </div>
+      </div>
+      <div class="serp" aria-label="Resultados simulados de una búsqueda">
+        <div class="barra-g" style="box-shadow:none;padding:8px 14px">pastillas para la gastritis</div>
+        <div class="res ad"><span class="pat">Patrocinado</span><div class="url">farmacia-ofertas.com</div><div class="tit">¡Cura tu gastritis en 3 días! 50 % dscto.</div><div class="desc">Fórmula natural importada. Envío gratis a todo el Perú…</div></div>
+        <div class="res"><div class="url">medlineplus.gov › spanish</div><div class="tit">Gastritis: MedlinePlus en español</div><div class="desc">La gastritis ocurre cuando el revestimiento del estómago se inflama…</div></div>
+        <div class="res"><div class="url">es.wikipedia.org › wiki › Gastritis</div><div class="tit">Gastritis - Wikipedia, la enciclopedia libre</div><div class="desc">La gastritis es la inflamación de la mucosa gástrica…</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="diapo seccion">
+    <p class="num">02</p>
+    <p class="eti">Segunda parte · saca tu celular</p>
+    <h1>Busca mejor, no más</h1>
+    <p class="sub">Cinco trucos que usan los profesionales para encontrar en segundos lo que otros buscan durante horas.</p>
+  </section>
+
+  <!-- 8 -->
+  <section class="diapo" id="d-lab">
+    <p class="eti">Laboratorio de búsqueda · toca un truco y pruébalo en tu celular</p>
+    <div class="lab">
+      <div class="trucos" id="trucos"></div>
+      <div>
+        <p class="antes" id="lab-antes"></p>
+        <div class="barra-g" id="lab-barra"></div>
+        <div class="expl" id="lab-expl"></div>
+        <div class="fila">
+          <a class="bt" id="lab-ir" href="#" target="_blank" rel="noopener">Probar en Google ↗</a>
+          <span class="peq" id="lab-tip"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="diapo">
+    <p class="eti">Tu celular también busca así</p>
+    <h2>Sin escribir: con la voz y con la cámara</h2>
+    <div class="rej c3">
+      <div class="tj"><h3>🎙️ Búsqueda por voz</h3><p>Toca el micrófono en la barra de Google y habla. Útil cuando tienes las manos ocupadas… ¡pero en la práctica clínica, con las manos limpias!</p></div>
+      <div class="tj"><h3>📷 Google Lens</h3><p>Apunta la cámara a un texto, un objeto o una planta y te dice qué es. También traduce y copia texto de una foto.</p></div>
+      <div class="tj"><h3>🖼️ ¿Esta foto es real?</h3><p>Con Lens puedes buscar una imagen que te llegó por WhatsApp y ver dónde apareció antes. Así descubres fotos viejas que pasan por «noticias nuevas».</p></div>
+    </div>
+    <div class="chat"><p>Pruébalo ahora: toca el micrófono y pregunta «¿cuál es la presión arterial normal en un adulto?». ¿Qué encontraste y en qué página?</p></div>
+  </section>
+
+  <!-- 10 -->
+  <section class="diapo">
+    <p class="eti">Reto en vivo · 3 minutos</p>
+    <div class="reto">
+      <h3>🏁 Encuentra la respuesta… y la página que la dice</h3>
+      <p>Escribe en el chat la respuesta <b>y el sitio</b> donde la encontraste. Gana quien use una fuente confiable, no quien conteste primero.</p>
+      <ol style="margin:0 0 10px;padding-left:1.3em">
+        <li>¿Cuánto tiempo debe durar un lavado de manos con agua y jabón, según la OMS?</li>
+        <li>¿Cuál es la frecuencia cardiaca normal de un adulto en reposo?</li>
+        <li>¿Cuántos huesos tiene el cuerpo de un adulto?</li>
+      </ol>
+      <div class="fila">
+        <span class="reloj" data-reloj="180">3:00</span>
+        <button class="bt amb" type="button" data-iniciar>▶ Iniciar tiempo</button>
+        <button class="bt sec" type="button" data-revela-sig>Ver respuestas</button>
+      </div>
+      <div class="expl" hidden>
+        <p>1. De <b>40 a 60 segundos</b> (con alcohol en gel: de 20 a 30 segundos). Fuente: OMS, <code>who.int</code>.</p>
+        <p>2. Entre <b>60 y 100 latidos por minuto</b>. Fuente: MedlinePlus, <code>medlineplus.gov</code>.</p>
+        <p style="margin:0!important">3. <b>206 huesos</b>. Pista que funcionaba: <code>huesos cuerpo humano adulto site:edu.pe</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="diapo seccion">
+    <p class="num">03</p>
+    <p class="eti">Tercera parte</p>
+    <h1>¿Le creo o no le creo?</h1>
+    <p class="sub">En salud, una información falsa no es solo un error: puede dañar a un paciente.</p>
+  </section>
+
+  <!-- 12 -->
+  <section class="diapo">
+    <p class="eti">Las 4 preguntas antes de creer</p>
+    <h2>Hazle este interrogatorio a cualquier información</h2>
+    <div class="rej c4">
+      <div class="tj" style="border-top:5px solid var(--azul)"><h3>👤 ¿Quién lo dice?</h3><p>¿Tiene autor o institución? ¿Es un profesional, un ministerio, una universidad… o nadie sabe?</p></div>
+      <div class="tj" style="border-top:5px solid var(--amber)"><h3>📅 ¿Cuándo?</h3><p>¿Tiene fecha? En salud, lo de hace 15 años puede haber cambiado.</p></div>
+      <div class="tj" style="border-top:5px solid var(--ok)"><h3>🔬 ¿Cómo lo sabe?</h3><p>¿Cita estudios o fuentes? ¿Otras páginas serias dicen lo mismo?</p></div>
+      <div class="tj" style="border-top:5px solid var(--bad)"><h3>💰 ¿Para qué?</h3><p>¿Te quiere vender algo, asustarte o que lo reenvíes a todos?</p></div>
+    </div>
+    <div class="lee" style="margin-top:12px">
+      <p>Desconfía cuando leas: <b>«cura todo»</b>, <b>«100 % natural, sin efectos»</b>, <b>«los médicos no quieren que sepas»</b>, <b>«compártelo antes de que lo borren»</b>. Son frases para que actúes sin pensar.</p>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="diapo">
+    <p class="eti">Pistas en la dirección</p>
+    <div class="dos">
+      <div>
+        <h2>El final de la dirección web te da pistas</h2>
+        <div class="dom">
+          <code>.gob.pe</code><p>Gobierno del Perú: MINSA, EsSalud, ministerios. Solo el Estado puede usarlo.</p>
+          <code>.edu.pe</code><p>Universidades e institutos del Perú.</p>
+          <code>.int</code><p>Organizaciones internacionales, como la OMS (<code>who.int</code>).</p>
+          <code>.org</code><p>Organizaciones… pero <b>cualquiera</b> puede comprar uno.</p>
+          <code>.com</code><p>Cualquiera: empresas, tiendas, blogs personales.</p>
+        </div>
+      </div>
+      <div>
+        <p class="nota"><b>Cuidado con las imitaciones:</b> <code>minsa-salud-peru.com</code> o <code>noticias-verdad24.blogspot.com</code> pueden copiar logos y colores de una institución real. Lee la dirección completa, no solo el logo.</p>
+        <div class="pregunta" data-revela>
+          <span>¿Un <code>.com</code> siempre miente?</span>
+          <button class="bt sec" type="button">Ver respuesta</button>
+          <p class="resp">No. La dirección es una pista, no una prueba. Por eso siempre haces las 4 preguntas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section class="diapo" id="d-juego">
+    <p class="eti">Juego · todos votan en el chat antes de tocar</p>
+    <div class="juego">
+      <div>
+        <div class="post" id="j-post"></div>
+        <div class="elige" id="j-elige">
+          <button class="bt si" type="button" data-voto="si">✅ Confiable</button>
+          <button class="bt no" type="button" data-voto="no">🚩 Dudosa</button>
+        </div>
+        <div id="j-ver"></div>
+      </div>
+      <div class="marcador">
+        <p class="eti" style="text-align:center">¿Confiable o dudosa?</p>
+        <div class="grande" id="j-score">0</div>
+        <p class="peq" id="j-de">aciertos</p>
+        <div class="puntos" id="j-puntos"></div>
+        <button class="bt sec" type="button" id="j-sig" hidden>Siguiente →</button>
+        <button class="bt amb" type="button" id="j-otra" hidden>↺ Jugar otra vez</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="diapo">
+    <p class="eti">Guárdalas en tu celular ⭐</p>
+    <h2>Fuentes de salud confiables para tu carrera</h2>
+    <div class="rej c3">
+      <a class="fuente" style="--c:#c8102e" href="https://www.gob.pe/minsa" target="_blank" rel="noopener"><h3>🇵🇪 MINSA</h3><small>gob.pe/minsa</small><p>Ministerio de Salud del Perú: normas técnicas, campañas y alertas.</p></a>
+      <a class="fuente" style="--c:#0093d5" href="https://www.who.int/es" target="_blank" rel="noopener"><h3>🌍 OMS</h3><small>who.int/es</small><p>Organización Mundial de la Salud: guías y hojas informativas.</p></a>
+      <a class="fuente" style="--c:#00539b" href="https://www.paho.org/es" target="_blank" rel="noopener"><h3>🌎 OPS</h3><small>paho.org/es</small><p>Organización Panamericana de la Salud: información para las Américas.</p></a>
+      <a class="fuente" style="--c:#2f7d4a" href="https://medlineplus.gov/spanish/" target="_blank" rel="noopener"><h3>📘 MedlinePlus</h3><small>medlineplus.gov/spanish</small><p>Enfermedades, medicamentos y exámenes explicados en lenguaje sencillo.</p></a>
+      <a class="fuente" style="--c:#b3752c" href="https://scielo.org/es/" target="_blank" rel="noopener"><h3>📚 SciELO</h3><small>scielo.org</small><p>Artículos científicos gratis de universidades de Latinoamérica.</p></a>
+      <a class="fuente" style="--c:#4285f4" href="https://scholar.google.com/?hl=es" target="_blank" rel="noopener"><h3>🎓 Google Académico</h3><small>scholar.google.com</small><p>Un Google solo para estudios y tesis. Ideal para tus trabajos.</p></a>
+    </div>
+    <p class="peq" style="margin-top:10px">Truco: ábrelas ahora y en el menú del navegador toca «Añadir a pantalla de inicio» o la ⭐ para tenerlas a mano.</p>
+  </section>
+
+  <!-- 16 -->
+  <section class="diapo">
+    <p class="eti">Reto final · 5 minutos · en parejas o solos</p>
+    <div class="reto">
+      <h3>🕵️ Detectives de la salud</h3>
+      <p>Elige <b>una</b> de estas afirmaciones. Búscala, decide si es <b>verdadera o falsa</b> y pega en el chat el <b>enlace de una fuente confiable</b> que lo demuestre.</p>
+      <div class="rej c3" style="margin-bottom:10px">
+        <div class="tj"><h3>💊 A</h3><p>«Los antibióticos curan la gripe».</p></div>
+        <div class="tj"><h3>🍋 B</h3><p>«El limón con bicarbonato cura la gastritis».</p></div>
+        <div class="tj"><h3>💉 C</h3><p>«Las vacunas causan autismo».</p></div>
+      </div>
+      <div class="fila">
+        <span class="reloj" data-reloj="300">5:00</span>
+        <button class="bt amb" type="button" data-iniciar>▶ Iniciar tiempo</button>
+        <button class="bt sec" type="button" data-revela-sig>Ver respuestas</button>
+      </div>
+      <div class="expl" hidden>
+        <p><b>A · Falso.</b> La gripe la causa un virus, y los antibióticos solo actúan contra bacterias. Usarlos mal crea bacterias resistentes (OMS, MINSA).</p>
+        <p><b>B · Falso.</b> No hay pruebas de que cure, y puede ocultar los síntomas. El tratamiento lo indica el médico. Ya puedes responderle a la señora Rosa.</p>
+        <p style="margin:0!important"><b>C · Falso.</b> Muchos estudios con millones de niños lo descartaron (OMS). El estudio que lo dijo fue retirado por fraude.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 -->
+  <section class="diapo" id="d-quiz">
+    <p class="eti">Repaso rápido · no vale nota, es para ti</p>
+    <div class="quiz">
+      <p class="peq" id="q-pos"></p>
+      <p class="qp" id="q-preg"></p>
+      <div class="ops" id="q-ops"></div>
+      <div class="fila"><button class="bt" type="button" id="q-sig" hidden>Siguiente →</button><span class="peq" id="q-fin"></span></div>
+    </div>
+  </section>
+
+  <!-- 18 -->
+  <section class="diapo">
+    <p class="eti">Para recordar</p>
+    <h2>Lo más importante de hoy</h2>
+    <ul>
+      <li><b class="k">Internet</b> es la red, la <b class="k">web</b> son las páginas, el <b class="k">navegador</b> las abre y el <b class="k">buscador</b> las encuentra.</li>
+      <li>Busca con <b>palabras clave</b>, usa <code>"comillas"</code>, <code>-palabra</code>, <code>site:</code> y <code>filetype:pdf</code>.</li>
+      <li>El primer resultado no es el más verdadero: mira si dice <b>«Patrocinado»</b>.</li>
+      <li>Antes de creer, pregunta: <b>¿quién?, ¿cuándo?, ¿cómo lo sabe?, ¿para qué?</b></li>
+    </ul>
+    <p class="nota" style="margin-top:14px">Como profesional de la salud, internet <b>te ayuda a informarte</b>, pero <b>no reemplaza</b> la indicación médica ni los protocolos de tu establecimiento.</p>
+    <div class="sintarea" style="margin-top:12px"><p>🎉 Hoy no hay tarea. Lo practicaste todo en clase.</p></div>
+  </section>
+
+  <!-- 19 -->
+  <section class="diapo portada">
+    <div class="txt">
+      <p class="eti">Herramientas Informáticas · Clase 5</p>
+      <h1>¡Gracias!</h1>
+      <p>Comparte en el chat: ¿qué truco de búsqueda vas a usar desde hoy?</p>
+      <p class="peq" style="color:#cfe3d3">Nos vemos en el laboratorio. 💻</p>
+    </div>
+    <svg class="lupa" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="82" cy="82" r="58" fill="rgba(255,255,255,.12)" stroke="#f6f4ee" stroke-width="14"/>
+      <line x1="125" y1="125" x2="180" y2="180" stroke="#b3752c" stroke-width="22" stroke-linecap="round"/>
+      <path d="M60 84l15 15 30-32" fill="none" stroke="#f6f4ee" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </section>
+
+</main>
+<nav class="control">
+  <button id="ini" type="button" title="Volver a la primera diapositiva">⏮ Inicio</button>
+  <button id="ant" type="button">← Anterior</button>
+  <span id="pos"></span>
+  <button id="sig" type="button">Siguiente →</button>
+  <button id="full" type="button" title="Pantalla completa (F)">⛶</button>
+</nav>
+<script>
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const escH = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------- escala ---------- */
+function ajustar() {
+  const grande = innerWidth >= 760 && innerHeight >= 430;
+  document.body.classList.toggle("escalar", grande);
+  const s = grande ? Math.min((innerWidth - 32) / 1140, (innerHeight - 88) / 641) : 1;
+  document.documentElement.style.setProperty("--s", s);
+}
+addEventListener("resize", ajustar); document.addEventListener("fullscreenchange", ajustar); ajustar();
+
+/* ---------- navegación ---------- */
+const D = $$(".diapo");
+let i = Math.max(0, Math.min(D.length - 1, Number(location.hash.slice(1)) - 1 || 0));
+function ir(n) {
+  i = Math.max(0, Math.min(D.length - 1, n));
+  D.forEach((d, k) => d.classList.toggle("on", k === i));
+  $("#pos").textContent = (i + 1) + " / " + D.length;
+  $("#ant").disabled = i === 0;
+  $("#ini").disabled = i === 0;
+  $("#sig").textContent = i === D.length - 1 ? "↺ Volver al inicio" : "Siguiente →";
+  $("#barra").style.width = ((i + 1) / D.length * 100) + "%";
+  history.replaceState(null, "", "#" + (i + 1));
+  D[i].scrollTop = 0;
+}
+$("#ant").onclick = () => ir(i - 1);
+$("#sig").onclick = () => ir(i === D.length - 1 ? 0 : i + 1);
+$("#ini").onclick = () => ir(0);
+$("#full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+addEventListener("keydown", e => {
+  if (e.target.closest("input, textarea, select")) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); ir(i === D.length - 1 ? 0 : i + 1); }
+  if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); ir(i - 1); }
+  if (e.key.toLowerCase() === "f") $("#full").click();
+  if (e.key === "Home") ir(0);
+});
+let x0 = null;
+addEventListener("touchstart", e => { x0 = e.target.closest("[data-noswipe], .barra-g") ? null : e.touches[0].clientX; }, { passive: true });
+addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 60) ir(i + (dx < 0 ? 1 : -1)); x0 = null; });
+
+/* ---------- sonido ---------- */
+let AC = null;
+function tono(f, dur = .25, tipo = "sine") {
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = tipo; o.frequency.value = f;
+    g.gain.setValueAtTime(.0001, AC.currentTime); g.gain.exponentialRampToValueAtTime(.22, AC.currentTime + .02);
+    g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + dur);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + dur + .05);
+  } catch (_) {}
+}
+const bien = () => { tono(660); setTimeout(() => tono(880), 110); };
+const mal = () => tono(200, .35, "square");
+
+/* ---------- tarjetas y respuestas que se revelan ---------- */
+document.addEventListener("click", e => {
+  const r = e.target.closest("[data-revela]"); if (r) r.classList.toggle("ver");
+  const s = e.target.closest("[data-revela-sig]");
+  if (s) { const x = s.closest(".reto").querySelector(".expl"); x.hidden = !x.hidden; s.textContent = x.hidden ? "Ver respuestas" : "Ocultar respuestas"; }
+});
+
+/* ---------- relojes de los retos ---------- */
+$$("[data-iniciar]").forEach(b => {
+  const r = b.parentElement.querySelector("[data-reloj]"), total = Number(r.dataset.reloj);
+  let t = null, quedan = total;
+  const pinta = () => r.textContent = Math.floor(quedan / 60) + ":" + String(quedan % 60).padStart(2, "0");
+  b.onclick = () => {
+    if (t) { clearInterval(t); t = null; quedan = total; pinta(); r.classList.remove("fin"); b.textContent = "▶ Iniciar tiempo"; return; }
+    quedan = total; pinta(); r.classList.remove("fin"); b.textContent = "⏹ Reiniciar";
+    t = setInterval(() => {
+      quedan--; pinta();
+      if (quedan <= 0) { clearInterval(t); t = null; r.classList.add("fin"); r.textContent = "¡Tiempo!"; tono(520, .5); setTimeout(() => tono(390, .7), 300); b.textContent = "▶ Otra vez"; }
+    }, 1000);
+  };
+});
+
+/* ---------- laboratorio de búsqueda ---------- */
+const TRUCOS = [
+  { e: "🗝️", n: "Palabras clave", antes: "qué debo hacer si mi abuelito tiene la presión alta", q: "presión alta adulto mayor cuidados", m: [],
+    d: "Quita las palabras que no aportan (qué, debo, si, mi…) y deja solo las <b>importantes</b>. El buscador no necesita frases completas.",
+    tip: "Menos palabras, mejores resultados." },
+  { e: "❝", n: "Frase exacta “ ”", antes: "lavado de manos clínico", q: "\"lavado de manos clínico\"", m: ["\"lavado de manos clínico\""],
+    d: "Las <b>comillas</b> buscan esas palabras <b>juntas y en ese orden</b>. Sin comillas, aparecen páginas que solo tienen «manos» o solo «clínico».",
+    tip: "Ideal para nombres de procedimientos o enfermedades." },
+  { e: "➖", n: "Quitar con −", antes: "insulina", q: "insulina -precio -comprar", m: ["-precio", "-comprar"],
+    d: "Un <b>guion pegado a la palabra</b> la elimina de los resultados. Aquí quitamos las tiendas para quedarnos con la información.",
+    tip: "Sin espacio entre el guion y la palabra." },
+  { e: "🏛️", n: "Solo un sitio: site:", antes: "dengue síntomas", q: "dengue síntomas site:gob.pe", m: ["site:gob.pe"],
+    d: "<code>site:</code> busca <b>solo dentro</b> de un tipo de página. <code>site:gob.pe</code> = solo páginas del Estado peruano. Prueba también <code>site:who.int</code>.",
+    tip: "Sin espacio después de los dos puntos." },
+  { e: "📄", n: "Solo PDF: filetype:", antes: "norma técnica lavado de manos", q: "norma técnica lavado de manos filetype:pdf", m: ["filetype:pdf"],
+    d: "<code>filetype:pdf</code> trae solo <b>documentos PDF</b>: guías, normas técnicas, manuales y tesis. Lo que más vas a necesitar para tus trabajos.",
+    tip: "También sirve filetype:docx o filetype:pptx." },
+  { e: "🚀", n: "¡Todo junto!", antes: "", q: "\"lavado de manos\" site:gob.pe filetype:pdf", m: ["\"lavado de manos\"", "site:gob.pe", "filetype:pdf"],
+    d: "Combina los trucos: la frase exacta, solo en páginas del Estado y solo en PDF. En segundos tienes <b>documentos oficiales</b>.",
+    tip: "Así buscan los profesionales." }
+];
+const caja = $("#trucos");
+caja.innerHTML = TRUCOS.map((t, k) => `<button class="truco" type="button" data-k="${k}"><span>${t.e}</span>${escH(t.n)}</button>`).join("");
+function verTruco(k) {
+  const t = TRUCOS[k];
+  $$(".truco", caja).forEach((b, j) => { b.classList.toggle("on", j === k); if (j === k) b.classList.add("visto"); });
+  let q = escH(t.q);
+  t.m.forEach(m => { q = q.replace(escH(m), `<mark>${escH(m)}</mark>`); });
+  $("#lab-barra").innerHTML = q;
+  $("#lab-antes").textContent = t.antes && t.antes !== t.q ? "Antes: " + t.antes : "";
+  $("#lab-antes").hidden = !$("#lab-antes").textContent;
+  $("#lab-expl").innerHTML = `<p>${t.d}</p>`;
+  $("#lab-tip").textContent = t.tip;
+  $("#lab-ir").href = "https://www.google.com/search?q=" + encodeURIComponent(t.q);
+}
+caja.addEventListener("click", e => { const b = e.target.closest(".truco"); if (b) verTruco(Number(b.dataset.k)); });
+verTruco(0);
+
+/* ---------- juego: ¿confiable o dudosa? ---------- */
+const POSTS = [
+  { av: "📱", de: "Cadena de WhatsApp", sub: "reenviado muchas veces", t: "🚨 URGENTE 🚨 Hervir limón con ajo cura el cáncer y la diabetes. Los médicos lo ocultan. ¡Reenvía a 10 personas antes de que lo borren!", ok: "no",
+    por: "Sin autor, sin fecha, promete curarlo todo, dice que «los médicos lo ocultan» y pide reenviarlo. Todas las alarmas." },
+  { av: "🏛️", de: "gob.pe/minsa", sub: "actualizado en 2025", t: "Dengue: conoce los signos de alarma (dolor abdominal intenso, vómitos persistentes, sangrado) y acude de inmediato al establecimiento de salud más cercano.", ok: "si",
+    por: "Página oficial del Estado (.gob.pe), con fecha reciente, y te manda al establecimiento de salud en vez de venderte algo." },
+  { av: "🕺", de: "@dr.salud.natural", sub: "video en redes sociales", t: "Soy doctor y te recomiendo MI cápsula 100 % natural: bajas 10 kilos en 7 días sin dieta. Compra con el link de mi perfil 👇", ok: "no",
+    por: "Te quiere vender su propio producto, promete resultados milagrosos y no hay forma de comprobar que sea doctor." },
+  { av: "📘", de: "medlineplus.gov/spanish", sub: "revisado por profesionales, con fecha", t: "Hipertensión arterial: qué es, sus causas, cómo se diagnostica y cuál es su tratamiento. Incluye referencias y la fecha de la última revisión.", ok: "si",
+    por: "Institución conocida, revisión por profesionales, fecha visible y referencias. Pasa las 4 preguntas." },
+  { av: "📝", de: "remedios-de-la-abuela.blogspot.com", sub: "sin autor · sin fecha", t: "Los 10 remedios caseros que reemplazan a los antibióticos. ¡Olvídate de la farmacia para siempre!", ok: "no",
+    por: "Blog sin autor ni fecha, y su consejo es peligroso: dejar un antibiótico indicado puede empeorar una infección." },
+  { av: "🌍", de: "who.int/es", sub: "hoja informativa", t: "Higiene de manos: cuándo y cómo lavarse las manos en la atención de salud. Los 5 momentos para la higiene de manos.", ok: "si",
+    por: "La OMS es la autoridad mundial de salud y esta es una de sus guías más usadas en hospitales." },
+  { av: "🤖", de: "Respuesta de un chat de inteligencia artificial", sub: "sin fuentes", t: "La dosis recomendada de este medicamento para un niño de 5 años es… (no dice de dónde sacó el dato).", ok: "no",
+    por: "La IA puede equivocarse con mucha seguridad. Las dosis siempre las indica el médico; verifica con fuentes oficiales y con tu protocolo." },
+  { av: "📺", de: "noticias-verdad24.blogspot.com", sub: "usa el logo de un canal conocido", t: "ÚLTIMO MINUTO: confirman que una vacuna fue prohibida en todo el país. ¡Mira el video!", ok: "no",
+    por: "La dirección no es la del canal real: copia el logo para parecer seria. Si fuera cierto, lo diría la página oficial del MINSA." }
+];
+let jk = 0, jsc = 0, jres = [];
+function jPinta() {
+  const p = POSTS[jk];
+  $("#j-post").innerHTML = `<div class="de"><span class="av">${p.av}</span><div><b>${escH(p.de)}</b><small>${escH(p.sub)}</small></div></div><p class="cuerpo">${escH(p.t)}</p>`;
+  $("#j-ver").innerHTML = "";
+  $("#j-elige").hidden = false;
+  $("#j-sig").hidden = true; $("#j-otra").hidden = true;
+  $("#j-score").textContent = jsc;
+  $("#j-de").textContent = `aciertos · tarjeta ${jk + 1} de ${POSTS.length}`;
+  $("#j-puntos").innerHTML = POSTS.map((_, k) => `<i class="${jres[k] || ""} ${k === jk ? "ya" : ""}"></i>`).join("");
+}
+$("#j-elige").addEventListener("click", e => {
+  const b = e.target.closest("[data-voto]"); if (!b) return;
+  const p = POSTS[jk], acierto = b.dataset.voto === p.ok;
+  if (acierto) { jsc++; bien(); } else mal();
+  jres[jk] = acierto ? "ok" : "mal";
+  $("#j-elige").hidden = true;
+  $("#j-ver").innerHTML = `<div class="veredicto ${acierto ? "ok" : "mal"}"><p><b>${acierto ? "¡Bien!" : "¡Cuidado!"} Es ${p.ok === "si" ? "✅ confiable" : "🚩 dudosa"}.</b></p><p>${escH(p.por)}</p></div>`;
+  $("#j-score").textContent = jsc;
+  $("#j-puntos").innerHTML = POSTS.map((_, k) => `<i class="${jres[k] || ""} ${k === jk ? "ya" : ""}"></i>`).join("");
+  if (jk < POSTS.length - 1) $("#j-sig").hidden = false;
+  else { $("#j-otra").hidden = false; $("#j-de").textContent = jsc >= 7 ? "¡Detective experto! 🕵️" : jsc >= 5 ? "¡Muy bien! Sigue entrenando el ojo" : "Repasa las 4 preguntas y vuelve a intentar"; }
+});
+$("#j-sig").onclick = () => { jk++; jPinta(); };
+$("#j-otra").onclick = () => { jk = 0; jsc = 0; jres = []; jPinta(); };
+jPinta();
+
+/* ---------- repaso ---------- */
+const QUIZ = [
+  { p: "Chrome, Safari y Firefox son…", o: ["Navegadores", "Buscadores", "Redes sociales"], c: 0, x: "Son navegadores: abren las páginas web. Google, Bing y DuckDuckGo son buscadores." },
+  { p: "Quiero ver solo páginas del Estado peruano. ¿Qué agrego a mi búsqueda?", o: ["site:gob.pe", "filetype:gob", "\"gobierno\""], c: 0, x: "site:gob.pe limita la búsqueda a páginas que terminan en .gob.pe." },
+  { p: "Necesito una norma técnica en documento. ¿Qué agrego?", o: ["-documento", "filetype:pdf", "site:pdf"], c: 1, x: "filetype:pdf trae solo archivos PDF." },
+  { p: "¿Para qué sirven las comillas \" \" en una búsqueda?", o: ["Para buscar más rápido", "Para buscar la frase exacta", "Para buscar en inglés"], c: 1, x: "Buscan esas palabras juntas y en ese orden." },
+  { p: "Un resultado que dice «Patrocinado» es…", o: ["La respuesta más confiable", "Un anuncio pagado", "Una página del gobierno"], c: 1, x: "Alguien pagó para que aparezca arriba. No es malo en sí, pero quiere venderte algo." },
+  { p: "¿Cuál es una señal de información DUDOSA?", o: ["Tiene autor, fecha y referencias", "Es de una página .gob.pe", "Promete curarlo todo y pide que la reenvíes"], c: 2, x: "Las promesas milagrosas y el «reenvía a todos» son señales de alarma." }
+];
+let qk = 0, qsc = 0;
+function qPinta() {
+  const q = QUIZ[qk];
+  $("#q-pos").textContent = `Pregunta ${qk + 1} de ${QUIZ.length}`;
+  $("#q-preg").textContent = q.p;
+  $("#q-ops").innerHTML = q.o.map((o, j) => `<button class="op" type="button" data-j="${j}">${escH(o)}</button>`).join("");
+  $("#q-sig").hidden = true; $("#q-fin").textContent = "";
+}
+$("#q-ops").addEventListener("click", e => {
+  const b = e.target.closest(".op"); if (!b || b.disabled) return;
+  const q = QUIZ[qk], j = Number(b.dataset.j), ok = j === q.c;
+  $$(".op", $("#q-ops")).forEach((x, n) => { x.disabled = true; if (n === q.c) x.classList.add("ok"); });
+  if (!ok) b.classList.add("mal");
+  ok ? (qsc++, bien()) : mal();
+  $("#q-fin").textContent = (ok ? "✅ " : "❌ ") + q.x;
+  if (qk < QUIZ.length - 1) { $("#q-sig").hidden = false; $("#q-sig").textContent = "Siguiente →"; }
+  else { $("#q-sig").hidden = false; $("#q-sig").textContent = "↺ Repetir"; $("#q-fin").textContent += `  ·  Resultado: ${qsc} de ${QUIZ.length}`; }
+});
+$("#q-sig").onclick = () => { if (qk < QUIZ.length - 1) qk++; else { qk = 0; qsc = 0; } qPinta(); };
+qPinta();
+
+ir(i);
+</script>
+</body>
+</html>
