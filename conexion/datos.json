@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-13T15:29:04.232Z",
+ "generado": "2026-11-16T15:47:24.885Z",
  "v": 1,
  "clases": [
   {
@@ -44,6 +44,12 @@
    {
     "titulo": "Google DOCS",
     "url": "https://docs.google.com/document/d/1rs9Lwb5XqeigIZfyPJgLtbkdF8TYbrJmeuEROktYwYI/edit?usp=drivesdk",
+    "tipo": "documento",
+    "para": "G2"
+   },
+   {
+    "titulo": "Copia de Google DOCS",
+    "url": "https://docs.google.com/document/d/1eyXRla6_t0m7l05uMmWqG07APqMyH0OwlwQIgaFMKUU/edit?usp=drivesdk",
     "tipo": "documento",
     "para": "Todos"
    }
