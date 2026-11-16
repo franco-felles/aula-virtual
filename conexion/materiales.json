@@ -61,6 +61,14 @@
       "tipo": "lectura",
       "descripcion": "Guía en PDF con capturas paso a paso: encabezados, viñetas y numeración, tablas, números de página e índice automático. Termina con un reto: armar tu informe de práctica clínica.",
       "orden": 1
+    },
+    {
+      "archivo": "m2c5.html",
+      "ruta": "clases/u1c5/material/m2c5.html",
+      "titulo": "Busca como profesional: información de salud confiable",
+      "tipo": "presentacion",
+      "descripcion": "Presentación interactiva para la clase virtual: internet, web, navegador y buscador; trucos para buscar mejor desde tu celular; cómo saber si una información de salud es confiable, con retos en vivo y un juego. Sin tarea.",
+      "orden": 2
     }
   ]
 }
