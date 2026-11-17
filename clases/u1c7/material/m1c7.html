@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- FICHA DEL MATERIAL: clase 7 · práctica con tablas en Google Docs: recrear una boleta -->
+<meta name="material-titulo" content="Reto: recrea esta boleta en Google Docs">
+<meta name="material-tipo" content="practica">
+<meta name="material-descripcion" content="Práctica con tablas: copia el diseño de una boleta ficticia de botica usando combinar celdas, color y grosor de bordes, color de fondo y alineación. Con pasos para marcar, colores exactos y pistas de dónde está cada opción.">
+<title>Reto: recrea esta boleta</title>
+<script src="../../../conexion/aula.js" data-proteger></script>
+<script src="../../../conexion/zoom.js" defer></script>
+<link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #6f6a57; --ok: #2f7d4a; --teal: #0B6E69; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; line-height: 1.5; }
+  .envase { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
+  .eti { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--moss); margin: 0; }
+  h1 { font-size: clamp(1.5rem, 3.4vw, 2.2rem); line-height: 1.1; margin: 4px 0 6px; letter-spacing: -.01em; }
+  h2 { font-size: 1.15rem; margin: 0 0 10px; }
+  .lead { color: #2c3a33; margin: 0 0 18px; max-width: 70ch; }
+  .rejilla { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+  @media (max-width: 860px) { .rejilla { grid-template-columns: minmax(0, 1fr); } }
+  .modelo { position: sticky; top: 14px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+  @media (max-width: 860px) { .modelo { position: static; } }
+  .modelo img { width: 100%; display: block; border-radius: 6px; }
+  .modelo .pista { font-size: .82rem; color: var(--mut); margin: 8px 2px 10px; }
+  .botones { display: flex; gap: 8px; flex-wrap: wrap; }
+  .bt { font: 600 .9rem "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 15px; text-decoration: none; cursor: pointer; }
+  .bt.sec { background: #fff; color: var(--moss); border: 1.5px solid var(--moss); }
+  .tarjeta { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+  .barra { height: 10px; background: #ece8dc; border-radius: 99px; overflow: hidden; margin: 4px 0 6px; }
+  .barra i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .3s; }
+  .avance { font: 600 .8rem "IBM Plex Mono", monospace; color: var(--mut); }
+  .paso { border-top: 1px solid var(--line); padding: 12px 0 4px; }
+  .paso:first-of-type { border-top: 0; }
+  .paso h3 { font-size: 1rem; margin: 0 0 6px; display: flex; gap: 8px; align-items: baseline; }
+  .paso h3 span { font: 600 .8rem "IBM Plex Mono", monospace; color: #fff; background: var(--teal); border-radius: 6px; padding: 1px 7px; }
+  label.ck { display: flex; gap: 9px; align-items: flex-start; padding: 4px 0; cursor: pointer; font-size: .95rem; }
+  label.ck input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--ok); flex: none; }
+  label.ck input:checked + span { color: var(--mut); text-decoration: line-through; }
+  .ruta { font: 600 .82rem "IBM Plex Mono", monospace; background: #f2efe6; border: 1px solid var(--line); border-radius: 6px; padding: 0 6px; white-space: nowrap; }
+  kbd { font: 600 .8rem "IBM Plex Mono", monospace; background: #fff; border: 1px solid var(--line); border-bottom-width: 2.5px; border-radius: 5px; padding: 0 5px; white-space: nowrap; }
+  details { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 8px 0; background: #fbfaf6; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p, details ul { margin: 8px 0 4px; font-size: .93rem; }
+  details ul { padding-left: 20px; }
+  .paleta { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .color { display: flex; align-items: center; gap: 9px; border: 1px solid var(--line); border-radius: 10px; padding: 7px 9px; background: #fff; cursor: pointer; font: inherit; text-align: left; }
+  .color i { width: 30px; height: 30px; border-radius: 7px; border: 1px solid rgba(0,0,0,.15); flex: none; }
+  .color b { display: block; font: 600 .85rem "IBM Plex Mono", monospace; }
+  .color small { color: var(--mut); font-size: .76rem; line-height: 1.2; display: block; }
+  .color.copiado { border-color: var(--ok); }
+  .final { background: #eef3ec; border-color: #c9d8c6; }
+  .final.listo { animation: brilla .8s ease 2; }
+  @keyframes brilla { 50% { box-shadow: 0 0 0 6px rgba(47,125,74,.25); } }
+</style>
+</head>
+<body>
+<div class="envase">
+  <p class="eti">Práctica · Google Docs · Tablas</p>
+  <h1>Reto: recrea esta boleta</h1>
+  <p class="lead">Una botica le vendió insumos a la estación de enfermería. Tu misión: que tu Google Docs se vea <b>igual</b> que esta boleta, usando solo <b>tablas</b>. Sin imágenes ni capturas: todo se arma con celdas, bordes y colores.</p>
+
+  <div class="rejilla">
+    <section class="modelo" data-zoom>
+      <img src="recursos/m1c7/boleta-modelo.png" alt="Boleta de venta ficticia de Botica El Roble con encabezado, datos del cliente, detalle de productos y totales">
+      <p class="pista">Toca la boleta para verla en grande. Es un documento ficticio, solo para practicar.</p>
+      <div class="botones">
+        <a class="bt" href="recursos/m1c7/boleta-modelo.pdf" target="_blank" rel="noopener">Abrir PDF</a>
+        <a class="bt sec" href="recursos/m1c7/boleta-modelo.png" download="Boleta modelo.png">Descargar imagen</a>
+      </div>
+    </section>
+
+    <div>
+      <section class="tarjeta">
+        <h2>Antes de empezar</h2>
+        <p style="margin:0 0 8px">Mírala bien y responde mentalmente: <b>¿cuántas tablas ves?</b></p>
+        <details>
+          <summary>Ver respuesta</summary>
+          <p><b>Son 4 tablas</b>, separadas por una línea en blanco:</p>
+          <ul>
+            <li><b>Encabezado</b>: 3 columnas × 3 filas (logo, datos de la botica y la caja del RUC).</li>
+            <li><b>Cliente</b>: 4 columnas × 3 filas.</li>
+            <li><b>Detalle</b>: 5 columnas × 8 filas (1 de títulos + 7 productos).</li>
+            <li><b>Totales</b>: 3 columnas × 3 filas.</li>
+          </ul>
+          <p>El texto final («¡Gracias por su compra!») va fuera de las tablas, centrado.</p>
+        </details>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Paso a paso</h2>
+        <div class="barra"><i id="barra"></i></div>
+        <p class="avance" id="avance">0 de 0 listos</p>
+
+        <div class="paso">
+          <h3><span>0</span> Prepara la hoja</h3>
+          <label class="ck"><input type="checkbox"><span>Crea un documento nuevo y ponle de nombre <b>Boleta – tu apellido</b>.</span></label>
+          <label class="ck"><input type="checkbox"><span>Elige la fuente <b>Arial</b>, tamaño <b>10</b>.</span></label>
+        </div>
+
+        <div class="paso">
+          <h3><span>1</span> Encabezado</h3>
+          <label class="ck"><input type="checkbox"><span>Inserta una tabla de <b>3 × 3</b> con <span class="ruta">Insertar → Tabla</span>.</span></label>
+          <label class="ck"><input type="checkbox"><span>Combina las 3 celdas de la <b>columna 1</b> (logo) y luego las 3 de la <b>columna 2</b> (datos de la botica).</span></label>
+          <label class="ck"><input type="checkbox"><span>Logo: fondo verde azulado y una <b>✚</b> blanca grande, centrada.</span></label>
+          <label class="ck"><input type="checkbox"><span>Escribe el nombre, el lema en cursiva y la dirección, teléfono y correo.</span></label>
+          <label class="ck"><input type="checkbox"><span>Columna 3: RUC, «BOLETA DE VENTA ELECTRÓNICA» (fondo verde, letra blanca) y el número. Todo en negrita y centrado.</span></label>
+          <label class="ck"><input type="checkbox"><span>Quita los bordes del logo y de los datos (<b>0 pt</b>) y deja la caja del RUC con borde verde de <b>2¼ pt</b>.</span></label>
+        </div>
+
+        <div class="paso">
+          <h3><span>2</span> Datos del cliente</h3>
+          <label class="ck"><input type="checkbox"><span>Tabla de <b>4 × 3</b>. Combina las 3 últimas celdas de la fila «Dirección».</span></label>
+          <label class="ck"><input type="checkbox"><span>Las celdas de título (Cliente, DNI, Fecha…) con fondo verde claro y letra verde en negrita.</span></label>
+          <label class="ck"><input type="checkbox"><span>Bordes de color verde grisáceo, <b>1 pt</b>.</span></label>
+        </div>
+
+        <div class="paso">
+          <h3><span>3</span> Detalle de productos</h3>
+          <label class="ck"><input type="checkbox"><span>Tabla de <b>5 × 8</b> y escribe los 7 productos.</span></label>
+          <label class="ck"><input type="checkbox"><span>Fila de títulos: fondo verde, letra blanca en negrita, centrada.</span></label>
+          <label class="ck"><input type="checkbox"><span>Filas <b>pares</b> con fondo muy clarito (efecto «cebra»).</span></label>
+          <label class="ck"><input type="checkbox"><span>Cantidad y unidad centradas; precios e importes alineados a la <b>derecha</b>.</span></label>
+          <label class="ck"><input type="checkbox"><span>Ajusta el ancho de columnas para que «Descripción» sea la más ancha.</span></label>
+        </div>
+
+        <div class="paso">
+          <h3><span>4</span> Totales</h3>
+          <label class="ck"><input type="checkbox"><span>Tabla de <b>3 × 3</b>. Combina las 3 celdas de la columna 1 y escribe el «SON: …» y la forma de pago.</span></label>
+          <label class="ck"><input type="checkbox"><span>Op. gravada e IGV con fondo verde claro; <b>IMPORTE TOTAL</b> con fondo verde y letra blanca más grande.</span></label>
+        </div>
+
+        <div class="paso">
+          <h3><span>5</span> Cierre</h3>
+          <label class="ck"><input type="checkbox"><span>Escribe «¡Gracias por su compra!» y la nota final, centrados y más pequeños.</span></label>
+          <label class="ck"><input type="checkbox"><span>Compara con el modelo: <span class="ruta">Archivo → Descargar → PDF</span> y míralos uno al lado del otro.</span></label>
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Colores exactos</h2>
+        <p style="margin:0 0 10px;font-size:.93rem">Toca un color para copiar su código. En Google Docs: en el menú de color elige <b>Personalizado</b> <b>+</b> y pégalo.</p>
+        <div class="paleta" id="paleta"></div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>¿Dónde está…?</h2>
+        <details>
+          <summary>Combinar celdas</summary>
+          <p>Selecciona las celdas arrastrando el mouse → clic derecho → <span class="ruta">Combinar celdas</span>. Si te equivocas: clic derecho → <span class="ruta">Separar celdas</span>.</p>
+        </details>
+        <details>
+          <summary>Color de fondo de una celda</summary>
+          <p>Selecciona la celda. En la barra de herramientas aparece el <b>bote de pintura</b> (Color de fondo). También en <span class="ruta">Formato → Tabla → Propiedades de la tabla → Color</span>.</p>
+        </details>
+        <details>
+          <summary>Color, grosor y quitar bordes</summary>
+          <p>Selecciona las celdas. En la barra aparecen el <b>lápiz</b> (color del borde) y las <b>líneas</b> (ancho del borde). Para que un borde «desaparezca», ponle <b>0 pt</b>.</p>
+          <p>Truco: con el botón de <b>bordes</b> que aparece al seleccionar puedes elegir solo el borde de arriba, abajo, izquierda o derecha.</p>
+        </details>
+        <details>
+          <summary>La cruz ✚ del logo</summary>
+          <p><span class="ruta">Insertar → Caracteres especiales</span> y escribe «cruz» en el buscador. O simplemente copia esta: <b style="font-size:1.2rem">✚</b></p>
+        </details>
+        <details>
+          <summary>Alinear y centrar rápido</summary>
+          <p>Centrar <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>E</kbd> · Derecha <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>R</kbd> · Izquierda <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>L</kbd>.</p>
+          <p>Para centrar el texto <b>de arriba a abajo</b> dentro de la celda: <span class="ruta">Propiedades de la tabla → Celda → Alineación vertical → Centro</span>.</p>
+        </details>
+        <details>
+          <summary>Mover el ancho de una columna</summary>
+          <p>Pasa el mouse por la línea entre dos columnas hasta ver la flecha ↔ y arrastra.</p>
+        </details>
+      </section>
+
+      <section class="tarjeta final" id="final">
+        <h2>¿Terminaste antes? Reto extra</h2>
+        <p style="margin:0 0 6px">Convierte tu boleta en una <b>PROFORMA</b> para tu propio botiquín:</p>
+        <ul style="margin:0;padding-left:20px">
+          <li>Cambia «BOLETA DE VENTA ELECTRÓNICA» por «PROFORMA» y elige <b>otro color</b> para todo el diseño.</li>
+          <li>Pon tu nombre como cliente y cambia al menos 3 productos (con precios que tengan sentido).</li>
+          <li>Agrega una fila al final: «Validez de la proforma: 7 días».</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const CLAVE = "m1c7-pasos";
+  const cajas = [...document.querySelectorAll("label.ck input")];
+  let guardado = [];
+  try { guardado = JSON.parse(localStorage.getItem(CLAVE) || "[]"); } catch (e) {}
+  cajas.forEach((c, i) => { c.checked = !!guardado[i]; c.addEventListener("change", actualizar); });
+  function actualizar(ev) {
+    const n = cajas.filter(c => c.checked).length;
+    document.getElementById("barra").style.width = (n / cajas.length * 100) + "%";
+    document.getElementById("avance").textContent = n === cajas.length ? `¡${n} de ${n}! Boleta terminada 🎉` : `${n} de ${cajas.length} listos`;
+    try { localStorage.setItem(CLAVE, JSON.stringify(cajas.map(c => c.checked))); } catch (e) {}
+    if (ev && n === cajas.length) {
+      const f = document.getElementById("final");
+      f.classList.remove("listo"); void f.offsetWidth; f.classList.add("listo");
+      f.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+  actualizar();
+
+  const COLORES = [
+    ["#0B6E69", "Verde: logo, títulos y total"],
+    ["#E0F2F1", "Verde claro: celdas de título"],
+    ["#F1F8F7", "Cebra: filas pares"],
+    ["#9FC4C1", "Borde tabla cliente"],
+    ["#C9DAD9", "Borde detalle y totales"],
+    ["#FFFFFF", "Blanco: letra sobre verde"]
+  ];
+  const paleta = document.getElementById("paleta");
+  COLORES.forEach(([hex, uso]) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "color";
+    b.innerHTML = `<i style="background:${hex}"></i><span><b>${hex}</b><small>${uso}</small></span>`;
+    b.onclick = async () => {
+      try { await navigator.clipboard.writeText(hex); } catch (e) {}
+      const t = b.querySelector("b"); t.textContent = "¡Copiado!"; b.classList.add("copiado");
+      setTimeout(() => { t.textContent = hex; b.classList.remove("copiado"); }, 1200);
+    };
+    paleta.append(b);
+  });
+})();
+</script>
+</body>
+</html>

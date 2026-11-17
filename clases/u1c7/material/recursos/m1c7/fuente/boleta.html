@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Boleta modelo (ficticia)</title>
+<!-- Fuente de boleta-modelo.pdf y boleta-modelo.png. Para regenerarlos: ver LEEME en esta carpeta.
+     Todo está hecho con lo que Google Docs permite: tablas, combinar celdas, bordes (color y grosor),
+     color de fondo de celda, Arial y márgenes por defecto (2,54 cm). -->
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; background: #fff; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #222; }
+  .hoja { width: 210mm; height: 297mm; padding: 25.4mm; position: relative; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { padding: 4px 7px; vertical-align: middle; }
+  p { margin: 0; }
+  .sep { height: 12pt; }
+
+  /* 1. Encabezado: logo | empresa | caja del RUC */
+  .enc td { border: 0; }
+  .logo { width: 22mm; background: #0B6E69; color: #fff; text-align: center; font-size: 34pt; font-weight: bold; }
+  .emp { padding-left: 12px; }
+  .emp .nom { font-size: 17pt; font-weight: bold; color: #0B6E69; }
+  .emp .lema { font-size: 9pt; font-style: italic; color: #555; margin-bottom: 5px; }
+  .emp .dat { font-size: 8.5pt; color: #444; line-height: 1.45; }
+  .ruc { width: 58mm; text-align: center; border: 2.25pt solid #0B6E69 !important; font-weight: bold; }
+  .ruc.t1 { font-size: 11pt; padding: 7px; }
+  .ruc.t2 { background: #0B6E69; color: #fff; font-size: 10pt; padding: 7px; }
+  .ruc.t3 { font-size: 12pt; padding: 7px; }
+
+  /* 2. Datos del cliente */
+  .cli td { border: 1pt solid #9FC4C1; font-size: 9pt; }
+  .cli .et { background: #E0F2F1; font-weight: bold; color: #0B6E69; width: 22mm; }
+
+  /* 3. Detalle */
+  .det th { background: #0B6E69; color: #fff; font-size: 9pt; border: 1pt solid #0B6E69; padding: 6px 7px; }
+  .det td { border: 1pt solid #C9DAD9; font-size: 9pt; }
+  .det tbody tr:nth-child(even) td { background: #F1F8F7; }
+  .c { text-align: center; } .d { text-align: right; }
+
+  /* 4. Totales */
+  .tot td { font-size: 9pt; }
+  .tot .son { border: 1pt solid #C9DAD9; vertical-align: top; color: #444; }
+  .tot .son b { color: #222; }
+  .tot .et { border: 1pt solid #C9DAD9; background: #E0F2F1; font-weight: bold; width: 38mm; }
+  .tot .vl { border: 1pt solid #C9DAD9; text-align: right; width: 26mm; }
+  .tot .fin td { background: #0B6E69; color: #fff; font-weight: bold; font-size: 10.5pt; border-color: #0B6E69; }
+
+  .pie { text-align: center; font-size: 8pt; color: #666; line-height: 1.5; }
+  .pie b { color: #0B6E69; font-size: 9.5pt; }
+  /* Versión imagen (boleta.html#png): sin márgenes de página */
+  .png .hoja { width: calc(210mm - 50.8mm + 16mm); height: auto; padding: 8mm; }
+</style>
+<script>if (location.hash === "#png") document.documentElement.classList.add("png");</script>
+</head>
+<body>
+<div class="hoja">
+
+  <table class="enc">
+    <tr>
+      <td class="logo" rowspan="3">✚</td>
+      <td class="emp" rowspan="3">
+        <p class="nom">BOTICA EL ROBLE</p>
+        <p class="lema">Insumos médicos y de enfermería</p>
+        <p class="dat">Av. Los Cedros 456 – Cercado de Lima<br>Teléfono: (01) 555-0147<br>ventas@boticaelroble.example</p>
+      </td>
+      <td class="ruc t1">R.U.C. 20123456789</td>
+    </tr>
+    <tr><td class="ruc t2">BOLETA DE VENTA ELECTRÓNICA</td></tr>
+    <tr><td class="ruc t3">B001 – 000147</td></tr>
+  </table>
+
+  <div class="sep"></div>
+
+  <table class="cli">
+    <tr><td class="et">Cliente</td><td>ESTACIÓN DE ENFERMERÍA – PRÁCTICA</td><td class="et">Fecha</td><td>17/11/2026</td></tr>
+    <tr><td class="et">DNI</td><td>12345678</td><td class="et">Moneda</td><td>Soles (S/)</td></tr>
+    <tr><td class="et">Dirección</td><td colspan="3">Jr. Las Magnolias 210 – Cercado de Lima</td></tr>
+  </table>
+
+  <div class="sep"></div>
+
+  <table class="det">
+    <thead>
+      <tr><th style="width:13mm">Cant.</th><th style="width:18mm">Unidad</th><th>Descripción</th><th style="width:22mm">P. unit.</th><th style="width:24mm">Importe</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="c">2</td><td class="c">CAJA</td><td>Guantes de nitrilo talla M x 100 und.</td><td class="d">28.50</td><td class="d">57.00</td></tr>
+      <tr><td class="c">3</td><td class="c">CAJA</td><td>Mascarillas quirúrgicas 3 pliegues x 50 und.</td><td class="d">12.90</td><td class="d">38.70</td></tr>
+      <tr><td class="c">4</td><td class="c">FRASCO</td><td>Alcohol etílico 70° x 1 L</td><td class="d">9.80</td><td class="d">39.20</td></tr>
+      <tr><td class="c">1</td><td class="c">CAJA</td><td>Jeringas descartables 5 mL x 100 und.</td><td class="d">35.00</td><td class="d">35.00</td></tr>
+      <tr><td class="c">5</td><td class="c">PAQ.</td><td>Gasa estéril 10 x 10 cm x 10 und.</td><td class="d">3.50</td><td class="d">17.50</td></tr>
+      <tr><td class="c">2</td><td class="c">ROLLO</td><td>Esparadrapo hipoalergénico 2.5 cm</td><td class="d">4.20</td><td class="d">8.40</td></tr>
+      <tr><td class="c">1</td><td class="c">UND.</td><td>Termómetro digital clínico</td><td class="d">18.90</td><td class="d">18.90</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sep"></div>
+
+  <table class="tot">
+    <tr><td class="son" rowspan="3"><b>SON:</b> DOSCIENTOS CATORCE CON 70/100 SOLES<br><br><b>Forma de pago:</b> Contado</td><td class="et">Op. gravada</td><td class="vl">S/ 181.95</td></tr>
+    <tr><td class="et">IGV (18%)</td><td class="vl">S/ 32.75</td></tr>
+    <tr class="fin"><td class="et">IMPORTE TOTAL</td><td class="vl">S/ 214.70</td></tr>
+  </table>
+
+  <div class="sep"></div><div class="sep"></div>
+
+  <div class="pie">
+    <p><b>¡Gracias por su compra!</b></p>
+    <p>Documento ficticio para práctica de Google Docs – sin valor tributario.</p>
+  </div>
+
+</div>
+</body>
+</html>
