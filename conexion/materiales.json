@@ -72,5 +72,15 @@
       "descripcion": "Presentación interactiva para la clase virtual: cómo funciona internet (animado), las partes de una dirección web, qué son www y https, cómo leer un dominio para saber si es confiable, trucos de búsqueda, descargas seguras y un video para cerrar. Con retos en vivo y juegos. Sin tarea.",
       "orden": 1
     }
+  ],
+  "u1c7": [
+    {
+      "archivo": "m1c7.html",
+      "ruta": "clases/u1c7/material/m1c7.html",
+      "titulo": "Reto: recrea esta boleta en Google Docs",
+      "tipo": "practica",
+      "descripcion": "Práctica con tablas: copia el diseño de una boleta ficticia de botica usando combinar celdas, color y grosor de bordes, color de fondo y alineación. Con pasos para marcar, colores exactos y pistas de dónde está cada opción.",
+      "orden": 1
+    }
   ]
 }
