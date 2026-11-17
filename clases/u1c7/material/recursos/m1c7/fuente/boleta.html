@@ -10,7 +10,7 @@
   @page { size: A4; margin: 0; }
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   html, body { margin: 0; background: #fff; }
-  body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #222; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #000; }
   .hoja { width: 210mm; height: 297mm; padding: 25.4mm; position: relative; }
   table { width: 100%; border-collapse: collapse; }
   td, th { padding: 4px 7px; vertical-align: middle; }
@@ -23,7 +23,7 @@
   .emp { padding-left: 12px; }
   .emp .nom { font-size: 17pt; font-weight: bold; color: #0B6E69; }
   .emp .lema { font-size: 9pt; font-style: italic; color: #555; margin-bottom: 5px; }
-  .emp .dat { font-size: 8.5pt; color: #444; line-height: 1.45; }
+  .emp .dat { font-size: 8.5pt; color: #555; line-height: 1.45; }
   .ruc { width: 58mm; text-align: center; border: 2.25pt solid #0B6E69 !important; font-weight: bold; }
   .ruc.t1 { font-size: 11pt; padding: 7px; }
   .ruc.t2 { background: #0B6E69; color: #fff; font-size: 10pt; padding: 7px; }
@@ -35,19 +35,19 @@
 
   /* 3. Detalle */
   .det th { background: #0B6E69; color: #fff; font-size: 9pt; border: 1pt solid #0B6E69; padding: 6px 7px; }
-  .det td { border: 1pt solid #C9DAD9; font-size: 9pt; }
-  .det tbody tr:nth-child(even) td { background: #F1F8F7; }
+  .det td { border: 1pt solid #9FC4C1; font-size: 9pt; }
+  .det tbody tr:nth-child(even) td { background: #E0F2F1; }
   .c { text-align: center; } .d { text-align: right; }
 
   /* 4. Totales */
   .tot td { font-size: 9pt; }
-  .tot .son { border: 1pt solid #C9DAD9; vertical-align: top; color: #444; }
-  .tot .son b { color: #222; }
-  .tot .et { border: 1pt solid #C9DAD9; background: #E0F2F1; font-weight: bold; width: 38mm; }
-  .tot .vl { border: 1pt solid #C9DAD9; text-align: right; width: 26mm; }
+  .tot .son { border: 1pt solid #9FC4C1; vertical-align: top; color: #555; }
+  .tot .son b { color: #000; }
+  .tot .et { border: 1pt solid #9FC4C1; background: #E0F2F1; font-weight: bold; width: 38mm; }
+  .tot .vl { border: 1pt solid #9FC4C1; text-align: right; width: 26mm; }
   .tot .fin td { background: #0B6E69; color: #fff; font-weight: bold; font-size: 10.5pt; border-color: #0B6E69; }
 
-  .pie { text-align: center; font-size: 8pt; color: #666; line-height: 1.5; }
+  .pie { text-align: center; font-size: 8pt; color: #555; line-height: 1.5; }
   .pie b { color: #0B6E69; font-size: 9.5pt; }
   /* Versión imagen (boleta.html#png): sin márgenes de página */
   .png .hoja { width: calc(210mm - 50.8mm + 16mm); height: auto; padding: 8mm; }
@@ -99,7 +99,7 @@
   <div class="sep"></div>
 
   <table class="tot">
-    <tr><td class="son" rowspan="3"><b>SON:</b> DOSCIENTOS CATORCE CON 70/100 SOLES<br><br><b>Forma de pago:</b> Contado</td><td class="et">Op. gravada</td><td class="vl">S/ 181.95</td></tr>
+    <tr><td class="son" rowspan="3"><span><b>SON:</b> DOSCIENTOS CATORCE CON 70/100 SOLES</span><br><br><span><b>Forma de pago:</b> Contado</span></td><td class="et">Op. gravada</td><td class="vl">S/ 181.95</td></tr>
     <tr><td class="et">IGV (18%)</td><td class="vl">S/ 32.75</td></tr>
     <tr class="fin"><td class="et">IMPORTE TOTAL</td><td class="vl">S/ 214.70</td></tr>
   </table>

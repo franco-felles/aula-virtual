@@ -28,6 +28,11 @@
   @media (max-width: 860px) { .modelo { position: static; } }
   .modelo img { width: 100%; display: block; border-radius: 6px; }
   .modelo .pista { font-size: .82rem; color: var(--mut); margin: 8px 2px 10px; }
+  .aviso { margin: 2px 2px 10px; font-size: .9rem; background: #fbf1e2; border-radius: 8px; padding: 7px 10px; }
+  #boleta { position: relative; overflow: hidden; }
+  #boleta .lienzo { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 20px); background: var(--ink); color: #fff; padding: 9px 16px; border-radius: 99px; font-size: .9rem; max-width: calc(100% - 32px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; pointer-events: none; transition: .2s; z-index: 50; }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); }
   .botones { display: flex; gap: 8px; flex-wrap: wrap; }
   .bt { font: 600 .9rem "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 15px; text-decoration: none; cursor: pointer; }
   .bt.sec { background: #fff; color: var(--moss); border: 1.5px solid var(--moss); }
@@ -66,14 +71,16 @@
   <p class="lead">Una botica le vendió insumos a la estación de enfermería. Tu misión: que tu Google Docs se vea <b>igual</b> que esta boleta, usando solo <b>tablas</b>. Sin imágenes ni capturas: todo se arma con celdas, bordes y colores.</p>
 
   <div class="rejilla">
-    <section class="modelo" data-zoom>
-      <img src="recursos/m1c7/boleta-modelo.png" alt="Boleta de venta ficticia de Botica El Roble con encabezado, datos del cliente, detalle de productos y totales">
-      <p class="pista">Toca la boleta para verla en grande. Es un documento ficticio, solo para practicar.</p>
+    <section class="modelo">
+      <p class="aviso">👆 <b>Toca cualquier dato</b> para copiarlo y pégalo en tu tabla con <kbd>Ctrl</kbd>+<kbd>V</kbd>. Así te concentras en el diseño, no en escribir.</p>
+      <div id="boleta" data-zoom><img src="recursos/m1c7/boleta-modelo.png" alt="Boleta de venta ficticia de Botica El Roble con encabezado, datos del cliente, detalle de productos y totales"></div>
+      <p class="pista">Es un documento ficticio, solo para practicar.</p>
       <div class="botones">
         <a class="bt" href="recursos/m1c7/boleta-modelo.pdf" target="_blank" rel="noopener">Abrir PDF</a>
         <a class="bt sec" href="recursos/m1c7/boleta-modelo.png" download="Boleta modelo.png">Descargar imagen</a>
       </div>
     </section>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <div>
       <section class="tarjeta">
@@ -108,7 +115,7 @@
           <label class="ck"><input type="checkbox"><span>Inserta una tabla de <b>3 × 3</b> con <span class="ruta">Insertar → Tabla</span>.</span></label>
           <label class="ck"><input type="checkbox"><span>Combina las 3 celdas de la <b>columna 1</b> (logo) y luego las 3 de la <b>columna 2</b> (datos de la botica).</span></label>
           <label class="ck"><input type="checkbox"><span>Logo: fondo verde azulado y una <b>✚</b> blanca grande, centrada.</span></label>
-          <label class="ck"><input type="checkbox"><span>Escribe el nombre, el lema en cursiva y la dirección, teléfono y correo.</span></label>
+          <label class="ck"><input type="checkbox"><span>Copia y pega el nombre, el lema (en cursiva) y la dirección, teléfono y correo.</span></label>
           <label class="ck"><input type="checkbox"><span>Columna 3: RUC, «BOLETA DE VENTA ELECTRÓNICA» (fondo verde, letra blanca) y el número. Todo en negrita y centrado.</span></label>
           <label class="ck"><input type="checkbox"><span>Quita los bordes del logo y de los datos (<b>0 pt</b>) y deja la caja del RUC con borde verde de <b>2¼ pt</b>.</span></label>
         </div>
@@ -122,9 +129,9 @@
 
         <div class="paso">
           <h3><span>3</span> Detalle de productos</h3>
-          <label class="ck"><input type="checkbox"><span>Tabla de <b>5 × 8</b> y escribe los 7 productos.</span></label>
+          <label class="ck"><input type="checkbox"><span>Tabla de <b>5 × 8</b> y pega los 7 productos.</span></label>
           <label class="ck"><input type="checkbox"><span>Fila de títulos: fondo verde, letra blanca en negrita, centrada.</span></label>
-          <label class="ck"><input type="checkbox"><span>Filas <b>pares</b> con fondo muy clarito (efecto «cebra»).</span></label>
+          <label class="ck"><input type="checkbox"><span>Filas <b>pares</b> con el <b>mismo verde claro</b> de los títulos (efecto «cebra»).</span></label>
           <label class="ck"><input type="checkbox"><span>Cantidad y unidad centradas; precios e importes alineados a la <b>derecha</b>.</span></label>
           <label class="ck"><input type="checkbox"><span>Ajusta el ancho de columnas para que «Descripción» sea la más ancha.</span></label>
         </div>
@@ -211,12 +218,66 @@
   }
   actualizar();
 
+  /* Boleta viva: se carga la misma fuente del PDF y cada dato se copia con un clic */
+  const toast = document.getElementById("toast");
+  let tt;
+  function avisar(txt) {
+    toast.textContent = txt; toast.classList.add("on");
+    clearTimeout(tt); tt = setTimeout(() => toast.classList.remove("on"), 1600);
+  }
+  async function copiar(txt) {
+    try { await navigator.clipboard.writeText(txt); return true; }
+    catch (e) {
+      const t = document.createElement("textarea"); t.value = txt; document.body.append(t); t.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e2) {} t.remove(); return ok;
+    }
+  }
+  (async () => {
+    const caja = document.getElementById("boleta");
+    try {
+      const r = await fetch("recursos/m1c7/fuente/boleta.html");
+      if (!r.ok) throw 0;
+      const doc = new DOMParser().parseFromString(await r.text(), "text/html");
+      const raiz = document.createElement("div"); raiz.className = "lienzo";
+      const sombra = raiz.attachShadow({ mode: "open" });
+      sombra.innerHTML = `<style>${doc.querySelector("style").textContent}
+        .hoja { background: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #000; line-height: normal; }
+        [data-copia] { cursor: copy; transition: box-shadow .15s; }
+        [data-copia]:hover { box-shadow: inset 0 0 0 2px #e8a33a; }
+        [data-copia].ok { box-shadow: inset 0 0 0 3px #2f7d4a; }
+      </style><div class="png">${doc.querySelector(".hoja").outerHTML}</div>`;
+      sombra.querySelectorAll("td, th").forEach(td => {
+        const partes = td.querySelectorAll(":scope > p, :scope > span");
+        (partes.length ? [...partes] : [td]).forEach(el => el.dataset.copia = "");
+      });
+      sombra.querySelectorAll(".pie p").forEach(el => el.dataset.copia = "");
+      sombra.addEventListener("click", async e => {
+        const el = e.target.closest("[data-copia]");
+        if (!el) return;
+        const txt = el.innerText.trim();
+        if (await copiar(txt)) {
+          avisar("Copiado: " + txt.replace(/\s*\n\s*/g, " · "));
+          el.classList.add("ok"); setTimeout(() => el.classList.remove("ok"), 700);
+        } else avisar("No se pudo copiar: selecciónalo y usa Ctrl+C");
+      });
+      caja.removeAttribute("data-zoom");
+      caja.replaceChildren(raiz);
+      const hoja = sombra.querySelector(".hoja");
+      const ajustar = () => {
+        const s = caja.clientWidth / hoja.offsetWidth;
+        raiz.style.transform = `scale(${s})`;
+        caja.style.height = hoja.offsetHeight * s + "px";
+      };
+      new ResizeObserver(ajustar).observe(caja);
+      ajustar();
+    } catch (e) { /* si falla, queda la imagen con zoom */ }
+  })();
+
   const COLORES = [
-    ["#0B6E69", "Verde: logo, títulos y total"],
-    ["#E0F2F1", "Verde claro: celdas de título"],
-    ["#F1F8F7", "Cebra: filas pares"],
-    ["#9FC4C1", "Borde tabla cliente"],
-    ["#C9DAD9", "Borde detalle y totales"],
+    ["#0B6E69", "Verde: logo, nombre, títulos, borde del RUC y total"],
+    ["#E0F2F1", "Verde claro: celdas de título y filas pares"],
+    ["#9FC4C1", "Bordes delgados de todas las tablas"],
+    ["#555555", "Gris: lema, dirección y nota final"],
     ["#FFFFFF", "Blanco: letra sobre verde"]
   ];
   const paleta = document.getElementById("paleta");
