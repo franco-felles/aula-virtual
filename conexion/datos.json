@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-16T16:23:18.223Z",
+ "generado": "2026-11-17T11:03:18.395Z",
  "v": 1,
  "clases": [
   {
@@ -55,6 +55,15 @@
    "tema": "EC - revisión de tareas",
    "publicada": true,
    "conCopias": false
+  },
+  {
+   "id": "u1c7",
+   "tipo": "Clase",
+   "unidad": 1,
+   "n": 7,
+   "tema": "GDOCS: TABLAS",
+   "publicada": true,
+   "conCopias": true
   }
  ],
  "enlaces": {
