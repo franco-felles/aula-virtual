@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-18T15:33:13.666Z",
+ "generado": "2026-11-18T15:43:36.122Z",
  "v": 1,
  "clases": [
   {
@@ -72,7 +72,7 @@
    "n": 8,
    "tema": "GDOCS: CV",
    "publicada": true,
-   "conCopias": false
+   "conCopias": true
   }
  ],
  "enlaces": {
