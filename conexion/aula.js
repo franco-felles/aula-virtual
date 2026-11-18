@@ -10,7 +10,9 @@
 
    La URL del Panel está en conexion/config.js (window.AULA_API). Se carga sola.
    Sesión en sessionStorage (solo esa pestaña y las que abra). Se cierra sola
-   tras INACTIVO_MIN minutos sin uso, porque las PC del laboratorio se comparten.
+   tras unos minutos sin uso, porque las PC del laboratorio se comparten.
+   Los minutos los pone el docente en el Panel (Config → MINUTOS_SESION, se aplican al
+   iniciar sesión); si no hay valor, INACTIVO_MIN.
    ========================================================== */
 (function () {
   "use strict";
@@ -18,7 +20,7 @@
   const RAIZ = new URL("../", script.src);
   const url = r => new URL(r, RAIZ).href;
   const CLAVE = "aula-sesion-v2";
-  const INACTIVO_MIN = 20;
+  const INACTIVO_MIN = 45;
 
   /* ---------- utilidades ---------- */
   const strip = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -44,7 +46,7 @@
   function sesion() {
     try {
       const s = JSON.parse(sessionStorage.getItem(CLAVE));
-      if (s && Date.now() - (s.uso || 0) > INACTIVO_MIN * 60000) { sessionStorage.removeItem(CLAVE); return null; }
+      if (s && Date.now() - (s.uso || 0) > (Number(s.min) || INACTIVO_MIN) * 60000) { sessionStorage.removeItem(CLAVE); return null; }
       return s;
     } catch { return null; }
   }
@@ -70,6 +72,12 @@
     const s = sesion(); if (s) guardar(s);
   }
   ["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, marcarUso, { passive: true }));
+  // Si trabaja DENTRO de un recuadro incrustado (Google Docs, video, formulario), la página no ve sus clics:
+  // mientras el foco siga en ese recuadro y la pestaña esté a la vista, cuenta como uso.
+  setInterval(() => {
+    const a = document.activeElement;
+    if (a && a.tagName === "IFRAME" && document.visibilityState === "visible") { ultimaMarca = 0; marcarUso(); }
+  }, 60000);
   setInterval(() => { if (proteger && !sesion()) salir("inactivo"); }, 30000);
 
   /* ---------- API ---------- */

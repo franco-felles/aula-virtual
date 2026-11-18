@@ -100,7 +100,8 @@ function configurarPanel() {
   }
   // Claves que se agregaron después (no pisa lo que ya escribiste)
   const existentes = cfg.getRange(1, 1, cfg.getLastRow(), 1).getValues().map(r => r[0]);
-  [["DOCENTE", "Docente", "Tu nombre como aparece en la web"]].forEach(f => { if (existentes.indexOf(f[0]) < 0) cfg.appendRow(f); });
+  [["DOCENTE", "Docente", "Tu nombre como aparece en la web"],
+   ["MINUTOS_SESION", 45, "Minutos sin uso antes de que la web cierre la sesión (5 a 180). Vale desde el próximo ingreso"]].forEach(f => { if (existentes.indexOf(f[0]) < 0) cfg.appendRow(f); });
 
   // Tablas
   Object.keys(CABECERAS).forEach(n => {
@@ -556,7 +557,7 @@ function generarCopiasNucleo(soloPublicadas) {
 }
 
 function generarCopias() {
-  const lock = LockService.getScriptLock();
+  const lock = LockService.getDocumentLock();   // candado propio de las tareas de fondo: no bloquea quizzes ni notas
   if (!lock.tryLock(30000)) return aviso("Ya se están generando copias (quizá el copiado automático). Intenta en un minuto.");
   let r;
   try { r = generarCopiasNucleo(false); } finally { lock.releaseLock(); }
@@ -569,7 +570,7 @@ function generarCopias() {
 /** Lo ejecuta el activador cada 15 min: copias que falten, SOLO en clases PUBLICADAS
  *  (así no se copian semillas que aún estás preparando). Deja el resultado en Config → AUTO_COPIAS. */
 function copiasAutomaticas() {
-  const lock = LockService.getScriptLock();
+  const lock = LockService.getDocumentLock();   // candado propio de las tareas de fondo: no bloquea quizzes ni notas
   if (!lock.tryLock(5000)) return;
   try {
     const r = generarCopiasNucleo(true);
@@ -708,7 +709,7 @@ function anotarPublicacion(txt) {
 function publicarWebAuto() {
   const hora = Number(Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "H"));
   if (hora < 6 || hora >= 23) return;
-  const lock = LockService.getScriptLock();
+  const lock = LockService.getDocumentLock();   // candado propio de las tareas de fondo: no bloquea quizzes ni notas
   if (!lock.tryLock(5000)) return;
   try {
     const r = publicarWebNucleo(false);

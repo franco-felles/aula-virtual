@@ -89,10 +89,16 @@ function buscarAlumno(codigo) {
   return a;
 }
 
+/** Minutos sin uso antes de que la web cierre la sesión (Config → MINUTOS_SESION; por defecto 45, entre 5 y 180). */
+function minutosSesion() {
+  const n = Number(String(valorConfig("MINUTOS_SESION") || "").replace(",", "."));
+  return n > 0 ? Math.min(180, Math.max(5, Math.round(n))) : 45;
+}
+
 function apiLogin(req) {
   const a = buscarAlumno(req.codigo);
   const token = nuevoToken({ rol: "alumno", codigos: [a.CODIGO] });
-  return { token, rol: "alumno", alumnos: [pub(a)] };
+  return { token, rol: "alumno", alumnos: [pub(a)], minutos: minutosSesion() };
 }
 
 function apiCompanero(req) {
@@ -134,7 +140,7 @@ function apiLoginDocente(req) {
   }
   c.remove("fallos_docente");
   const nombre = String(valorConfig("DOCENTE") || "Docente");
-  return { token: nuevoToken({ rol: "docente" }), rol: "docente", nombre };
+  return { token: nuevoToken({ rol: "docente" }), rol: "docente", nombre, minutos: minutosSesion() };
 }
 
 function apiCambiarClave(req) {

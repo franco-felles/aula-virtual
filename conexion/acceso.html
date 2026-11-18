@@ -132,7 +132,7 @@ async function enviar(e, boton, err, accion, datos) {
   try {
     sessionStorage.clear();
     const r = await Aula.api(accion, datos);
-    Aula.guardar({ token: r.token, rol: r.rol, nombre: r.nombre, alumnos: r.alumnos || [] });
+    Aula.guardar({ token: r.token, rol: r.rol, nombre: r.nombre, alumnos: r.alumnos || [], min: r.minutos });
     location.replace(Aula.destinoTrasLogin());
   } catch (ex) {
     $(err).textContent = ex.message;
