@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-17T11:03:18.395Z",
+ "generado": "2026-11-18T14:43:20.489Z",
  "v": 1,
  "clases": [
   {
@@ -64,6 +64,15 @@
    "tema": "GDOCS: TABLAS",
    "publicada": true,
    "conCopias": true
+  },
+  {
+   "id": "u1c8",
+   "tipo": "Clase",
+   "unidad": 1,
+   "n": 8,
+   "tema": "GDOCS: CV",
+   "publicada": true,
+   "conCopias": false
   }
  ],
  "enlaces": {
