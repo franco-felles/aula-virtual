@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-18T21:23:16.260Z",
+ "generado": "2026-11-18T22:33:16.750Z",
  "v": 1,
  "clases": [
   {
@@ -105,7 +105,7 @@
    "id": "qzmwmajuo0b632",
    "titulo": "Creación de un CV",
    "clase": "u1c8",
-   "abierto": false,
+   "abierto": true,
    "repetir": false,
    "npreg": 15
   }
