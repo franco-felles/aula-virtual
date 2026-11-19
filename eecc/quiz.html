@@ -72,10 +72,24 @@
   .opcion-det.correcta { background: #fff3b0; border-color: #e0b000; }
   .opcion-det.mal { background: #fdecea; border-color: #c62828; color: #7d211b; }
   .opcion-det .marca { flex: none; font-weight: 700; }
-  .retro { margin-top: 8px; padding: 9px 12px; border-radius: 9px; font-size: .86rem; line-height: 1.45; white-space: pre-line; display: flex; flex-direction: column; gap: 2px; }
-  .retro b { font-size: .78rem; }
-  .retro.mal { background: #fdecea; color: #7d211b; border-left: 3px solid #c62828; }
-  .retro.bien { background: var(--moss-bg); color: var(--moss-d); border-left: 3px solid var(--moss); }
+  /* globos de retroalimentación: al costado de la alternativa (pantalla ancha) o debajo (celular) */
+  .op-wrap { position: relative; }
+  .globo { position: relative; margin: 9px 0 3px; padding: 9px 13px; border: 1.5px solid; border-radius: 14px; font-size: .84rem; line-height: 1.4;
+           white-space: pre-line; box-shadow: 0 8px 20px rgba(16,35,28,.09); animation: sube .3s ease both; }
+  .globo b { display: block; font-size: .74rem; margin-bottom: 2px; }
+  .globo.mal { background: #fdecea; border-color: #e9a29b; color: #7d211b; }
+  .globo.bien { background: #eaf4ec; border-color: #a9c7b2; color: var(--moss-d); }
+  .globo::before { content: ""; position: absolute; width: 12px; height: 12px; background: inherit; border: inherit; border-width: 1.5px 0 0 1.5px; transform: rotate(45deg); top: -7.5px; }
+  .globo.izq { margin-right: 44px; }  .globo.izq::before { left: 24px; }
+  .globo.der { margin-left: 44px; }   .globo.der::before { right: 24px; }
+  @media (min-width: 1220px) {
+    .globo { position: absolute; top: 50%; transform: translateY(-50%); width: 230px; margin: 0; z-index: 2; animation: none; }
+    .globo::before { top: 50%; margin-top: -6px; }
+    .globo.der { left: calc(100% + 58px); }
+    .globo.der::before { left: -7.5px; right: auto; border-width: 0 0 1.5px 1.5px; }
+    .globo.izq { right: calc(100% + 58px); }
+    .globo.izq::before { right: -7.5px; left: auto; border-width: 1.5px 1.5px 0 0; }
+  }
 
   .ficha-acciones { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-top: 14px; }
   .correccion { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -269,23 +283,30 @@ function revision(alumno, titulo, r, alVolver) {
   const bien = r.revision.filter(p => p.ok).length;
   box.append(el("p", "eyebrow", Aula.nombreBonito(alumno.nombre) + " · " + titulo), el("h1", "pregunta", "Tus respuestas"),
     el("p", "mut", `${bien} bien · ${r.revision.length - bien} mal. Amarillo = respuesta correcta, rojo = tu error.` +
-      (r.revision.some(p => p.opciones.some(o => o.msg)) ? " Debajo de cada pregunta verás por qué." : "")));
+      (r.revision.some(p => p.opciones.some(o => o.msg)) ? " Los globos 💬 te explican por qué." : "")));
   r.revision.forEach((p, i) => {
     const pq = el("div", "pregunta-det" + (p.ok ? " ok" : " fallo"));
     pq.appendChild(el("div", "pregunta-det-q", `${i + 1}. ${p.texto}`));
     const ops = el("div", "opciones-det");
+    // Retroalimentación (si el docente la activó): un globo junto a lo que eligió y, si falló, otro junto a la correcta.
+    // Los lados se alternan de pregunta en pregunta; si hay dos globos, van uno a cada lado para no taparse.
+    const lado = i % 2 ? "izq" : "der", otro = i % 2 ? "der" : "izq";
+    const globo = o => {
+      if (!o.msg) return null;
+      if (o.elegida) return el("div", "globo " + (o.correcta ? "bien " : "mal ") + lado);
+      if (o.correcta && !p.ok) return el("div", "globo bien " + (p.opciones.some(x => x.elegida && x.msg) ? otro : lado));
+      return null;
+    };
     p.opciones.forEach(o => {
       const x = el("div", "opcion-det" + (o.correcta ? " correcta" : "") + (o.elegida && !o.correcta ? " mal" : ""), o.texto);
       if (o.elegida) x.prepend(el("span", "marca", o.correcta ? "✓" : "✗"));
-      ops.appendChild(x);
+      const w = el("div", "op-wrap"); w.appendChild(x);
+      const g = globo(o);
+      if (g) { g.append(el("b", "", o.elegida ? (o.correcta ? "✓ ¡Bien!" : "✗ Por qué no") : "✓ La correcta"), el("span", "", o.msg)); w.appendChild(g); }
+      ops.appendChild(w);
     });
     if (!p.opciones.some(o => o.elegida)) ops.appendChild(el("div", "mut", "(sin responder)"));
     pq.appendChild(ops);
-    // Retroalimentación (si el docente la activó): el porqué de lo que eligió y, si falló, el de la correcta
-    const elegida = p.opciones.find(o => o.elegida), correcta = p.opciones.find(o => o.correcta);
-    const retro = (o, cls, tit) => { const x = el("div", "retro " + cls); x.append(el("b", "", tit), el("span", "", o.msg)); pq.appendChild(x); };
-    if (elegida && elegida.msg) retro(elegida, p.ok ? "bien" : "mal", p.ok ? "✓ ¡Bien!" : "✗ Por qué no:");
-    if (!p.ok && correcta && correcta.msg) retro(correcta, "bien", "La correcta:");
     box.appendChild(pq);
   });
   const b = el("button", "btn block", "Volver"); b.type = "button"; b.style.marginTop = "14px";
