@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-19T16:43:15.650Z",
+ "generado": "2026-11-19T16:53:19.507Z",
  "v": 1,
  "clases": [
   {
@@ -124,7 +124,7 @@
    "clase": "u1c9",
    "abierto": true,
    "repetir": false,
-   "npreg": 15
+   "npreg": 27
   },
   {
    "id": "qzmwns2u9o94aa",
@@ -132,7 +132,7 @@
    "clase": "",
    "abierto": true,
    "repetir": true,
-   "npreg": 65
+   "npreg": 124
   }
  ]
 }
