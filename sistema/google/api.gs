@@ -35,7 +35,8 @@ const ACCIONES = {
   login: apiLogin, loginDocente: apiLoginDocente, companero: apiCompanero, cambiarClave: apiCambiarClave,
   portal: apiPortal, clase: apiClase,
   quizLista: apiQuizLista, quizVer: apiQuizVer, quizGuardar: apiQuizGuardar, quizOpciones: apiQuizOpciones, quizBorrar: apiQuizBorrar,
-  quizRendir: apiQuizRendir, quizEnviar: apiQuizEnviar, quizCorregir: apiQuizCorregir, quizReiniciar: apiQuizReiniciar
+  quizRendir: apiQuizRendir, quizEnviar: apiQuizEnviar, quizCorregir: apiQuizCorregir, quizReiniciar: apiQuizReiniciar,
+  pasoVer: apiPasoVer, pasoFijar: apiPasoFijar
 };
 
 /* ======================= SESIÓN ======================= */
@@ -526,6 +527,32 @@ function apiQuizReiniciar(req) {
     invalidarCache(["res"]);
   } finally { lock.releaseLock(); }
   return {};
+}
+
+/* ======================= MATERIALES POR PARTES =======================
+   Un material puede ir "por partes": el docente abre la siguiente desde la misma página
+   y los alumnos la ven aparecer (la página pregunta cada pocos segundos).
+   Se guarda en Propiedades del script (paso_<material>) y en memoria para responder rápido. */
+const PASO_SEG = 6 * 60 * 60;
+function clavePaso(material) {
+  const k = String(material || "").toLowerCase().replace(/[^a-z0-9-]/g, "");
+  if (!k) throw new Error("Falta el material.");
+  return "paso_" + k;
+}
+function apiPasoVer(req) {
+  sesionDe(req);
+  const k = clavePaso(req.material);
+  let v = cache().get(k);
+  if (v === null) { v = PropertiesService.getScriptProperties().getProperty(k) || "0"; cache().put(k, v, PASO_SEG); }
+  return { paso: Number(v) || 0 };
+}
+function apiPasoFijar(req) {
+  sesionDe(req, "docente");
+  const k = clavePaso(req.material);
+  const v = String(Math.max(0, Math.min(99, Math.floor(Number(req.paso) || 0))));
+  PropertiesService.getScriptProperties().setProperty(k, v);
+  cache().put(k, v, PASO_SEG);
+  return { paso: Number(v) };
 }
 
 /* ======================= UTILIDADES ======================= */

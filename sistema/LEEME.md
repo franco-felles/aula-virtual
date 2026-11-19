@@ -40,6 +40,11 @@ Pega el código nuevo y luego: **Implementar → Gestionar implementaciones → 
 | Borré copias o semillas en Drive | **Aula → Limpiar copias borradas** (quita de Entregas lo que está en la papelera; la web deja de mostrarlo) |
 | Alumno tardío | Fila nueva en `Alumnos` (código, nombre, grupo) → **Generar copias** |
 
+## Materiales por partes (el docente desbloquea)
+
+Algunos materiales (ej. `m1c9`) muestran sus partes **cerradas** hasta que el docente las abre. Entra a la web como docente y abre el material: abajo a la izquierda aparece el **mando** (◀ · Abrir siguiente ▶ · Todo · ⟲). Los alumnos ven la parte nueva en unos segundos, sin recargar.
+Necesita que `api.gs` tenga las acciones `pasoVer` / `pasoFijar` (pegar el código y publicar **Nueva versión**). Si el Panel aún no las tiene, el material se abre completo para todos y avisa al docente.
+
 ## Pestañas
 
 - **Config**: `MES`, `GRUPOS`, `PCS`, `RAIZ_ID`, `DOCENTE` (tu nombre en la web).

@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- FICHA DEL MATERIAL: clase 9 · párrafos en Google Docs, por partes que abre el docente -->
+<meta name="material-titulo" content="Párrafos: interlineado, espaciado y alineación">
+<meta name="material-tipo" content="practica">
+<meta name="material-descripcion" content="Práctica por partes (el docente las va abriendo): arreglar textos de obras clásicas mal formateados usando interlineado, espacio entre párrafos, alineación, las 9 posiciones dentro de una celda, sangría francesa y un reto final con el Juramento de Florence Nightingale.">
+<title>Párrafos en Google Docs</title>
+<script src="../../../conexion/aula.js" data-proteger></script>
+<link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #6f6a57; --ok: #2f7d4a; --teal: #0B6E69; --rojo: #a8432f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; line-height: 1.5; }
+  .envase { max-width: 980px; margin: 0 auto; padding: 20px 16px 120px; }
+  .eti { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--moss); margin: 0; }
+  h1 { font-size: clamp(1.5rem, 3.4vw, 2.2rem); line-height: 1.1; margin: 4px 0 6px; letter-spacing: -.01em; }
+  h2 { font-size: 1.2rem; margin: 0; line-height: 1.2; }
+  h3 { font-size: 1rem; margin: 16px 0 6px; }
+  .lead { color: #2c3a33; margin: 0 0 16px; max-width: 70ch; }
+  .ruta { font: 600 .82rem "IBM Plex Mono", monospace; background: #f2efe6; border: 1px solid var(--line); border-radius: 6px; padding: 0 6px; }
+  kbd { font: 600 .8rem "IBM Plex Mono", monospace; background: #fff; border: 1px solid var(--line); border-bottom-width: 2.5px; border-radius: 5px; padding: 0 5px; white-space: nowrap; }
+  .bt { font: 600 .9rem "IBM Plex Sans", sans-serif; background: var(--moss); color: #fff; border: 0; border-radius: 99px; padding: 8px 15px; text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .bt.sec { background: #fff; color: var(--moss); border: 1.5px solid var(--moss); }
+  .bt:disabled { opacity: .5; cursor: default; }
+  details { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 10px 0; background: #fbfaf6; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p, details ul { margin: 8px 0 4px; font-size: .93rem; }
+
+  /* ---- franja de estado (dónde va la clase) ---- */
+  .franja { position: sticky; top: 0; z-index: 20; margin: 0 -16px 16px; padding: 9px 16px; background: var(--ink); color: #f6f4ee; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: .92rem; }
+  .franja b { color: #ffd59a; }
+  .franja .bt { padding: 4px 12px; font-size: .82rem; background: #f6f4ee; color: var(--ink); }
+  .puntos { display: flex; gap: 4px; margin-left: auto; }
+  .puntos i { width: 22px; height: 6px; border-radius: 99px; background: rgba(246,244,238,.22); }
+  .puntos i.ab { background: #8fc79f; }
+  .puntos i.ya { background: #ffd59a; }
+
+  /* ---- llegué tarde ---- */
+  .tarde { background: #fbf1e2; border: 1px solid #ecd3ae; border-radius: 14px; padding: 12px 16px; margin-bottom: 16px; }
+  .tarde h2 { font-size: 1.05rem; }
+  .tarde ol { margin: 8px 0 0; padding-left: 22px; }
+  .tarde li { margin: 3px 0; }
+  .tarde a { color: var(--ink); font-weight: 600; }
+
+  /* ---- partes ---- */
+  .parte { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 18px; scroll-margin-top: 60px; }
+  .p-cab { display: flex; align-items: center; gap: 12px; }
+  .num { flex: none; width: 42px; height: 42px; border-radius: 12px; background: var(--teal); color: #fff; font: 700 1.2rem "IBM Plex Mono", monospace; display: grid; place-items: center; }
+  .p-cab > div { flex: 1; min-width: 0; }
+  .estado { font: 600 .74rem "IBM Plex Mono", monospace; border-radius: 99px; padding: 3px 10px; background: #e9f2ea; color: var(--ok); white-space: nowrap; }
+  .parte.actual { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(11,110,105,.15); }
+  .parte.actual .estado { background: var(--teal); color: #fff; }
+  .p-cerrada { display: none; align-items: center; gap: 10px; margin-top: 12px; padding: 14px; border-radius: 12px; background: repeating-linear-gradient(-45deg, #f4f1e8 0 10px, #efebdf 10px 20px); color: var(--mut); font-size: .93rem; }
+  .p-cerrada span { font-size: 1.5rem; }
+  .parte.cerrada { background: #fbfaf6; }
+  .parte.cerrada .num { background: #b9b4a4; }
+  .parte.cerrada .estado { background: #efebdf; color: var(--mut); }
+  .parte.cerrada .p-cuerpo { display: none; }
+  .parte.cerrada .p-cerrada { display: flex; }
+  .parte.nueva { animation: brilla 1s ease 2; }
+  @keyframes brilla { 50% { box-shadow: 0 0 0 7px rgba(11,110,105,.25); } }
+  /* vista del docente: ve todo, pero marca lo que los alumnos aún no ven */
+  .parte.solo-docente { border-style: dashed; border-color: var(--amber); }
+  .parte.solo-docente .estado { background: #fbf1e2; color: var(--amber); }
+  .abrir-aqui { display: none; font: 600 .78rem "IBM Plex Sans", sans-serif; border: 1.5px solid var(--amber); color: var(--amber); background: #fff; border-radius: 99px; padding: 3px 10px; cursor: pointer; white-space: nowrap; }
+  .es-docente .parte.solo-docente .abrir-aqui { display: inline-block; }
+  .meta { margin: 10px 0 0; color: #2c3a33; }
+
+  /* ---- visor de texto: así llega / así debe quedar ---- */
+  .visor { border: 1px solid var(--line); border-radius: 12px; background: #eceae3; margin: 12px 0; overflow: hidden; }
+  .visor-cab { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px; background: #f2efe6; border-bottom: 1px solid var(--line); }
+  .seg { display: inline-flex; background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: 3px; }
+  .seg button { font: 600 .82rem "IBM Plex Sans", sans-serif; border: 0; background: none; border-radius: 99px; padding: 5px 12px; cursor: pointer; color: var(--mut); }
+  .seg button.on[data-v="mal"] { background: #f6dcd5; color: var(--rojo); }
+  .seg button.on[data-v="bien"] { background: #dcefe1; color: var(--ok); }
+  .visor-cab .bt { margin-left: auto; }
+  .hoja-envase { padding: 14px; max-height: 460px; overflow: auto; }
+  .hoja { background: #fff; color: #000; max-width: 640px; margin: 0 auto; padding: 28px 34px; box-shadow: 0 1px 4px rgba(0,0,0,.18); font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.15; overflow-wrap: break-word; }
+  .hoja p { margin: 0; }
+  @media (max-width: 560px) { .hoja { padding: 18px 16px; font-size: 10pt; } }
+  .nota-texto { font-size: .8rem; color: var(--mut); margin: 6px 2px 0; }
+
+  /* ---- pasos ---- */
+  .pasos { margin: 10px 0 4px; }
+  label.ck { display: flex; gap: 9px; align-items: flex-start; padding: 5px 0; cursor: pointer; font-size: .96rem; }
+  label.ck input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--ok); flex: none; }
+  label.ck input:checked + span { color: var(--mut); text-decoration: line-through; }
+  .listo-parte { display: none; margin-top: 8px; font-weight: 600; color: var(--ok); }
+  .pasos.completos + .listo-parte { display: block; }
+
+  /* ---- demos ---- */
+  .demo { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 12px 0; background: #fbfaf6; }
+  .demo-cab { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .demo-cab .tit { font: 600 .74rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--moss); margin-right: 6px; }
+  .op { font: 600 .85rem "IBM Plex Sans", sans-serif; border: 1.5px solid var(--line); background: #fff; border-radius: 9px; padding: 5px 11px; cursor: pointer; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
+  .op.on { border-color: var(--teal); background: #e3f1ef; color: var(--teal); }
+  .op svg { width: 18px; height: 18px; }
+  .muestra { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 11pt; color: #000; transition: line-height .3s; }
+  .muestra p { margin: 0; transition: margin .3s, text-indent .3s, padding .3s; }
+  .explica { font-size: .9rem; color: #2c3a33; margin: 8px 0 0; min-height: 1.5em; }
+  .regla { position: relative; height: 4px; background: #f6dcd5; border-radius: 99px; }
+  .pmark { color: #7aa7d9; font-family: Arial, sans-serif; }
+  .vacio { min-height: 1.15em; }
+  input[type=range] { accent-color: var(--teal); width: min(260px, 100%); }
+
+  /* rejilla 3×3 de posiciones */
+  .pos-envase { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 620px) { .pos-envase { grid-template-columns: minmax(0, 1fr); } }
+  .rejilla9 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 170px; }
+  .rejilla9 button { aspect-ratio: 1; border: 1.5px solid var(--line); background: #fff; border-radius: 8px; cursor: pointer; font: 600 .62rem "IBM Plex Mono", monospace; color: var(--mut); padding: 2px; line-height: 1.15; }
+  .rejilla9 button.on { border-color: var(--teal); background: var(--teal); color: #fff; }
+  .celda-demo { height: 150px; border: 2px solid #000; background: #fff; display: flex; padding: 10px; font-family: Arial, sans-serif; transition: .25s; }
+  .celda-demo span { background: #ffe9a8; padding: 2px 8px; border-radius: 3px; font-weight: 700; transition: .25s; }
+  .receta { margin: 10px 0 0; padding: 0; list-style: none; font-size: .93rem; }
+  .receta li { padding: 3px 0; }
+  .receta b { color: var(--teal); }
+
+  /* ---- mando del docente ---- */
+  .mando { position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 99998; background: #fff; border: 2px solid var(--amber); border-radius: 14px; padding: 8px 10px; box-shadow: 0 8px 24px rgba(16,35,28,.22); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; max-width: calc(100vw - 24px); font-size: .86rem; }
+  .mando b { font-family: "IBM Plex Mono", monospace; font-size: .8rem; }
+  .mando button { font: 600 .82rem "IBM Plex Sans", sans-serif; border: 1.5px solid var(--line); background: #fff; color: var(--ink); border-radius: 9px; padding: 5px 10px; cursor: pointer; }
+  .mando button.prin { background: var(--amber); border-color: var(--amber); color: #fff; }
+  .mando .aviso-api { flex-basis: 100%; color: var(--rojo); font-size: .78rem; line-height: 1.3; }
+  .mando[hidden] { display: none; }
+
+  .toast { position: fixed; left: 50%; top: 56px; transform: translate(-50%, -10px); background: var(--ink); color: #fff; padding: 9px 10px 9px 16px; border-radius: 99px; font-size: .92rem; max-width: calc(100% - 32px); display: flex; align-items: center; gap: 10px; opacity: 0; pointer-events: none; transition: .25s; z-index: 50; }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .toast button { font: 600 .8rem "IBM Plex Sans", sans-serif; border: 0; border-radius: 99px; padding: 4px 11px; background: #ffd59a; color: var(--ink); cursor: pointer; }
+  .toast button:empty { display: none; }
+</style>
+</head>
+<body>
+<div class="envase">
+  <div class="franja" id="franja">
+    <span id="franjaTxt">Conectando…</span>
+    <button class="bt" id="franjaIr" type="button" hidden>Ir ahí</button>
+    <span class="puntos" id="puntos" aria-hidden="true"></span>
+  </div>
+
+  <p class="eti">Práctica · Google Docs · Párrafos</p>
+  <h1>Textos mal hechos, textos bien hechos</h1>
+  <p class="lead">Te llegan fragmentos de <b>obras clásicas</b> pegados «como sea». Tu trabajo: que se vean como un documento profesional usando <b>interlineado</b>, <b>espacio entre párrafos</b>, <b>alineación</b> y <b>sangría</b>. La clase va <b>por partes</b>: cada parte se abre cuando el profe lo indica.</p>
+
+  <section class="tarde" id="tarde" hidden>
+    <h2>¿Llegaste tarde? Ponte al día así</h2>
+    <ol id="tardeLista"></ol>
+  </section>
+
+  <!-- ================= PARTE 0 ================= -->
+  <section class="parte" data-parte="0" id="p0" data-titulo="Prepara tu documento" data-resumen="Abre tu documento y escribe tu nombre arriba.">
+    <header class="p-cab">
+      <span class="num">0</span>
+      <div><p class="eti">Siempre abierta</p><h2>Prepara tu documento</h2></div>
+      <span class="estado">Abierta</span>
+    </header>
+    <div class="p-cuerpo">
+      <div class="pasos" data-grupo="0">
+        <label class="ck"><input type="checkbox"><span>Abre tu documento de la clase: <button class="bt sec" type="button" id="miDoc" style="padding:3px 12px;font-size:.84rem">Ir a mi documento</button> <small id="miDocNota" style="color:var(--mut)"></small></span></label>
+        <label class="ck"><input type="checkbox"><span>En la primera línea escribe tu <b>nombre completo</b> y presiona <kbd>Enter</kbd> dos veces.</span></label>
+        <label class="ck"><input type="checkbox"><span>Deja esta página abierta en otra pestaña. Cambias entre las dos con <kbd>Ctrl</kbd>+<kbd>Tab</kbd>.</span></label>
+      </div>
+      <p class="listo-parte">Listo. Espera a que se abra la parte 1.</p>
+      <details>
+        <summary>¿Cómo se usa esta página?</summary>
+        <ul>
+          <li>En cada parte hay un texto. El botón <b>📋 Copiar texto</b> lo copia tal cual llega (mal hecho). Lo pegas en tu documento con <kbd>Ctrl</kbd>+<kbd>V</kbd>.</li>
+          <li>Con el interruptor <b>Así llega / Así debe quedar</b> ves cómo tiene que terminar.</li>
+          <li>Marca cada paso cuando lo termines. Si te pierdes, las partes ya abiertas siguen ahí.</li>
+        </ul>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 1 · INTERLINEADO ================= -->
+  <section class="parte" data-parte="1" id="p1" data-titulo="Interlineado" data-resumen="Divina Comedia: selecciona todo y pon interlineado 1,5.">
+    <header class="p-cab">
+      <span class="num">1</span>
+      <div><p class="eti">Parte 1</p><h2>Interlineado</h2></div>
+      <button class="abrir-aqui" type="button">Abrir para alumnos</button>
+      <span class="estado"></span>
+    </header>
+    <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
+    <div class="p-cuerpo">
+      <p class="meta">El <b>interlineado</b> es el espacio entre una <b>línea</b> y la siguiente, dentro del mismo párrafo. Muy junto cansa la vista; muy separado parece relleno.</p>
+
+      <div class="demo" id="demoInter">
+        <div class="demo-cab"><span class="tit">Pruébalo</span>
+          <button class="op" data-lh="1" type="button">Sencillo</button>
+          <button class="op on" data-lh="1.15" type="button">1,15</button>
+          <button class="op" data-lh="1.5" type="button">1,5</button>
+          <button class="op" data-lh="2" type="button">Doble</button>
+        </div>
+        <div class="muestra" style="line-height:1.15">En medio del camino de la vida,<br>errante me encontré por selva oscura,<br>en que la recta vía era perdida.</div>
+        <p class="explica" id="explicaInter">1,15 es el que trae Google Docs por defecto.</p>
+      </div>
+
+      <div class="visor" data-texto="t1"></div>
+
+      <h3>Pasos</h3>
+      <div class="pasos" data-grupo="1">
+        <label class="ck"><input type="checkbox"><span>Copia el texto y pégalo en tu documento.</span></label>
+        <label class="ck"><input type="checkbox"><span>Selecciona todo el poema (desde el título hasta el último verso).</span></label>
+        <label class="ck"><input type="checkbox"><span>Abre <span class="ruta">Formato → Interlineado y espaciado entre párrafos</span> y prueba <b>Sencillo</b>, luego <b>Doble</b>. Mira la diferencia.</span></label>
+        <label class="ck"><input type="checkbox"><span>Déjalo en <b>1,5</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Ahora entra a <b>Espaciado personalizado</b> en el mismo menú: verás el número exacto (puedes escribir, por ejemplo, 1,3).</span></label>
+      </div>
+      <p class="listo-parte">✔ Parte 1 lista.</p>
+      <details>
+        <summary>¿No encuentras el botón?</summary>
+        <p>En la barra de herramientas es el ícono de <b>líneas con una flecha hacia arriba y abajo</b> ↕. Si no lo ves (pantalla angosta), está dentro de los <b>tres puntos ⋮</b> al final de la barra.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 2 · ESPACIO ENTRE PÁRRAFOS ================= -->
+  <section class="parte" data-parte="2" id="p2" data-titulo="Espacio entre párrafos" data-resumen="Quijote: borra los Enter vacíos y usa espacio después de 12 pt.">
+    <header class="p-cab">
+      <span class="num">2</span>
+      <div><p class="eti">Parte 2</p><h2>Espacio entre párrafos</h2></div>
+      <button class="abrir-aqui" type="button">Abrir para alumnos</button>
+      <span class="estado"></span>
+    </header>
+    <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
+    <div class="p-cuerpo">
+      <p class="meta">Para separar párrafos <b>no</b> se presiona <kbd>Enter</kbd> varias veces. Se usa el <b>espacio antes / después del párrafo</b>: queda parejo y no se descuadra cuando el texto cambia de página.</p>
+
+      <div class="demo" id="demoEsp">
+        <div class="demo-cab"><span class="tit">Compara</span>
+          <button class="op on" data-modo="enter" type="button">Con Enter vacíos</button>
+          <button class="op" data-modo="esp" type="button">Con espaciado</button>
+        </div>
+        <div class="muestra" id="muestraEsp"></div>
+        <div id="sliderEsp" style="margin-top:10px" hidden>
+          <label style="font-size:.9rem">Espacio después del párrafo: <b id="valEsp">12</b> pt<br>
+          <input type="range" min="0" max="30" step="3" value="12" id="rangoEsp"></label>
+        </div>
+        <p class="explica" id="explicaEsp">Los <span class="pmark">¶</span> muestran cada Enter. Fíjate: hay párrafos vacíos que solo «ocupan sitio», y no todos tienen la misma cantidad.</p>
+      </div>
+
+      <div class="visor" data-texto="t2"></div>
+
+      <h3>Pasos</h3>
+      <div class="pasos" data-grupo="2">
+        <label class="ck"><input type="checkbox"><span>Copia y pega el texto debajo del poema.</span></label>
+        <label class="ck"><input type="checkbox"><span>Activa <span class="ruta">Ver → Mostrar caracteres que no se imprimen</span> (<kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>P</kbd>) para ver los <span class="pmark">¶</span>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Borra los <b>párrafos vacíos</b> (las líneas que solo tienen <span class="pmark">¶</span>).</span></label>
+        <label class="ck"><input type="checkbox"><span>Ojo: el último párrafo está <b>cortado en dos líneas</b> con un Enter en medio de la frase. Únelo (clic al final de «recia,» y <kbd>Supr</kbd>).</span></label>
+        <label class="ck"><input type="checkbox"><span>Selecciona los párrafos → <span class="ruta">Formato → Interlineado y espaciado entre párrafos → Espaciado personalizado</span> → Antes: <b>0</b>, Después: <b>12</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Vuelve a ocultar los <span class="pmark">¶</span> con el mismo atajo.</span></label>
+      </div>
+      <p class="listo-parte">✔ Parte 2 lista.</p>
+      <details>
+        <summary>Atajo rápido sin números</summary>
+        <p>En el mismo menú hay <b>Agregar espacio antes del párrafo</b> y <b>Agregar espacio después del párrafo</b>. Ponen un espacio estándar con un clic. Si ya lo tiene, la opción dice <b>Quitar…</b>.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 3 · ALINEACIÓN ================= -->
+  <section class="parte" data-parte="3" id="p3" data-titulo="Alineación del texto" data-resumen="Nightingale: título centrado, texto justificado, firma a la derecha.">
+    <header class="p-cab">
+      <span class="num">3</span>
+      <div><p class="eti">Parte 3</p><h2>Alineación del texto</h2></div>
+      <button class="abrir-aqui" type="button">Abrir para alumnos</button>
+      <span class="estado"></span>
+    </header>
+    <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
+    <div class="p-cuerpo">
+      <p class="meta">La alineación dice <b>hacia qué borde</b> se pega cada línea del párrafo. Nunca se centra con la barra espaciadora: si cambias la letra, todo se corre.</p>
+
+      <div class="demo" id="demoAlin">
+        <div class="demo-cab"><span class="tit">Pruébalo</span></div>
+        <div class="muestra" id="muestraAlin"><p>Debería significar el uso adecuado del aire fresco, la luz, el calor, la limpieza, el silencio y la correcta elección de la dieta; todo con el menor gasto de fuerza vital para el paciente.</p></div>
+        <p class="explica" id="explicaAlin"></p>
+      </div>
+
+      <div class="visor" data-texto="t3"></div>
+
+      <h3>Pasos</h3>
+      <div class="pasos" data-grupo="3">
+        <label class="ck"><input type="checkbox"><span>Copia y pega el texto.</span></label>
+        <label class="ck"><input type="checkbox"><span>Borra los espacios que se pusieron para «centrar» el subtítulo.</span></label>
+        <label class="ck"><input type="checkbox"><span>Título y subtítulo: <b>centrados</b> (<kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>E</kbd>).</span></label>
+        <label class="ck"><input type="checkbox"><span>Los tres párrafos: <b>justificados</b> (<kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>J</kbd>). Mira cómo el borde derecho queda recto.</span></label>
+        <label class="ck"><input type="checkbox"><span>Nombre y fecha del final: a la <b>derecha</b> (<kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>R</kbd>).</span></label>
+      </div>
+      <p class="listo-parte">✔ Parte 3 lista.</p>
+      <details>
+        <summary>¿Por qué Florence Nightingale?</summary>
+        <p>Es considerada la fundadora de la enfermería moderna. En 1859 publicó <i>Notes on Nursing</i> («Notas sobre enfermería»), escrito para cualquier persona que cuidara la salud de otra. Este fragmento es una traducción libre hecha para la clase.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 4 · LAS 9 POSICIONES ================= -->
+  <section class="parte" data-parte="4" id="p4" data-titulo="Las 9 posiciones en una celda" data-resumen="Bécquer: tabla 3×3, cada texto en su esquina (horizontal + vertical).">
+    <header class="p-cab">
+      <span class="num">4</span>
+      <div><p class="eti">Parte 4</p><h2>Las 9 posiciones en una celda</h2></div>
+      <button class="abrir-aqui" type="button">Abrir para alumnos</button>
+      <span class="estado"></span>
+    </header>
+    <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
+    <div class="p-cuerpo">
+      <p class="meta">Dentro de una celda de tabla puedes ubicar el texto en <b>9 lugares</b>. Siempre se combinan <b>dos</b> ajustes: el <b>horizontal</b> (izquierda · centro · derecha) y el <b>vertical</b> (superior · centro · inferior).</p>
+
+      <div class="demo">
+        <div class="demo-cab"><span class="tit">Elige una posición</span></div>
+        <div class="pos-envase">
+          <div class="rejilla9" id="rejilla9"></div>
+          <div>
+            <div class="celda-demo" id="celdaDemo"><span>Texto</span></div>
+            <ul class="receta" id="receta"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="visor" data-texto="t4"></div>
+
+      <h3>Pasos</h3>
+      <div class="pasos" data-grupo="4">
+        <label class="ck"><input type="checkbox"><span>Copia y pega: llega una tabla de 3 × 3 con todo amontonado arriba a la izquierda.</span></label>
+        <label class="ck"><input type="checkbox"><span>Haz las filas altas: selecciona toda la tabla → clic derecho → <span class="ruta">Propiedades de la tabla → Filas → Altura mínima de fila</span>: <b>2,5 cm</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Fila de arriba</b>: selecciónala → <span class="ruta">Propiedades de la tabla → Celda → Alineación vertical → Superior</span>. Luego: «Rima XXI» a la izquierda, «✦ ✦ ✦» al centro, «1871» a la derecha.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Fila del medio</b>: alineación vertical <b>Centro</b>. «❧» izquierda, poema centro, «☙» derecha.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Fila de abajo</b>: alineación vertical <b>Inferior</b>. «Rimas» izquierda, «✦ ✦ ✦» centro, «Gustavo Adolfo Bécquer» derecha.</span></label>
+        <label class="ck"><input type="checkbox"><span>Pon el poema en <b>cursiva</b> y un poco más grande (<b>13</b>).</span></label>
+      </div>
+      <p class="listo-parte">✔ Parte 4 lista.</p>
+      <details>
+        <summary>Reto extra: que parezca una tarjeta</summary>
+        <p>Selecciona toda la tabla y deja <b>solo el borde exterior</b>: con el botón de bordes elige los bordes interiores y ponles <b>0 pt</b>. Luego dale un color de fondo suave a toda la tabla.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 5 · SANGRÍA ================= -->
+  <section class="parte" data-parte="5" id="p5" data-titulo="Sangría francesa (referencias)" data-resumen="Referencias: orden alfabético, interlineado doble y sangría francesa 1,27 cm.">
+    <header class="p-cab">
+      <span class="num">5</span>
+      <div><p class="eti">Parte 5</p><h2>Sangría: primera línea y francesa</h2></div>
+      <button class="abrir-aqui" type="button">Abrir para alumnos</button>
+      <span class="estado"></span>
+    </header>
+    <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
+    <div class="p-cuerpo">
+      <p class="meta">La <b>sangría</b> mete hacia adentro parte del párrafo. La de <b>primera línea</b> es la de los libros. La <b>francesa</b> es la de las <b>referencias bibliográficas</b> (normas APA) que vas a usar en todos tus trabajos.</p>
+
+      <div class="demo" id="demoSang">
+        <div class="demo-cab"><span class="tit">Compara</span>
+          <button class="op on" data-s="no" type="button">Sin sangría</button>
+          <button class="op" data-s="primera" type="button">Primera línea</button>
+          <button class="op" data-s="francesa" type="button">Francesa</button>
+        </div>
+        <div class="muestra"><p id="pSang">Organización Mundial de la Salud. (2020). <i>Situación de la enfermería en el mundo 2020: Invertir en educación, empleo y liderazgo.</i></p></div>
+        <p class="explica" id="explicaSang"></p>
+      </div>
+
+      <div class="visor" data-texto="t5"></div>
+
+      <h3>Pasos</h3>
+      <div class="pasos" data-grupo="5">
+        <label class="ck"><input type="checkbox"><span>Copia y pega la lista.</span></label>
+        <label class="ck"><input type="checkbox"><span>Une cada referencia en <b>un solo párrafo</b>: borra los Enter y espacios que se pusieron para simular la sangría.</span></label>
+        <label class="ck"><input type="checkbox"><span>Ordénalas <b>alfabéticamente</b> por el primer apellido (corta con <kbd>Ctrl</kbd>+<kbd>X</kbd> y pega con <kbd>Ctrl</kbd>+<kbd>V</kbd>).</span></label>
+        <label class="ck"><input type="checkbox"><span>Selecciona las referencias → <span class="ruta">Formato → Alinear y aplicar sangría → Opciones de sangría</span> → Sangría especial: <b>Francesa</b>, <b>1,27 cm</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Interlineado <b>Doble</b>. Título «Referencias» centrado y en negrita.</span></label>
+      </div>
+      <p class="listo-parte">✔ Parte 5 lista.</p>
+      <details>
+        <summary>Con la regla también se puede</summary>
+        <p>Arriba de la hoja está la <b>regla</b> (si no la ves: <span class="ruta">Ver → Mostrar regla</span>). El <b>rectángulo</b> de arriba mueve solo la primera línea y el <b>triángulo</b> mueve el resto. Para la francesa: arrastra el triángulo a 1,27 cm y deja el rectángulo en 0.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 6 · RETO FINAL ================= -->
+  <section class="parte" data-parte="6" id="p6" data-titulo="Reto final: el juramento" data-resumen="Juramento Nightingale: borrar formato y aplicar todo lo aprendido.">
+    <header class="p-cab">
+      <span class="num">6</span>
+      <div><p class="eti">Parte 6</p><h2>Reto final: el texto desastre</h2></div>
+      <button class="abrir-aqui" type="button">Abrir para alumnos</button>
+      <span class="estado"></span>
+    </header>
+    <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
+    <div class="p-cuerpo">
+      <p class="meta">El <b>Juramento Florence Nightingale</b> (1893) lo pronuncian enfermeras y enfermeros en muchas ceremonias. Este llega con <b>todo</b> mal: letras mezcladas, colores, espacios hechos a mano… Déjalo listo para imprimir y firmar, <b>en una página nueva</b>.</p>
+
+      <div class="visor" data-texto="t6"></div>
+
+      <h3>Pasos</h3>
+      <div class="pasos" data-grupo="6">
+        <label class="ck"><input type="checkbox"><span>Al final de tu documento: <span class="ruta">Insertar → Salto → Salto de página</span>. Pega ahí el texto.</span></label>
+        <label class="ck"><input type="checkbox"><span>Selecciona todo el juramento → <span class="ruta">Formato → Borrar formato</span> (<kbd>Ctrl</kbd>+<kbd>\</kbd>). Adiós colores y letras raras.</span></label>
+        <label class="ck"><input type="checkbox"><span>Borra los párrafos vacíos y los espacios del inicio de cada párrafo.</span></label>
+        <label class="ck"><input type="checkbox"><span>Todo en <b>Arial 12</b>. Título en negrita, <b>14</b> y en mayúsculas con <span class="ruta">Formato → Texto → Uso de mayúsculas → MAYÚSCULAS</span>. Título y «(1893)» centrados.</span></label>
+        <label class="ck"><input type="checkbox"><span>Párrafos: <b>justificados</b>, interlineado <b>1,5</b>, espacio después <b>12</b> y sangría de <b>primera línea 1,25 cm</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>«Lugar y fecha» a la <b>derecha</b>. Línea de firma y «Firma» <b>centradas</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Revisa con <span class="ruta">Archivo → Imprimir</span> (vista previa) y cancela: ¿se ve como el modelo?</span></label>
+      </div>
+      <p class="listo-parte">🎉 ¡Terminaste la práctica!</p>
+      <details>
+        <summary>Truco: copiar el formato de un párrafo a otro</summary>
+        <p>Deja un párrafo perfecto, haz clic en él y pulsa el <b>rodillo</b> (Pintar formato) de la barra. Luego selecciona otro párrafo: copia letra, interlineado, espaciado y sangría de una vez. Doble clic en el rodillo lo deja activo para varios párrafos.</p>
+      </details>
+    </div>
+  </section>
+</div>
+
+<div class="mando" id="mando" hidden>
+  <b>👨‍🏫 MANDO</b>
+  <span id="mandoTxt">—</span>
+  <button type="button" data-m="menos" title="Cerrar la última parte">◀</button>
+  <button type="button" data-m="mas" class="prin">Abrir siguiente ▶</button>
+  <button type="button" data-m="todo" title="Abrir todas las partes">Todo</button>
+  <button type="button" data-m="cero" title="Cerrar todo (para el siguiente grupo)">⟲</button>
+  <span class="aviso-api" id="avisoApi" hidden></span>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastTxt"></span><button type="button" id="toastBt"></button></div>
+
+<!-- ======================= TEXTOS =======================
+     "mal"  = como llega (es lo que se copia: lleva el formato malo a propósito)
+     "bien" = cómo debe quedar
+     Obras en dominio público. Las traducciones de Nightingale son libres, hechas para la clase. -->
+
+<template id="t1-mal">
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">Divina Comedia – Infierno, Canto I</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">Dante Alighieri (traducción de Bartolomé Mitre, adaptada)</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">En medio del camino de la vida,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">errante me encontré por selva oscura,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">en que la recta vía era perdida.</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">¡Ay, que decir lo que era es cosa dura,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">esta selva salvaje, áspera y fuerte,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">que en la mente renueva la pavura!</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">¡Tan amarga es, que poco más es muerte!</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">Pero al tratar del bien que allí encontrara,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">otras cosas diré que vi en mi suerte.</p>
+</template>
+<template id="t1-bien">
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0"><b>Divina Comedia – Infierno, Canto I</b></p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0"><i>Dante Alighieri (traducción de Bartolomé Mitre, adaptada)</i></p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">En medio del camino de la vida,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">errante me encontré por selva oscura,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">en que la recta vía era perdida.</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">¡Ay, que decir lo que era es cosa dura,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">esta selva salvaje, áspera y fuerte,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">que en la mente renueva la pavura!</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">¡Tan amarga es, que poco más es muerte!</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">Pero al tratar del bien que allí encontrara,</p>
+<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">otras cosas diré que vi en mi suerte.</p>
+</template>
+
+<template id="t2-mal">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Don Quijote de la Mancha – Capítulo primero (Miguel de Cervantes, 1605)</p>
+<p style="margin:0"><br></p>
+<p style="margin:0"><br></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor.</p>
+<p style="margin:0"><br></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Una olla de algo más vaca que carnero, salpicón las más noches, duelos y quebrantos los sábados, lantejas los viernes, algún palomino de añadidura los domingos, consumían las tres partes de su hacienda. El resto della concluían sayo de velarte, calzas de velludo para las fiestas, con sus pantuflos de lo mesmo, y los días de entresemana se honraba con su vellorí de lo más fino.</p>
+<p style="margin:0"><br></p>
+<p style="margin:0"><br></p>
+<p style="margin:0"><br></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Tenía en su casa una ama que pasaba de los cuarenta, y una sobrina que no llegaba a los veinte, y un mozo de campo y plaza, que así ensillaba el rocín como tomaba la podadera.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Frisaba la edad de nuestro hidalgo con los cincuenta años; era de complexión recia,</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">seco de carnes, enjuto de rostro, gran madrugador y amigo de la caza.</p>
+</template>
+<template id="t2-bien">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 12pt"><b>Don Quijote de la Mancha – Capítulo primero (Miguel de Cervantes, 1605)</b></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 12pt">En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 12pt">Una olla de algo más vaca que carnero, salpicón las más noches, duelos y quebrantos los sábados, lantejas los viernes, algún palomino de añadidura los domingos, consumían las tres partes de su hacienda. El resto della concluían sayo de velarte, calzas de velludo para las fiestas, con sus pantuflos de lo mesmo, y los días de entresemana se honraba con su vellorí de lo más fino.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 12pt">Tenía en su casa una ama que pasaba de los cuarenta, y una sobrina que no llegaba a los veinte, y un mozo de campo y plaza, que así ensillaba el rocín como tomaba la podadera.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 12pt">Frisaba la edad de nuestro hidalgo con los cincuenta años; era de complexión recia, seco de carnes, enjuto de rostro, gran madrugador y amigo de la caza.</p>
+</template>
+
+<template id="t3-mal">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt"><b>NOTAS SOBRE ENFERMERÍA</b></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Qué es y qué no es</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt">Uso la palabra enfermería a falta de una mejor. Se ha limitado a significar poco más que dar medicamentos y aplicar cataplasmas. Debería significar el uso adecuado del aire fresco, la luz, el calor, la limpieza, el silencio, y la correcta elección y administración de la dieta; todo ello con el menor gasto de fuerza vital para el paciente.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt">La primera regla de la enfermería, lo primero y lo último en lo que debe fijarse la atención de quien cuida, es esta: mantener el aire que respira el paciente tan puro como el aire exterior, sin enfriarlo.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt">El conocimiento de la enfermería, es decir, de cómo poner el cuerpo en un estado en que no enferme o en que pueda recuperarse de la enfermedad, ocupa cada día un lugar más alto.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Florence Nightingale</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Londres, 1859</p>
+</template>
+<template id="t3-bien">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;text-align:center"><b>NOTAS SOBRE ENFERMERÍA</b></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt;text-align:center">Qué es y qué no es</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt;text-align:justify">Uso la palabra enfermería a falta de una mejor. Se ha limitado a significar poco más que dar medicamentos y aplicar cataplasmas. Debería significar el uso adecuado del aire fresco, la luz, el calor, la limpieza, el silencio, y la correcta elección y administración de la dieta; todo ello con el menor gasto de fuerza vital para el paciente.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt;text-align:justify">La primera regla de la enfermería, lo primero y lo último en lo que debe fijarse la atención de quien cuida, es esta: mantener el aire que respira el paciente tan puro como el aire exterior, sin enfriarlo.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0 0 10pt;text-align:justify">El conocimiento de la enfermería, es decir, de cómo poner el cuerpo en un estado en que no enferme o en que pueda recuperarse de la enfermedad, ocupa cada día un lugar más alto.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;text-align:right">Florence Nightingale</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;text-align:right">Londres, 1859</p>
+</template>
+
+<template id="t4-mal">
+<table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:11pt">
+<tr><td style="border:1px solid #000;padding:5px;vertical-align:top;width:33%">Rima XXI</td><td style="border:1px solid #000;padding:5px;vertical-align:top;width:34%">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:top;width:33%">1871</td></tr>
+<tr><td style="border:1px solid #000;padding:5px;vertical-align:top">❧</td><td style="border:1px solid #000;padding:5px;vertical-align:top">¿Qué es poesía?, dices mientras clavas<br>en mi pupila tu pupila azul.<br>¿Qué es poesía? ¿Y tú me lo preguntas?<br>Poesía… eres tú.</td><td style="border:1px solid #000;padding:5px;vertical-align:top">☙</td></tr>
+<tr><td style="border:1px solid #000;padding:5px;vertical-align:top">Rimas</td><td style="border:1px solid #000;padding:5px;vertical-align:top">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:top">Gustavo Adolfo Bécquer</td></tr>
+</table>
+</template>
+<template id="t4-bien">
+<table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:11pt">
+<tr style="height:2.5cm"><td style="border:1px solid #000;padding:5px;vertical-align:top;text-align:left;width:33%"><b>Rima XXI</b></td><td style="border:1px solid #000;padding:5px;vertical-align:top;text-align:center;width:34%">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:top;text-align:right;width:33%">1871</td></tr>
+<tr style="height:2.5cm"><td style="border:1px solid #000;padding:5px;vertical-align:middle;text-align:left">❧</td><td style="border:1px solid #000;padding:5px;vertical-align:middle;text-align:center;font-size:13pt"><i>¿Qué es poesía?, dices mientras clavas<br>en mi pupila tu pupila azul.<br>¿Qué es poesía? ¿Y tú me lo preguntas?<br>Poesía… eres tú.</i></td><td style="border:1px solid #000;padding:5px;vertical-align:middle;text-align:right">☙</td></tr>
+<tr style="height:2.5cm"><td style="border:1px solid #000;padding:5px;vertical-align:bottom;text-align:left">Rimas</td><td style="border:1px solid #000;padding:5px;vertical-align:bottom;text-align:center">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:bottom;text-align:right">Gustavo Adolfo Bécquer</td></tr>
+</table>
+</template>
+
+<template id="t5-mal">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Referencias</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Vallejo, C. (1918). <i>Los heraldos negros</i>. Souza Ferreyra.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Organización Mundial de la Salud. (2020). <i>Situación de la enfermería en el mundo</i></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>2020: Invertir en educación, empleo y liderazgo</i>.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Cervantes, M. de. (1605). <i>El ingenioso hidalgo don Quijote de la Mancha</i>.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Juan de la Cuesta.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Nightingale, F. (1859). <i>Notes on nursing: What it is, and what it is not</i>.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Harrison and Sons.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Darío, R. (1888). <i>Azul…</i> Imprenta y Litografía Excelsior.</p>
+</template>
+<template id="t5-bien">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;line-height:2;text-align:center"><b>Referencias</b></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;line-height:2;padding-left:1.27cm;text-indent:-1.27cm">Cervantes, M. de. (1605). <i>El ingenioso hidalgo don Quijote de la Mancha</i>. Juan de la Cuesta.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;line-height:2;padding-left:1.27cm;text-indent:-1.27cm">Darío, R. (1888). <i>Azul…</i> Imprenta y Litografía Excelsior.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;line-height:2;padding-left:1.27cm;text-indent:-1.27cm">Nightingale, F. (1859). <i>Notes on nursing: What it is, and what it is not</i>. Harrison and Sons.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;line-height:2;padding-left:1.27cm;text-indent:-1.27cm">Organización Mundial de la Salud. (2020). <i>Situación de la enfermería en el mundo 2020: Invertir en educación, empleo y liderazgo</i>.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;line-height:2;padding-left:1.27cm;text-indent:-1.27cm">Vallejo, C. (1918). <i>Los heraldos negros</i>. Souza Ferreyra.</p>
+</template>
+
+<template id="t6-mal">
+<p style="font-family:'Comic Sans MS',cursive;font-size:16pt;color:#d6336c;margin:0">juramento&nbsp;&nbsp;&nbsp;&nbsp; florence&nbsp;&nbsp;&nbsp;&nbsp; nightingale</p>
+<p style="font-family:'Courier New',monospace;font-size:10pt;margin:0">(1893)</p>
+<p style="margin:0"><br></p>
+<p style="font-family:Georgia,serif;font-size:14pt;margin:0;text-align:center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Juro solemnemente ante Dios y en presencia de esta asamblea llevar una vida pura y ejercer mi profesión con fidelidad.</p>
+<p style="margin:0"><br></p>
+<p style="margin:0"><br></p>
+<p style="font-family:'Courier New',monospace;font-size:10pt;margin:0;text-align:center"><span style="background:#fff200">Me abstendré de todo lo que sea dañino o perjudicial</span>, y no tomaré ni administraré a sabiendas ningún medicamento que pueda ser nocivo.</p>
+<p style="font-family:'Times New Roman',serif;font-size:12pt;color:#1c7ed6;margin:0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Haré todo lo que esté en mi poder para mantener y elevar el nivel de mi profesión, y guardaré en reserva todos los asuntos personales que se me confíen y todos los asuntos familiares que llegue a conocer en el ejercicio de mi oficio.</p>
+<p style="margin:0"><br></p>
+<p style="font-family:Verdana,sans-serif;font-size:9pt;margin:0"><u>Con lealtad procuraré ayudar al médico en su labor</u> y me dedicaré al bienestar de quienes estén a mi cuidado.</p>
+<p style="margin:0"><br></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Lugar y fecha: ______________________</p>
+<p style="margin:0"><br></p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;______________________________</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Firma</p>
+</template>
+<template id="t6-bien">
+<p style="font-family:Arial,sans-serif;font-size:14pt;margin:0;text-align:center;line-height:1.5"><b>JURAMENTO FLORENCE NIGHTINGALE</b></p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0 0 12pt;text-align:center;line-height:1.5">(1893)</p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0 0 12pt;text-align:justify;line-height:1.5;text-indent:1.25cm">Juro solemnemente ante Dios y en presencia de esta asamblea llevar una vida pura y ejercer mi profesión con fidelidad.</p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0 0 12pt;text-align:justify;line-height:1.5;text-indent:1.25cm">Me abstendré de todo lo que sea dañino o perjudicial, y no tomaré ni administraré a sabiendas ningún medicamento que pueda ser nocivo.</p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0 0 12pt;text-align:justify;line-height:1.5;text-indent:1.25cm">Haré todo lo que esté en mi poder para mantener y elevar el nivel de mi profesión, y guardaré en reserva todos los asuntos personales que se me confíen y todos los asuntos familiares que llegue a conocer en el ejercicio de mi oficio.</p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0 0 12pt;text-align:justify;line-height:1.5;text-indent:1.25cm">Con lealtad procuraré ayudar al médico en su labor y me dedicaré al bienestar de quienes estén a mi cuidado.</p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0 0 36pt;text-align:right;line-height:1.5">Lugar y fecha: ______________________</p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0;text-align:center;line-height:1.5">______________________________</p>
+<p style="font-family:Arial,sans-serif;font-size:12pt;margin:0;text-align:center;line-height:1.5">Firma</p>
+</template>
+
+<script>
+(() => {
+  const MATERIAL = "m1c9";
+  const PARTES = [...document.querySelectorAll(".parte[data-parte]")];
+  const TOTAL = Math.max(...PARTES.map(p => +p.dataset.parte));
+  const $ = id => document.getElementById(id);
+  const docente = () => window.Aula && Aula.esDocente();
+
+  /* ---------- aviso flotante ---------- */
+  let tt;
+  function avisar(txt, boton, accion) {
+    $("toastTxt").textContent = txt;
+    const b = $("toastBt"); b.textContent = boton || ""; b.onclick = () => { $("toast").classList.remove("on"); accion && accion(); };
+    $("toast").classList.add("on");
+    clearTimeout(tt); tt = setTimeout(() => $("toast").classList.remove("on"), boton ? 9000 : 2200);
+  }
+
+  /* ---------- copiar con formato (para que el "mal hecho" llegue tal cual a Google Docs) ---------- */
+  function textoPlano(html) {
+    const d = document.createElement("div");
+    d.style.cssText = "position:fixed;left:-9999px;top:0;white-space:normal";
+    d.innerHTML = html; document.body.append(d);
+    const t = d.innerText; d.remove(); return t;
+  }
+  async function copiarRico(html) {
+    const plano = textoPlano(html);
+    try {
+      if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+        await navigator.clipboard.write([new ClipboardItem({
+          "text/html": new Blob([html], { type: "text/html" }),
+          "text/plain": new Blob([plano], { type: "text/plain" })
+        })]);
+        return true;
+      }
+    } catch (e) {}
+    const d = document.createElement("div");
+    d.contentEditable = "true"; d.style.cssText = "position:fixed;left:-9999px;top:0"; d.innerHTML = html;
+    document.body.append(d);
+    const r = document.createRange(); r.selectNodeContents(d);
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    let ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    sel.removeAllRanges(); d.remove();
+    return ok;
+  }
+
+  /* ---------- visores: así llega / así debe quedar ---------- */
+  document.querySelectorAll(".visor[data-texto]").forEach(v => {
+    const id = v.dataset.texto;
+    const mal = $(id + "-mal").innerHTML.trim(), bien = $(id + "-bien").innerHTML.trim();
+    v.innerHTML = `<div class="visor-cab">
+        <div class="seg" role="group" aria-label="Versión del texto"><button type="button" data-v="mal" class="on">✗ Así llega</button><button type="button" data-v="bien">✓ Así debe quedar</button></div>
+        <button type="button" class="bt copiar">📋 Copiar texto</button>
+      </div><div class="hoja-envase"><div class="hoja"></div></div>`;
+    const hoja = v.querySelector(".hoja");
+    const ver = q => { hoja.innerHTML = q === "bien" ? bien : mal; v.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.v === q)); };
+    v.querySelectorAll(".seg button").forEach(b => b.onclick = () => ver(b.dataset.v));
+    ver("mal");
+    const bt = v.querySelector(".copiar");
+    bt.onclick = async () => {
+      const ok = await copiarRico(mal);
+      if (ok) { bt.textContent = "✔ Copiado"; avisar("Copiado. Ve a tu documento y pega con Ctrl+V"); }
+      else avisar("No se pudo copiar: selecciona el texto con el mouse y usa Ctrl+C");
+      setTimeout(() => bt.textContent = "📋 Copiar texto", 1800);
+    };
+  });
+
+  /* ---------- pasos con casillas (se recuerdan en esta PC) ---------- */
+  const CLAVE = "m1c9-pasos";
+  let marcas = {};
+  try { marcas = JSON.parse(localStorage.getItem(CLAVE) || "{}"); } catch (e) {}
+  document.querySelectorAll(".pasos[data-grupo]").forEach(g => {
+    const cajas = [...g.querySelectorAll("input")], k = g.dataset.grupo;
+    cajas.forEach((c, i) => { c.checked = !!(marcas[k] || [])[i]; });
+    const revisar = () => g.classList.toggle("completos", cajas.every(c => c.checked));
+    g.addEventListener("change", () => {
+      marcas[k] = cajas.map(c => c.checked);
+      try { localStorage.setItem(CLAVE, JSON.stringify(marcas)); } catch (e) {}
+      revisar();
+    });
+    revisar();
+  });
+
+  /* ---------- demo 1: interlineado ---------- */
+  const TXT_INTER = { "1": "Sencillo: las líneas casi se tocan. Cansa leer mucho así.", "1.15": "1,15 es el que trae Google Docs por defecto.", "1.5": "1,5: cómodo para leer. Muy usado en trabajos de instituto y universidad.", "2": "Doble: mucho aire. Lo piden las normas APA para trabajos académicos." };
+  document.querySelectorAll("#demoInter .op").forEach(b => b.onclick = () => {
+    document.querySelectorAll("#demoInter .op").forEach(x => x.classList.toggle("on", x === b));
+    document.querySelector("#demoInter .muestra").style.lineHeight = b.dataset.lh;
+    $("explicaInter").textContent = TXT_INTER[b.dataset.lh];
+  });
+
+  /* ---------- demo 2: Enter vacíos vs espaciado ---------- */
+  const PARRAFOS = ["En un lugar de la Mancha, de cuyo nombre no quiero acordarme…", "Una olla de algo más vaca que carnero, salpicón las más noches…", "Tenía en su casa una ama que pasaba de los cuarenta…"];
+  const VACIOS = [2, 0, 3];
+  function pintarEsp(modo) {
+    const m = $("muestraEsp"), pt = +$("rangoEsp").value;
+    if (modo === "enter") {
+      m.innerHTML = PARRAFOS.map((p, i) => `<p>${p}<span class="pmark">¶</span></p>` + (i < 2 ? `<p class="vacio"><span class="pmark">¶</span></p>`.repeat(VACIOS[i] || 0) : "")).join("");
+      $("explicaEsp").innerHTML = 'Los <span class="pmark">¶</span> muestran cada Enter. Hay párrafos vacíos que solo «ocupan sitio», y no todos tienen la misma cantidad: queda disparejo.';
+    } else {
+      m.innerHTML = PARRAFOS.map(p => `<p style="margin-bottom:${pt}pt">${p}<span class="pmark">¶</span></p>`).join("");
+      $("explicaEsp").innerHTML = pt === 0 ? "Con 0 pt los párrafos quedan pegados." : `Un solo Enter por párrafo y ${pt} pt de espacio después: todos separados por igual.`;
+    }
+    $("sliderEsp").hidden = modo !== "esp";
+  }
+  let modoEsp = "enter";
+  document.querySelectorAll("#demoEsp .op").forEach(b => b.onclick = () => {
+    modoEsp = b.dataset.modo;
+    document.querySelectorAll("#demoEsp .op").forEach(x => x.classList.toggle("on", x === b));
+    pintarEsp(modoEsp);
+  });
+  $("rangoEsp").oninput = () => { $("valEsp").textContent = $("rangoEsp").value; pintarEsp(modoEsp); };
+  pintarEsp("enter");
+
+  /* ---------- demo 3: alineación ---------- */
+  const ico = lineas => `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">${lineas.map((l, i) => `<path d="M${l[0]} ${3 + i * 4}H${l[1]}"/>`).join("")}</svg>`;
+  const ALIN = [
+    ["left", "Izquierda", "L", ico([[2, 16], [2, 11], [2, 16], [2, 9]]), "Izquierda: el borde izquierdo queda recto y el derecho «dentado». Es la normal."],
+    ["center", "Centro", "E", ico([[2, 16], [5, 13], [2, 16], [6, 12]]), "Centro: para títulos, subtítulos y firmas. No para párrafos largos."],
+    ["right", "Derecha", "R", ico([[2, 16], [7, 16], [2, 16], [9, 16]]), "Derecha: para fechas, lugar y nombre de quien firma una carta."],
+    ["justify", "Justificado", "J", ico([[2, 16], [2, 16], [2, 16], [2, 10]]), "Justificado: los dos bordes rectos, como en los libros y periódicos."]
+  ];
+  const cabAlin = document.querySelector("#demoAlin .demo-cab");
+  ALIN.forEach(([v, nom, letra, svg, exp], i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "op" + (i === 0 ? " on" : "");
+    b.innerHTML = `${svg}${nom}`;
+    b.onclick = () => {
+      cabAlin.querySelectorAll(".op").forEach(x => x.classList.toggle("on", x === b));
+      $("muestraAlin").style.textAlign = v;
+      $("explicaAlin").innerHTML = `${exp} Atajo: <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>${letra}</kbd>`;
+    };
+    cabAlin.append(b);
+  });
+  $("explicaAlin").innerHTML = ALIN[0][4] + ' Atajo: <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>L</kbd>';
+
+  /* ---------- demo 4: las 9 posiciones ---------- */
+  const VERT = [["flex-start", "Superior"], ["center", "Centro"], ["flex-end", "Inferior"]];
+  const HOR = [["flex-start", "Izquierda", "L"], ["center", "Centro", "E"], ["flex-end", "Derecha", "R"]];
+  const NOMBRE = (f, c) => f === 1 && c === 1 ? "Central" : `${VERT[f][1]} ${HOR[c][1].toLowerCase()}`;
+  const rej = $("rejilla9");
+  function elegir(f, c) {
+    rej.querySelectorAll("button").forEach(b => b.classList.toggle("on", +b.dataset.f === f && +b.dataset.c === c));
+    const cel = $("celdaDemo");
+    cel.style.alignItems = VERT[f][0]; cel.style.justifyContent = HOR[c][0];
+    cel.querySelector("span").textContent = NOMBRE(f, c);
+    $("receta").innerHTML =
+      `<li><b>Horizontal: ${HOR[c][1]}</b> → botón de alinear de la barra, o <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>${HOR[c][2]}</kbd></li>` +
+      `<li><b>Vertical: ${VERT[f][1]}</b> → clic derecho en la celda → <span class="ruta">Propiedades de la tabla → Celda → Alineación vertical</span></li>`;
+  }
+  for (let f = 0; f < 3; f++) for (let c = 0; c < 3; c++) {
+    const b = document.createElement("button");
+    b.type = "button"; b.dataset.f = f; b.dataset.c = c; b.textContent = NOMBRE(f, c);
+    b.onclick = () => elegir(f, c);
+    rej.append(b);
+  }
+  elegir(2, 2);
+
+  /* ---------- demo 5: sangría ---------- */
+  const SANG = {
+    no: ["0", "0", "Sin sangría: todas las líneas empiezan en el mismo borde. En una lista larga cuesta ver dónde empieza cada referencia."],
+    primera: ["0", "1.27cm", "Primera línea: solo la primera entra. Es la de los párrafos de libros y ensayos."],
+    francesa: ["1.27cm", "-1.27cm", "Francesa: la primera línea queda afuera y las demás entran. Así el apellido del autor resalta: es la que piden las normas APA."]
+  };
+  document.querySelectorAll("#demoSang .op").forEach(b => b.onclick = () => {
+    document.querySelectorAll("#demoSang .op").forEach(x => x.classList.toggle("on", x === b));
+    const [pad, ind, exp] = SANG[b.dataset.s];
+    $("pSang").style.paddingLeft = pad; $("pSang").style.textIndent = ind;
+    $("explicaSang").textContent = exp;
+  });
+  $("explicaSang").textContent = SANG.no[2];
+
+  /* ---------- mi documento ---------- */
+  $("miDoc").onclick = async () => {
+    const b = $("miDoc"); b.disabled = true; $("miDocNota").textContent = "Buscando…";
+    try {
+      const docs = await Aula.miDocumento();
+      const conUrl = (docs || []).filter(d => d.url);
+      if (docente()) { $("miDocNota").textContent = "(como docente ves la lista en la página de la clase)"; }
+      else if (conUrl.length) { conUrl.forEach(d => window.open(d.url, "_blank", "noopener")); $("miDocNota").textContent = ""; }
+      else { window.open("https://docs.new", "_blank", "noopener"); $("miDocNota").textContent = "Aún no tienes copia: se abrió un documento nuevo. Ponle tu nombre."; }
+    } catch (e) {
+      window.open("https://docs.new", "_blank", "noopener");
+      $("miDocNota").textContent = "Se abrió un documento nuevo. Ponle tu nombre.";
+    }
+    b.disabled = false;
+  };
+
+  /* ======================= PARTES QUE ABRE EL DOCENTE ======================= */
+  let abierto = null;           // hasta qué parte está abierto
+  let libre = false;            // el Panel no conoce "pasoVer": todo abierto
+  const titulo = n => (PARTES.find(p => +p.dataset.parte === n) || {}).dataset?.titulo || "";
+
+  function aplicar(n, desdeServidor) {
+    const antes = abierto;
+    abierto = libre ? TOTAL : Math.max(0, Math.min(TOTAL, n));
+    const doc = docente();
+    PARTES.forEach(p => {
+      const k = +p.dataset.parte, ab = k <= abierto;
+      p.classList.toggle("cerrada", !ab && !doc);
+      p.classList.toggle("solo-docente", !ab && doc);
+      p.classList.toggle("actual", !libre && k === abierto && k > 0);
+      const est = p.querySelector(".estado");
+      if (k > 0) est.textContent = !ab ? (doc ? "Cerrada para alumnos" : "🔒 Cerrada") : (!libre && k === abierto ? "★ Ahora" : "Abierta");
+    });
+    // franja
+    if (libre) $("franjaTxt").innerHTML = "Todas las partes están abiertas.";
+    else if (abierto === 0) $("franjaTxt").innerHTML = "Prepara tu documento (parte 0). Las demás partes se abrirán durante la clase.";
+    else $("franjaTxt").innerHTML = `Vamos en la <b>Parte ${abierto}: ${titulo(abierto)}</b>`;
+    $("franjaIr").hidden = libre || abierto === 0;
+    $("puntos").innerHTML = Array.from({ length: TOTAL }, (_, i) => `<i class="${i + 1 < abierto ? "ya" : i + 1 === abierto ? "ab" : ""}"></i>`).join("");
+    // llegué tarde (solo alumnos, cuando ya se avanzó)
+    $("tarde").hidden = doc || libre || abierto < 2;
+    if (!$("tarde").hidden) {
+      $("tardeLista").innerHTML = PARTES.filter(p => +p.dataset.parte <= abierto).map(p =>
+        `<li><a href="#${p.id}">Parte ${p.dataset.parte}</a> — ${p.dataset.resumen}</li>`).join("") +
+        `<li style="list-style:none;margin-left:-22px;margin-top:6px;color:var(--mut)">Consejo: haz la parte 0, luego <b>únete a la parte actual</b> con todos y completa las anteriores al final.</li>`;
+    }
+    // mando
+    if (doc) $("mandoTxt").textContent = libre ? "Modo libre" : `Abiertas: ${abierto} de ${TOTAL}`;
+    // aviso de parte nueva (alumnos)
+    if (desdeServidor && antes !== null && abierto > antes && !doc) {
+      const p = $("p" + abierto);
+      p.classList.remove("nueva"); void p.offsetWidth; p.classList.add("nueva");
+      avisar(`🔓 Se abrió la Parte ${abierto}: ${titulo(abierto)}`, "Ir", () => p.scrollIntoView({ behavior: "smooth", block: "start" }));
+    }
+  }
+  $("franjaIr").onclick = () => $("p" + abierto).scrollIntoView({ behavior: "smooth", block: "start" });
+
+  function modoLibre(msg) {
+    libre = true; aplicar(TOTAL);
+    if (docente()) { $("avisoApi").hidden = false; $("avisoApi").textContent = msg; }
+  }
+
+  // Consulta "liviana": no usa Aula.api para no contar como actividad (si no, la sesión nunca se cerraría sola en PCs compartidas).
+  async function consultar() {
+    const s = Aula.sesion();
+    if (!s || !window.AULA_API) return;
+    const r = await fetch(window.AULA_API, {
+      method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ accion: "pasoVer", token: s.token, material: MATERIAL })
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "Error");
+    return j.paso;
+  }
+  let timer = null, fallos = 0;
+  async function tic() {
+    if (libre || document.visibilityState !== "visible") return;
+    try {
+      const n = await consultar();
+      if (typeof n === "number") { fallos = 0; if (n !== abierto) aplicar(n, true); }
+    } catch (e) {
+      const m = String(e.message || e);
+      if (/desconocida/i.test(m)) { clearInterval(timer); modoLibre("El Panel aún no tiene el código para abrir partes: pega el api.gs nuevo y publica una Nueva versión. Mientras tanto todo está abierto."); }
+      else if (m === "SESION") { clearInterval(timer); Aula.salir("expirada"); }
+      else if (++fallos >= 4 && abierto === null) modoLibre("Sin conexión con el Panel: se abrió todo.");
+    }
+  }
+
+  async function fijar(n) {
+    n = Math.max(0, Math.min(TOTAL, n));
+    const antes = abierto;
+    aplicar(n);
+    try { const r = await Aula.api("pasoFijar", { material: MATERIAL, paso: n }); aplicar(r.paso); avisar(n === 0 ? "Todo cerrado para alumnos" : `Alumnos ven hasta la Parte ${r.paso}`); }
+    catch (e) {
+      if (/desconocida/i.test(e.message)) modoLibre("El Panel aún no tiene el código para abrir partes: pega el api.gs nuevo y publica una Nueva versión.");
+      else { aplicar(antes); avisar("No se pudo guardar: " + e.message); }
+    }
+  }
+
+  Aula.listo.then(() => {
+    const doc = docente();
+    document.body.classList.toggle("es-docente", doc);
+    if (doc) {
+      $("mando").hidden = false;
+      $("mando").addEventListener("click", e => {
+        const m = e.target.closest("button")?.dataset.m; if (!m || libre) return;
+        if (m === "mas") fijar((abierto || 0) + 1);
+        if (m === "menos") fijar((abierto || 0) - 1);
+        if (m === "todo") fijar(TOTAL);
+        if (m === "cero" && confirm("¿Cerrar todas las partes para los alumnos? (útil antes de empezar con el otro grupo)")) fijar(0);
+      });
+      PARTES.forEach(p => { const b = p.querySelector(".abrir-aqui"); if (b) b.onclick = () => fijar(+p.dataset.parte); });
+    }
+    aplicar(0);
+    abierto = null;            // aún no sabemos lo real: el primer dato del Panel no dispara aviso
+    tic();
+    timer = setInterval(tic, 6000);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") tic(); });
+  });
+})();
+</script>
+</body>
+</html>
