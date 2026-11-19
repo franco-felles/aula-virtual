@@ -82,5 +82,15 @@
       "descripcion": "Práctica con tablas: copia el diseño de una boleta ficticia de botica usando combinar celdas, color y grosor de bordes, color de fondo y alineación. Con pasos para marcar, colores exactos y pistas de dónde está cada opción.",
       "orden": 1
     }
+  ],
+  "u1c9": [
+    {
+      "archivo": "m1c9.html",
+      "ruta": "clases/u1c9/material/m1c9.html",
+      "titulo": "Párrafos: interlineado, espaciado y alineación",
+      "tipo": "practica",
+      "descripcion": "Práctica por partes (el docente las va abriendo): arreglar textos de obras clásicas mal formateados usando interlineado, espacio entre párrafos, alineación, las 9 posiciones dentro de una celda, sangría francesa y un reto final con el Juramento de Florence Nightingale.",
+      "orden": 1
+    }
   ]
 }
