@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-19T16:23:17.646Z",
+ "generado": "2026-11-19T16:43:15.650Z",
  "v": 1,
  "clases": [
   {
@@ -125,6 +125,14 @@
    "abierto": true,
    "repetir": false,
    "npreg": 15
+  },
+  {
+   "id": "qzmwns2u9o94aa",
+   "titulo": "Repaso general · Unidad 1",
+   "clase": "",
+   "abierto": true,
+   "repetir": true,
+   "npreg": 65
   }
  ]
 }
