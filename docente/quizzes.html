@@ -570,7 +570,18 @@ async function vistaEditor(id) {
       if (!c) return;
       reemplazar = c.marcado;
     }
-    quiz.preguntas = (reemplazar ? [] : actuales).concat(r.preguntas);
+    // Si una pregunta importada ya existe (mismo texto), se actualiza esa misma: conserva su id
+    // y los resultados de quienes ya la rindieron (sirve para agregarle los mensajes 💬 a un quiz ya subido).
+    const clave = t => String(t || "").toLowerCase().replace(/\s+/g, " ").trim();
+    const porTexto = new Map(actuales.map(p => [clave(p.texto), p]));
+    let actualizadas = 0;
+    const nuevas = [];
+    r.preguntas.forEach(np => {
+      const vieja = porTexto.get(clave(np.texto));
+      if (vieja && vieja.id) { np.id = vieja.id; actualizadas++; }
+      if (vieja && !reemplazar) Object.assign(vieja, np); else nuevas.push(np);
+    });
+    quiz.preguntas = (reemplazar ? [] : actuales).concat(nuevas);
     if (r.titulo && !iTit.value.trim()) iTit.value = r.titulo;
     if (r.mostrar !== null) iMos.value = r.mostrar;
     ta.value = ""; pegar.open = false; marcar(); pintarPreguntas();
@@ -581,7 +592,7 @@ async function vistaEditor(id) {
       if (r.avisos.length > 12) ul.appendChild(el("li", "", `…y ${r.avisos.length - 12} aviso(s) más.`));
       box.appendChild(ul); avisosImp.appendChild(box);
     }
-    Aula.toast(r.preguntas.length + " pregunta(s) importadas", r.avisos.length ? "Hay avisos: revísalos arriba de las preguntas." : "Revisa y guarda el quiz.", r.avisos.length ? "warn" : "");
+    Aula.toast(r.preguntas.length + " pregunta(s) importadas" + (actualizadas ? ` (${actualizadas} ya existían y se actualizaron)` : ""), r.avisos.length ? "Hay avisos: revísalos arriba de las preguntas." : "Revisa y guarda el quiz.", r.avisos.length ? "warn" : "");
   }
 
   /* --- puntos --- */

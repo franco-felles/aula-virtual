@@ -166,6 +166,10 @@ function inicio(alumno, r) {
     el("p", "", `Tendrás ${r.preguntas.length} preguntas. No se puede volver atrás.`));
   if (r.previo) t.append(el("div", "otra-vez", "Ya lo rendiste" + (r.previo.puntaje ? ` (nota ${r.previo.nota})` : "") +
     ` · este es tu intento ${r.previo.intentos + 1}. Se queda tu nota más alta.`));
+  if (r.previo && r.previo.revision && r.previo.revision.length) {
+    const v = el("button", "btn block ghost", r.previo.intentos > 1 ? "Ver mis respuestas (intento con mi mejor nota)" : "Ver mis respuestas anteriores");
+    v.type = "button"; v.onclick = () => revision(alumno, r.titulo, r.previo, () => inicio(alumno, r)); t.append(v);
+  }
   t.append(
     r.penalizar
       ? el("div", "advertencia fuerte", "⚠️ Cada vez que cambies de pestaña, abras otro programa o minimices la ventana se te descontará 1 PUNTO. Quédate en esta pantalla hasta terminar.")
@@ -244,7 +248,7 @@ function mostrarNota(alumno, titulo, r, previa) {
   if (r.intentos > 1) t.append(el("p", "mut", `Intentos: ${r.intentos}`));
   if (r.revision && r.revision.length) {
     const v = el("button", "btn block ghost", "Ver mis respuestas"); v.type = "button";
-    v.onclick = () => revision(alumno, titulo, r, previa); t.appendChild(v);
+    v.onclick = () => revision(alumno, titulo, r, () => mostrarNota(alumno, titulo, r, previa)); t.appendChild(v);
   }
   if (r.repetir) {
     const o = el("button", "btn block ghost", "Intentar de nuevo"); o.type = "button"; o.onclick = () => abrir(alumno); t.appendChild(o);
@@ -260,7 +264,7 @@ function mostrarNota(alumno, titulo, r, previa) {
   c.appendChild(t); app.replaceChildren(c);
 }
 
-function revision(alumno, titulo, r, previa) {
+function revision(alumno, titulo, r, alVolver) {
   const box = el("div", "quiz");
   const bien = r.revision.filter(p => p.ok).length;
   box.append(el("p", "eyebrow", Aula.nombreBonito(alumno.nombre) + " · " + titulo), el("h1", "pregunta", "Tus respuestas"),
@@ -285,7 +289,7 @@ function revision(alumno, titulo, r, previa) {
     box.appendChild(pq);
   });
   const b = el("button", "btn block", "Volver"); b.type = "button"; b.style.marginTop = "14px";
-  b.onclick = () => mostrarNota(alumno, titulo, r, previa);
+  b.onclick = () => { alVolver(); scrollTo(0, 0); };
   box.appendChild(b);
   app.replaceChildren(box); scrollTo(0, 0);
 }
