@@ -6,7 +6,7 @@
 <!-- FICHA DEL MATERIAL: clase 9 · párrafos en Google Docs, por partes que abre el docente -->
 <meta name="material-titulo" content="Párrafos: interlineado, espaciado y alineación">
 <meta name="material-tipo" content="practica">
-<meta name="material-descripcion" content="Práctica por partes (el docente las va abriendo): arreglar textos de obras clásicas mal formateados usando interlineado, espacio entre párrafos, alineación, las 9 posiciones dentro de una celda, sangría francesa y un reto final con el Juramento de Florence Nightingale.">
+<meta name="material-descripcion" content="Teoría y práctica por partes (el docente las va abriendo): qué es un párrafo, interlineado, espacio entre párrafos, alineación, posiciones en la hoja (dedicatoria y epígrafe) y sangría, arreglando textos clásicos mal formateados; cierra con el Juramento de Florence Nightingale.">
 <title>Párrafos en Google Docs</title>
 <script src="../../../conexion/aula.js" data-proteger></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
@@ -114,11 +114,35 @@
   .rejilla9 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 170px; }
   .rejilla9 button { aspect-ratio: 1; border: 1.5px solid var(--line); background: #fff; border-radius: 8px; cursor: pointer; font: 600 .62rem "IBM Plex Mono", monospace; color: var(--mut); padding: 2px; line-height: 1.15; }
   .rejilla9 button.on { border-color: var(--teal); background: var(--teal); color: #fff; }
-  .celda-demo { height: 150px; border: 2px solid #000; background: #fff; display: flex; padding: 10px; font-family: Arial, sans-serif; transition: .25s; }
-  .celda-demo span { background: #ffe9a8; padding: 2px 8px; border-radius: 3px; font-weight: 700; transition: .25s; }
   .receta { margin: 10px 0 0; padding: 0; list-style: none; font-size: .93rem; }
   .receta li { padding: 3px 0; }
   .receta b { color: var(--teal); }
+
+  /* ---- teoría y preguntas ---- */
+  .teoria { background: #f1f6f3; border-left: 4px solid var(--teal); border-radius: 10px; padding: 12px 16px; margin: 12px 0; }
+  .teoria h4 { margin: 0 0 6px; font-size: 1rem; }
+  .teoria p { margin: 6px 0; font-size: .95rem; }
+  .teoria ul { margin: 6px 0; padding-left: 20px; font-size: .95rem; }
+  .teoria details { background: #fff; }
+  .tabla-t { border-collapse: collapse; width: 100%; font-size: .88rem; margin: 8px 0; background: #fff; }
+  .tabla-t th, .tabla-t td { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  .tabla-t th { background: #e6efe9; font-weight: 600; }
+  .quiz { border: 1.5px dashed var(--line); border-radius: 12px; padding: 10px 14px; margin: 12px 0; background: #fff; }
+  .quiz > p:first-child { margin: 0 0 6px; font-weight: 600; }
+  .quiz > p:first-child::before { content: "❓ "; }
+  .quiz button { display: block; width: 100%; text-align: left; margin: 5px 0; font: .93rem "IBM Plex Sans", sans-serif; border: 1.5px solid var(--line); background: #fbfaf6; border-radius: 9px; padding: 6px 10px; cursor: pointer; color: var(--ink); }
+  .quiz button.bien { border-color: var(--ok); background: #e9f2ea; }
+  .quiz button.mal { border-color: var(--rojo); background: #f9e6e1; }
+  .quiz .fb { margin: 6px 0 0; font-size: .9rem; min-height: 1.2em; }
+  .visor-cab .solo { font: 600 .82rem "IBM Plex Sans", sans-serif; color: var(--ok); padding: 4px 6px; }
+  /* hoja tamaño A4 para posiciones */
+  .hoja.a4 { aspect-ratio: 210 / 297; max-width: 330px; padding: 9% 10%; display: flex; font-size: 8pt; line-height: 1.2; }
+  .area { flex: 1; display: flex; flex-direction: column; outline: 1px dashed #c9d3dd; outline-offset: 4px; min-height: 0; }
+  .pagina-demo { aspect-ratio: 210 / 297; width: 190px; background: #fff; border: 1px solid #bbb; box-shadow: 0 1px 4px rgba(0,0,0,.15); padding: 20px 18px; display: flex; }
+  .pagina-demo .area { flex-direction: row; transition: .25s; }
+  .pagina-demo span { background: #ffe9a8; padding: 2px 6px; border-radius: 3px; font: 700 .72rem Arial, sans-serif; height: fit-content; }
+  .pos-der { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  .pos-der .receta { flex: 1; min-width: 200px; margin: 0; }
 
   /* ---- mando del docente ---- */
   .mando { position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 99998; background: #fff; border: 2px solid var(--amber); border-radius: 14px; padding: 8px 10px; box-shadow: 0 8px 24px rgba(16,35,28,.22); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; max-width: calc(100vw - 24px); font-size: .86rem; }
@@ -152,13 +176,38 @@
   </section>
 
   <!-- ================= PARTE 0 ================= -->
-  <section class="parte" data-parte="0" id="p0" data-titulo="Prepara tu documento" data-resumen="Abre tu documento y escribe tu nombre arriba.">
+  <section class="parte" data-parte="0" id="p0" data-titulo="Prepara tu documento" data-resumen="Abre tu documento, escribe tu nombre y lee qué es un párrafo.">
     <header class="p-cab">
       <span class="num">0</span>
       <div><p class="eti">Siempre abierta</p><h2>Prepara tu documento</h2></div>
       <span class="estado">Abierta</span>
     </header>
     <div class="p-cuerpo">
+      <div class="teoria">
+        <h4>📖 ¿Qué es un párrafo para Google Docs?</h4>
+        <p>Para Google Docs, un <b>párrafo</b> es todo lo que escribes <b>hasta presionar Enter</b>. Cada Enter cierra un párrafo y empieza otro, aunque esté vacío o tenga una sola palabra. Un título, una fecha o un verso suelto también son párrafos.</p>
+        <p>Hay dos tipos de formato:</p>
+        <table class="tabla-t">
+          <tr><th>Formato de <b>texto</b></th><th>Formato de <b>párrafo</b></th></tr>
+          <tr><td>Fuente, tamaño, negrita, cursiva, color.</td><td>Interlineado, espacio entre párrafos, alineación, sangría.</td></tr>
+          <tr><td>Se aplica solo a las letras que <b>seleccionas</b>.</td><td>Se aplica al párrafo <b>completo</b>: basta con tener el cursor dentro.</td></tr>
+        </table>
+        <p>Hoy trabajamos el <b>formato de párrafo</b>. Es el que hace que un documento se vea ordenado y profesional, aunque use una sola letra.</p>
+        <details>
+          <summary>Saber más: las medidas que vas a ver</summary>
+          <ul>
+            <li><b>pt (puntos)</b>: medida de imprenta. 1 pt ≈ 0,35 mm, y 72 pt = 1 pulgada (2,54 cm). La letra y el espacio entre párrafos se miden en pt.</li>
+            <li><b>cm</b>: márgenes y sangrías.</li>
+            <li><b>Número sin unidad</b> (1 · 1,5 · 2): el interlineado. Es un «por cuánto», no una distancia.</li>
+          </ul>
+        </details>
+      </div>
+      <div class="quiz" data-ok="1" data-exp="Cada Enter crea un párrafo nuevo, aunque esté vacío.">
+        <p>¿Cuándo empieza un párrafo nuevo en Google Docs?</p>
+        <button type="button">Cuando cambias de tema</button><button type="button">Cada vez que presionas Enter</button><button type="button">Cada 5 líneas</button><button type="button">Cuando pones un punto</button>
+        <p class="fb"></p>
+      </div>
+      <h3>Pasos</h3>
       <div class="pasos" data-grupo="0">
         <label class="ck"><input type="checkbox"><span>Abre tu documento de la clase: <button class="bt sec" type="button" id="miDoc" style="padding:3px 12px;font-size:.84rem">Ir a mi documento</button> <small id="miDocNota" style="color:var(--mut)"></small></span></label>
         <label class="ck"><input type="checkbox"><span>En la primera línea escribe tu <b>nombre completo</b> y presiona <kbd>Enter</kbd> dos veces.</span></label>
@@ -168,7 +217,8 @@
       <details>
         <summary>¿Cómo se usa esta página?</summary>
         <ul>
-          <li>En cada parte hay un texto. El botón <b>📋 Copiar texto</b> lo copia tal cual llega (mal hecho). Lo pegas en tu documento con <kbd>Ctrl</kbd>+<kbd>V</kbd>.</li>
+          <li>Cada parte tiene un poco de <b>teoría</b>, una <b>pregunta rápida</b> y una <b>práctica</b>.</li>
+          <li>El botón <b>📋 Copiar texto</b> copia el texto tal como llega (mal hecho). Lo pegas en tu documento con <kbd>Ctrl</kbd>+<kbd>V</kbd>.</li>
           <li>Con el interruptor <b>Así llega / Así debe quedar</b> ves cómo tiene que terminar.</li>
           <li>Marca cada paso cuando lo termines. Si te pierdes, las partes ya abiertas siguen ahí.</li>
         </ul>
@@ -177,7 +227,7 @@
   </section>
 
   <!-- ================= PARTE 1 · INTERLINEADO ================= -->
-  <section class="parte" data-parte="1" id="p1" data-titulo="Interlineado" data-resumen="Divina Comedia: selecciona todo y pon interlineado 1,5.">
+  <section class="parte" data-parte="1" id="p1" data-titulo="Interlineado" data-resumen="Divina Comedia: prueba interlineado 0,5 · 2 · 5 y déjalo en 1.">
     <header class="p-cab">
       <span class="num">1</span>
       <div><p class="eti">Parte 1</p><h2>Interlineado</h2></div>
@@ -186,39 +236,62 @@
     </header>
     <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
     <div class="p-cuerpo">
-      <p class="meta">El <b>interlineado</b> es el espacio entre una <b>línea</b> y la siguiente, dentro del mismo párrafo. Muy junto cansa la vista; muy separado parece relleno.</p>
+      <div class="teoria">
+        <h4>📖 ¿Qué es el interlineado?</h4>
+        <p>Es la distancia entre una <b>línea</b> y la siguiente <b>dentro del mismo párrafo</b>. No se mide en centímetros: es un <b>multiplicador</b>. <b>1</b> es una línea normal, <b>2</b> es el doble de alto y <b>0,5</b> es la mitad, así que las líneas se montan unas sobre otras.</p>
+        <table class="tabla-t">
+          <tr><th>Valor</th><th>¿Dónde se usa?</th></tr>
+          <tr><td><b>1</b></td><td>Poemas, tablas, cuadros, membretes: cuando el texto debe verse compacto.</td></tr>
+          <tr><td><b>1,15</b></td><td>El que trae Google Docs por defecto.</td></tr>
+          <tr><td><b>1,5</b></td><td>Informes, monografías y trabajos de instituto.</td></tr>
+          <tr><td><b>2</b></td><td>Trabajos con normas <b>APA</b> (doble espacio).</td></tr>
+        </table>
+        <p><b>¿Para qué sirve?</b> Un texto apretado cansa la vista y es difícil de corregir a mano. Uno demasiado suelto parece «relleno». El interlineado correcto hace que el documento se lea cómodo.</p>
+      </div>
 
       <div class="demo" id="demoInter">
         <div class="demo-cab"><span class="tit">Interlineado</span>
+          <button class="op" data-lh="0.5" type="button">0,5</button>
           <button class="op" data-lh="1" type="button">1</button>
           <button class="op on" data-lh="1.15" type="button">1,15</button>
           <button class="op" data-lh="1.5" type="button">1,5</button>
           <button class="op" data-lh="2" type="button">2</button>
+          <button class="op" data-lh="5" type="button">5</button>
         </div>
-        <div class="muestra" style="line-height:1.15">En medio del camino de la vida,<br>errante me encontré por selva oscura,<br>en que la recta vía era perdida.</div>
+        <div class="muestra" style="line-height:1.15">En medio del camino de nuestra vida<br>me encontré en una selva oscura,<br>porque la recta vía había perdido.</div>
         <p class="explica" id="explicaInter">1,15 es el que trae Google Docs por defecto.</p>
       </div>
 
+      <div class="quiz" data-ok="1" data-exp="Con menos de 1, las líneas no caben y se superponen: el texto se vuelve ilegible.">
+        <p>Pones interlineado <b>0,5</b> a un párrafo. ¿Qué pasa?</p>
+        <button type="button">Las líneas se separan más</button><button type="button">Las líneas se montan unas sobre otras</button><button type="button">La letra se hace más pequeña</button><button type="button">Se separan los párrafos</button>
+        <p class="fb"></p>
+      </div>
+
+      <h3>Práctica: el primer canto del Infierno</h3>
+      <p class="meta" style="margin-top:0">Este texto lo vas a usar en las partes 1, 2 y 3. En cada una le agregas un formato nuevo, hasta que quede como un libro. Cada <b>terceto</b> (grupo de 3 versos) es <b>un solo párrafo</b>: los versos están separados con salto de línea, no con Enter.</p>
       <div class="visor" data-texto="t1"></div>
+      <p class="nota-texto">Dante Alighieri, <i>Divina Comedia</i> (siglo XIV, dominio público). Traducción libre del italiano hecha para la clase.</p>
 
       <h3>Pasos</h3>
       <div class="pasos" data-grupo="1">
-        <label class="ck"><input type="checkbox"><span>Copia el texto y pégalo en tu documento.</span></label>
-        <label class="ck"><input type="checkbox"><span>Selecciona todo el poema (desde el título hasta el último verso).</span></label>
+        <label class="ck"><input type="checkbox"><span>Copia el texto y pégalo en tu documento. Llega con un interlineado enorme.</span></label>
+        <label class="ck"><input type="checkbox"><span>Selecciona todo el poema, desde «DIVINA COMEDIA» hasta el último verso.</span></label>
         <label class="ck"><input type="checkbox"><span>Abre <span class="ruta">Formato → Interlineado y espaciado entre párrafos → Espaciado personalizado</span>.</span></label>
-        <label class="ck"><input type="checkbox"><span>En <b>Interlineado</b> escribe <b>1</b> y pulsa <b>Aplicar</b>. Mira cómo quedan los versos. Repite con <b>2</b>.</span></label>
-        <label class="ck"><input type="checkbox"><span>Déjalo en <b>1,5</b>. Con este cuadro puedes poner el número exacto que quieras (por ejemplo 1,3), no solo los que trae el menú.</span></label>
+        <label class="ck"><input type="checkbox"><span>En <b>Interlineado</b> escribe <b>0,5</b> → <b>Aplicar</b>. Mira cómo se montan las líneas.</span></label>
+        <label class="ck"><input type="checkbox"><span>Repite con <b>2</b> y luego con <b>5</b>. ¿Cuántas hojas ocupa ahora?</span></label>
+        <label class="ck"><input type="checkbox"><span>Déjalo en <b>1</b>. Los tercetos quedan pegados entre sí, pero eso se arregla en la parte 2, y no con Enter.</span></label>
       </div>
       <p class="listo-parte">✔ Parte 1 lista.</p>
       <details>
-        <summary>¿No encuentras el botón?</summary>
-        <p>En la barra de herramientas es el ícono de <b>líneas con una flecha hacia arriba y abajo</b> ↕. Si no lo ves (pantalla angosta), está dentro de los <b>tres puntos ⋮</b> al final de la barra.</p>
+        <summary>¿No encuentras el menú?</summary>
+        <p>También está en la barra de herramientas: es el ícono de <b>líneas con una flecha hacia arriba y abajo</b> ↕. Si no lo ves (pantalla angosta), está dentro de los <b>tres puntos ⋮</b> al final de la barra. Ahí elige <b>Espaciado personalizado</b>.</p>
       </details>
     </div>
   </section>
 
   <!-- ================= PARTE 2 · ESPACIO ENTRE PÁRRAFOS ================= -->
-  <section class="parte" data-parte="2" id="p2" data-titulo="Espacio entre párrafos" data-resumen="Quijote: borra los Enter vacíos y usa espacio después de 12 pt.">
+  <section class="parte" data-parte="2" id="p2" data-titulo="Espacio entre párrafos" data-resumen="Quijote sin Enter vacíos y con 12 pt después; Dante: 12 pt entre tercetos.">
     <header class="p-cab">
       <span class="num">2</span>
       <div><p class="eti">Parte 2</p><h2>Espacio entre párrafos</h2></div>
@@ -227,7 +300,22 @@
     </header>
     <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
     <div class="p-cuerpo">
-      <p class="meta">Para separar párrafos <b>no</b> se presiona <kbd>Enter</kbd> varias veces. Se usa el <b>espacio antes / después del párrafo</b>: queda parejo y no se descuadra cuando el texto cambia de página.</p>
+      <div class="teoria">
+        <h4>📖 Espacio antes y después del párrafo</h4>
+        <p>Es el aire que se deja <b>entre un párrafo y otro</b>. Se mide en <b>puntos (pt)</b>, y cada párrafo tiene dos: el espacio <b>antes</b> (arriba) y el espacio <b>después</b> (abajo). Como referencia, 12 pt es más o menos el alto de una línea con letra tamaño 12.</p>
+        <table class="tabla-t">
+          <tr><th></th><th>Interlineado</th><th>Espacio entre párrafos</th></tr>
+          <tr><td><b>Separa…</b></td><td>las líneas de un mismo párrafo</td><td>un párrafo del siguiente</td></tr>
+          <tr><td><b>Se mide en…</b></td><td>veces (1 · 1,5 · 2)</td><td>puntos (0 · 6 · 12 pt)</td></tr>
+          <tr><td><b>Ejemplo</b></td><td>versos dentro de un terceto</td><td>un terceto y el siguiente</td></tr>
+        </table>
+        <p><b>¿Por qué no separar con Enter?</b></p>
+        <ul>
+          <li>Cada Enter vacío es un párrafo «fantasma», y nunca queda parejo: aquí hay dos, allá tres.</li>
+          <li>Cuando el texto pasa a otra hoja, el Enter vacío queda arriba de la página y la descuadra.</li>
+          <li>Con el espacio después escribes un número y <b>todos</b> los párrafos quedan iguales.</li>
+        </ul>
+      </div>
 
       <div class="demo" id="demoEsp">
         <div class="demo-cab"><span class="tit">Compara</span>
@@ -239,20 +327,32 @@
           <label style="font-size:.9rem">Espacio después del párrafo: <b id="valEsp">12</b> pt<br>
           <input type="range" min="0" max="30" step="3" value="12" id="rangoEsp"></label>
         </div>
-        <p class="explica" id="explicaEsp">Los <span class="pmark">¶</span> muestran cada Enter. Fíjate: hay párrafos vacíos que solo «ocupan sitio», y no todos tienen la misma cantidad.</p>
+        <p class="explica" id="explicaEsp"></p>
       </div>
 
-      <div class="visor" data-texto="t2"></div>
+      <div class="quiz" data-ok="1" data-exp="El interlineado separa los versos; el espacio después separa un terceto del siguiente. Cada uno controla una cosa distinta.">
+        <p>Quieres separar los tercetos del Dante <b>sin</b> separar los versos de cada terceto. ¿Qué usas?</p>
+        <button type="button">Interlineado 2</button><button type="button">Espacio después del párrafo</button><button type="button">Dos Enter entre tercetos</button><button type="button">Sangría</button>
+        <p class="fb"></p>
+      </div>
 
-      <h3>Pasos</h3>
+      <h3>Práctica A: el Quijote</h3>
+      <div class="visor" data-texto="t2"></div>
       <div class="pasos" data-grupo="2">
         <label class="ck"><input type="checkbox"><span>Copia y pega el texto debajo del poema.</span></label>
-        <label class="ck"><input type="checkbox"><span>Activa <span class="ruta">Ver → Mostrar caracteres que no se imprimen</span> para ver los <span class="pmark">¶</span>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Activa <span class="ruta">Ver → Mostrar caracteres que no se imprimen</span> para ver los <span class="pmark">¶</span> (cada uno es un Enter).</span></label>
         <label class="ck"><input type="checkbox"><span>Borra los <b>párrafos vacíos</b> (las líneas que solo tienen <span class="pmark">¶</span>).</span></label>
-        <label class="ck"><input type="checkbox"><span>Ojo: el último párrafo está <b>cortado en dos líneas</b> con un Enter en medio de la frase. Únelo: clic al final de «recia,» y presiona <kbd>Supr</kbd>.</span></label>
-        <label class="ck"><input type="checkbox"><span>Selecciona los párrafos → <span class="ruta">Formato → Interlineado y espaciado entre párrafos → Espaciado personalizado</span> → Antes: <b>0</b>, Después: <b>12</b>.</span></label>
-        <label class="ck"><input type="checkbox"><span>Vuelve a ocultar los <span class="pmark">¶</span> desde el mismo menú <span class="ruta">Ver</span>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Ojo: el último párrafo está <b>cortado en dos</b> con un Enter en medio de la frase. Únelo: clic al final de «recia,» y presiona <kbd>Supr</kbd>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Selecciona los párrafos → <span class="ruta">Espaciado personalizado</span> → Antes: <b>0</b>, Después: <b>12</b>.</span></label>
       </div>
+
+      <h3>Práctica B: vuelve a la Divina Comedia</h3>
+      <div class="pasos" data-grupo="2b">
+        <label class="ck"><input type="checkbox"><span>Selecciona todo el poema → <span class="ruta">Espaciado personalizado</span> → Después: <b>5</b>. Mira: los versos siguen juntos (interlineado 1) y los tercetos se separan un poquito.</span></label>
+        <label class="ck"><input type="checkbox"><span>Prueba con <b>30</b> y luego déjalo en <b>12</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>Oculta los <span class="pmark">¶</span> desde el mismo menú <span class="ruta">Ver</span>.</span></label>
+      </div>
+      <div class="visor" data-texto="t1b" data-titulo="Divina Comedia: así va quedando"></div>
       <p class="listo-parte">✔ Parte 2 lista.</p>
       <details>
         <summary>Otra forma (sin números)</summary>
@@ -262,7 +362,7 @@
   </section>
 
   <!-- ================= PARTE 3 · ALINEACIÓN ================= -->
-  <section class="parte" data-parte="3" id="p3" data-titulo="Alineación del texto" data-resumen="Nightingale: título centrado, texto justificado, firma a la derecha.">
+  <section class="parte" data-parte="3" id="p3" data-titulo="Alineación del texto" data-resumen="Nightingale: título centrado, texto justificado, firma a la derecha; Dante: título centrado y autor a la derecha.">
     <header class="p-cab">
       <span class="num">3</span>
       <div><p class="eti">Parte 3</p><h2>Alineación del texto</h2></div>
@@ -271,7 +371,18 @@
     </header>
     <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
     <div class="p-cuerpo">
-      <p class="meta">La alineación dice <b>hacia qué borde</b> se pega cada línea del párrafo. Nunca se centra con la barra espaciadora: si cambias la letra, todo se corre.</p>
+      <div class="teoria">
+        <h4>📖 Las cuatro alineaciones</h4>
+        <p>La alineación dice <b>hacia qué borde de la hoja</b> se acomoda cada línea del párrafo. Se elige con el <b>botón de alinear</b> de la barra de herramientas.</p>
+        <table class="tabla-t">
+          <tr><th>Alineación</th><th>Cómo se ve</th><th>Para qué se usa</th></tr>
+          <tr><td><b>Izquierda</b></td><td>Borde izquierdo recto, derecho disparejo.</td><td>La normal: notas, listas, poemas, correos.</td></tr>
+          <tr><td><b>Centro</b></td><td>Cada línea al medio.</td><td>Títulos, subtítulos, membretes, firmas.</td></tr>
+          <tr><td><b>Derecha</b></td><td>Borde derecho recto.</td><td>Lugar y fecha, nombre del autor, número de página.</td></tr>
+          <tr><td><b>Justificado</b></td><td>Los dos bordes rectos.</td><td>Informes, monografías, libros, solicitudes.</td></tr>
+        </table>
+        <p><b>Nunca centres con la barra espaciadora.</b> Parece igual en tu pantalla, pero si cambias la letra o el tamaño, todo se corre. Además, el justificado en columnas angostas deja huecos grandes entre palabras: úsalo en párrafos anchos.</p>
+      </div>
 
       <div class="demo" id="demoAlin">
         <div class="demo-cab"><span class="tit">Pruébalo</span></div>
@@ -279,9 +390,14 @@
         <p class="explica" id="explicaAlin"></p>
       </div>
 
-      <div class="visor" data-texto="t3"></div>
+      <div class="quiz" data-ok="2" data-exp="Lugar y fecha van a la derecha en cartas y solicitudes; el cuerpo, justificado.">
+        <p>En una solicitud dirigida al director, ¿cómo va la línea «Lima, 20 de noviembre de 2026»?</p>
+        <button type="button">Centrada</button><button type="button">Justificada</button><button type="button">A la derecha</button><button type="button">Con espacios hasta que llegue al borde</button>
+        <p class="fb"></p>
+      </div>
 
-      <h3>Pasos</h3>
+      <h3>Práctica A: Notas sobre enfermería</h3>
+      <div class="visor" data-texto="t3"></div>
       <div class="pasos" data-grupo="3">
         <label class="ck"><input type="checkbox"><span>Copia y pega el texto.</span></label>
         <label class="ck"><input type="checkbox"><span>Borra los espacios que se pusieron para «centrar» el subtítulo.</span></label>
@@ -289,6 +405,15 @@
         <label class="ck"><input type="checkbox"><span>Los tres párrafos: <b>justificados</b> (botón de alinear → <b>Justificar</b>). Mira cómo el borde derecho queda recto.</span></label>
         <label class="ck"><input type="checkbox"><span>Nombre y fecha del final: a la <b>derecha</b> (botón de alinear → <b>Alinear a la derecha</b>).</span></label>
       </div>
+
+      <h3>Práctica B: termina la Divina Comedia</h3>
+      <div class="pasos" data-grupo="3b">
+        <label class="ck"><input type="checkbox"><span>«DIVINA COMEDIA»: <b>centrado</b>, negrita, tamaño <b>16</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>«Infierno – Canto I»: <b>centrado</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span>«Dante Alighieri»: a la <b>derecha</b> y en cursiva.</span></label>
+        <label class="ck"><input type="checkbox"><span>Los tercetos se quedan a la <b>izquierda</b>: en poesía es lo normal.</span></label>
+      </div>
+      <div class="visor" data-texto="t1c" data-titulo="Divina Comedia terminada"></div>
       <p class="listo-parte">✔ Parte 3 lista.</p>
       <details>
         <summary>¿Por qué Florence Nightingale?</summary>
@@ -297,45 +422,75 @@
     </div>
   </section>
 
-  <!-- ================= PARTE 4 · LAS 9 POSICIONES ================= -->
-  <section class="parte" data-parte="4" id="p4" data-titulo="Las 9 posiciones en una celda" data-resumen="Bécquer: tabla 3×3, cada texto en su esquina (horizontal + vertical).">
+  <!-- ================= PARTE 4 · POSICIONES EN LA HOJA ================= -->
+  <section class="parte" data-parte="4" id="p4" data-titulo="Posiciones en la hoja" data-resumen="Hoja nueva: Bécquer en 5 posiciones y una dedicatoria abajo a la derecha (alineación + espacio antes + sangría).">
     <header class="p-cab">
       <span class="num">4</span>
-      <div><p class="eti">Parte 4</p><h2>Las 9 posiciones en una celda</h2></div>
+      <div><p class="eti">Parte 4</p><h2>Posiciones en la hoja: dedicatoria y epígrafe</h2></div>
       <button class="abrir-aqui" type="button">Abrir para alumnos</button>
       <span class="estado"></span>
     </header>
     <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
     <div class="p-cuerpo">
-      <p class="meta">Dentro de una celda de tabla puedes ubicar el texto en <b>9 lugares</b>. Siempre se combinan <b>dos</b> ajustes: el <b>horizontal</b> (izquierda · centro · derecha) y el <b>vertical</b> (superior · centro · inferior).</p>
+      <div class="teoria">
+        <h4>📖 Ubicar un texto en cualquier lugar de la hoja</h4>
+        <p>Algunos textos van en un <b>lugar fijo de la página</b>: arriba a la derecha, al centro, abajo a la izquierda… Siempre se combinan <b>dos</b> ajustes:</p>
+        <ul>
+          <li><b>Horizontal</b> (izquierda · centro · derecha): con la <b>alineación</b>. Si es un bloque de varias líneas que debe quedar a la derecha pero justificado, se usa <span class="ruta">Opciones de sangría → Izquierda</span> (por ejemplo, 8 cm).</li>
+          <li><b>Vertical</b> (superior · centro · inferior): con el <b>espacio antes del párrafo</b> en <span class="ruta">Espaciado personalizado</span>. Escribes cuántos puntos quieres bajarlo y queda exacto. No con Enter: si cambias algo arriba, todo se corre.</li>
+        </ul>
+        <p><b>¿Dónde se usa?</b> En las <b>páginas preliminares</b> de una monografía, informe de prácticas o tesis:</p>
+        <table class="tabla-t">
+          <tr><th>Página</th><th>Posición habitual</th></tr>
+          <tr><td><b>Dedicatoria</b>: a quién le ofreces el trabajo.</td><td>Abajo a la derecha, breve, en cursiva.</td></tr>
+          <tr><td><b>Epígrafe</b>: una cita corta que inspira el trabajo, con su autor.</td><td>Arriba a la derecha, en cursiva.</td></tr>
+          <tr><td><b>Agradecimientos</b></td><td>Título centrado arriba y texto justificado.</td></tr>
+        </table>
+        <p style="font-size:.88rem;color:var(--mut)">Es costumbre, no una ley: cada instituto puede pedir su propio formato. La línea punteada de las hojas de ejemplo son los <b>márgenes</b>: las posiciones se miden dentro de ellos.</p>
+      </div>
 
       <div class="demo">
-        <div class="demo-cab"><span class="tit">Elige una posición</span></div>
+        <div class="demo-cab"><span class="tit">Elige una posición de la hoja</span></div>
         <div class="pos-envase">
           <div class="rejilla9" id="rejilla9"></div>
-          <div>
-            <div class="celda-demo" id="celdaDemo"><span>Texto</span></div>
+          <div class="pos-der">
+            <div class="pagina-demo"><div class="area" id="celdaDemo"><span>Texto</span></div></div>
             <ul class="receta" id="receta"></ul>
           </div>
         </div>
       </div>
 
-      <div class="visor" data-texto="t4"></div>
+      <div class="quiz" data-ok="1" data-exp="Con Espaciado personalizado → Antes, bajas el párrafo un número exacto de puntos y no se mueve si cambias otra cosa.">
+        <p>¿Cómo bajas la dedicatoria hasta el final de la hoja de forma exacta?</p>
+        <button type="button">Presionando Enter muchas veces</button><button type="button">Con espacio antes del párrafo (Espaciado personalizado)</button><button type="button">Con interlineado 5</button><button type="button">Con la barra espaciadora</button>
+        <p class="fb"></p>
+      </div>
 
-      <h3>Pasos</h3>
+      <h3>Práctica A: cinco posiciones en una hoja</h3>
+      <div class="visor" data-texto="t4a" data-a4></div>
       <div class="pasos" data-grupo="4">
-        <label class="ck"><input type="checkbox"><span>Copia y pega: llega una tabla de 3 × 3 con todo amontonado arriba a la izquierda.</span></label>
-        <label class="ck"><input type="checkbox"><span>Haz las filas altas: selecciona toda la tabla → clic derecho → <span class="ruta">Opciones de tabla</span> → en el panel de la derecha busca <b>Altura mínima de fila</b>: <b>2,5 cm</b>.</span></label>
-        <label class="ck"><input type="checkbox"><span><b>Fila de arriba</b>: selecciónala → clic derecho → <span class="ruta">Opciones de tabla</span> → <b>Alineación vertical</b>: <b>Superior</b>. Luego: «Rima XXI» a la izquierda, «✦ ✦ ✦» al centro, «1871» a la derecha.</span></label>
-        <label class="ck"><input type="checkbox"><span><b>Fila del medio</b>: alineación vertical <b>Centro</b>. «❧» izquierda, poema centro, «☙» derecha.</span></label>
-        <label class="ck"><input type="checkbox"><span><b>Fila de abajo</b>: alineación vertical <b>Inferior</b>. «Rimas» izquierda, «✦ ✦ ✦» centro, «Gustavo Adolfo Bécquer» derecha.</span></label>
-        <label class="ck"><input type="checkbox"><span>Pon el poema en <b>cursiva</b> y un poco más grande (<b>13</b>).</span></label>
+        <label class="ck"><input type="checkbox"><span>Al final de tu documento: <span class="ruta">Insertar → Salto → Salto de página</span>. Pega el texto en la hoja nueva.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Superior izquierda</b>: «Rima XXI» se queda a la izquierda. Ponlo en negrita.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Superior derecha</b>: «1871» → alinear a la <b>derecha</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Central</b>: selecciona el poema → <b>centrar</b>, cursiva, tamaño 14 → <span class="ruta">Espaciado personalizado</span> → Antes: <b>280</b>.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Inferior izquierda</b>: «Rimas» → <span class="ruta">Espaciado personalizado</span> → Antes: <b>280</b>. Ajusta el número hasta que quede al final de la hoja sin pasar a la siguiente.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Inferior derecha</b>: «Gustavo Adolfo Bécquer» → alinear a la <b>derecha</b>.</span></label>
+      </div>
+      <details>
+        <summary>¿El número no me cuadra?</summary>
+        <p>Depende del tamaño de letra y de cuántas líneas tenga cada texto. Usa el número como punto de partida: si el texto quedó muy arriba, <b>súbelo</b>; si se fue a la hoja siguiente, <b>bájalo</b>. Para ver la hoja completa, aleja el zoom de Google Docs (menú de porcentaje de la barra, por ejemplo 50 %).</p>
+      </details>
+
+      <h3>Práctica B: tu dedicatoria</h3>
+      <div class="visor" data-texto="t4b" data-a4></div>
+      <div class="pasos" data-grupo="4b">
+        <label class="ck"><input type="checkbox"><span>Otro <span class="ruta">Insertar → Salto → Salto de página</span> y pega el texto.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Epígrafe</b> (la cita y su autor): <span class="ruta">Opciones de sangría</span> → Izquierda: <b>8 cm</b> → alinear a la <b>derecha</b> → cursiva.</span></label>
+        <label class="ck"><input type="checkbox"><span><b>Dedicatoria</b>: <span class="ruta">Opciones de sangría</span> → Izquierda: <b>8 cm</b> → <b>justificar</b> → cursiva.</span></label>
+        <label class="ck"><input type="checkbox"><span>Bájala con <span class="ruta">Espaciado personalizado</span> → Antes: <b>550</b>, y ajusta hasta que quede abajo a la derecha.</span></label>
+        <label class="ck"><input type="checkbox"><span>Opcional: cambia la dedicatoria por una tuya.</span></label>
       </div>
       <p class="listo-parte">✔ Parte 4 lista.</p>
-      <details>
-        <summary>Reto extra: que parezca una tarjeta</summary>
-        <p>Selecciona toda la tabla y deja <b>solo el borde exterior</b>: con el botón de bordes elige los bordes interiores y ponles <b>0 pt</b>. Luego dale un color de fondo suave a toda la tabla.</p>
-      </details>
     </div>
   </section>
 
@@ -349,7 +504,18 @@
     </header>
     <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
     <div class="p-cuerpo">
-      <p class="meta">La <b>sangría</b> mete hacia adentro parte del párrafo. La de <b>primera línea</b> es la de los libros. La <b>francesa</b> es la de las <b>referencias bibliográficas</b> (normas APA) que vas a usar en todos tus trabajos.</p>
+      <div class="teoria">
+        <h4>📖 ¿Qué es la sangría?</h4>
+        <p>Es el espacio que separa un párrafo de los <b>márgenes</b> de la hoja. Se configura en <span class="ruta">Formato → Alinear y aplicar sangría → Opciones de sangría</span>, en centímetros:</p>
+        <table class="tabla-t">
+          <tr><th>Casilla</th><th>Qué hace</th><th>Para qué se usa</th></tr>
+          <tr><td><b>Izquierda</b></td><td>Mete todo el párrafo desde el margen izquierdo.</td><td>Citas largas, dedicatorias, listas.</td></tr>
+          <tr><td><b>Derecha</b></td><td>Aleja el párrafo del margen derecho.</td><td>Citas largas (junto con la izquierda).</td></tr>
+          <tr><td><b>Especial: Primera línea</b></td><td>Solo la primera línea entra.</td><td>Párrafos de libros, ensayos y trabajos APA.</td></tr>
+          <tr><td><b>Especial: Francesa</b></td><td>La primera línea queda afuera y el resto entra.</td><td><b>Referencias bibliográficas</b> (APA).</td></tr>
+        </table>
+        <p><b>Normas APA</b> (las que te pedirán en tus trabajos): párrafos con sangría de primera línea de <b>1,27 cm</b>, referencias con sangría <b>francesa de 1,27 cm</b>, interlineado <b>2</b> y en orden alfabético. 1,27 cm es media pulgada.</p>
+      </div>
 
       <div class="demo" id="demoSang">
         <div class="demo-cab"><span class="tit">Compara</span>
@@ -361,6 +527,13 @@
         <p class="explica" id="explicaSang"></p>
       </div>
 
+      <div class="quiz" data-ok="1" data-exp="En la francesa el apellido del autor queda «afuera» y se encuentra rápido en una lista larga.">
+        <p>Las referencias bibliográficas en normas APA llevan sangría…</p>
+        <button type="button">de primera línea</button><button type="button">francesa</button><button type="button">derecha</button><button type="button">ninguna</button>
+        <p class="fb"></p>
+      </div>
+
+      <h3>Práctica: lista de referencias</h3>
       <div class="visor" data-texto="t5"></div>
 
       <h3>Pasos</h3>
@@ -394,6 +567,19 @@
     <div class="p-cerrada"><span>🔒</span>Esta parte se abrirá cuando el profe lo indique. No hace falta recargar la página.</div>
     <div class="p-cuerpo">
       <p class="meta">El <b>Juramento Florence Nightingale</b> (1893) lo pronuncian enfermeras y enfermeros en muchas ceremonias. Este llega con <b>todo</b> mal: letras mezcladas, colores, espacios hechos a mano… Déjalo listo para imprimir y firmar, <b>en una página nueva</b>.</p>
+
+      <div class="teoria">
+        <h4>📖 Resumen: todo lo que usarás</h4>
+        <table class="tabla-t">
+          <tr><th>Formato</th><th>Dónde está</th><th>Qué controla</th></tr>
+          <tr><td><b>Borrar formato</b></td><td><span class="ruta">Formato → Borrar formato</span></td><td>Deja el texto «limpio» para empezar de cero.</td></tr>
+          <tr><td><b>Interlineado</b></td><td><span class="ruta">Espaciado personalizado</span></td><td>Espacio entre líneas de un párrafo.</td></tr>
+          <tr><td><b>Antes / Después</b></td><td><span class="ruta">Espaciado personalizado</span></td><td>Espacio entre párrafos y posición vertical.</td></tr>
+          <tr><td><b>Alineación</b></td><td>Botón de alinear</td><td>Hacia qué borde va cada línea.</td></tr>
+          <tr><td><b>Sangría</b></td><td><span class="ruta">Opciones de sangría</span></td><td>Distancia a los márgenes.</td></tr>
+        </table>
+        <p>Un documento bien hecho combina <b>todos</b> a la vez. Ninguno se hace con Enter ni con la barra espaciadora.</p>
+      </div>
 
       <div class="visor" data-texto="t6"></div>
 
@@ -431,33 +617,6 @@
      "mal"  = como llega (es lo que se copia: lleva el formato malo a propósito)
      "bien" = cómo debe quedar
      Obras en dominio público. Las traducciones de Nightingale son libres, hechas para la clase. -->
-
-<template id="t1-mal">
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">Divina Comedia – Infierno, Canto I</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">Dante Alighieri (traducción de Bartolomé Mitre, adaptada)</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">En medio del camino de la vida,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">errante me encontré por selva oscura,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">en que la recta vía era perdida.</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">¡Ay, que decir lo que era es cosa dura,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">esta selva salvaje, áspera y fuerte,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">que en la mente renueva la pavura!</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">¡Tan amarga es, que poco más es muerte!</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">Pero al tratar del bien que allí encontrara,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1;margin:0">otras cosas diré que vi en mi suerte.</p>
-</template>
-<template id="t1-bien">
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0"><b>Divina Comedia – Infierno, Canto I</b></p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0"><i>Dante Alighieri (traducción de Bartolomé Mitre, adaptada)</i></p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">En medio del camino de la vida,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">errante me encontré por selva oscura,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">en que la recta vía era perdida.</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">¡Ay, que decir lo que era es cosa dura,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">esta selva salvaje, áspera y fuerte,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">que en la mente renueva la pavura!</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">¡Tan amarga es, que poco más es muerte!</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">Pero al tratar del bien que allí encontrara,</p>
-<p style="font-family:'Times New Roman',serif;font-size:11pt;line-height:1.5;margin:0">otras cosas diré que vi en mi suerte.</p>
-</template>
 
 <template id="t2-mal">
 <p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Don Quijote de la Mancha – Capítulo primero (Miguel de Cervantes, 1605)</p>
@@ -500,19 +659,37 @@
 <p style="font-family:Arial,sans-serif;font-size:11pt;margin:0;text-align:right">Londres, 1859</p>
 </template>
 
-<template id="t4-mal">
-<table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:11pt">
-<tr><td style="border:1px solid #000;padding:5px;vertical-align:top;width:33%">Rima XXI</td><td style="border:1px solid #000;padding:5px;vertical-align:top;width:34%">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:top;width:33%">1871</td></tr>
-<tr><td style="border:1px solid #000;padding:5px;vertical-align:top">❧</td><td style="border:1px solid #000;padding:5px;vertical-align:top">¿Qué es poesía?, dices mientras clavas<br>en mi pupila tu pupila azul.<br>¿Qué es poesía? ¿Y tú me lo preguntas?<br>Poesía… eres tú.</td><td style="border:1px solid #000;padding:5px;vertical-align:top">☙</td></tr>
-<tr><td style="border:1px solid #000;padding:5px;vertical-align:top">Rimas</td><td style="border:1px solid #000;padding:5px;vertical-align:top">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:top">Gustavo Adolfo Bécquer</td></tr>
-</table>
+<template id="t4a-mal">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Rima XXI</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">1871</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">¿Qué es poesía?, dices mientras clavas<br>en mi pupila tu pupila azul.<br>¿Qué es poesía? ¿Y tú me lo preguntas?<br>Poesía… eres tú.</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Rimas</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Gustavo Adolfo Bécquer</p>
 </template>
-<template id="t4-bien">
-<table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:11pt">
-<tr style="height:2.5cm"><td style="border:1px solid #000;padding:5px;vertical-align:top;text-align:left;width:33%"><b>Rima XXI</b></td><td style="border:1px solid #000;padding:5px;vertical-align:top;text-align:center;width:34%">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:top;text-align:right;width:33%">1871</td></tr>
-<tr style="height:2.5cm"><td style="border:1px solid #000;padding:5px;vertical-align:middle;text-align:left">❧</td><td style="border:1px solid #000;padding:5px;vertical-align:middle;text-align:center;font-size:13pt"><i>¿Qué es poesía?, dices mientras clavas<br>en mi pupila tu pupila azul.<br>¿Qué es poesía? ¿Y tú me lo preguntas?<br>Poesía… eres tú.</i></td><td style="border:1px solid #000;padding:5px;vertical-align:middle;text-align:right">☙</td></tr>
-<tr style="height:2.5cm"><td style="border:1px solid #000;padding:5px;vertical-align:bottom;text-align:left">Rimas</td><td style="border:1px solid #000;padding:5px;vertical-align:bottom;text-align:center">✦ ✦ ✦</td><td style="border:1px solid #000;padding:5px;vertical-align:bottom;text-align:right">Gustavo Adolfo Bécquer</td></tr>
-</table>
+<template id="t4a-bien">
+<div class="area">
+<p><b>Rima XXI</b></p>
+<p style="text-align:right">1871</p>
+<div style="flex:1"></div>
+<p style="text-align:center;font-style:italic;font-size:1.25em">¿Qué es poesía?, dices mientras clavas<br>en mi pupila tu pupila azul.<br>¿Qué es poesía? ¿Y tú me lo preguntas?<br>Poesía… eres tú.</p>
+<div style="flex:1"></div>
+<p>Rimas</p>
+<p style="text-align:right">Gustavo Adolfo Bécquer</p>
+</div>
+</template>
+
+<template id="t4b-mal">
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">«Lo primero, no hacer daño.»</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">Principio atribuido a Hipócrates</p>
+<p style="font-family:Arial,sans-serif;font-size:11pt;margin:0">A mis padres, por enseñarme con su ejemplo que cuidar a otros es una forma de amar. A mis docentes, por su paciencia y por cada consejo. Y a cada paciente que algún día confiará en mis manos.</p>
+</template>
+<template id="t4b-bien">
+<div class="area">
+<p style="padding-left:50%;text-align:right;font-style:italic">«Lo primero, no hacer daño.»</p>
+<p style="padding-left:50%;text-align:right;font-style:italic">Principio atribuido a Hipócrates</p>
+<div style="flex:1"></div>
+<p style="padding-left:50%;text-align:justify;font-style:italic">A mis padres, por enseñarme con su ejemplo que cuidar a otros es una forma de amar. A mis docentes, por su paciencia y por cada consejo. Y a cada paciente que algún día confiará en mis manos.</p>
+</div>
 </template>
 
 <template id="t5-mal">
@@ -609,15 +786,48 @@
     return ok;
   }
 
+  /* ---------- Divina Comedia: un mismo texto que va sumando formato en las partes 1, 2 y 3 ---------- */
+  const TERCETOS = [
+    ["En medio del camino de nuestra vida", "me encontré en una selva oscura,", "porque la recta vía había perdido."],
+    ["¡Ay, cuánto cuesta decir cómo era", "esta selva salvaje, áspera y espesa,", "que al pensarla me renueva el miedo!"],
+    ["Tan amarga es que poco más lo es la muerte;", "mas para hablar del bien que allí encontré,", "diré las otras cosas que allí vi."],
+    ["No sé bien contar cómo entré en ella,", "tan lleno de sueño estaba en aquel punto", "en que la verdadera vía abandoné."],
+    ["Pero cuando llegué al pie de una colina,", "allí donde terminaba aquel valle", "que me había llenado de miedo el corazón,"],
+    ["miré hacia lo alto y vi sus laderas", "vestidas ya con los rayos del planeta", "que guía recto a todos por cualquier senda."],
+    ["Entonces se calmó un poco el miedo", "que en el lago del corazón me había durado", "la noche que pasé con tanta angustia."],
+    ["Y como aquel que, con aliento fatigado,", "salido fuera del mar a la orilla,", "se vuelve hacia el agua peligrosa y la mira,"],
+    ["así mi ánimo, que aún huía,", "se volvió atrás a contemplar el paso", "que jamás dejó con vida a persona alguna."]
+  ];
+  // etapa: 0 = como llega · 1 = interlineado 1 · 2 = + 12 pt después · 3 = + alineación del título y autor
+  function dante(etapa) {
+    const base = `font-family:'Times New Roman',serif;font-size:12pt;line-height:${etapa ? 1 : 2.3};margin:0 0 ${etapa >= 2 ? 12 : 0}pt;`;
+    const par = (txt, extra) => `<p style="${base}${extra || ""}">${txt}</p>`;
+    const fin = etapa >= 3;
+    return [
+      par(fin ? "<b>DIVINA COMEDIA</b>" : "DIVINA COMEDIA", fin ? "text-align:center;font-size:16pt" : ""),
+      par("Infierno – Canto I", fin ? "text-align:center" : ""),
+      par(fin ? "<i>Dante Alighieri</i>" : "Dante Alighieri", fin ? "text-align:right" : ""),
+      ...TERCETOS.map(t => par(t.join("<br>")))
+    ].join("");
+  }
+  const TEXTOS = { t1: { mal: dante(0), bien: dante(1) }, t1b: { bien: dante(2) }, t1c: { bien: dante(3) } };
+
   /* ---------- visores: así llega / así debe quedar ---------- */
   document.querySelectorAll(".visor[data-texto]").forEach(v => {
     const id = v.dataset.texto;
-    const mal = $(id + "-mal").innerHTML.trim(), bien = $(id + "-bien").innerHTML.trim();
+    const plantilla = k => { const t = $(k); return t ? t.innerHTML.trim() : ""; };
+    const T = TEXTOS[id] || { mal: plantilla(id + "-mal"), bien: plantilla(id + "-bien") };
+    const mal = T.mal || "", bien = T.bien;
     v.innerHTML = `<div class="visor-cab">
         <div class="seg" role="group" aria-label="Versión del texto"><button type="button" data-v="mal" class="on">✗ Así llega</button><button type="button" data-v="bien">✓ Así debe quedar</button></div>
         <button type="button" class="bt copiar">📋 Copiar texto</button>
       </div><div class="hoja-envase"><div class="hoja"></div></div>`;
     const hoja = v.querySelector(".hoja");
+    if (v.hasAttribute("data-a4")) { hoja.classList.add("a4"); hoja.parentNode.style.maxHeight = "none"; }
+    if (!mal) {                       // solo muestra cómo va quedando (no se copia)
+      v.querySelector(".visor-cab").innerHTML = `<span class="solo">✓ ${v.dataset.titulo || "Así debe quedar"}</span>`;
+      hoja.innerHTML = bien; return;
+    }
     const ver = q => { hoja.innerHTML = q === "bien" ? bien : mal; v.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.v === q)); };
     v.querySelectorAll(".seg button").forEach(b => b.onclick = () => ver(b.dataset.v));
     ver("mal");
@@ -647,7 +857,7 @@
   });
 
   /* ---------- demo 1: interlineado ---------- */
-  const TXT_INTER = { "1": "1 (sencillo): las líneas casi se tocan. Cansa leer mucho así.", "1.15": "1,15 es el que trae Google Docs por defecto.", "1.5": "1,5: cómodo para leer. Muy usado en trabajos de instituto y universidad.", "2": "2 (doble): mucho aire. Lo piden las normas APA para trabajos académicos." };
+  const TXT_INTER = { "0.5": "0,5: las líneas no caben y se montan unas sobre otras. ¡Ilegible!", "5": "5: cada línea queda casi sola. Un poema corto ocupa varias hojas.", "1": "1 (sencillo): las líneas casi se tocan. Cansa leer mucho así.", "1.15": "1,15 es el que trae Google Docs por defecto.", "1.5": "1,5: cómodo para leer. Muy usado en trabajos de instituto y universidad.", "2": "2 (doble): mucho aire. Lo piden las normas APA para trabajos académicos." };
   document.querySelectorAll("#demoInter .op").forEach(b => b.onclick = () => {
     document.querySelectorAll("#demoInter .op").forEach(x => x.classList.toggle("on", x === b));
     document.querySelector("#demoInter .muestra").style.lineHeight = b.dataset.lh;
@@ -699,19 +909,21 @@
   });
   $("explicaAlin").innerHTML = ALIN[0][4];
 
-  /* ---------- demo 4: las 9 posiciones ---------- */
-  const VERT = [["flex-start", "Superior"], ["center", "Centro"], ["flex-end", "Inferior"]];
-  const HOR = [["flex-start", "Izquierda", "L"], ["center", "Centro", "E"], ["flex-end", "Derecha", "R"]];
+  /* ---------- demo 4: las 9 posiciones en la hoja ---------- */
+  const VERT = [["flex-start", "Superior", "Antes: <b>0 pt</b> (se queda arriba)"], ["center", "Centro", "Antes: unos <b>300 pt</b>"], ["flex-end", "Inferior", "Antes: unos <b>550–600 pt</b> (menos lo que mida el texto)"]];
+  const HOR = [["flex-start", "Izquierda", "Alinear a la izquierda"], ["center", "Centro", "Centrar"], ["flex-end", "Derecha", "Alinear a la derecha"]];
   const NOMBRE = (f, c) => f === 1 && c === 1 ? "Central" : `${VERT[f][1]} ${HOR[c][1].toLowerCase()}`;
+  const USO = { "0,2": "Ej.: epígrafe, número de expediente.", "2,2": "Ej.: dedicatoria.", "1,1": "Ej.: título de la portada, un poema.", "0,0": "Ej.: nombre del instituto en un membrete.", "2,0": "Ej.: lugar o nota al pie de una portada.", "0,1": "Ej.: título de una página." };
   const rej = $("rejilla9");
   function elegir(f, c) {
     rej.querySelectorAll("button").forEach(b => b.classList.toggle("on", +b.dataset.f === f && +b.dataset.c === c));
-    const cel = $("celdaDemo");
-    cel.style.alignItems = VERT[f][0]; cel.style.justifyContent = HOR[c][0];
-    cel.querySelector("span").textContent = NOMBRE(f, c);
+    const area = $("celdaDemo");
+    area.style.alignItems = VERT[f][0]; area.style.justifyContent = HOR[c][0];
+    area.querySelector("span").textContent = NOMBRE(f, c);
     $("receta").innerHTML =
-      `<li><b>Horizontal: ${HOR[c][1]}</b> → botón de alinear de la barra de herramientas</li>` +
-      `<li><b>Vertical: ${VERT[f][1]}</b> → clic derecho en la celda → <span class="ruta">Opciones de tabla</span> → <b>Alineación vertical</b></li>`;
+      `<li><b>Horizontal: ${HOR[c][1]}</b> → botón de alinear → ${HOR[c][2]}</li>` +
+      `<li><b>Vertical: ${VERT[f][1]}</b> → <span class="ruta">Espaciado personalizado</span> → ${VERT[f][2]}</li>` +
+      (USO[f + "," + c] ? `<li style="color:var(--mut)">${USO[f + "," + c]}</li>` : "");
   }
   for (let f = 0; f < 3; f++) for (let c = 0; c < 3; c++) {
     const b = document.createElement("button");
@@ -720,6 +932,15 @@
     rej.append(b);
   }
   elegir(2, 2);
+
+  /* ---------- preguntas rápidas ---------- */
+  document.querySelectorAll(".quiz").forEach(q => {
+    const ok = +q.dataset.ok, bs = [...q.querySelectorAll("button")];
+    bs.forEach((b, i) => b.onclick = () => {
+      b.classList.add(i === ok ? "bien" : "mal");
+      q.querySelector(".fb").textContent = i === ok ? "✔ ¡Correcto! " + q.dataset.exp : "✗ No exactamente. Prueba otra opción.";
+    });
+  });
 
   /* ---------- demo 5: sangría ---------- */
   const SANG = {
