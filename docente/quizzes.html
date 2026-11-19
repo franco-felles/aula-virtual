@@ -123,6 +123,7 @@
   .pts-chip { font-family: var(--mono); font-size: .78rem; font-weight: 700; border-radius: 8px; padding: 6px 10px; background: var(--moss-bg); color: var(--moss-d); }
   .pts-chip.mal { background: var(--err-bg); color: var(--err); }
   .importar textarea { width: 100%; min-height: 120px; margin: 10px 0; padding: 10px; border: 1px solid var(--line); border-radius: 9px; font-family: var(--mono); font-size: .78rem; background: var(--panel); color: var(--ink); }
+  .panel-viejo { background: var(--err-bg); border: 1px solid #efc3bf; color: var(--err); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-size: .88rem; }
   .barra-guardar { position: sticky; bottom: 0; z-index: 5; background: rgba(246,244,238,.96); backdrop-filter: blur(6px); border-top: 1px solid var(--line); padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
   .barra-guardar .estado { flex: 1; min-width: 120px; font-size: .84rem; color: var(--mut); }
 
@@ -156,7 +157,11 @@ const ICO = {
   ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>'
 };
 const boton = (texto, cls, ico) => { const b = el("button", "btn " + (cls || "")); b.type = "button"; if (ico) b.innerHTML = ICO[ico]; b.append(texto); return b; };
-let clases = [], sucio = false;
+let clases = [], sucio = false, versionPanel = null;
+/* El Panel (api.gs) informa su versión. Con la anterior a la 2, los mensajes 💬 y «Ve por qué se equivocó» no se guardan. */
+const VERSION_WEB = 2;
+const panelViejo = () => versionPanel !== null && versionPanel < VERSION_WEB;
+const avisoPanel = () => el("div", "panel-viejo", "⚠ El Panel tiene el código anterior: los mensajes 💬 y «Ve por qué se equivocó» NO se guardan. En Apps Script pega el api.gs nuevo y luego Implementar → Gestionar implementaciones → ✏ → Versión: Nueva versión → Implementar.");
 window.addEventListener("beforeunload", e => { if (sucio) { e.preventDefault(); e.returnValue = ""; } });
 const olvidar = () => Aula.olvidar("quizLista", "portal", "clase");   // tras cambiar algo, que el inicio y las clases lo vean ya
 
@@ -235,7 +240,7 @@ async function vistaLista() {
 
 function pintarLista(r) {
   if (/editar=/.test(location.search)) return;          // ya se pasó al editor mientras llegaba lo fresco
-  clases = r.clases;
+  clases = r.clases; versionPanel = r.version || 1;
   const volver = el("a", "btn ghost", ""); volver.innerHTML = ICO.atras; volver.append("Inicio"); volver.href = Aula.url("index.html");
   volver.style.marginBottom = "18px";
   const cab = el("div", "cab"), izq = el("div");
@@ -244,6 +249,7 @@ function pintarLista(r) {
   const nuevo = boton("+ Nuevo quiz", "morado lg"); nuevo.onclick = () => vistaEditor(null);
   cab.append(izq, nuevo);
   app.replaceChildren(volver, cab);
+  if (panelViejo()) app.appendChild(avisoPanel());
   if (!r.quizzes.length) { app.appendChild(el("p", "vacio", "Aún no tienes quizzes. Crea el primero.")); return; }
 
   const grupos = { ec: [], clase: [], general: [] };
@@ -431,8 +437,8 @@ async function vistaEditor(id) {
   let quiz = { id: null, titulo: "", clase: "", mostrar: 10, abierto: false, oculto: true, repetir: false, puntaje: true, errores: false, retro: false, penalizar: true, preguntas: [vacia()] };
   history.replaceState(null, "", "?editar=" + (id || "nuevo"));
   try {
-    if (id) { const d = await Aula.api("quizVer", { id }); quiz = Object.assign(d.quiz, { rindieron: d.resultados.length }); }
-    if (!clases.length) clases = (await Aula.api("quizLista")).clases;
+    if (id) { const d = await Aula.api("quizVer", { id }); quiz = Object.assign(d.quiz, { rindieron: d.resultados.length }); versionPanel = d.version || 1; }
+    if (!clases.length || versionPanel === null) { const l = await Aula.api("quizLista"); clases = l.clases; versionPanel = l.version || 1; }
   } catch (ex) { if (id) { app.replaceChildren(el("div", "aviso", ex.message)); return; } }
   quiz.preguntas = quiz.preguntas.map(p => ({ ...p, alts: p.alts.slice(), msgs: p.alts.map((_, k) => (p.msgs || [])[k] || "") }));
   sucio = false;
@@ -683,10 +689,12 @@ async function vistaEditor(id) {
         oculto: estado === "oculto", abierto: estado === "abierto", repetir: oRep.checked, puntaje: oPun.checked, errores: oErr.checked, retro: oRet.checked, penalizar: oPen.checked, preguntas };
       const r = await Aula.api("quizGuardar", { quiz: datosQuiz });
       const nuevo = !quiz.id;
+      versionPanel = r.version || 1;
+      if (panelViejo()) { if (!app.querySelector(".panel-viejo")) app.insertBefore(avisoPanel(), cTipo); Aula.toast("Guardado a medias", "El Panel no está actualizado: los mensajes y «Ve por qué se equivocó» no se guardaron.", "warn"); }
       Object.assign(quiz, datosQuiz, { id: r.id }); iTit.value = titulo; sucio = false; olvidar();
       history.replaceState(null, "", "?editar=" + r.id);
       if (nuevo) barra.insertBefore(borrar, guardar);
-      Aula.toast("Quiz guardado", estado === "abierto" ? "Está abierto: los alumnos ya pueden rendirlo." : estado === "cerrado" ? "Está cerrado: lo ven pero no pueden rendirlo." : "Está oculto: los alumnos no lo ven.");
+      if (!panelViejo()) Aula.toast("Quiz guardado", estado === "abierto" ? "Está abierto: los alumnos ya pueden rendirlo." : estado === "cerrado" ? "Está cerrado: lo ven pero no pueden rendirlo." : "Está oculto: los alumnos no lo ven.");
       estadoTxt.textContent = "✓ Guardado · " + preguntas.length + " pregunta(s)";
     } catch (ex) { Aula.toast("No se guardó", ex.message, "warn"); estadoTxt.textContent = ex.message; }
     guardar.disabled = false;
@@ -694,7 +702,7 @@ async function vistaEditor(id) {
   // "sin guardar" en la barra al primer cambio
   app.oninput = () => { if (sucio && !/sin guardar/.test(estadoTxt.textContent)) estadoTxt.textContent = quiz.preguntas.length + " pregunta(s) · sin guardar"; };
 
-  app.replaceChildren(top, cTipo, cDatos, cOpc, hPreg, imp, ptsBox, lista, agregar, barra);
+  app.replaceChildren(top, ...(panelViejo() ? [avisoPanel()] : []), cTipo, cDatos, cOpc, hPreg, imp, ptsBox, lista, agregar, barra);
   pintarDestino();
   pintarPreguntas();
 }

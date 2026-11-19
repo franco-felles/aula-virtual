@@ -16,10 +16,11 @@
    ========================================================== */
 
 const TOKEN_SEG = 6 * 60 * 60;
+const VERSION_API = 2;          // 2 = quizzes con mensaje por alternativa y RETRO (la web avisa si el Panel tiene una versión menor)
 const CAB_QUIZ = ["ID", "TITULO", "CLASE", "MOSTRAR", "ABIERTO", "NPREG", "PREGUNTAS", "ACTUALIZADO", "OCULTO", "REPETIR", "PUNTAJE", "ERRORES", "PENALIZAR", "RETRO"];
 const CAB_RES = ["QUIZ", "CODIGO", "ALUMNO", "GRUPO", "ACIERTOS", "TOTAL", "NOTA", "CORRECCION", "INCIDENTES", "HORA", "DETALLE", "INTENTOS", "DESCUENTO"];
 
-function doGet() { return salida({ ok: true, app: "Aula Virtual" }); }
+function doGet() { return salida({ ok: true, app: "Aula Virtual", version: VERSION_API }); }
 
 function doPost(e) {
   let req;
@@ -358,7 +359,7 @@ function apiQuizLista(req) {
   sesionDe(req, "docente");
   const res = resultadosTodos();
   return { quizzes: quizzesTodos().map(q => Object.assign(quizResumen(q), { rindieron: res.filter(r => r.QUIZ === q.id).length })),
-           clases: clasesTodas().map(clasePublica) };
+           clases: clasesTodas().map(clasePublica), version: VERSION_API };
 }
 
 function apiQuizVer(req) {
@@ -366,7 +367,7 @@ function apiQuizVer(req) {
   const q = quizDe(req.id);
   return { quiz: Object.assign(quizResumen(q), { preguntas: q.preguntas }),
            resultados: resultadosTodos().filter(r => r.QUIZ === q.id).map(resPublico),
-           alumnos: alumnosTodos().filter(esActivo).map(pub) };
+           alumnos: alumnosTodos().filter(esActivo).map(pub), version: VERSION_API };
 }
 
 function filaQuiz(d, id, preguntas) {
@@ -405,7 +406,7 @@ function apiQuizGuardar(req) {
     if (existente) escribirFila(sh, t, existente._fila, fila);
     else sh.appendRow(filaDesde(t.cab, fila));
     invalidarCache(["quiz"]);
-    return { id };
+    return { id, version: VERSION_API };
   } finally { lock.releaseLock(); }
 }
 
