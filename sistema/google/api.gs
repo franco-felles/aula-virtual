@@ -16,7 +16,7 @@
    ========================================================== */
 
 const TOKEN_SEG = 6 * 60 * 60;
-const CAB_QUIZ = ["ID", "TITULO", "CLASE", "MOSTRAR", "ABIERTO", "NPREG", "PREGUNTAS", "ACTUALIZADO", "OCULTO", "REPETIR", "PUNTAJE", "ERRORES", "PENALIZAR"];
+const CAB_QUIZ = ["ID", "TITULO", "CLASE", "MOSTRAR", "ABIERTO", "NPREG", "PREGUNTAS", "ACTUALIZADO", "OCULTO", "REPETIR", "PUNTAJE", "ERRORES", "PENALIZAR", "RETRO"];
 const CAB_RES = ["QUIZ", "CODIGO", "ALUMNO", "GRUPO", "ACIERTOS", "TOTAL", "NOTA", "CORRECCION", "INCIDENTES", "HORA", "DETALLE", "INTENTOS", "DESCUENTO"];
 
 function doGet() { return salida({ ok: true, app: "Aula Virtual" }); }
@@ -258,13 +258,15 @@ function apiClase(req) {
 
 /* ======================= QUIZ =======================
    Opciones de cada quiz (columnas de la pestaña Quiz):
-     CLASE    u1c2 = quiz de esa clase · ec1u1 = EC virtual 1 de la unidad 1 · vacío = suelto (sale en el portal)
+     CLASE    u1c2 = quiz de esa clase · ec1u1 = EC virtual 1 de la unidad 1 · vacío = repaso general (sale en el portal)
      OCULTO   los alumnos no lo ven en ningún lado
      ABIERTO  acepta respuestas (visible + cerrado = lo ven pero no pueden rendirlo; sí ven su nota)
      REPETIR  puede rendirlo otra vez (se queda la nota más alta)
      PUNTAJE  al terminar ve su nota
      ERRORES  al terminar ve qué respondió bien y mal, y la respuesta correcta
      PENALIZAR  descuenta 1 punto por cada vez que sale de la pestaña o minimiza
+     RETRO    en la revisión ve el mensaje de cada alternativa (por qué está mal o bien). Necesita ERRORES.
+   Cada pregunta: { id, tema, texto, alts: [..], msgs: [..] (mensaje de cada alternativa, opcional), correcta, puntos }
    Puntos: cada pregunta puede tener "puntos"; las que no tienen se reparten lo que falta para 20.
    Si al alumno le tocan solo algunas (MOSTRAR), sus preguntas se escalan para que siempre sumen 20. */
 
@@ -283,13 +285,13 @@ function quizzesTodos(fresco) {
     return { id: String(f.ID), titulo: f.TITULO, clase: normId(f.CLASE), mostrar: Number(f.MOSTRAR) || 0, abierto,
              oculto: SI_NO(f.OCULTO, !abierto),    // quizzes antiguos: cerrado = oculto, como antes
              repetir: SI_NO(f.REPETIR, false), puntaje: SI_NO(f.PUNTAJE, true), errores: SI_NO(f.ERRORES, false),
-             penalizar: SI_NO(f.PENALIZAR, true),
+             penalizar: SI_NO(f.PENALIZAR, true), retro: SI_NO(f.RETRO, false),
              npreg: preguntas.length, preguntas, _fila: f._fila };
   });
   return fresco ? leer() : datos("quiz", leer);
 }
 const quizResumen = q => ({ id: q.id, titulo: q.titulo, clase: q.clase, mostrar: q.mostrar, npreg: q.npreg,
-  abierto: q.abierto, oculto: q.oculto, repetir: q.repetir, puntaje: q.puntaje, errores: q.errores, penalizar: q.penalizar });
+  abierto: q.abierto, oculto: q.oculto, repetir: q.repetir, puntaje: q.puntaje, errores: q.errores, penalizar: q.penalizar, retro: q.retro });
 
 const redondear = (x, d) => { const f = Math.pow(10, d === undefined ? 2 : d); return Math.round(x * f) / f; };
 /** Puntos de cada pregunta del banco: las fijas conservan los suyos; las vacías se reparten lo que falta para 20. */
@@ -328,8 +330,13 @@ function revisionDe(detalle, q) {
   return detalle.map(d => {
     const p = porId[d.id]; if (!p) return null;
     const orden = (d.orden && d.orden.length ? d.orden : p.alts.map((_, k) => k)).filter(k => p.alts[k] !== undefined);
+    const msgs = q.retro && p.msgs ? p.msgs : [];
     return { texto: p.texto, tema: p.tema, ok: d.ok,
-             opciones: orden.map(k => ({ texto: p.alts[k], correcta: k === p.correcta, elegida: k === d.elegida })) };
+             opciones: orden.map(k => {
+               const o = { texto: p.alts[k], correcta: k === p.correcta, elegida: k === d.elegida };
+               if (msgs[k]) o.msg = msgs[k];
+               return o;
+             }) };
   }).filter(Boolean);
 }
 function paraAlumno(q, intento) {
@@ -365,7 +372,7 @@ function apiQuizVer(req) {
 function filaQuiz(d, id, preguntas) {
   return { ID: id, TITULO: String(d.titulo || "").trim(), CLASE: normId(d.clase), MOSTRAR: Math.max(0, Number(d.mostrar) || 0),
            ABIERTO: !!d.abierto && !d.oculto, OCULTO: !!d.oculto, REPETIR: !!d.repetir, PUNTAJE: d.puntaje !== false, ERRORES: !!d.errores,
-           PENALIZAR: d.penalizar !== false, NPREG: preguntas.length, PREGUNTAS: JSON.stringify(preguntas), ACTUALIZADO: new Date() };
+           PENALIZAR: d.penalizar !== false, RETRO: !!d.retro && !!d.errores, NPREG: preguntas.length, PREGUNTAS: JSON.stringify(preguntas), ACTUALIZADO: new Date() };
 }
 
 function apiQuizGuardar(req) {
@@ -373,16 +380,19 @@ function apiQuizGuardar(req) {
   const d = req.quiz || {};
   if (!String(d.titulo || "").trim()) throw new Error("Ponle un título al quiz.");
   const preguntas = (d.preguntas || []).map((p, i) => {
-    const alts = (p.alts || []).map(a => String(a || "").trim()).filter(Boolean);
+    const pares = (p.alts || []).map((a, k) => ({ a: String(a || "").trim(), m: String((p.msgs || [])[k] || "").trim(), k })).filter(x => x.a);
+    const alts = pares.map(x => x.a), msgs = pares.map(x => x.m);
     const texto = String(p.texto || "").trim();
     if (!texto) throw new Error(`La pregunta ${i + 1} está vacía.`);
     if (alts.length < 2) throw new Error(`La pregunta ${i + 1} necesita al menos 2 alternativas.`);
-    const correcta = Number(p.correcta);
+    const correcta = pares.findIndex(x => x.k === Number(p.correcta));
     if (!(correcta >= 0 && correcta < alts.length)) throw new Error(`Marca la respuesta correcta de la pregunta ${i + 1}.`);
     const pts = p.puntos === "" || p.puntos === null || p.puntos === undefined ? 0 : Number(String(p.puntos).replace(",", "."));
     if (!(pts >= 0)) throw new Error(`Los puntos de la pregunta ${i + 1} no son un número.`);
-    return { id: p.id || "p" + Utilities.getUuid().slice(0, 8), tema: String(p.tema || "").trim(), texto, alts, correcta,
-             puntos: pts > 0 ? redondear(pts) : null };
+    const out = { id: p.id || "p" + Utilities.getUuid().slice(0, 8), tema: String(p.tema || "").trim(), texto, alts, correcta,
+                  puntos: pts > 0 ? redondear(pts) : null };
+    if (msgs.some(Boolean)) out.msgs = msgs;
+    return out;
   });
   if (!preguntas.length) throw new Error("El quiz no tiene preguntas.");
 
@@ -410,7 +420,8 @@ function apiQuizOpciones(req) {
     const o = req.opciones || {}, cambios = { ACTUALIZADO: new Date() };
     if ("oculto" in o) { cambios.OCULTO = !!o.oculto; if (o.oculto) cambios.ABIERTO = false; }
     if ("abierto" in o) { cambios.ABIERTO = !!o.abierto; if (o.abierto) cambios.OCULTO = false; }
-    ["repetir", "puntaje", "errores", "penalizar"].forEach(k => { if (k in o) cambios[k.toUpperCase()] = !!o[k]; });
+    ["repetir", "puntaje", "errores", "penalizar", "retro"].forEach(k => { if (k in o) cambios[k.toUpperCase()] = !!o[k]; });
+    if (o.errores === false) cambios.RETRO = false;
     escribirFila(sh, t, f._fila, cambios);
     invalidarCache(["quiz"]);
   } finally { lock.releaseLock(); }

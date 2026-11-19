@@ -223,19 +223,22 @@ function pintarPortal(r, s, docente) {
                 num: String(c.n).padStart(2, "0"), sub: c.tema || "Clase " + c.n, go: "Abrir carpeta", extra: marca(c), precarga: c.id }));
     cont.appendChild(bloque("Unidad " + u, cartas));
   });
-  // Los quizzes asignados a una clase/EC salen DENTRO de su carpeta; aquí solo los sueltos
-  // (o los de una carpeta que el alumno no ve, para que no queden inaccesibles).
-  const sueltos = r.quizzes.filter(q => !q.clase || (!visibles.has(q.clase) && (docente || q.abierto || (q.rendidos || []).length)));
-  if (sueltos.length) cont.appendChild(bloque("Evaluaciones virtuales", sueltos.map(q => {
+  // Los quizzes asignados a una clase/EC salen DENTRO de su carpeta; aquí solo los repasos generales y,
+  // aparte, los de una carpeta que el alumno no ve (para que no queden inaccesibles).
+  const huerfano = q => q.clase && !visibles.has(q.clase) && (docente || q.abierto || (q.rendidos || []).length);
+  const tarjetaQuiz = q => {
     const hechos = (q.rendidos || []).length, todos = (s.alumnos || []).length;
     const listo = !docente && todos && hechos >= todos;
     const etiqueta = docente ? (q.oculto ? "OCULTO" : !q.abierto ? "CERRADO" : null) : (!q.abierto && !listo ? "CERRADO" : null);
     return carta({
-      href: "eecc/quiz.html?id=" + q.id, cls: "ev" + (listo ? " hecha" : "") + (docente && q.oculto ? " oculta" : ""), tipo: "QUIZ", id: q.npreg + " preg.",
-      num: "Q", sub: q.titulo, go: docente ? "Ver resultados" : listo ? (q.abierto && q.repetir ? "Rendido · intentar de nuevo" : "Ya rendido · ver nota") : q.abierto ? "Rendir" : "No disponible", nueva: !docente,
+      href: "eecc/quiz.html?id=" + q.id, cls: "ev" + (listo ? " hecha" : "") + (docente && q.oculto ? " oculta" : ""), tipo: q.clase ? "QUIZ" : "REPASO", id: q.npreg + " preg.",
+      num: q.clase ? "Q" : "R", sub: q.titulo, go: docente ? "Ver resultados" : listo ? (q.abierto && q.repetir ? "Rendido · intentar de nuevo" : "Ya rendido · ver nota") : q.abierto ? "Rendir" : "No disponible", nueva: !docente,
       extra: etiqueta ? el("span", "borrador", etiqueta) : null
     });
-  })));
+  };
+  const repasos = r.quizzes.filter(q => !q.clase), sueltos = r.quizzes.filter(huerfano);
+  if (repasos.length) cont.appendChild(bloque("Repasos", repasos.map(tarjetaQuiz)));
+  if (sueltos.length) cont.appendChild(bloque("Evaluaciones virtuales", sueltos.map(tarjetaQuiz)));
   if (!cont.children.length) cont.appendChild(el("p", "vacio", docente
     ? "Aún no hay clases. Créalas en el Panel: Aula → Nueva clase / EC."
     : "Aún no hay clases publicadas."));

@@ -52,7 +52,7 @@ En el Panel se crean con **Aula → Nueva clase / EC**: `u1 4` o `u1 ec2`.
 
 **Enlaces** (Doc o Sheet compartido, YouTube, una web, Kahoot…) van en el Panel, pestaña **Enlaces**.
 
-**Quizzes** se crean en la web: **Mis quizzes**, vinculados a la clase o EC.
+**Quizzes** se crean en la web: **Mis quizzes**, vinculados a una clase o EC, o como **repaso general** (sale en el inicio, en «Repasos»). Cada alternativa puede llevar un mensaje (💬) que el alumno ve al revisar si se activa «Ve por qué se equivocó».
 
 ### Ficha de cada material
 

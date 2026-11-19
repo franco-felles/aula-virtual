@@ -53,8 +53,8 @@
   .ed-top h1 { margin: 0; flex: 1; }
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
   .card > h2 { font-size: .78rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .6px; color: var(--mut); margin: 0 0 14px; font-weight: 600; }
-  .tipos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 600px) { .tipos { grid-template-columns: 1fr; } }
+  .tipos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 760px) { .tipos { grid-template-columns: 1fr; } }
   .tipo { text-align: left; border: 2px solid var(--line); background: var(--panel); border-radius: 14px; padding: 16px; cursor: pointer; font: inherit; color: var(--ink); display: flex; gap: 12px; align-items: flex-start; transition: border-color .15s, background .15s; }
   .tipo:hover { border-color: var(--acc); }
   .tipo .em { font-size: 1.6rem; line-height: 1; }
@@ -62,6 +62,9 @@
   .tipo small { color: var(--mut); font-size: .82rem; }
   .tipo.on { border-color: var(--acc); background: var(--acc-bg); }
   .tipo.ec.on { border-color: var(--amber); background: var(--amber-bg); }
+  .tipo.general.on { border-color: var(--moss); background: var(--moss-bg); }
+  .qz.general { border-left-color: var(--moss); }
+  .qz.general .chip.dest { background: var(--moss-bg); color: var(--moss-d); }
   .destino { margin-top: 16px; display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-end; }
   .destino .grupo-d { display: flex; flex-direction: column; gap: 6px; }
   .destino .grupo-d > span { font-family: var(--mono); font-size: .72rem; color: var(--mut); }
@@ -95,6 +98,12 @@
   .alt .let { font-family: var(--mono); font-weight: 600; width: 18px; color: var(--mut); }
   .alt input[type=text] { flex: 1; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--ink); }
   .alt.ok input[type=text] { border-color: var(--moss); background: var(--moss-bg); }
+  .icon-btn.msg.tiene { border-color: var(--acc); color: var(--acc-d); background: var(--acc-bg); }
+  .alt-msg { display: flex; gap: 8px; margin: 4px 0 0 54px; }
+  .alt-msg[hidden] { display: none; }
+  .preg .alt-msg textarea { min-height: 0; height: 44px; padding: 8px 11px; font-size: .84rem; border-style: dashed; background: var(--paper); }
+  .alt.ok + .alt-msg textarea { border-color: var(--moss); }
+  @media (max-width: 600px) { .alt-msg { margin-left: 28px; } }
   .preg .pie { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: .78rem; color: var(--mut); }
   .importar { background: var(--panel); border: 2px dashed var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 16px; transition: border-color .15s, background .15s; }
   .importar.encima { border-color: var(--acc); background: var(--acc-bg); }
@@ -118,6 +127,8 @@
   .barra-guardar .estado { flex: 1; min-width: 120px; font-size: .84rem; color: var(--mut); }
 
   /* ---------- ventana de confirmación ---------- */
+  .opc.sub { padding-left: 22px; }
+  .opc.apagada { opacity: .5; }
   dialog.conf { border: 0; border-radius: 16px; padding: 24px; max-width: 440px; width: calc(100vw - 32px); box-shadow: 0 24px 60px rgba(16,35,28,.3); background: var(--panel); color: var(--ink); }
   dialog.conf::backdrop { background: rgba(16,35,28,.45); }
   dialog.conf h3 { margin: 0 0 8px; font-size: 1.15rem; }
@@ -149,10 +160,10 @@ let clases = [], sucio = false;
 window.addEventListener("beforeunload", e => { if (sucio) { e.preventDefault(); e.returnValue = ""; } });
 const olvidar = () => Aula.olvidar("quizLista", "portal", "clase");   // tras cambiar algo, que el inicio y las clases lo vean ya
 
-/* ---------- destino: EC virtual (ec1u1) o quiz de clase (u1c2) ---------- */
+/* ---------- destino: EC virtual (ec1u1), quiz de clase (u1c2) o repaso general (sin clase) ---------- */
 const reEC = /^ec(\d+)(?:u(\d+))?$/;
 function destino(id) {
-  if (!id) return { tipo: "suelto", texto: "Sin clase · sale en el inicio" };
+  if (!id) return { tipo: "general", texto: "Repaso general · sale en el inicio" };
   const m = reEC.exec(id), cl = clases.find(c => c.id === id);
   const aviso = !cl ? "Esa carpeta aún no existe en el Panel" : !cl.publicada ? "La carpeta no está publicada: los alumnos no la ven" : "";
   if (m) return { tipo: "ec", n: +m[1], u: m[2] ? +m[2] : null, texto: "EC virtual " + m[1] + (m[2] ? " · Unidad " + m[2] : ""), aviso };
@@ -229,15 +240,15 @@ function pintarLista(r) {
   volver.style.marginBottom = "18px";
   const cab = el("div", "cab"), izq = el("div");
   izq.append(el("p", "eyebrow", "Docente"), el("h1", "titulo", "Mis quizzes"),
-    el("p", "lede", "Cada quiz es una EC virtual o un quiz de clase, y aparece dentro de esa carpeta. Cámbiale el estado aquí mismo: Oculto, Cerrado o Abierto."));
+    el("p", "lede", "Cada quiz es una EC virtual o un quiz de clase (aparece dentro de esa carpeta), o un repaso general (aparece en el inicio). Cámbiale el estado aquí mismo: Oculto, Cerrado o Abierto."));
   const nuevo = boton("+ Nuevo quiz", "morado lg"); nuevo.onclick = () => vistaEditor(null);
   cab.append(izq, nuevo);
   app.replaceChildren(volver, cab);
   if (!r.quizzes.length) { app.appendChild(el("p", "vacio", "Aún no tienes quizzes. Crea el primero.")); return; }
 
-  const grupos = { ec: [], clase: [], suelto: [] };
+  const grupos = { ec: [], clase: [], general: [] };
   r.quizzes.forEach(q => grupos[destino(q.clase).tipo].push(q));
-  [["ec", "EC virtuales"], ["clase", "Quizzes de clase"], ["suelto", "Sin clase asignada"]].forEach(([k, nombre]) => {
+  [["general", "Repasos generales"], ["ec", "EC virtuales"], ["clase", "Quizzes de clase"]].forEach(([k, nombre]) => {
     const lista = grupos[k].sort((a, b) => String(a.clase).localeCompare(String(b.clase), "es", { numeric: true }) || a.titulo.localeCompare(b.titulo));
     if (!lista.length) return;
     const h = el("h2", "seccion", nombre); h.append(" ", el("small", "", String(lista.length))); app.appendChild(h);
@@ -247,13 +258,13 @@ function pintarLista(r) {
 
 function filaQuiz(q) {
   const d = destino(q.clase);
-  const fila = el("div", "qz" + (d.tipo === "ec" ? " ec" : "") + (q.oculto ? " es-oculto" : ""));
+  const fila = el("div", "qz" + (d.tipo !== "clase" ? " " + d.tipo : "") + (q.oculto ? " es-oculto" : ""));
   const info = el("div", "info"), chips = el("div", "chips");
   chips.append(el("span", "chip dest", d.texto), el("span", "chip", `${q.npreg} preg.` + (q.mostrar ? ` · ${q.mostrar} al azar` : "")),
     el("span", "chip", q.rindieron + " rindieron"));
   if (q.repetir) chips.append(el("span", "chip", "↻ repetible"));
   chips.append(el("span", "chip", q.puntaje ? "ve su nota" : "no ve su nota"));
-  if (q.errores) chips.append(el("span", "chip", "ve sus errores"));
+  if (q.errores) chips.append(el("span", "chip", q.retro ? "ve sus errores y el porqué" : "ve sus errores"));
   if (q.penalizar !== false) chips.append(el("span", "chip", "−1 por salir"));
   if (d.aviso && !q.oculto) chips.append(el("span", "chip warn", "⚠ " + d.aviso));
   info.append(el("span", "tit", q.titulo), chips);
@@ -280,7 +291,7 @@ function filaQuiz(q) {
 }
 
 /* ======================= EDITOR ======================= */
-const vacia = () => ({ tema: "", texto: "", alts: ["", "", "", ""], correcta: -1 });
+const vacia = () => ({ tema: "", texto: "", alts: ["", "", "", ""], msgs: ["", "", "", ""], correcta: -1 });
 
 /* ---------- IMPORTAR (.txt) ----------
    Formato pensado para escribirse a mano en el Bloc de notas (ver PLANTILLA). También acepta el CSV del quiz antiguo. */
@@ -290,6 +301,8 @@ const PLANTILLA = `# ============ PLANTILLA DE QUIZ · Aula Virtual ============
 # · Cada pregunta empieza con un número:   1.   o   1)
 # · Cada alternativa empieza con una letra:  a)  b)  c)  d)  e)   (de 2 a 5)
 # · Marca la correcta con un * al final.
+# · Mensaje de una alternativa (opcional): en la línea de abajo, empezando con >
+#   Es el «por qué» que ve el alumno al revisar (activa «Ve por qué se equivocó»).
 # · Puntos (opcional), al final de la pregunta:  [2]   o   [1.5 pts]
 #   Las preguntas sin puntos se reparten solas lo que falta para 20.
 # · TEMA: agrupa las preguntas que siguen (opcional).
@@ -302,8 +315,11 @@ MOSTRAR: 10
 TEMA: Atajos de teclado
 1. ¿Qué atajo guarda un documento en Word (español)?
 a) Ctrl + G *
+> Correcto: G de «Guardar».
 b) Ctrl + P
+> Ctrl + P abre la ventana para imprimir.
 c) Ctrl + S
+> Ctrl + S guarda en Word en inglés; en español es subrayado.
 
 2. ¿Qué hace Ctrl + Z? [3]
 a) Copiar
@@ -333,7 +349,7 @@ function leerTxt(texto) {
     if (act.alts.length < 2) { out.avisos.push(`${donde}: tiene ${act.alts.length} alternativa(s); necesita al menos 2.`); while (act.alts.length < 2) act.alts.push(""); }
     if (act.marcadas === 0) out.avisos.push(`${donde}: no tiene la correcta marcada con *.`);
     if (act.marcadas > 1) out.avisos.push(`${donde}: tiene ${act.marcadas} correctas; se tomó la primera.`);
-    out.preguntas.push({ tema: act.tema, texto: act.texto, alts: act.alts, correcta: act.correcta, puntos: act.puntos });
+    out.preguntas.push({ tema: act.tema, texto: act.texto, alts: act.alts, msgs: act.alts.map((_, k) => act.msgs[k] || ""), correcta: act.correcta, puntos: act.puntos });
     act = null;
   };
   texto.replace(/^﻿/, "").split(/\r?\n/).forEach((raw, i) => {
@@ -342,6 +358,9 @@ function leerTxt(texto) {
     if ((m = /^t[ií]tulo\s*:\s*(.*)$/i.exec(l))) { out.titulo = m[1].trim(); return; }
     if ((m = /^(?:mostrar|preguntas por alumno)\s*:\s*(\d+)/i.exec(l))) { out.mostrar = Number(m[1]); return; }
     if ((m = /^tema\s*:\s*(.*)$/i.exec(l))) { tema = m[1].trim(); return; }
+    if (act && act.alts.length && (m = /^>\s*(.*)$/.exec(l))) {             // mensaje de la última alternativa
+      const k = act.alts.length - 1; act.msgs[k] = (act.msgs[k] ? act.msgs[k] + "\n" : "") + m[1].trim(); return;
+    }
     if (act && (m = reA.exec(l))) {
       let t = m[3].trim(), ok = !!m[1];
       if (reOk.test(t)) { ok = true; t = t.replace(reOk, "").trim(); }
@@ -352,7 +371,7 @@ function leerTxt(texto) {
     if ((m = reQ.exec(l))) {
       cerrar();
       const [t, puntos] = sacarPuntos(m[2].trim());
-      act = { tema, texto: t, alts: [], correcta: -1, marcadas: 0, puntos, linea: nl }; return;
+      act = { tema, texto: t, alts: [], msgs: [], correcta: -1, marcadas: 0, puntos, linea: nl }; return;
     }
     if (act && !act.alts.length) {                                          // pregunta escrita en varias líneas
       const [t, puntos] = sacarPuntos(l); act.texto += "\n" + t; if (puntos !== null) act.puntos = puntos; return;
@@ -380,7 +399,7 @@ function leerCSV(texto) {
     if (f.length < 5 || /^n$/i.test(f[0]) || /pregunta/i.test(f[2])) return;
     const alts = [], correctaTxt = [];
     f.slice(3, 8).forEach(a => { if (!a) return; if (a.endsWith("*")) { correctaTxt.push(alts.length); alts.push(a.slice(0, -1).trim()); } else alts.push(a); });
-    if (alts.length >= 2 && f[2]) preguntas.push({ tema: f[1], texto: f[2], alts, correcta: correctaTxt.length ? correctaTxt[0] : -1 });
+    if (alts.length >= 2 && f[2]) preguntas.push({ tema: f[1], texto: f[2], alts, msgs: alts.map(() => ""), correcta: correctaTxt.length ? correctaTxt[0] : -1 });
   });
   return preguntas;
 }
@@ -409,13 +428,13 @@ const fmt = x => String(Math.round(x * 100) / 100).replace(".", ",");
 
 async function vistaEditor(id) {
   app.replaceChildren(el("p", "vacio", "Cargando…"));
-  let quiz = { id: null, titulo: "", clase: "", mostrar: 10, abierto: false, oculto: true, repetir: false, puntaje: true, errores: false, penalizar: true, preguntas: [vacia()] };
+  let quiz = { id: null, titulo: "", clase: "", mostrar: 10, abierto: false, oculto: true, repetir: false, puntaje: true, errores: false, retro: false, penalizar: true, preguntas: [vacia()] };
   history.replaceState(null, "", "?editar=" + (id || "nuevo"));
   try {
     if (id) { const d = await Aula.api("quizVer", { id }); quiz = Object.assign(d.quiz, { rindieron: d.resultados.length }); }
     if (!clases.length) clases = (await Aula.api("quizLista")).clases;
   } catch (ex) { if (id) { app.replaceChildren(el("div", "aviso", ex.message)); return; } }
-  quiz.preguntas = quiz.preguntas.map(p => ({ ...p, alts: p.alts.slice() }));
+  quiz.preguntas = quiz.preguntas.map(p => ({ ...p, alts: p.alts.slice(), msgs: p.alts.map((_, k) => (p.msgs || [])[k] || "") }));
   sucio = false;
   const marcar = () => { sucio = true; };
 
@@ -431,7 +450,7 @@ async function vistaEditor(id) {
 
   /* --- 1. tipo y destino --- */
   const d0 = destino(quiz.clase);
-  let tipo = d0.tipo === "ec" ? "ec" : "clase";
+  let tipo = id ? d0.tipo : "clase";
   let ecN = d0.n || 1, ecU = d0.u || Number((clases.find(c => c.tipo !== "EC") || {}).unidad) || 1;
   let claseSel = d0.tipo === "clase" ? quiz.clase : "";
   const cTipo = el("div", "card"); cTipo.append(el("h2", "", "1 · ¿Qué es este quiz?"));
@@ -441,7 +460,8 @@ async function vistaEditor(id) {
     b.onclick = () => { tipo = k; marcar(); pintarDestino(); }; return b; };
   const bClase = opTipo("clase", "📝", "Quiz de clase", "Un repaso o práctica. Aparece dentro de la carpeta de la clase.");
   const bEC = opTipo("ec", "🏁", "EC virtual", "Evaluación continua 1, 2 o 3. Aparece dentro de la carpeta de esa EC.");
-  tipos.append(bClase, bEC);
+  const bGen = opTipo("general", "📚", "Repaso general", "No es de una clase ni una EC. Aparece en el inicio, en «Repasos».");
+  tipos.append(bClase, bEC, bGen);
   const dest = el("div", "destino"), donde = el("p", "donde");
   cTipo.append(tipos, dest, donde);
 
@@ -452,17 +472,17 @@ async function vistaEditor(id) {
       b.onclick = () => { s.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); alElegir(v); }; s.appendChild(b); });
     return s;
   }
-  const claseActual = () => tipo === "ec" ? `ec${ecN}u${ecU}` : claseSel;
+  const claseActual = () => tipo === "ec" ? `ec${ecN}u${ecU}` : tipo === "general" ? "" : claseSel;
   function pintarDestino() {
-    bClase.classList.toggle("on", tipo === "clase"); bEC.classList.toggle("on", tipo === "ec");
+    bClase.classList.toggle("on", tipo === "clase"); bEC.classList.toggle("on", tipo === "ec"); bGen.classList.toggle("on", tipo === "general");
     dest.replaceChildren();
     const grupo = (lab, nodo) => { const g = el("div", "grupo-d"); g.append(el("span", "", lab), nodo); return g; };
     if (tipo === "ec") {
       dest.append(
         grupo("Número de EC", segNum([1, 2, 3], ecN, v => "EC" + v, v => { ecN = v; marcar(); actualizarDonde(); })),
         grupo("Unidad", segNum(unidades, ecU, v => "Unidad " + v, v => { ecU = v; marcar(); actualizarDonde(); })));
-    } else {
-      const sel = el("select"); sel.append(new Option("— Sin clase (sale en el inicio) —", ""));
+    } else if (tipo === "clase") {
+      const sel = el("select"); sel.append(new Option("— Elige la clase —", ""));
       clases.filter(c => c.tipo !== "EC").forEach(c => sel.append(new Option(`U${c.unidad} · Clase ${c.n}` + (c.tema ? " — " + c.tema : "") + (c.publicada ? "" : " (no publicada)"), c.id)));
       if (claseSel && ![...sel.options].some(o => o.value === claseSel)) sel.append(new Option(claseSel.toUpperCase() + " (no existe en el Panel)", claseSel));
       sel.value = claseSel;
@@ -474,9 +494,10 @@ async function vistaEditor(id) {
   function actualizarDonde() {
     const d = destino(claseActual());
     donde.className = "donde" + (d.aviso ? " warn" : "");
-    donde.textContent = d.tipo === "suelto" ? "Aparecerá en el inicio, en «Evaluaciones virtuales»."
+    donde.textContent = tipo === "clase" && !claseSel ? "Elige la clase donde aparecerá."
+      : d.tipo === "general" ? "Aparecerá en el inicio, en «Repasos», para todos los alumnos."
       : "Aparecerá dentro de: " + d.texto + (d.aviso ? " — ⚠ " + d.aviso + "." : ".");
-    iTit.placeholder = tipo === "ec" ? `EC virtual ${ecN} · Unidad ${ecU}` : "Ej.: Repaso de fórmulas";
+    iTit.placeholder = tipo === "ec" ? `EC virtual ${ecN} · Unidad ${ecU}` : tipo === "general" ? "Ej.: Repaso de Google Docs" : "Ej.: Repaso de fórmulas";
   }
 
   /* --- 2. datos --- */
@@ -503,6 +524,10 @@ async function vistaEditor(id) {
   const oRep = opcion("Puede volver a rendirlo", "Si lo rinde otra vez, se queda con su nota más alta.", quiz.repetir);
   const oPun = opcion("Ve su puntaje al terminar", "Si lo apagas, solo ve «Respuestas enviadas».", quiz.puntaje !== false);
   const oErr = opcion("Ve sus errores al terminar", "Qué respondió mal y cuál era la correcta.", quiz.errores);
+  const oRet = opcion("Ve por qué se equivocó", "En la revisión aparece el mensaje que escribiste en cada alternativa (botón 💬 junto a ella).", quiz.retro && quiz.errores);
+  const lRet = oRet.closest(".opc"); lRet.classList.add("sub");
+  const syncRet = () => { oRet.disabled = !oErr.checked; if (!oErr.checked) oRet.checked = false; lRet.classList.toggle("apagada", !oErr.checked); };
+  oErr.addEventListener("change", syncRet); syncRet();
   const oPen = opcion("Descontar 1 punto por cada salida", "Si cambia de pestaña o minimiza, pierde 1 punto. Se le advierte al empezar y se le avisa cada vez.", quiz.penalizar !== false);
   cOpc.append(seg, descEstado, opciones);
 
@@ -621,12 +646,19 @@ async function vistaEditor(id) {
         const t = el("input"); t.type = "text"; t.value = a; t.placeholder = "Alternativa " + "ABCDE"[k];
         t.oninput = () => { p.alts[k] = t.value; marcar(); };
         const q = ib("−", "Quitar alternativa", "x"); q.disabled = p.alts.length <= 2;
-        q.onclick = () => { p.alts.splice(k, 1); if (p.correcta === k) p.correcta = -1; else if (p.correcta > k) p.correcta--; marcar(); pintarPreguntas(); };
-        fila.append(r, el("span", "let", "ABCDE"[k]), t, q); box.appendChild(fila);
+        q.onclick = () => { p.alts.splice(k, 1); p.msgs.splice(k, 1); if (p.correcta === k) p.correcta = -1; else if (p.correcta > k) p.correcta--; marcar(); pintarPreguntas(); };
+        const mb = ib("💬", "Mensaje de esta alternativa: por qué está mal (o bien)", "msg" + (p.msgs[k] ? " tiene" : ""));
+        const caja = el("div", "alt-msg"), mt = el("textarea"); caja.hidden = !p.msgs[k];
+        mt.value = p.msgs[k] || "";
+        mt.placeholder = p.correcta === k ? "Por qué es la correcta (opcional)" : "Por qué está mal: lo verá el alumno que elija esta alternativa";
+        mt.oninput = () => { p.msgs[k] = mt.value; mb.classList.toggle("tiene", !!mt.value.trim()); marcar(); };
+        mb.onclick = () => { caja.hidden = !caja.hidden; if (!caja.hidden) mt.focus(); };
+        caja.appendChild(mt);
+        fila.append(r, el("span", "let", "ABCDE"[k]), t, mb, q); box.append(fila, caja);
       });
       const pie = el("div", "pie");
       pie.append(el("span", "", p.correcta >= 0 ? "✓ correcta: " + "ABCDE"[p.correcta] : "⚠ marca la correcta (círculo)"));
-      if (p.alts.length < 5) { const m = boton("+ alternativa", "sm ghost"); m.onclick = () => { p.alts.push(""); marcar(); pintarPreguntas(); }; pie.appendChild(m); }
+      if (p.alts.length < 5) { const m = boton("+ alternativa", "sm ghost"); m.onclick = () => { p.alts.push(""); p.msgs.push(""); marcar(); pintarPreguntas(); }; pie.appendChild(m); }
       box.appendChild(pie);
       lista.appendChild(box);
     });
@@ -637,17 +669,18 @@ async function vistaEditor(id) {
   guardar.onclick = async () => {
     const preguntas = quiz.preguntas.filter(p => p.texto.trim() || p.alts.some(a => a.trim()))
       .map(p => {   // quita alternativas vacías y reajusta el índice de la correcta
-        const alts = [], idx = []; p.alts.forEach((a, k) => { if (a.trim()) { idx.push(k); alts.push(a.trim()); } });
-        return { id: p.id, tema: p.tema, texto: p.texto.trim(), alts, correcta: idx.indexOf(p.correcta), puntos: Number(p.puntos) > 0 ? Number(p.puntos) : null };
+        const alts = [], msgs = [], idx = []; p.alts.forEach((a, k) => { if (a.trim()) { idx.push(k); alts.push(a.trim()); msgs.push(String(p.msgs[k] || "").trim()); } });
+        return { id: p.id, tema: p.tema, texto: p.texto.trim(), alts, msgs, correcta: idx.indexOf(p.correcta), puntos: Number(p.puntos) > 0 ? Number(p.puntos) : null };
       });
     const c = actualizarPuntos();
     if (c.dif !== 0 && !(await confirmar({ titulo: `Los puntos suman ${fmt(c.total)}, no 20`, ok: "Guardar así",
       texto: (c.dif < 0 ? `Faltan ${fmt(-c.dif)}` : `Sobran ${fmt(c.dif)}`) + " puntos. Si guardas así, la nota igual se ajusta a 20 (cada punto vale " + fmt(20 / c.total) + ")." }))) return;
+    if (tipo === "clase" && !claseSel) { Aula.toast("Falta la clase", "Elige la clase o cambia a «Repaso general».", "warn"); cTipo.scrollIntoView({ behavior: "smooth" }); return; }
     const titulo = iTit.value.trim() || (tipo === "ec" ? iTit.placeholder : "");
     guardar.disabled = true; estadoTxt.textContent = "Guardando…";
     try {
       const datosQuiz = { id: quiz.id, titulo, clase: claseActual(), mostrar: Number(iMos.value) || 0,
-        oculto: estado === "oculto", abierto: estado === "abierto", repetir: oRep.checked, puntaje: oPun.checked, errores: oErr.checked, penalizar: oPen.checked, preguntas };
+        oculto: estado === "oculto", abierto: estado === "abierto", repetir: oRep.checked, puntaje: oPun.checked, errores: oErr.checked, retro: oRet.checked, penalizar: oPen.checked, preguntas };
       const r = await Aula.api("quizGuardar", { quiz: datosQuiz });
       const nuevo = !quiz.id;
       Object.assign(quiz, datosQuiz, { id: r.id }); iTit.value = titulo; sucio = false; olvidar();

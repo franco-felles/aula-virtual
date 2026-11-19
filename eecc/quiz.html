@@ -72,6 +72,10 @@
   .opcion-det.correcta { background: #fff3b0; border-color: #e0b000; }
   .opcion-det.mal { background: #fdecea; border-color: #c62828; color: #7d211b; }
   .opcion-det .marca { flex: none; font-weight: 700; }
+  .retro { margin-top: 8px; padding: 9px 12px; border-radius: 9px; font-size: .86rem; line-height: 1.45; white-space: pre-line; display: flex; flex-direction: column; gap: 2px; }
+  .retro b { font-size: .78rem; }
+  .retro.mal { background: #fdecea; color: #7d211b; border-left: 3px solid #c62828; }
+  .retro.bien { background: var(--moss-bg); color: var(--moss-d); border-left: 3px solid var(--moss); }
 
   .ficha-acciones { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-top: 14px; }
   .correccion { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -260,7 +264,8 @@ function revision(alumno, titulo, r, previa) {
   const box = el("div", "quiz");
   const bien = r.revision.filter(p => p.ok).length;
   box.append(el("p", "eyebrow", Aula.nombreBonito(alumno.nombre) + " · " + titulo), el("h1", "pregunta", "Tus respuestas"),
-    el("p", "mut", `${bien} bien · ${r.revision.length - bien} mal. Amarillo = respuesta correcta, rojo = tu error.`));
+    el("p", "mut", `${bien} bien · ${r.revision.length - bien} mal. Amarillo = respuesta correcta, rojo = tu error.` +
+      (r.revision.some(p => p.opciones.some(o => o.msg)) ? " Debajo de cada pregunta verás por qué." : "")));
   r.revision.forEach((p, i) => {
     const pq = el("div", "pregunta-det" + (p.ok ? " ok" : " fallo"));
     pq.appendChild(el("div", "pregunta-det-q", `${i + 1}. ${p.texto}`));
@@ -271,7 +276,13 @@ function revision(alumno, titulo, r, previa) {
       ops.appendChild(x);
     });
     if (!p.opciones.some(o => o.elegida)) ops.appendChild(el("div", "mut", "(sin responder)"));
-    pq.appendChild(ops); box.appendChild(pq);
+    pq.appendChild(ops);
+    // Retroalimentación (si el docente la activó): el porqué de lo que eligió y, si falló, el de la correcta
+    const elegida = p.opciones.find(o => o.elegida), correcta = p.opciones.find(o => o.correcta);
+    const retro = (o, cls, tit) => { const x = el("div", "retro " + cls); x.append(el("b", "", tit), el("span", "", o.msg)); pq.appendChild(x); };
+    if (elegida && elegida.msg) retro(elegida, p.ok ? "bien" : "mal", p.ok ? "✓ ¡Bien!" : "✗ Por qué no:");
+    if (!p.ok && correcta && correcta.msg) retro(correcta, "bien", "La correcta:");
+    box.appendChild(pq);
   });
   const b = el("button", "btn block", "Volver"); b.type = "button"; b.style.marginTop = "14px";
   b.onclick = () => mostrarNota(alumno, titulo, r, previa);
