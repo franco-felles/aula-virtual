@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-20T15:43:16.925Z",
+ "generado": "2026-11-20T18:53:14.581Z",
  "v": 1,
  "clases": [
   {
@@ -80,15 +80,6 @@
    "unidad": 1,
    "n": 9,
    "tema": "GDOCS: PÁRRAFOS",
-   "publicada": true,
-   "conCopias": true
-  },
-  {
-   "id": "ec3u1",
-   "tipo": "EC",
-   "unidad": 1,
-   "n": 3,
-   "tema": "EC FINAL UNIDAD 1",
    "publicada": true,
    "conCopias": true
   }
