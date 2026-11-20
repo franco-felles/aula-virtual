@@ -107,6 +107,18 @@
   .tam.on { border-color: var(--ink); background: var(--panel); }
   .zoom-lbl { font-family: var(--mono); font-size: .72rem; color: var(--mut); min-width: 42px; text-align: center; }
   .v-ayuda { font-size: .74rem; color: var(--mut); margin-left: auto; padding-left: 8px; }
+  /* propiedades de la marca seleccionada (tamaño; en el sello, también la nota que muestra) */
+  .v-props { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 14px; background: #e8f0fb; border-bottom: 1px solid #c4d6ef; font-size: .82rem; color: #1b3a66; }
+  .v-props[hidden] { display: none; }
+  .v-props b { font-weight: 700; }
+  .v-props label { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+  .v-props input[type=range] { width: 160px; accent-color: #1e5bd6; }
+  .v-props .val { font-family: var(--mono); font-size: .74rem; min-width: 34px; }
+  .v-props input.nota-sello { width: 70px; font-family: var(--mono); font-size: 1rem; font-weight: 700; text-align: center; padding: 5px 6px; border: 2px solid #1e5bd6; border-radius: 9px; background: #fff; color: var(--ink); }
+  .v-props small { color: #4a628a; }
+  .v-props .ib { height: 32px; min-width: 32px; }
+  .btn-elim { border: 1px solid #efc3bf; background: var(--panel); color: var(--err); border-radius: 9px; height: 38px; padding: 0 12px; font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .btn-elim:hover { background: var(--err); color: #fff; border-color: var(--err); }
   .v-pages { flex: 1; overflow: auto; padding: 26px 18px 60px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
   .pg { position: relative; background: #fff; box-shadow: 0 4px 18px rgba(0,0,0,.18); flex: none; }
   .pg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -317,7 +329,7 @@ function pintarDocente() {
   const ed = el("a", "btn sm ghost", "Editar tarea"); ed.href = Aula.url("docente/tareas.html?editar=" + t.id);
   const bts = el("div", "tools"); bts.style.marginTop = "10px"; bts.append(csv, ed);
   izq.append(el("p", "eyebrow", "Entrega en PDF · " + estado + (D.clase ? " · " + nombreClase(D.clase) : "")), el("h1", "titulo", t.titulo),
-    el("p", "lede", "Clic en un alumno para abrir su PDF: corrígelo encima, ponle el sello con la nota y guarda. Las notas se descargan en Excel para tu registro."), bts);
+    el("p", "lede", "Clic en un alumno para abrir su PDF: corrígelo encima, ponle el sello con la nota y guarda. Si alguien subió el archivo equivocado, ábrelo y usa «🗑 Eliminar entrega». Las notas se descargan en Excel para tu registro."), bts);
   const stats = el("div", "stats"); stats.id = "stats";
   cab.append(izq, stats);
   const bus = el("div", "buscar"); bus.innerHTML = ICO.lupa;
@@ -434,7 +446,7 @@ function crearVisor() {
   const guardar = el("button", "btn acc", "Guardar nota"); guardar.type = "button"; guardar.onclick = () => guardarNota(false);
   const guardarSig = el("button", "btn ghost", "Guardar y siguiente →"); guardarSig.type = "button"; guardarSig.onclick = () => guardarNota(true);
   const bajar = boton("ib", ICO.bajar, "Descargar este PDF con tus correcciones", descargarPdf);
-  const reini = boton("ib", "↺", "Reiniciar su entrega (borra su PDF para que lo vuelva a subir)", reiniciarEntrega);
+  const reini = boton("btn-elim", "🗑 Eliminar entrega", "Borra el PDF que subió (por si se equivocó de archivo) para que vuelva a subirlo", reiniciarEntrega);
   top.append(cerrar, prev, next, quien, notaBox, com, guardar, guardarSig, bajar, reini);
 
   const herr = el("div", "v-herr"), bHerr = {};
@@ -454,14 +466,44 @@ function crearVisor() {
   const zAjus = boton("herr", "↔", "Ajustar al ancho", () => { V.ajustar = true; calcularZoom(); aplicarZoom(); }); zAjus.append(el("span", "", "Ajustar"));
   herr.append(zMenos, zLbl, zMas, zAjus, el("span", "v-ayuda", "Ctrl+Z deshace · Supr borra lo seleccionado"));
   const pages = el("div", "v-pages");
-  visor.append(top, herr, pages);
+
+  // Barra de la marca seleccionada: tamaño y, si es un sello, la nota que muestra
+  const props = el("div", "v-props"); props.hidden = true;
+  const pTit = el("b");
+  const tamLbl = el("label"), tam = el("input"), tamVal = el("span", "val");
+  tam.type = "range"; tamLbl.append("Tamaño", tam, tamVal);
+  const sLbl = el("label"), sNota = el("input", "nota-sello"); sNota.inputMode = "decimal"; sNota.maxLength = 5;
+  sLbl.append("Nota en el sello", sNota, "/ 20");
+  const sAyuda = el("small", "", "Vacío = la nota de arriba.");
+  const pBorrar = boton("ib", ICO.borrar, "Borrar esta marca (Supr)", () => V.sel && borrarObj(V.sel));
+  const pListo = boton("ib", ICO.ok, "Listo (quitar la selección)", () => seleccionar(null));
+  props.append(pTit, tamLbl, sLbl, sAyuda, el("span", "", ""), pBorrar, pListo);
+  let tocando = false;                          // un solo «deshacer» por cada arrastre del control
+  tam.addEventListener("input", () => {
+    const o = V.anots.find(x => x.id === V.sel); if (!o) return;
+    if (!tocando) { cambio(); tocando = true; }
+    o.s = Number(tam.value); tamVal.textContent = Math.round(o.s / TAM_RANGO[o.t][2] * 100) + "%";
+    dibujarAnots(pagina(o.p));
+  });
+  tam.addEventListener("change", () => { tocando = false; });
+  sNota.addEventListener("focus", () => { tocando = false; });
+  sNota.addEventListener("input", () => {
+    const o = V.anots.find(x => x.id === V.sel); if (!o || o.t !== "sello") return;
+    if (!tocando) { cambio(); tocando = true; }
+    o.v = sNota.value.trim();
+    dibujarAnots(pagina(o.p));
+  });
+  sNota.addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Enter") { e.preventDefault(); seleccionar(null); } });
+
+  visor.append(top, herr, props, pages);
   document.body.appendChild(visor);
 
-  nota.addEventListener("input", () => { V.sucio = true; V.pages.forEach(P => { if (V.anots.some(o => o.p === P.i && o.t === "sello")) dibujarAnots(P); }); });
+  nota.addEventListener("input", () => { V.sucio = true; actualizarProps(); V.pages.forEach(P => { if (V.anots.some(o => o.p === P.i && o.t === "sello")) dibujarAnots(P); }); });
   nota.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); guardarNota(false); } });
   com.addEventListener("input", () => V.sucio = true);
   com.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); guardarNota(false); } });
-  UI = { visor, quien, nota, com, guardar, guardarSig, prev, next, bajar, reini, bHerr, bColor, bTam, deshacerB, zLbl, pages };
+  UI = { visor, quien, nota, com, guardar, guardarSig, prev, next, bajar, reini, bHerr, bColor, bTam, deshacerB, zLbl, pages,
+         props, pTit, tamLbl, tam, tamVal, sLbl, sNota, sAyuda };
 
   document.addEventListener("keydown", e => {
     if (!V.abierto) return;
@@ -498,6 +540,7 @@ async function abrirVisor(codigo) {
   cerrarEditor();
   const a = D.alumnos.find(x => x.codigo === codigo), e = D.env[codigo];
   Object.assign(V, { codigo, anots: [], hist: [], sel: null, sucio: false, abierto: true, bytes: null });
+  actualizarProps();
   const token = ++V.token;
   UI.visor.hidden = false; document.body.style.overflow = "hidden";
   UI.quien.firstChild.textContent = Aula.nombreBonito(a.nombre);
@@ -525,8 +568,8 @@ async function abrirVisor(codigo) {
   } catch (ex) {
     if (token !== V.token) return;
     UI.pages.replaceChildren(el("div", "aviso", /password|encrypt/i.test(ex.message || "")
-      ? "Este PDF tiene contraseña y no se puede abrir aquí. Pídele al alumno que lo vuelva a guardar sin contraseña (reinicia su entrega con ↺)."
-      : /Invalid PDF|corrupt/i.test(ex.message || "") ? "El archivo está dañado o no es un PDF válido. Reinicia su entrega (↺) para que lo vuelva a subir."
+      ? "Este PDF tiene contraseña y no se puede abrir aquí. Pídele al alumno que lo vuelva a guardar sin contraseña (usa «🗑 Eliminar entrega» para que lo suba de nuevo)."
+      : /Invalid PDF|corrupt/i.test(ex.message || "") ? "El archivo está dañado o no es un PDF válido. Usa «🗑 Eliminar entrega» para que lo vuelva a subir."
       : textoError(ex, true)));
   }
 }
@@ -598,7 +641,25 @@ function deshacer() {
 }
 function borrarObj(id) { cambio(); V.anots = V.anots.filter(o => o.id !== id); if (V.sel === id) V.sel = null; redibujarTodo(); }
 function seleccionar(id) { if (V.sel === id) return; V.sel = id; redibujarTodo(); }
-function redibujarTodo() { V.pages.forEach(dibujarAnots); }
+function redibujarTodo() { V.pages.forEach(dibujarAnots); actualizarProps(); }
+/** Tamaño ajustable de cada marca: [mínimo, máximo, «normal» (= 100 %)] */
+const TAM_RANGO = { texto: [8, 40, 13], bien: [8, 64, 22], mal: [8, 64, 22], sello: [16, 90, 34] };
+const NOMBRE_MARCA = { texto: "Texto seleccionado", bien: "Marca ✓ seleccionada", mal: "Marca ✗ seleccionada", sello: "Sello seleccionado" };
+function actualizarProps() {
+  if (!UI) return;
+  const o = V.anots.find(x => x.id === V.sel), rango = o && TAM_RANGO[o.t];
+  UI.props.hidden = !rango;
+  if (!rango) return;
+  UI.pTit.textContent = NOMBRE_MARCA[o.t];
+  Object.assign(UI.tam, { min: rango[0], max: rango[1], step: 1 }); UI.tam.value = o.s;
+  UI.tamVal.textContent = Math.round(o.s / rango[2] * 100) + "%";
+  const sello = o.t === "sello";
+  UI.sLbl.hidden = UI.sAyuda.hidden = !sello;
+  if (sello) {
+    if (document.activeElement !== UI.sNota) UI.sNota.value = o.v || "";
+    UI.sNota.placeholder = UI.nota.value.trim() || "—";
+  }
+}
 const pagina = i => V.pages.find(P => P.i === i);
 
 const dTrazo = pts => pts.map((p, i) => (i ? "L" : "M") + p[0] + " " + p[1]).join(" ");
@@ -608,9 +669,10 @@ function dMarca(o) {
     ? `M${f(x - .45 * s)} ${f(y + .02 * s)} L${f(x - .12 * s)} ${f(y + .36 * s)} L${f(x + .5 * s)} ${f(y - .4 * s)}`
     : `M${f(x - .36 * s)} ${f(y - .36 * s)} L${f(x + .36 * s)} ${f(y + .36 * s)} M${f(x + .36 * s)} ${f(y - .36 * s)} L${f(x - .36 * s)} ${f(y + .36 * s)}`;
 }
-const notaSello = () => UI.nota.value.trim().replace(".", ",") || "—";
+/** Nota del sello: la suya (o.v) si se la pusiste; si no, la nota de arriba. */
+const notaSello = o => String((o && o.v) || UI.nota.value.trim()).replace(".", ",") || "—";
 /** Textos del sello: [texto, tamaño, negrita, desplazamiento de la línea base desde el centro] */
-const textosSello = o => { const n = notaSello(), r = o.s;
+const textosSello = o => { const n = notaSello(o), r = o.s;
   return [["NOTA", r * .25, true, -r * .4], [n, r * (n.length > 3 ? .58 : .78), true, r * .29], ["de 20", r * .22, false, r * .62]]; };
 const ctxMedir = document.createElement("canvas").getContext("2d");
 const anchoTexto = (t, s) => { ctxMedir.font = `${s}px ${FUENTE}`; return ctxMedir.measureText(t).width; };
@@ -679,9 +741,13 @@ function eventosPagina(P) {
       case "bien": case "mal":
         cambio(); V.anots.push({ id: nid(), p: P.i, t: V.herr, c: V.color, x: r1(x), y: r1(y), s: TAM.marca[V.tam] }); dibujarAnots(P); break;
       case "sello":
-        cambio(); V.anots.push({ id: nid(), p: P.i, t: "sello", c: V.color, x: r1(x), y: r1(y), s: TAM.sello[V.tam] }); dibujarAnots(P);
-        if (!UI.nota.value.trim()) { UI.nota.focus(); Aula.toast("Escribe la nota arriba", "El sello muestra la nota que pongas (0 a 20) y cambia si la corriges.", "warn"); }
+      {
+        const o = { id: nid(), p: P.i, t: "sello", c: V.color, x: r1(x), y: r1(y), s: TAM.sello[V.tam], v: "" };
+        cambio(); V.anots.push(o);
+        fijarHerr("mover"); seleccionar(o.id);       // queda seleccionado: se ajusta su tamaño y su nota en la barra azul
+        if (!UI.nota.value.trim()) { UI.sNota.focus(); Aula.toast("¿Qué nota va en el sello?", "Escríbela en la barra azul, o arriba en «Nota» (el sello la copia).", "warn"); }
         break;
+      }
     }
   });
   P.svg.addEventListener("dblclick", ev => {
@@ -836,12 +902,12 @@ async function guardarNota(yAvanzar) {
 
 async function reiniciarEntrega() {
   const a = D.alumnos.find(x => x.codigo === V.codigo);
-  if (!confirm(`¿Reiniciar la entrega de ${Aula.nombreBonito(a.nombre)}?\n\nSu PDF (y la corrección, si la hay) va a la papelera de tu Drive y podrá subirlo otra vez mientras la tarea esté abierta.`)) return;
+  if (!confirm(`¿Eliminar la entrega de ${Aula.nombreBonito(a.nombre)}?\n\nSu PDF (y tu corrección y nota, si las hay) va a la papelera de tu Drive. El alumno podrá subir otro mientras la entrega esté abierta.`)) return;
   try {
     await Aula.api("tareaReiniciar", { id: tareaId, codigo: V.codigo });
     delete D.env[V.codigo];
     cerrarVisor(true); pintarLista(); actualizarStats();
-    Aula.toast("Entrega reiniciada", Aula.nombreBonito(a.nombre) + " puede volver a subir su PDF.");
+    Aula.toast("Entrega eliminada",Aula.nombreBonito(a.nombre) + " puede volver a subir su PDF.");
   } catch (ex) { Aula.toast("No se pudo reiniciar", textoError(ex, true), "warn"); }
 }
 

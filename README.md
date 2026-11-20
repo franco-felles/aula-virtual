@@ -103,9 +103,9 @@ Para que el alumno **suba su trabajo en PDF sin cuenta de Google** (entra con su
 - Se crean en **Entregas en PDF** (botón del inicio, modo docente): título, clase o EC donde aparece, indicaciones y si el alumno **ve su nota y la corrección**. Estado: **Oculta** · **Cerrada** (la ven, no suben) · **Abierta**.
 - El alumno la ve dentro de su carpeta («Entregas en PDF»), elige su PDF (máx. 10 MB) y lo envía. Puede cambiarlo mientras esté abierta y **no** lo hayas calificado. Si comparten PC, cada uno sube el suyo.
 - Se guarda en tu Drive: `carpeta de la clase / ENTREGAS PDF / <título> / G1-03 - APELLIDOS NOMBRES - <título>.pdf` (privado).
-- **Corregir**: «Ver entregas y calificar» → clic en el alumno. Herramientas: mover, lápiz, resaltador, texto, ✓, ✗, **sello con la nota** (muestra la nota que escribas arriba), borrar, deshacer (Ctrl+Z), colores, grosor y zoom. «Guardar y siguiente →» pasa al próximo alumno.
+- **Corregir**: «Ver entregas y calificar» → clic en el alumno. Herramientas: mover, lápiz, resaltador, texto, ✓, ✗, **sello con la nota** (al ponerlo queda seleccionado: en la barra azul ajustas su tamaño y la nota que muestra; vacío = la nota de arriba), borrar, deshacer (Ctrl+Z), colores, grosor y zoom. «Guardar y siguiente →» pasa al próximo alumno.
 - Al guardar: la nota (0–20) y el comentario quedan en la pestaña **EnviosPDF**, y una copia del PDF **con tus marcas** se guarda junto al original como «CORREGIDO - …» (el original no se toca). Puedes volver a abrirlo y seguir editando las marcas.
-- **Descargar notas (Excel)**: CSV con grupo, N°, código, alumno, nota, comentario y estado (también los que no entregaron). El botón ⬇ del visor descarga el PDF corregido; ↺ reinicia la entrega de un alumno (su PDF va a la papelera de tu Drive y puede volver a subirlo).
+- **Descargar notas (Excel)**: CSV con grupo, N°, código, alumno, nota, comentario y estado (también los que no entregaron). El botón ⬇ del visor descarga el PDF corregido; «🗑 Eliminar entrega» borra el PDF de un alumno que se equivocó de archivo (va a la papelera de tu Drive y puede volver a subirlo).
 - Requiere el `api.gs` nuevo (versión 3) publicado como **Nueva versión**; si no, la web avisa.
 
 Instalación del Panel: [`sistema/LEEME.md`](sistema/LEEME.md).
