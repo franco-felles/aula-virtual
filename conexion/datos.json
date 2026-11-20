@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-20T14:23:22.158Z",
+ "generado": "2026-11-20T14:53:19.582Z",
  "v": 1,
  "clases": [
   {
@@ -90,7 +90,7 @@
    "n": 3,
    "tema": "EC FINAL UNIDAD 1",
    "publicada": true,
-   "conCopias": false
+   "conCopias": true
   }
  ],
  "enlaces": {
