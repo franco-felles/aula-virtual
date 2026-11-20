@@ -16,7 +16,7 @@
    ========================================================== */
 
 const TOKEN_SEG = 6 * 60 * 60;
-const VERSION_API = 2;          // 2 = quizzes con mensaje por alternativa y RETRO (la web avisa si el Panel tiene una versión menor)
+const VERSION_API = 3;          // 2 = quizzes con mensaje por alternativa y RETRO · 3 = entregas en PDF (la web avisa si el Panel tiene una versión menor)
 const CAB_QUIZ = ["ID", "TITULO", "CLASE", "MOSTRAR", "ABIERTO", "NPREG", "PREGUNTAS", "ACTUALIZADO", "OCULTO", "REPETIR", "PUNTAJE", "ERRORES", "PENALIZAR", "RETRO"];
 const CAB_RES = ["QUIZ", "CODIGO", "ALUMNO", "GRUPO", "ACIERTOS", "TOTAL", "NOTA", "CORRECCION", "INCIDENTES", "HORA", "DETALLE", "INTENTOS", "DESCUENTO"];
 
@@ -37,7 +37,9 @@ const ACCIONES = {
   portal: apiPortal, clase: apiClase,
   quizLista: apiQuizLista, quizVer: apiQuizVer, quizGuardar: apiQuizGuardar, quizOpciones: apiQuizOpciones, quizBorrar: apiQuizBorrar,
   quizRendir: apiQuizRendir, quizEnviar: apiQuizEnviar, quizCorregir: apiQuizCorregir, quizReiniciar: apiQuizReiniciar,
-  pasoVer: apiPasoVer, pasoFijar: apiPasoFijar
+  pasoVer: apiPasoVer, pasoFijar: apiPasoFijar,
+  tareaLista: apiTareaLista, tareaGuardar: apiTareaGuardar, tareaOpciones: apiTareaOpciones, tareaBorrar: apiTareaBorrar,
+  tareaVer: apiTareaVer, tareaSubir: apiTareaSubir, tareaPdf: apiTareaPdf, tareaCalificar: apiTareaCalificar, tareaReiniciar: apiTareaReiniciar
 };
 
 /* ======================= SESIÓN ======================= */
@@ -51,7 +53,7 @@ const cache = () => CacheService.getScriptCache();
    Cada pestaña se lee una vez y se guarda ya procesada DS_SEG segundos, así la web no abre la hoja en cada visita.
    Se borra sola cuando editas el Panel (onEdit) o cuando el script cambia algo (invalidarCache). */
 const DS_SEG = 300;
-const DS = ["alumnos", "clases", "enlaces", "entregas", "quiz", "res"];
+const DS = ["alumnos", "clases", "enlaces", "entregas", "quiz", "res", "tareas", "envios"];
 function datos(nombre, leer) {
   const k = "ds_" + nombre, hit = cache().get(k);
   if (hit) { try { return JSON.parse(hit); } catch (_) {} }
@@ -178,7 +180,8 @@ function apiPortal(req) {
   const docente = s.rol === "docente";
   const clases = clasesTodas().filter(c => docente || c.publicada).map(clasePublica);
   const res = docente ? [] : resultadosTodos();
-  const out = { clases, quizzes: quizzesTodos().filter(q => docente || !q.oculto).map(q => quizParaLista(q, s, res)) };
+  const out = { clases, quizzes: quizzesTodos().filter(q => docente || !q.oculto).map(q => quizParaLista(q, s, res)),
+                tareas: tareasParaLista(s, null) };
   if (docente) out.panel = SpreadsheetApp.getActive().getUrl();
   else { const todos = alumnosTodos(); out.alumnos = s.codigos.map(c => pub(todos.find(x => x.CODIGO === c))); }
   return out;
@@ -254,7 +257,8 @@ function apiClase(req) {
   const res = docente ? [] : resultadosTodos();
   const quizzes = quizzesTodos().filter(q => q.clase === c.id && (docente || !q.oculto)).map(q => quizParaLista(q, s, res));
 
-  return { clase: clasePublica(c), materiales: materialesDe(c), enlaces, docs, quizzes, haySemilla: entregas.length > 0 };
+  return { clase: clasePublica(c), materiales: materialesDe(c), enlaces, docs, quizzes, haySemilla: entregas.length > 0,
+           tareas: tareasParaLista(s, c.id) };
 }
 
 /* ======================= QUIZ =======================
@@ -538,6 +542,282 @@ function apiQuizReiniciar(req) {
       .map(r => r._fila).sort((a, b) => b - a).forEach(n => sh.deleteRow(n));
     invalidarCache(["res"]);
   } finally { lock.releaseLock(); }
+  return {};
+}
+
+/* ======================= ENTREGAS EN PDF =======================
+   El docente crea una tarea (pestaña Tareas) vinculada a una clase o EC: sale dentro de esa carpeta.
+   El alumno sube su trabajo en PDF sin cuenta de Google (entra con su código). Se guarda en tu Drive, privado:
+     carpeta de la clase / ENTREGAS PDF / <título> / G1-03 - APELLIDOS NOMBRES - <título>.pdf
+   El docente lo abre en la web, lo corrige encima (lápiz, texto, ✓ ✗, sello con la nota) y guarda la nota (0–20)
+   en la pestaña EnviosPDF. La versión corregida queda al lado («CORREGIDO - …pdf», con enlace de solo lectura).
+   Estado: OCULTO (no la ven) · cerrada (la ven, no pueden subir) · ABIERTO (pueden subir o reemplazar su PDF).
+   VER_NOTA: el alumno ve su nota, el comentario y su trabajo corregido.
+   Una vez calificado, el alumno ya no puede reemplazar su PDF (el docente puede reiniciar su entrega). */
+const CAB_TAREA = ["ID", "TITULO", "CLASE", "INDICACIONES", "ABIERTO", "OCULTO", "VER_NOTA", "ACTUALIZADO"];
+const CAB_ENVIO = ["TAREA", "CODIGO", "ALUMNO", "GRUPO", "N", "ARCHIVO_ID", "NOMBRE", "KB", "HORA", "VECES",
+                   "NOTA", "COMENTARIO", "ANOTACIONES", "CORREGIDO_ID", "CALIFICADO"];
+const MAX_PDF_MB = 10;
+const MAX_CELDA = 45000;      // una celda admite 50 000 caracteres; si las anotaciones pasan de esto van a un .json en Drive
+
+function tareasTodas(fresco) {
+  const leer = () => leerTabla(tablaFija("Tareas", CAB_TAREA)).filas.filter(f => f.ID).map(f => ({
+    id: String(f.ID), titulo: String(f.TITULO || ""), clase: normId(f.CLASE), indicaciones: String(f.INDICACIONES || ""),
+    abierto: SI_NO(f.ABIERTO, false), oculto: SI_NO(f.OCULTO, false), verNota: SI_NO(f.VER_NOTA, true), _fila: f._fila
+  }));
+  return fresco ? leer() : datos("tareas", leer);
+}
+function tareaDe(id, fresco) {
+  const t = tareasTodas(fresco).find(x => x.id === String(id || ""));
+  if (!t) throw new Error("No existe esa tarea.");
+  return t;
+}
+const tareaPublica = t => ({ id: t.id, titulo: t.titulo, clase: t.clase, indicaciones: t.indicaciones,
+                             abierto: t.abierto, oculto: t.oculto, verNota: t.verNota });
+
+/** Entregas sin las anotaciones (pueden ser largas): así caben en la memoria. */
+function enviosTodos(fresco) {
+  const leer = () => leerTabla(tablaFija("EnviosPDF", CAB_ENVIO)).filas.filter(f => f.TAREA && f.CODIGO)
+    .map(f => { const o = Object.assign({}, f); delete o.ANOTACIONES; delete o._formulas; return o; });
+  return fresco ? leer() : datos("envios", leer);
+}
+const vacio = v => v === "" || v === null || v === undefined;
+const urlDrive = id => id ? "https://drive.google.com/file/d/" + id + "/view" : null;
+
+const envioDocente = e => ({ codigo: e.CODIGO, nombre: e.NOMBRE, kb: Number(e.KB) || 0, hora: e.HORA, veces: Number(e.VECES) || 1,
+  nota: vacio(e.NOTA) ? null : Number(e.NOTA), comentario: String(e.COMENTARIO || ""), calificado: e.CALIFICADO || null,
+  corregido: urlDrive(e.CORREGIDO_ID) });
+function envioAlumno(e, t) {
+  const out = { nombre: e.NOMBRE, kb: Number(e.KB) || 0, hora: e.HORA, veces: Number(e.VECES) || 1, revisado: !vacio(e.NOTA) };
+  if (t.verNota && out.revisado) Object.assign(out, { nota: Number(e.NOTA), comentario: String(e.COMENTARIO || ""), corregido: urlDrive(e.CORREGIDO_ID) });
+  return out;
+}
+
+/** Tareas para el portal (clase = null) o para una carpeta. Al alumno: quiénes de la sesión ya entregaron. */
+function tareasParaLista(s, clase) {
+  const docente = s.rol === "docente";
+  const env = docente ? [] : enviosTodos();
+  return tareasTodas().filter(t => (docente || !t.oculto) && (clase === null || t.clase === clase)).map(t => ({
+    id: t.id, titulo: t.titulo, clase: t.clase, abierto: t.abierto, oculto: t.oculto,
+    entregados: docente ? undefined : s.codigos.filter(c => env.some(e => e.TAREA === t.id && e.CODIGO === c))
+  }));
+}
+
+const limpiarNombre = s => String(s || "").replace(/[\\/:*?"<>|#%\n\r\t]+/g, "-").replace(/\s+/g, " ").trim().slice(0, 90);
+function carpetaTarea(t) {
+  const c = clasesTodas().find(x => x.id === t.clase);
+  let base = null;
+  try { base = c && c.carpeta ? DriveApp.getFolderById(c.carpeta) : null; } catch (_) {}
+  if (!base) base = carpetaMes();
+  return subcarpeta(subcarpeta(base, "ENTREGAS PDF"), limpiarNombre(t.titulo) || t.id);
+}
+const aPapelera = id => { if (!id) return; try { DriveApp.getFileById(String(id)).setTrashed(true); } catch (_) {} };
+
+/* ---------- docente: crear, editar, estado, borrar ---------- */
+
+function apiTareaLista(req) {
+  sesionDe(req, "docente");
+  const env = enviosTodos();
+  return { tareas: tareasTodas().map(t => Object.assign(tareaPublica(t), {
+             entregaron: env.filter(e => e.TAREA === t.id).length,
+             calificados: env.filter(e => e.TAREA === t.id && !vacio(e.NOTA)).length })),
+           clases: clasesTodas().map(clasePublica), version: VERSION_API };
+}
+
+function apiTareaGuardar(req) {
+  sesionDe(req, "docente");
+  const d = req.tarea || {};
+  const titulo = String(d.titulo || "").trim();
+  if (!titulo) throw new Error("Ponle un título a la tarea.");
+  if (!normId(d.clase)) throw new Error("Elige en qué clase o EC aparece.");
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const sh = tablaFija("Tareas", CAB_TAREA), t = leerTabla(sh);
+    const id = d.id || "tp" + Date.now().toString(36) + Utilities.getUuid().slice(0, 4);
+    const fila = { ID: id, TITULO: titulo, CLASE: normId(d.clase), INDICACIONES: String(d.indicaciones || "").trim(),
+                   ABIERTO: !!d.abierto && !d.oculto, OCULTO: !!d.oculto, VER_NOTA: d.verNota !== false, ACTUALIZADO: new Date() };
+    const existente = t.filas.find(f => String(f.ID) === id);
+    if (existente) escribirFila(sh, t, existente._fila, fila);
+    else sh.appendRow(filaDesde(t.cab, fila));
+    invalidarCache(["tareas"]);
+    return { id, version: VERSION_API };
+  } finally { lock.releaseLock(); }
+}
+
+function apiTareaOpciones(req) {
+  sesionDe(req, "docente");
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const sh = tablaFija("Tareas", CAB_TAREA), t = leerTabla(sh);
+    const f = t.filas.find(x => String(x.ID) === String(req.id || ""));
+    if (!f) throw new Error("No existe esa tarea.");
+    const o = req.opciones || {}, cambios = { ACTUALIZADO: new Date() };
+    if ("oculto" in o) { cambios.OCULTO = !!o.oculto; if (o.oculto) cambios.ABIERTO = false; }
+    if ("abierto" in o) { cambios.ABIERTO = !!o.abierto; if (o.abierto) cambios.OCULTO = false; }
+    if ("verNota" in o) cambios.VER_NOTA = !!o.verNota;
+    escribirFila(sh, t, f._fila, cambios);
+    invalidarCache(["tareas"]);
+  } finally { lock.releaseLock(); }
+  return { tarea: tareaPublica(tareaDe(req.id, true)) };
+}
+
+/** Borra la tarea. conEnvios: también sus filas de EnviosPDF (los PDF quedan en Drive). */
+function apiTareaBorrar(req) {
+  sesionDe(req, "docente");
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const t = tareaDe(req.id, true);
+    tablaFija("Tareas", CAB_TAREA).deleteRow(t._fila);
+    if (req.conEnvios) {
+      const sh = tablaFija("EnviosPDF", CAB_ENVIO);
+      leerTabla(sh).filas.filter(e => e.TAREA === t.id).map(e => e._fila).sort((a, b) => b - a).forEach(n => sh.deleteRow(n));
+    }
+    invalidarCache(["tareas", "envios"]);
+  } finally { lock.releaseLock(); }
+  return {};
+}
+
+/* ---------- ver: docente (todas las entregas) o alumno (las suyas) ---------- */
+
+function apiTareaVer(req) {
+  const s = sesionDe(req);
+  const t = tareaDe(req.id);
+  const c = clasesTodas().find(x => x.id === t.clase);
+  const clase = c ? clasePublica(c) : null;
+  if (s.rol === "docente") {
+    return { tarea: tareaPublica(t), clase, version: VERSION_API,
+             envios: enviosTodos().filter(e => e.TAREA === t.id).map(envioDocente),
+             alumnos: alumnosTodos().filter(esActivo).map(pub) };
+  }
+  if (t.oculto) throw new Error("Esta tarea no está disponible.");
+  const todos = alumnosTodos(), env = enviosTodos();
+  return { tarea: tareaPublica(t), clase, max: MAX_PDF_MB,
+           mios: s.codigos.map(cod => {
+             const a = todos.find(x => x.CODIGO === cod), e = env.find(x => x.TAREA === t.id && x.CODIGO === cod);
+             return Object.assign(pub(a), { envio: e ? envioAlumno(e, t) : null });
+           }) };
+}
+
+/* ---------- alumno: subir su PDF ---------- */
+
+function apiTareaSubir(req) {
+  const s = sesionDe(req, "alumno");
+  const a = alumnoDeSesion(s, req.codigo);
+  const t = tareaDe(req.id, true);
+  if (t.oculto) throw new Error("Esta tarea no está disponible.");
+  if (!t.abierto) throw new Error("La entrega está cerrada. Si necesitas entregar, avísale a tu docente.");
+  const b64 = String(req.pdf || "").replace(/^data:[^,]*,/, "");
+  if (!b64) throw new Error("No llegó el archivo. Vuelve a elegirlo.");
+  const bytes = Utilities.base64Decode(b64);
+  if (bytes.length > MAX_PDF_MB * 1024 * 1024) throw new Error(`El PDF pesa más de ${MAX_PDF_MB} MB.`);
+  const inicio = bytes.slice(0, 1024).map(b => String.fromCharCode((b + 256) % 256)).join("");
+  if (inicio.indexOf("%PDF") < 0) throw new Error("Ese archivo no es un PDF. Conviértelo a PDF y vuelve a subirlo.");
+
+  // Revisa ANTES de crear el archivo (sin candado: Drive tarda y no debe frenar a los demás)
+  const antes = enviosTodos(true).find(e => e.TAREA === t.id && e.CODIGO === a.CODIGO);
+  if (antes && !vacio(antes.NOTA)) throw new Error("Tu docente ya revisó este trabajo. Si necesitas cambiarlo, avísale.");
+  const nombre = `${a.GRUPO}-${String(a.N || "").padStart(2, "0")} - ${a["APELLIDOS Y NOMBRES"]} - ${limpiarNombre(t.titulo)}.pdf`;
+  const archivo = carpetaTarea(t).createFile(Utilities.newBlob(bytes, "application/pdf", nombre));
+
+  let viejos = [], fila;
+  const lock = LockService.getScriptLock(); lock.waitLock(30000);
+  try {
+    const sh = tablaFija("EnviosPDF", CAB_ENVIO), tb = leerTabla(sh);
+    const previo = tb.filas.find(e => e.TAREA === t.id && e.CODIGO === a.CODIGO);
+    if (previo && !vacio(previo.NOTA)) { archivo.setTrashed(true); throw new Error("Tu docente ya revisó este trabajo. Si necesitas cambiarlo, avísale."); }
+    fila = { TAREA: t.id, CODIGO: a.CODIGO, ALUMNO: a["APELLIDOS Y NOMBRES"], GRUPO: a.GRUPO, N: a.N,
+             ARCHIVO_ID: archivo.getId(), NOMBRE: limpiarNombre(req.nombre) || "trabajo.pdf", KB: Math.round(bytes.length / 1024),
+             HORA: new Date(), VECES: previo ? (Number(previo.VECES) || 1) + 1 : 1,
+             NOTA: "", COMENTARIO: "", ANOTACIONES: "", CORREGIDO_ID: "", CALIFICADO: "" };
+    if (previo) {
+      viejos = [previo.ARCHIVO_ID, previo.CORREGIDO_ID, idAnotDrive(previo.ANOTACIONES)];
+      escribirFila(sh, tb, previo._fila, fila);
+    } else sh.appendRow(filaDesde(tb.cab, fila));
+    invalidarCache(["envios"]);
+  } finally { lock.releaseLock(); }
+  viejos.forEach(aPapelera);                       // el PDF anterior va a la papelera de tu Drive (se puede recuperar)
+  return { envio: envioAlumno(fila, t) };
+}
+
+/* ---------- docente: abrir, calificar, reiniciar ---------- */
+
+function filaEnvio(sh, idTarea, codigo) {
+  const tb = leerTabla(sh);
+  const f = tb.filas.find(e => e.TAREA === String(idTarea || "") && e.CODIGO === codigo);
+  if (!f) throw new Error("Ese alumno no tiene entrega en esta tarea.");
+  return { tb, f };
+}
+const idAnotDrive = v => { const m = /^drive:([\w-]+)$/.exec(String(v || "")); return m ? m[1] : ""; };
+function leerAnot(v) {
+  let txt = String(v || "");
+  const id = idAnotDrive(txt);
+  if (id) { try { txt = DriveApp.getFileById(id).getBlob().getDataAsString("UTF-8"); } catch (_) { txt = ""; } }
+  try { return JSON.parse(txt || "[]"); } catch (_) { return []; }
+}
+
+function apiTareaPdf(req) {
+  sesionDe(req, "docente");
+  const { f } = filaEnvio(tablaFija("EnviosPDF", CAB_ENVIO), req.id, req.codigo);
+  let bytes;
+  try { bytes = DriveApp.getFileById(String(f.ARCHIVO_ID)).getBlob().getBytes(); }
+  catch (_) { throw new Error("No encuentro el PDF en tu Drive (¿lo borraste?). Reinicia su entrega para que lo vuelva a subir."); }
+  return { pdf: Utilities.base64Encode(bytes), anot: leerAnot(f.ANOTACIONES),
+           nota: vacio(f.NOTA) ? null : Number(f.NOTA), comentario: String(f.COMENTARIO || "") };
+}
+
+/** Guarda nota, comentario y anotaciones. corregido = PDF ya con las marcas (base64); quitarCorregido = ya no hay marcas. */
+function apiTareaCalificar(req) {
+  sesionDe(req, "docente");
+  tareaDe(req.id);
+  const nota = vacio(req.nota) ? "" : Number(String(req.nota).replace(",", "."));
+  if (nota !== "" && !(nota >= 0 && nota <= 20)) throw new Error("La nota va de 0 a 20.");
+  const anot = String(req.anot || "[]");
+  const sh = tablaFija("EnviosPDF", CAB_ENVIO);
+  const { f } = filaEnvio(sh, req.id, req.codigo);
+
+  // Archivos en Drive primero (sin candado)
+  let carpeta = null, original = null;
+  try { original = DriveApp.getFileById(String(f.ARCHIVO_ID)); const it = original.getParents(); if (it.hasNext()) carpeta = it.next(); } catch (_) {}
+  if (!carpeta) carpeta = carpetaTarea(tareaDe(req.id));
+  const base = original ? original.getName() : limpiarNombre(f.ALUMNO) + ".pdf";
+  const viejos = [];
+  let corregidoId = String(f.CORREGIDO_ID || "");
+  if (req.corregido) {
+    const nuevo = carpeta.createFile(Utilities.newBlob(Utilities.base64Decode(String(req.corregido)), "application/pdf", "CORREGIDO - " + base));
+    try { nuevo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (_) {}
+    viejos.push(corregidoId); corregidoId = nuevo.getId();
+  } else if (req.quitarCorregido) { viejos.push(corregidoId); corregidoId = ""; }
+  let celda = anot;
+  viejos.push(idAnotDrive(f.ANOTACIONES));
+  if (anot.length > MAX_CELDA) {
+    celda = "drive:" + carpeta.createFile(Utilities.newBlob(anot, "application/json", "_anotaciones - " + base.replace(/\.pdf$/i, "") + ".json")).getId();
+  }
+
+  const calificado = vacio(nota) ? "" : new Date();
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const { tb, f: fila } = filaEnvio(sh, req.id, req.codigo);
+    escribirFila(sh, tb, fila._fila, { NOTA: nota, COMENTARIO: String(req.comentario || "").trim(), ANOTACIONES: celda,
+                                        CORREGIDO_ID: corregidoId, CALIFICADO: calificado });
+    invalidarCache(["envios"]);
+  } finally { lock.releaseLock(); }
+  viejos.filter(Boolean).forEach(aPapelera);
+  return { nota: vacio(nota) ? null : nota, calificado: calificado || null, corregido: urlDrive(corregidoId) };
+}
+
+/** Borra la entrega de un alumno para que la vuelva a subir (los archivos van a la papelera de tu Drive). */
+function apiTareaReiniciar(req) {
+  sesionDe(req, "docente");
+  let viejos = [];
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const sh = tablaFija("EnviosPDF", CAB_ENVIO);
+    const { f } = filaEnvio(sh, req.id, req.codigo);
+    viejos = [f.ARCHIVO_ID, f.CORREGIDO_ID, idAnotDrive(f.ANOTACIONES)];
+    sh.deleteRow(f._fila);
+    invalidarCache(["envios"]);
+  } finally { lock.releaseLock(); }
+  viejos.forEach(aPapelera);
   return {};
 }
 

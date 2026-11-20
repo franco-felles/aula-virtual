@@ -3,7 +3,7 @@
 Dos archivos en el **mismo** proyecto de Apps Script del Panel:
 
 - `panel.gs` → menú **Aula** (importar alumnos, grupos, PCs, clases, copias).
-- `api.gs` → lo que la web le pide al Panel (login, clases, quizzes).
+- `api.gs` → lo que la web le pide al Panel (login, clases, quizzes, entregas en PDF).
 
 ## Instalar / actualizar el código
 
@@ -54,6 +54,7 @@ Necesita que `api.gs` tenga las acciones `pasoVer` / `pasoFijar` (pegar el códi
 - **Entregas**: enlace de la copia de cada alumno en cada clase (automático).
 - **Enlaces**: `CLASE, ORDEN, TIPO, TITULO, URL, PARA` (Todos / G1 / G2).
 - **Quiz** y **Resultados**: los llena la web (Mis quizzes). En Resultados ves todas las notas.
+- **Tareas** y **EnviosPDF**: entregas en PDF (se crean solas la primera vez). Tareas = cada entrega creada en la web; EnviosPDF = un PDF por alumno con `NOTA`, `COMENTARIO`, `ANOTACIONES` (las marcas del corrector) y `CORREGIDO_ID`. Los PDF quedan en tu Drive: `carpeta de la clase / ENTREGAS PDF / <título>/`, privados; el «CORREGIDO - …» tiene enlace de solo lectura.
 - **Importar**: plan B si el PDF no se lee (pega el texto).
 
 ## Velocidad (memoria)

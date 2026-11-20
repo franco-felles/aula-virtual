@@ -13,8 +13,10 @@ clases/
 eecc/
   quiz.html                 evaluación virtual (alumno rinde · docente ve resultados)
   ec1u1/material/  ec2u1/  ec3u1/   ec1u2/  ec2u2/  ec3u2/
+  tarea.html                entrega en PDF (alumno sube su PDF · docente lo corrige y pone nota)
 docente/
   quizzes.html              crear y editar quizzes
+  tareas.html               crear y administrar entregas en PDF
 conexion/
   acceso.html               login (alumno: código · docente: contraseña)
   aula.js                   sesión, conexión con el Panel, cierre por inactividad
@@ -93,5 +95,17 @@ El alumno no ve `m1c1`: ve lo que diga la ficha del `<head>`:
 - **Importar desde .txt**: botón «Subir archivo .txt» (o arrastrar). «Descargar plantilla» trae el formato explicado: `1.` pregunta, `a)` alternativas, `*` la correcta, `[2]` puntos, `TEMA:`, `TITULO:`, `MOSTRAR:`. También acepta el CSV del quiz antiguo.
 - El alumno **nunca recibe las respuestas correctas** mientras rinde: corrige el Panel. Se detecta el cambio de pestaña.
 - Las notas quedan en la pestaña **Resultados** del Panel y se pueden **descargar en CSV (Excel)** desde la página de resultados. La corrección de nota y el reinicio se hacen desde la web.
+
+## Entregas en PDF
+
+Para que el alumno **suba su trabajo en PDF sin cuenta de Google** (entra con su código) y tú lo corrijas en el navegador.
+
+- Se crean en **Entregas en PDF** (botón del inicio, modo docente): título, clase o EC donde aparece, indicaciones y si el alumno **ve su nota y la corrección**. Estado: **Oculta** · **Cerrada** (la ven, no suben) · **Abierta**.
+- El alumno la ve dentro de su carpeta («Entregas en PDF»), elige su PDF (máx. 10 MB) y lo envía. Puede cambiarlo mientras esté abierta y **no** lo hayas calificado. Si comparten PC, cada uno sube el suyo.
+- Se guarda en tu Drive: `carpeta de la clase / ENTREGAS PDF / <título> / G1-03 - APELLIDOS NOMBRES - <título>.pdf` (privado).
+- **Corregir**: «Ver entregas y calificar» → clic en el alumno. Herramientas: mover, lápiz, resaltador, texto, ✓, ✗, **sello con la nota** (muestra la nota que escribas arriba), borrar, deshacer (Ctrl+Z), colores, grosor y zoom. «Guardar y siguiente →» pasa al próximo alumno.
+- Al guardar: la nota (0–20) y el comentario quedan en la pestaña **EnviosPDF**, y una copia del PDF **con tus marcas** se guarda junto al original como «CORREGIDO - …» (el original no se toca). Puedes volver a abrirlo y seguir editando las marcas.
+- **Descargar notas (Excel)**: CSV con grupo, N°, código, alumno, nota, comentario y estado (también los que no entregaron). El botón ⬇ del visor descarga el PDF corregido; ↺ reinicia la entrega de un alumno (su PDF va a la papelera de tu Drive y puede volver a subirlo).
+- Requiere el `api.gs` nuevo (versión 3) publicado como **Nueva versión**; si no, la web avisa.
 
 Instalación del Panel: [`sistema/LEEME.md`](sistema/LEEME.md).

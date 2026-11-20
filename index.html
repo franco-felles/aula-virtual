@@ -156,9 +156,10 @@ function pintarCompanero(s) {
 function pintarDocente(r) {
   const acc = el("div", "acciones");
   const q = el("a", "btn", "Mis quizzes"); q.href = "docente/quizzes.html";
+  const t = el("a", "btn", "Entregas en PDF"); t.href = "docente/tareas.html";
   const p = el("a", "btn ghost", "Abrir Panel (Google)"); p.href = r.panel; p.target = "_blank"; p.rel = "noopener";
   const c = el("button", "btn ghost", "Cambiar contraseña"); c.type = "button"; c.onclick = () => { $("ovClave").classList.add("on"); $("cAct").focus(); };
-  acc.append(q, p, c); $("extra").appendChild(acc);
+  acc.append(q, t, p, c); $("extra").appendChild(acc);
 }
 
 $("cCancel").onclick = () => { $("ovClave").classList.remove("on"); $("fClave").reset(); $("cErr").textContent = ""; };
@@ -210,7 +211,9 @@ function pintarPortal(r, s, docente) {
   const marca = c => {
     if (docente) return !c.publicada ? el("span", "borrador", "NO PUBLICADA") : null;
     const n = r.quizzes.filter(q => q.clase === c.id && pendiente(q)).length;
-    return n ? el("span", "c-quiz", n > 1 ? n + " QUIZZES" : "QUIZ") : null;
+    const nT = (r.tareas || []).filter(t => t.clase === c.id && t.abierto && t.entregados && t.entregados.length < (s.alumnos || []).length).length;
+    const etiqueta = [n ? (n > 1 ? n + " QUIZZES" : "QUIZ") : "", nT ? (nT > 1 ? nT + " ENTREGAS" : "ENTREGA") : ""].filter(Boolean).join(" · ");
+    return etiqueta ? el("span", "c-quiz", etiqueta) : null;
   };
   // Orden real dentro de cada unidad: C1 · C2 · EC1 · C4 · C5 · EC2 · C7 · C8 · EC3  (la EC n ocupa el lugar 3n)
   const lugar = c => c.tipo === "EC" ? c.n * 3 + 0.5 : c.n;   // si hay clase 3/6/9 normal, va antes que su EC

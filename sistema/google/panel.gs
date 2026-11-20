@@ -234,7 +234,8 @@ function ordenarAlumnos() {
 /** Al editar Alumnos: asignar grupo activa al alumno y renumera; cambios de PC refrescan el mapa. */
 function onEdit(e) {
   const sh = e.range.getSheet();
-  const MEM = { Alumnos: "alumnos", Clases: "clases", Enlaces: "enlaces", Entregas: "entregas", Quiz: "quiz", Resultados: "res" };
+  const MEM = { Alumnos: "alumnos", Clases: "clases", Enlaces: "enlaces", Entregas: "entregas", Quiz: "quiz", Resultados: "res",
+                Tareas: "tareas", EnviosPDF: "envios" };
   if (MEM[sh.getName()]) { try { invalidarCache([MEM[sh.getName()]]); } catch (_) {} }   // la web ve el cambio al instante
   if (sh.getName() !== HOJA.alumnos || e.range.getRow() < 2) return;
   const cGrupo = colDe(sh, "GRUPO"), cPC = colDe(sh, "PC"), cEstado = colDe(sh, "ESTADO");

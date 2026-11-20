@@ -6,7 +6,7 @@
 <title>Clase · Aula Virtual</title>
 <!-- ÚNICA página de carpeta para clases y EC:  clases/clase.html?id=u1c1   o   ?id=ec1u1
      Secciones: mi documento (copia de la semilla) · material de clase (clases/<id>/material/*.html, eecc/<id>/material/*.html
-     y archivos de la carpeta de Drive) · enlaces (pestaña Enlaces del Panel) · quizzes vinculados. -->
+     y archivos de la carpeta de Drive) · entregas en PDF · enlaces (pestaña Enlaces del Panel) · quizzes vinculados. -->
 <script src="../conexion/aula.js" data-proteger data-sin-barra></script>
 <link rel="icon" type="image/png" href="../conexion/img/favicon.png">
 <link rel="stylesheet" href="../conexion/estilo.css">
@@ -83,13 +83,14 @@ const SVG = {
   file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
   quiz: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>',
+  upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>',
   users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>'
 };
 const EMOJI = { interactivo: "🧩", juego: "🎮", presentacion: "📊", lectura: "📖", practica: "✍️", documento: "📄", hoja: "📗", encuesta: "📝",
-                pdf: "📕", video: "🎬", imagen: "🖼️", archivo: "📎", enlace: "🔗", web: "🌐", quiz: "✅" };
+                pdf: "📕", video: "🎬", imagen: "🖼️", archivo: "📎", enlace: "🔗", web: "🌐", quiz: "✅", entrega: "📤" };
 const NOMBRE_TIPO = { interactivo: "Interactivo", juego: "Juego", presentacion: "Presentación", lectura: "Lectura", practica: "Práctica",
                       documento: "Documento", hoja: "Hoja de cálculo", encuesta: "Encuesta", pdf: "PDF", video: "Video", imagen: "Imagen",
-                      archivo: "Archivo", enlace: "Enlace", web: "Sitio web", quiz: "Evaluación virtual" };
+                      archivo: "Archivo", enlace: "Enlace", web: "Sitio web", quiz: "Evaluación virtual", entrega: "Entrega en PDF" };
 
 function carpeta(icono, titulo, nodos, cuenta) {
   const s = el("section", "carp anim");
@@ -228,6 +229,20 @@ function pintarClase(r, man, docente) {
   if (docente) cont.appendChild(carpeta("users", "Documentos de los alumnos", listaDocente(r.docs), r.docs.filter(d => d.url).length + "/" + r.docs.length));
   else if (r.provisional && r.haySemilla) cont.appendChild(carpeta("doc", esEC ? "Mi evaluación" : "Mi documento", el("p", "vacio", "Buscando tu documento…")));
   else if (r.haySemilla || r.docs.some(d => d.url)) cont.appendChild(carpeta("doc", esEC ? "Mi evaluación" : "Mi documento", miDocumento(r.docs, esEC)));
+
+  // 1b. Entregas en PDF (se crean en docente/tareas.html; el alumno sube su trabajo y el docente lo califica)
+  const tareas = r.tareas || [];
+  const nAlT = (Aula.sesion().alumnos || []).length;
+  const estadoTarea = t => {
+    if (docente) return t.oculto ? " · oculta" : !t.abierto ? " · cerrada" : " · abierta";
+    return nAlT && (t.entregados || []).length >= nAlT ? " · ✓ entregado" : !t.abierto ? " · cerrada" : "";
+  };
+  if (tareas.length) cont.appendChild(carpeta("upload", "Entregas en PDF", grid(tareas.map(t => ({
+    titulo: t.titulo + estadoTarea(t), tipo: "entrega", url: "eecc/tarea.html?id=" + t.id, interna: true,
+    descripcion: docente ? "Ver los PDF, corregirlos y poner nota"
+      : nAlT && (t.entregados || []).length >= nAlT ? "Ver mi entrega y mi nota"
+      : t.abierto ? "Sube aquí tu trabajo en PDF" : "Ver mi entrega"
+  }))), tareas.length));
 
   // 2. Material de clase: HTML del repo (material/m#…) y luego los archivos de la carpeta de Drive
   // (el replace tolera "u1c01" = "u1c1")

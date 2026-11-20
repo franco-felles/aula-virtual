@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrega en PDF · Aula Virtual</title>
+<!-- ÚNICA página de entrega en PDF: tarea.html?id=<id>  (las tareas se crean en docente/tareas.html)
+     alumno  -> sube su trabajo en PDF (puede cambiarlo mientras esté abierta y sin calificar); ve su nota si el docente lo permite
+     docente -> entregas por grupo; abre cada PDF en el navegador, lo corrige encima (lápiz, resaltador, texto, ✓ ✗,
+                sello con la nota), guarda la nota 0–20 y descarga las notas en CSV (Excel) o el PDF corregido.
+     Librerías (solo se cargan al abrir un PDF): pdf.js para mostrarlo, pdf-lib para escribir las marcas dentro del PDF. -->
+<script src="../conexion/aula.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="../conexion/img/favicon.png">
+<link rel="stylesheet" href="../conexion/estilo.css">
+<style>
+  body { --acc: var(--amber); --acc-d: var(--amber-d); --acc-bg: var(--amber-bg); }
+  .volver { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); text-decoration: none; font-size: .85rem; font-weight: 600; margin-bottom: 18px; }
+  .volver:hover { color: var(--acc-d); }
+  .cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat { font-family: var(--mono); font-size: .75rem; color: var(--ink-2); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  .stat b { color: var(--acc-d); font-size: 1rem; margin-right: 4px; }
+  .tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn.acc { background: var(--acc); border-color: var(--acc); }
+  .btn.acc:hover { background: var(--acc-d); border-color: var(--acc-d); }
+  .btn.peligro { background: var(--panel); color: var(--err); border-color: #efc3bf; }
+  .btn.peligro:hover { background: var(--err); color: #fff; border-color: var(--err); }
+
+  /* ---------- alumno ---------- */
+  .cab-t { border-left: 4px solid var(--acc); padding-left: 16px; margin-bottom: 20px; }
+  .indic { white-space: pre-line; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 12px 0 0; color: var(--ink-2); font-size: .92rem; max-width: 70ch; }
+  .estado-t { display: inline-block; font-family: var(--mono); font-size: .72rem; font-weight: 600; border-radius: 6px; padding: 4px 9px; margin-top: 12px; background: var(--moss-bg); color: var(--moss-d); }
+  .estado-t.cerrada { background: var(--paper); border: 1px solid var(--line); color: var(--mut); }
+  .al-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 10px 28px rgba(16,35,28,.05); max-width: 640px; }
+  .al-nom { font-weight: 700; margin: 0 0 10px; }
+  .env-ok { display: flex; gap: 12px; align-items: flex-start; background: var(--moss-bg); border: 1px solid #cfdccb; border-radius: 12px; padding: 12px 14px; }
+  .env-ok .ico { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--moss); color: #fff; display: grid; place-items: center; }
+  .env-ok .ico svg { width: 17px; height: 17px; }
+  .env-ok b { display: block; color: var(--moss-d); }
+  .env-ok small { display: block; font-size: .8rem; color: var(--ink-2); word-break: break-word; }
+  .sin-env { color: var(--ink-2); margin: 0 0 12px; }
+  .nota-al { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  .nota-al .big { font-family: var(--mono); font-size: 2.6rem; font-weight: 700; color: var(--acc-d); line-height: 1; }
+  .nota-al .big small { display: block; font-family: var(--sans); font-size: .78rem; color: var(--mut); font-weight: 500; margin-top: 4px; }
+  .nota-al .com { flex: 1 1 220px; font-size: .9rem; color: var(--ink-2); white-space: pre-line; border-left: 3px solid var(--acc); padding-left: 12px; }
+  .revisado { margin: 12px 0 0; color: var(--ink-2); font-size: .9rem; }
+  .subir { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; cursor: pointer; margin-top: 14px; padding: 26px 18px; border: 2px dashed var(--line); border-radius: 14px; background: var(--paper); transition: border-color .15s, background .15s; }
+  .subir:hover, .subir.encima { border-color: var(--acc); background: var(--acc-bg); }
+  .subir svg { width: 34px; height: 34px; color: var(--acc-d); }
+  .subir b { font-size: 1rem; }
+  .subir small { color: var(--mut); font-size: .82rem; }
+  .conf-env { margin-top: 14px; border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: var(--paper); }
+  .conf-env .archivo { font-weight: 600; word-break: break-word; margin-bottom: 4px; }
+  .conf-env .hint { color: var(--mut); font-size: .82rem; margin: 0 0 12px; }
+  .cerrada-box { margin-top: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; color: var(--ink-2); font-size: .9rem; }
+  details.ayuda { max-width: 640px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; font-size: .9rem; color: var(--ink-2); }
+  details.ayuda summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.ayuda ol { margin: 10px 0 4px; padding-left: 20px; }
+  details.ayuda li { margin-bottom: 6px; }
+
+  /* ---------- docente: lista ---------- */
+  .buscar { position: relative; flex: 1 1 260px; margin-top: 4px; }
+  .buscar input { width: 100%; padding: 12px 14px 12px 40px; font-size: .95rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); outline: none; }
+  .buscar input:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(179,117,44,.15); }
+  .buscar svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--mut); }
+  .grupo { display: flex; align-items: baseline; gap: 10px; margin: 24px 0 10px; font-size: 1.05rem; }
+  .grupo::after { content: ""; flex: 1; border-top: 1px solid var(--line); transform: translateY(-4px); }
+  .alumnos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+  button.alumno { display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; color: var(--ink); font: inherit; transition: border-color .15s, background .15s, transform .15s; }
+  button.alumno:hover { border-color: var(--acc); background: var(--acc-bg); transform: translateY(-1px); }
+  button.alumno .t { min-width: 0; flex: 1; }
+  button.alumno .nom { display: block; font-size: .85rem; font-weight: 600; line-height: 1.25; }
+  button.alumno .cod { display: block; font-family: var(--mono); font-size: .68rem; color: var(--mut); margin-top: 1px; }
+  button.alumno .g { flex: none; font-family: var(--mono); font-size: .72rem; font-weight: 700; color: var(--paper); background: var(--mut); border-radius: 8px; padding: 5px 9px; white-space: nowrap; }
+  button.alumno .g.pdf { background: var(--amber); }
+  button.alumno .g.ok { background: var(--moss); }
+  button.alumno.sin { opacity: .55; }
+  .leyenda { display: flex; gap: 14px; flex-wrap: wrap; font-size: .78rem; color: var(--mut); margin-top: 10px; }
+  .leyenda i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+  /* ---------- docente: visor y corrector ---------- */
+  .visor { position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column; background: #dcd8cc; }
+  .visor[hidden] { display: none; }
+  .v-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--line); }
+  .v-quien { min-width: 0; flex: 1 1 200px; }
+  .v-quien b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .v-quien small { display: block; font-family: var(--mono); font-size: .68rem; color: var(--mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ib { border: 1px solid var(--line); background: var(--panel); border-radius: 9px; min-width: 38px; height: 38px; padding: 0 10px; display: inline-grid; place-items: center; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+  .ib:hover:not(:disabled) { border-color: var(--ink); }
+  .ib:disabled { opacity: .35; cursor: default; }
+  .ib svg { width: 18px; height: 18px; }
+  .v-nota { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: .8rem; color: var(--mut); }
+  .v-nota input { width: 70px; font-family: var(--mono); font-size: 1.25rem; font-weight: 700; text-align: center; padding: 5px 6px; border: 2px solid var(--acc); border-radius: 10px; background: var(--panel); color: var(--ink); outline: none; }
+  .v-nota input:focus { box-shadow: 0 0 0 3px rgba(179,117,44,.2); }
+  .v-com { flex: 1 1 220px; max-width: 380px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); font: inherit; font-size: .88rem; }
+  .v-herr { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; padding: 6px 12px; background: #f1eee5; border-bottom: 1px solid var(--line); }
+  .herr { display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; background: transparent; border-radius: 8px; padding: 7px 10px; font: inherit; font-size: .8rem; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+  .herr:hover { background: #e4e0d3; }
+  .herr.on { background: var(--ink); color: var(--paper); }
+  .herr svg { width: 18px; height: 18px; flex: none; }
+  .herr:disabled { opacity: .35; cursor: default; background: transparent; }
+  .sep-v { width: 1px; height: 26px; background: var(--line); margin: 0 6px; }
+  .color { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; margin: 0 2px; }
+  .color.on { box-shadow: 0 0 0 2px var(--ink); }
+  .tam { width: 30px; height: 30px; border: 1px solid transparent; border-radius: 8px; background: transparent; display: inline-grid; place-items: center; cursor: pointer; padding: 0; }
+  .tam i { display: block; border-radius: 50%; background: var(--ink-2); }
+  .tam.on { border-color: var(--ink); background: var(--panel); }
+  .zoom-lbl { font-family: var(--mono); font-size: .72rem; color: var(--mut); min-width: 42px; text-align: center; }
+  .v-ayuda { font-size: .74rem; color: var(--mut); margin-left: auto; padding-left: 8px; }
+  .v-pages { flex: 1; overflow: auto; padding: 26px 18px 60px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+  .pg { position: relative; background: #fff; box-shadow: 0 4px 18px rgba(0,0,0,.18); flex: none; }
+  .pg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .pg svg { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; overflow: visible; }
+  .pg .num { position: absolute; left: 0; top: -19px; font-family: var(--mono); font-size: .68rem; color: var(--ink-2); }
+  .visor[data-herr="mover"] .pg svg { touch-action: pan-x pan-y; }
+  .visor[data-herr="mover"] .anot { cursor: move; }
+  .visor[data-herr="lapiz"] .pg svg, .visor[data-herr="resaltar"] .pg svg { cursor: crosshair; }
+  .visor[data-herr="texto"] .pg svg { cursor: text; }
+  .visor[data-herr="bien"] .pg svg, .visor[data-herr="mal"] .pg svg, .visor[data-herr="sello"] .pg svg { cursor: copy; }
+  .visor[data-herr="borrar"] .anot { cursor: pointer; }
+  .visor[data-herr="borrar"] .anot:hover { opacity: .35; }
+  .txt-edit { position: absolute; z-index: 3; margin: 0; padding: 0 2px; border: 1.5px dashed #1e5bd6; background: rgba(255,255,255,.9); outline: none; resize: none; overflow: hidden; line-height: 1.2; font-family: Helvetica, Arial, sans-serif; white-space: pre; min-width: 40px; }
+  .v-carga { margin: auto; color: var(--ink-2); font-size: .95rem; }
+  .v-pages .aviso { max-width: 520px; margin: auto; }
+  @media (max-width: 760px) { .herr span, .v-ayuda { display: none; } .v-com { max-width: none; } }
+</style>
+</head>
+<body>
+  <header class="topbar"><div class="topbar-in">
+    <a class="plate" href="../index.html"><span class="plate-mark"><img src="../conexion/img/icono.png" alt=""></span>
+      <span class="plate-txt"><b>Aula Virtual</b><small>Herramientas Informáticas</small></span></a>
+    <div class="who-chip"><i class="dot"></i><span id="quien"></span><button class="btn ghost sm" id="salir" type="button">Salir</button></div>
+  </div></header>
+  <main class="wrap" id="app"><p class="vacio">Cargando…</p></main>
+
+<script>
+const { el } = Aula;
+const app = document.getElementById("app");
+const tareaId = new URLSearchParams(location.search).get("id") || "";
+const fmtHora = iso => { try { return new Date(iso).toLocaleString("es-PE", { dateStyle: "medium", timeStyle: "short" }); } catch { return String(iso || ""); } };
+const fmtKB = kb => kb >= 1024 ? (kb / 1024).toFixed(1).replace(".", ",") + " MB" : Math.max(1, kb) + " KB";
+const fmtNota = n => n === null || n === undefined || n === "" ? "" : String(n).replace(".", ",");
+const nombreClase = c => c ? (c.tipo === "EC" ? `EC${c.n} · Unidad ${c.unidad}` : `Clase ${c.n} · Unidad ${c.unidad}`) : "";
+const ICO = {
+  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  subir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>',
+  alerta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',
+  lupa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  izq: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>',
+  der: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
+  mover: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 7-6 2-2 6z"/></svg>',
+  lapiz: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg>',
+  resaltar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15l-3 3h5l1-1"/><path d="M8 13l7-9 5 4-8 8z"/><path d="M4 21h16"/></svg>',
+  texto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg>',
+  bien: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 4.5 4.5L19.5 6.5"/></svg>',
+  mal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  sello: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="6" stroke-width="1"/><path d="M10 13.5h4" stroke-linecap="round"/></svg>',
+  borrar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H9L4 15a2 2 0 0 1 0-2.8L13.2 3a2 2 0 0 1 2.8 0L21 8a2 2 0 0 1 0 2.8L12 20"/><path d="M8 11l6 6"/></svg>',
+  deshacer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>',
+  bajar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M4 19h16"/></svg>'
+};
+/** Si el Panel aún tiene el api.gs anterior, explica qué hacer. */
+const textoError = (ex, docente) => /Acción desconocida/.test(ex.message)
+  ? (docente ? "El Panel todavía no tiene las entregas en PDF. En Apps Script pega el api.gs nuevo y luego Implementar → Gestionar implementaciones → ✏ → Versión: Nueva versión → Implementar."
+             : "Esta entrega aún no está activa. Avísale a tu docente.")
+  : ex.message;
+
+function avisoCaja(titulo, texto) {
+  const c = el("div", "al-card anim");
+  c.style.margin = "40px auto"; c.style.textAlign = "center";
+  const ic = el("div"); ic.innerHTML = ICO.alerta; ic.style.cssText = "width:44px;height:44px;margin:0 auto;color:var(--amber-d)";
+  const a = el("a", "btn", "Volver al inicio"); a.href = Aula.url("index.html"); a.style.marginTop = "14px";
+  c.append(ic, el("h1", "", titulo), el("p", "", texto), a);
+  c.querySelector("h1").style.cssText = "font-size:1.25rem;margin:12px 0 6px";
+  app.replaceChildren(c);
+}
+function descargar(blob, nombre) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = nombre.replace(/[\\/:*?"<>|]+/g, "-");
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+const aBase64 = blob => new Promise((res, rej) => {
+  const fr = new FileReader();
+  fr.onload = () => res(String(fr.result).split(",")[1] || "");
+  fr.onerror = () => rej(new Error("No se pudo leer el archivo."));
+  fr.readAsDataURL(blob);
+});
+
+/* ======================= ALUMNO ======================= */
+let A = null;      // { tarea, clase, max, mios: [{codigo, nombre, …, envio}] }
+
+async function vistaAlumno() {
+  try { A = await Aula.api("tareaVer", { id: tareaId }); }
+  catch (ex) { return avisoCaja("No se puede abrir", textoError(ex, false)); }
+  pintarAlumno();
+}
+
+function pintarAlumno() {
+  const t = A.tarea;
+  document.title = t.titulo + " · Aula Virtual";
+  const volver = el("a", "volver", A.clase ? "← " + (A.clase.tema || nombreClase(A.clase)) : "← Inicio");
+  volver.href = Aula.url(A.clase ? "clases/clase.html?id=" + A.clase.id : "index.html");
+  const cab = el("section", "cab-t anim");
+  cab.append(el("p", "eyebrow", "Entrega en PDF" + (A.clase ? " · " + nombreClase(A.clase) : "")), el("h1", "titulo", t.titulo));
+  if (t.indicaciones) cab.append(el("div", "indic", t.indicaciones));
+  cab.append(el("span", "estado-t" + (t.abierto ? "" : " cerrada"), t.abierto ? "● Abierta: puedes subir tu PDF" : "Entrega cerrada"));
+
+  const ayuda = el("details", "ayuda");
+  ayuda.innerHTML = `<summary>¿Cómo guardo mi trabajo como PDF?</summary>
+    <ol><li><b>Google Docs:</b> menú <b>Archivo → Descargar → Documento PDF (.pdf)</b>. Se guarda en tu carpeta <b>Descargas</b>.</li>
+    <li><b>Word:</b> menú <b>Archivo → Guardar como</b> y en «Tipo» elige <b>PDF</b>.</li>
+    <li>Vuelve a esta página, pulsa <b>Elegir mi PDF</b> y búscalo en <b>Descargas</b>.</li></ol>`;
+  const lista = el("div", "anim");
+  A.mios.forEach(a => lista.appendChild(tarjetaAlumno(a)));
+  app.replaceChildren(volver, cab, lista, ayuda);
+}
+
+function tarjetaAlumno(a) {
+  const t = A.tarea, e = a.envio;
+  const card = el("div", "al-card");
+  if (A.mios.length > 1) card.append(el("p", "al-nom", Aula.nombreBonito(a.nombre)));
+  if (e) {
+    const ok = el("div", "env-ok"), ic = el("span", "ico"); ic.innerHTML = ICO.ok;
+    const tx = el("div");
+    tx.append(el("b", "", "Entregado"), el("small", "", `${fmtHora(e.hora)} · ${e.nombre} · ${fmtKB(e.kb)}` +
+      (e.veces > 1 ? ` · lo cambiaste ${e.veces - 1} ${e.veces === 2 ? "vez" : "veces"}` : "")));
+    ok.append(ic, tx); card.append(ok);
+    if (e.revisado && e.nota !== undefined) {
+      const n = el("div", "nota-al"), big = el("div", "big", fmtNota(e.nota));
+      big.appendChild(el("small", "", "sobre 20"));
+      n.append(big);
+      if (e.comentario) n.append(el("div", "com", e.comentario));
+      card.append(n);
+      if (e.corregido) {
+        const v = el("a", "btn ghost", "Ver mi trabajo corregido ↗"); v.href = e.corregido; v.target = "_blank"; v.rel = "noopener";
+        v.style.marginTop = "14px"; card.append(v);
+      }
+    } else if (e.revisado) card.append(el("p", "revisado", "Tu docente ya revisó tu trabajo."));
+  } else card.append(el("p", "sin-env", "Aún no entregas tu trabajo."));
+
+  if (t.abierto && !(e && e.revisado)) card.append(zonaSubir(a, !!e));
+  else if (!t.abierto && !e) card.append(el("div", "cerrada-box", "La entrega está cerrada. Si no llegaste a entregar, avísale a tu docente."));
+  return card;
+}
+
+function zonaSubir(a, reemplazo) {
+  const max = A.max || 10;
+  const caja = el("div");
+  const z = el("label", "subir");
+  const inp = el("input"); inp.type = "file"; inp.accept = "application/pdf,.pdf"; inp.hidden = true;
+  z.innerHTML = ICO.subir;
+  z.append(el("b", "", reemplazo ? "Cambiar mi PDF por otro" : "Elegir mi PDF"),
+           el("small", "", `Arrastra el archivo aquí o haz clic. Solo PDF, hasta ${max} MB.`), inp);
+  caja.append(z);
+
+  const elegir = f => {
+    if (!f) return;
+    if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf")
+      return Aula.toast("Ese archivo no es PDF", "Guárdalo como PDF primero (mira la ayuda de abajo).", "warn");
+    if (f.size > max * 1024 * 1024)
+      return Aula.toast("Archivo muy pesado", `Pesa ${fmtKB(Math.round(f.size / 1024))}; el máximo es ${max} MB.`, "warn");
+    confirmar(f);
+  };
+  inp.onchange = () => elegir(inp.files[0]);
+  z.addEventListener("dragover", e => { e.preventDefault(); z.classList.add("encima"); });
+  z.addEventListener("dragleave", () => z.classList.remove("encima"));
+  z.addEventListener("drop", e => { e.preventDefault(); z.classList.remove("encima"); elegir(e.dataTransfer.files[0]); });
+
+  function confirmar(f) {
+    const c = el("div", "conf-env");
+    c.append(el("div", "archivo", "📕 " + f.name), el("p", "hint", fmtKB(Math.round(f.size / 1024)) +
+      (reemplazo ? " · reemplazará al PDF que ya entregaste." : " · revisa que sea el archivo correcto.")));
+    const env = el("button", "btn acc", "Enviar mi PDF"); env.type = "button";
+    const otro = el("button", "btn ghost", "Elegir otro"); otro.type = "button";
+    const fila = el("div", "tools"); fila.append(env, otro); c.append(fila);
+    otro.onclick = () => { inp.value = ""; caja.replaceChildren(z); };
+    env.onclick = async () => {
+      env.disabled = otro.disabled = true; env.textContent = "Subiendo… no cierres esta página";
+      try {
+        const pdf = await aBase64(f);
+        const r = await Aula.api("tareaSubir", { id: tareaId, codigo: a.codigo, nombre: f.name, pdf });
+        a.envio = r.envio;
+        Aula.toast("¡Entregado!", "Tu docente ya puede ver tu PDF.");
+        pintarAlumno();
+      } catch (ex) {
+        Aula.toast("No se pudo subir", textoError(ex, false), "warn");
+        env.disabled = otro.disabled = false; env.textContent = "Reintentar envío";
+      }
+    };
+    caja.replaceChildren(c);
+  }
+  return caja;
+}
+
+/* ======================= DOCENTE: LISTA ======================= */
+let D = null;      // { tarea, clase, alumnos, env: {codigo: envio} }
+let filtro = "";
+const enOrden = lista => lista.slice().sort((a, b) => String(a.grupo).localeCompare(String(b.grupo)) || (a.n || 0) - (b.n || 0));
+
+async function vistaDocente() {
+  try {
+    const d = await Aula.api("tareaVer", { id: tareaId });
+    D = Object.assign(d, { env: {} });
+    d.envios.forEach(e => D.env[e.codigo] = e);
+  } catch (ex) { return avisoCaja("No se pudo cargar", textoError(ex, true)); }
+  pintarDocente();
+}
+
+function pintarDocente() {
+  const t = D.tarea;
+  document.title = t.titulo + " · Entregas";
+  const volver = el("a", "volver", "← Mis entregas en PDF"); volver.href = Aula.url("docente/tareas.html");
+  const cab = el("div", "cab anim"), izq = el("div");
+  const estado = t.oculto ? "OCULTA" : t.abierto ? "ABIERTA" : "CERRADA";
+  const csv = el("button", "btn sm ghost", "Descargar notas (Excel)"); csv.type = "button"; csv.onclick = descargarCSV;
+  const ed = el("a", "btn sm ghost", "Editar tarea"); ed.href = Aula.url("docente/tareas.html?editar=" + t.id);
+  const bts = el("div", "tools"); bts.style.marginTop = "10px"; bts.append(csv, ed);
+  izq.append(el("p", "eyebrow", "Entrega en PDF · " + estado + (D.clase ? " · " + nombreClase(D.clase) : "")), el("h1", "titulo", t.titulo),
+    el("p", "lede", "Clic en un alumno para abrir su PDF: corrígelo encima, ponle el sello con la nota y guarda. Las notas se descargan en Excel para tu registro."), bts);
+  const stats = el("div", "stats"); stats.id = "stats";
+  cab.append(izq, stats);
+  const bus = el("div", "buscar"); bus.innerHTML = ICO.lupa;
+  const q = el("input"); q.type = "search"; q.placeholder = "Buscar alumno…"; q.value = filtro; bus.appendChild(q);
+  q.oninput = () => { filtro = q.value; pintarLista(); };
+  const ley = el("div", "leyenda");
+  ley.innerHTML = '<span><i style="background:var(--mut)"></i>— no entregó</span><span><i style="background:var(--amber)"></i>PDF: entregó, falta calificar</span><span><i style="background:var(--moss)"></i>nota guardada</span>';
+  const cont = el("div"); cont.id = "lista";
+  app.replaceChildren(volver, cab, bus, ley, cont);
+  actualizarStats(); pintarLista();
+}
+
+function actualizarStats() {
+  const s = document.getElementById("stats"); if (!s) return;
+  const env = D.alumnos.filter(a => D.env[a.codigo]);
+  const stat = (b, t) => { const x = el("div", "stat"); x.append(el("b", "", b), t); return x; };
+  s.replaceChildren(stat(env.length + "/" + D.alumnos.length, "entregaron"), stat(String(env.filter(a => D.env[a.codigo].nota != null).length), "calificados"));
+}
+
+function pintarLista() {
+  const cont = document.getElementById("lista"); if (!cont) return;
+  cont.replaceChildren();
+  const pal = Aula.norm(filtro).split(/\s+/).filter(Boolean);
+  const grupos = [...new Set(D.alumnos.map(a => a.grupo))].sort();
+  grupos.forEach(g => {
+    const hits = D.alumnos.filter(a => a.grupo === g && (!pal.length || pal.every(w => Aula.norm(a.nombre + " " + a.codigo).includes(w))));
+    if (!hits.length) return;
+    const n = hits.filter(a => D.env[a.codigo]).length;
+    const h = el("h2", "grupo", "Grupo " + g); h.append(el("small", "mono", ` ${n}/${hits.length}`));
+    cont.appendChild(h);
+    const grid = el("div", "alumnos");
+    hits.sort((a, b) => (a.n || 0) - (b.n || 0)).forEach(a => {
+      const e = D.env[a.codigo];
+      const b = el("button", "alumno" + (e ? "" : " sin")); b.type = "button";
+      const t = el("span", "t");
+      t.append(el("span", "nom", Aula.nombreBonito(a.nombre)), el("span", "cod", e ? "Entregó " + fmtHora(e.hora) : a.codigo));
+      b.append(t, el("span", "g" + (e ? (e.nota != null ? " ok" : " pdf") : ""), e ? (e.nota != null ? fmtNota(e.nota) : "PDF") : "—"));
+      b.onclick = () => e ? abrirVisor(a.codigo) : Aula.toast("Aún no entrega", Aula.nombreBonito(a.nombre) + " no ha subido su PDF.", "warn");
+      grid.appendChild(b);
+    });
+    cont.appendChild(grid);
+  });
+  if (!cont.children.length) cont.appendChild(el("p", "vacio", D.alumnos.length ? "Nadie coincide con la búsqueda." : "No hay alumnos activos."));
+}
+
+/** CSV con ; y BOM: Excel en español lo abre directo, con tildes y columnas bien separadas. */
+function descargarCSV() {
+  const esc = v => { v = v == null ? "" : String(v); return /[;"\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const filas = [["GRUPO", "N", "CODIGO", "ALUMNO", "NOTA", "COMENTARIO", "ESTADO", "ENTREGÓ", "ARCHIVO"]];
+  enOrden(D.alumnos).forEach(a => {
+    const e = D.env[a.codigo];
+    filas.push([a.grupo, a.n, a.codigo, Aula.nombreBonito(a.nombre), e && e.nota != null ? fmtNota(e.nota) : "", e ? e.comentario : "",
+      !e ? "no entregó" : e.nota != null ? "calificado" : "entregó, sin nota", e ? fmtHora(e.hora) : "", e ? e.nombre : ""]);
+  });
+  descargar(new Blob(["﻿" + filas.map(f => f.map(esc).join(";")).join("\r\n")], { type: "text/csv;charset=utf-8" }),
+    (D.tarea.titulo || "entrega") + " - notas.csv");
+}
+
+/* ======================= DOCENTE: VISOR Y CORRECTOR =======================
+   Cada marca se guarda en puntos del PDF (origen arriba a la izquierda de la página), así no depende del zoom:
+     { id, p: página (0…), t: "lapiz"|"resaltar"|"texto"|"bien"|"mal"|"sello", c: color, … }
+     lapiz/resaltar: pts [[x,y]…], w grosor · texto: x, y (esquina), s tamaño, txt · bien/mal/sello: x, y (centro), s tamaño
+   El sello muestra la nota escrita arriba (si la cambias, el sello cambia). Al guardar se escriben las marcas
+   dentro de una copia del PDF (pdf-lib) y se sube a tu Drive como «CORREGIDO - …». El original no se toca. */
+const LIB = {
+  pdfjs: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+  worker: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+  cmaps: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/",
+  fuentes: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/",
+  pdflib: "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"
+};
+let pLibs = null;
+const cargarScript = src => new Promise((res, rej) => {
+  const s = document.createElement("script"); s.src = src; s.onload = res;
+  s.onerror = () => rej(new Error("No se pudo cargar el visor de PDF. Revisa tu conexión a internet."));
+  document.head.appendChild(s);
+});
+function cargarLibs() {
+  if (!pLibs) {
+    pLibs = Promise.all([cargarScript(LIB.pdfjs), cargarScript(LIB.pdflib)]).then(() => { pdfjsLib.GlobalWorkerOptions.workerSrc = LIB.worker; });
+    pLibs.catch(() => { pLibs = null; });
+  }
+  return pLibs;
+}
+
+const NS = "http://www.w3.org/2000/svg";
+const FUENTE = "Helvetica, Arial, sans-serif";
+const COLORES = [["#d32f2f", "Rojo"], ["#1e5bd6", "Azul"], ["#1f8a3b", "Verde"], ["#111111", "Negro"]];
+const AMARILLO = "#ffd400";
+const TAM = { lapiz: [1.2, 2, 3.5], resaltar: [9, 14, 20], texto: [10, 13, 18], marca: [14, 22, 32], sello: [26, 34, 44] };
+const HERR = [["mover", "Mover", "Mover o seleccionar marcas (doble clic en un texto para editarlo; Supr borra la seleccionada)"],
+  ["lapiz", "Lápiz", "Dibujar a mano alzada"], ["resaltar", "Resaltar", "Resaltador amarillo"], ["texto", "Texto", "Clic donde quieras escribir. Enter termina, Mayús+Enter = otra línea"],
+  ["bien", "Bien", "Marca ✓"], ["mal", "Mal", "Marca ✗"], ["sello", "Sello", "Sello con la nota (la que escribas arriba)"], ["borrar", "Borrar", "Clic en una marca para borrarla"]];
+
+const V = { codigo: null, bytes: null, doc: null, pages: [], anots: [], hist: [], herr: "lapiz", color: COLORES[0][0], tam: 1,
+            zoom: 1, ajustar: true, sel: null, sucio: false, token: 0, editor: null, editando: null, abierto: false };
+let UI = null;
+const nid = () => Math.random().toString(36).slice(2, 9);
+const r1 = n => Math.round(n * 10) / 10;
+function svgEl(tag, attrs) { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); return n; }
+function boton(cls, html, titulo, fn) { const b = el("button", cls); b.type = "button"; b.innerHTML = html; if (titulo) b.title = titulo; if (fn) b.onclick = fn; return b; }
+
+function crearVisor() {
+  if (UI) return;
+  const visor = el("div", "visor"); visor.hidden = true; visor.dataset.herr = V.herr;
+  const top = el("div", "v-top");
+  const cerrar = boton("ib", ICO.x, "Cerrar (vuelve a la lista)", () => cerrarVisor());
+  const prev = boton("ib", ICO.izq, "Alumno anterior", () => vecino(-1));
+  const next = boton("ib", ICO.der, "Alumno siguiente", () => vecino(1));
+  const quien = el("div", "v-quien"); quien.append(el("b"), el("small"));
+  const notaBox = el("label", "v-nota"); const nota = el("input"); nota.inputMode = "decimal"; nota.placeholder = "—"; nota.maxLength = 5;
+  notaBox.append("Nota", nota, "/ 20");
+  const com = el("input", "v-com"); com.placeholder = "Comentario para el alumno (opcional)"; com.maxLength = 500;
+  const guardar = el("button", "btn acc", "Guardar nota"); guardar.type = "button"; guardar.onclick = () => guardarNota(false);
+  const guardarSig = el("button", "btn ghost", "Guardar y siguiente →"); guardarSig.type = "button"; guardarSig.onclick = () => guardarNota(true);
+  const bajar = boton("ib", ICO.bajar, "Descargar este PDF con tus correcciones", descargarPdf);
+  const reini = boton("ib", "↺", "Reiniciar su entrega (borra su PDF para que lo vuelva a subir)", reiniciarEntrega);
+  top.append(cerrar, prev, next, quien, notaBox, com, guardar, guardarSig, bajar, reini);
+
+  const herr = el("div", "v-herr"), bHerr = {};
+  HERR.forEach(([k, txt, tip]) => {
+    const b = boton("herr" + (k === V.herr ? " on" : ""), ICO[k], tip, () => fijarHerr(k)); b.append(el("span", "", txt));
+    bHerr[k] = b; herr.appendChild(b);
+  });
+  herr.append(el("span", "sep-v"));
+  const bColor = COLORES.map(([c, n]) => { const b = boton("color" + (c === V.color ? " on" : ""), "", n, () => fijarColor(c)); b.style.background = c; herr.appendChild(b); return b; });
+  herr.append(el("span", "sep-v"));
+  const bTam = [5, 8, 12].map((px, i) => { const b = boton("tam" + (i === V.tam ? " on" : ""), "", ["Fino / pequeño", "Normal", "Grueso / grande"][i], () => fijarTam(i)); const d = el("i"); d.style.width = d.style.height = px + "px"; b.appendChild(d); herr.appendChild(b); return b; });
+  herr.append(el("span", "sep-v"));
+  const deshacerB = boton("herr", ICO.deshacer, "Deshacer (Ctrl+Z)", deshacer); deshacerB.append(el("span", "", "Deshacer"));
+  herr.append(deshacerB, el("span", "sep-v"));
+  const zMenos = boton("ib", "−", "Alejar", () => zoomPaso(1 / 1.2)), zMas = boton("ib", "+", "Acercar", () => zoomPaso(1.2));
+  const zLbl = el("span", "zoom-lbl", "100%");
+  const zAjus = boton("herr", "↔", "Ajustar al ancho", () => { V.ajustar = true; calcularZoom(); aplicarZoom(); }); zAjus.append(el("span", "", "Ajustar"));
+  herr.append(zMenos, zLbl, zMas, zAjus, el("span", "v-ayuda", "Ctrl+Z deshace · Supr borra lo seleccionado"));
+  const pages = el("div", "v-pages");
+  visor.append(top, herr, pages);
+  document.body.appendChild(visor);
+
+  nota.addEventListener("input", () => { V.sucio = true; V.pages.forEach(P => { if (V.anots.some(o => o.p === P.i && o.t === "sello")) dibujarAnots(P); }); });
+  nota.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); guardarNota(false); } });
+  com.addEventListener("input", () => V.sucio = true);
+  com.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); guardarNota(false); } });
+  UI = { visor, quien, nota, com, guardar, guardarSig, prev, next, bajar, reini, bHerr, bColor, bTam, deshacerB, zLbl, pages };
+
+  document.addEventListener("keydown", e => {
+    if (!V.abierto) return;
+    const escribiendo = /^(INPUT|TEXTAREA)$/.test((document.activeElement || {}).tagName || "");
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !escribiendo) { e.preventDefault(); deshacer(); }
+    else if ((e.key === "Delete" || e.key === "Backspace") && V.sel && !escribiendo) { e.preventDefault(); borrarObj(V.sel); }
+    else if (e.key === "Escape" && !escribiendo) { if (V.sel) seleccionar(null); }
+  });
+  let tRes = 0;
+  addEventListener("resize", () => { if (!V.abierto || !V.ajustar) return; clearTimeout(tRes); tRes = setTimeout(() => { calcularZoom(); aplicarZoom(); }, 250); });
+  addEventListener("beforeunload", e => { if (V.abierto && V.sucio) { e.preventDefault(); e.returnValue = ""; } });
+}
+
+function fijarHerr(k) {
+  cerrarEditor();
+  V.herr = k; UI.visor.dataset.herr = k;
+  for (const h in UI.bHerr) UI.bHerr[h].classList.toggle("on", h === k);
+  if (k !== "mover") seleccionar(null);
+}
+function fijarColor(c) {
+  V.color = c;
+  UI.bColor.forEach((b, i) => b.classList.toggle("on", COLORES[i][0] === c));
+  const o = V.anots.find(x => x.id === V.sel);
+  if (o && o.t !== "resaltar") { cambio(); o.c = c; redibujarTodo(); }          // recolorea lo seleccionado
+  if (V.herr === "mover" || V.herr === "borrar" || V.herr === "resaltar") { if (!o) fijarHerr("lapiz"); }
+}
+function fijarTam(i) { V.tam = i; UI.bTam.forEach((b, k) => b.classList.toggle("on", k === i)); }
+
+/* ---------- abrir / cerrar ---------- */
+const conEntrega = () => enOrden(D.alumnos).filter(a => D.env[a.codigo]);
+async function abrirVisor(codigo) {
+  crearVisor();
+  if (V.abierto && V.sucio && !confirm("Tienes cambios sin guardar en este PDF. ¿Cambiar de alumno sin guardarlos?")) return;
+  cerrarEditor();
+  const a = D.alumnos.find(x => x.codigo === codigo), e = D.env[codigo];
+  Object.assign(V, { codigo, anots: [], hist: [], sel: null, sucio: false, abierto: true, bytes: null });
+  const token = ++V.token;
+  UI.visor.hidden = false; document.body.style.overflow = "hidden";
+  UI.quien.firstChild.textContent = Aula.nombreBonito(a.nombre);
+  UI.quien.lastChild.textContent = `${a.grupo}-${String(a.n || "").padStart(2, "0")} · entregó ${fmtHora(e.hora)} · ${e.nombre}` + (e.veces > 1 ? ` · ${e.veces} envíos` : "");
+  UI.nota.value = e.nota == null ? "" : String(e.nota); UI.com.value = e.comentario || "";
+  const lista = conEntrega(), k = lista.findIndex(x => x.codigo === codigo);
+  UI.prev.disabled = k <= 0; UI.next.disabled = k < 0 || k >= lista.length - 1;
+  UI.guardarSig.disabled = UI.next.disabled;
+  [UI.guardar, UI.bajar].forEach(b => b.disabled = true);
+  UI.pages.replaceChildren(el("p", "v-carga", "Abriendo el PDF de " + Aula.nombreBonito(a.nombre) + "…"));
+  try {
+    const [r] = await Promise.all([Aula.api("tareaPdf", { id: tareaId, codigo }), cargarLibs()]);
+    if (token !== V.token) return;
+    const bin = atob(r.pdf), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    V.bytes = bytes;
+    V.anots = Array.isArray(r.anot) ? r.anot : [];
+    UI.nota.value = r.nota == null ? "" : String(r.nota); UI.com.value = r.comentario || "";
+    if (V.doc) { try { V.doc.destroy(); } catch (_) {} V.doc = null; }
+    const doc = await pdfjsLib.getDocument({ data: bytes.slice(), cMapUrl: LIB.cmaps, cMapPacked: true, standardFontDataUrl: LIB.fuentes }).promise;
+    if (token !== V.token) { doc.destroy(); return; }
+    V.doc = doc;
+    await armarPaginas(token);
+    [UI.guardar, UI.bajar].forEach(b => b.disabled = false);
+  } catch (ex) {
+    if (token !== V.token) return;
+    UI.pages.replaceChildren(el("div", "aviso", /password|encrypt/i.test(ex.message || "")
+      ? "Este PDF tiene contraseña y no se puede abrir aquí. Pídele al alumno que lo vuelva a guardar sin contraseña (reinicia su entrega con ↺)."
+      : /Invalid PDF|corrupt/i.test(ex.message || "") ? "El archivo está dañado o no es un PDF válido. Reinicia su entrega (↺) para que lo vuelva a subir."
+      : textoError(ex, true)));
+  }
+}
+
+function cerrarVisor(forzar) {
+  if (!forzar && V.sucio && !confirm("Tienes cambios sin guardar en este PDF. ¿Cerrar sin guardarlos?")) return false;
+  cerrarEditor();
+  V.token++; V.abierto = false; V.sucio = false; V.pages = [];
+  if (V.doc) { try { V.doc.destroy(); } catch (_) {} V.doc = null; }
+  UI.pages.replaceChildren(); UI.visor.hidden = true; document.body.style.overflow = "";
+  return true;
+}
+function vecino(paso) {
+  const lista = conEntrega(), k = lista.findIndex(x => x.codigo === V.codigo);
+  const a = lista[k + paso]; if (a) abrirVisor(a.codigo);
+}
+
+async function armarPaginas(token) {
+  V.pages = [];
+  const frag = [];
+  for (let i = 1; i <= V.doc.numPages; i++) {
+    const page = await V.doc.getPage(i);
+    if (token !== V.token) return;
+    const vp = page.getViewport({ scale: 1, rotation: 0 });
+    const div = el("div", "pg"), canvas = document.createElement("canvas");
+    const svg = svgEl("svg", { viewBox: `0 0 ${vp.width} ${vp.height}` });
+    div.append(canvas, svg, el("span", "num", `Página ${i} de ${V.doc.numPages}`));
+    const P = { i: i - 1, page, w: vp.width, h: vp.height, div, canvas, svg };
+    eventosPagina(P);
+    V.pages.push(P); frag.push(div);
+  }
+  UI.pages.replaceChildren(...frag);
+  calcularZoom(); aplicarZoom();
+  redibujarTodo();
+}
+
+/* ---------- zoom y dibujo del PDF ---------- */
+function calcularZoom() {
+  if (!V.ajustar || !V.pages.length) return;
+  const ancho = UI.pages.clientWidth - 40, maxW = Math.max(...V.pages.map(p => p.w));
+  V.zoom = Math.min(1.5, Math.max(.35, ancho / maxW));
+}
+function zoomPaso(f) { if (!V.pages.length) return; V.ajustar = false; V.zoom = Math.min(4, Math.max(.3, V.zoom * f)); aplicarZoom(); }
+let renderTok = 0;
+function aplicarZoom() {
+  cerrarEditor();
+  V.pages.forEach(P => { P.div.style.width = P.w * V.zoom + "px"; P.div.style.height = P.h * V.zoom + "px"; });
+  UI.zLbl.textContent = Math.round(V.zoom * 100) + "%";
+  renderizar();
+}
+async function renderizar() {
+  const tok = ++renderTok, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  for (const P of V.pages) {
+    if (tok !== renderTok) return;
+    const vp = P.page.getViewport({ scale: V.zoom * dpr, rotation: 0 });
+    const c = document.createElement("canvas"); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+    try { await P.page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise; } catch (_) { continue; }
+    if (tok !== renderTok) return;
+    P.canvas.replaceWith(c); P.canvas = c;               // se cambia ya dibujado: no parpadea
+  }
+}
+
+/* ---------- marcas ---------- */
+function cambio() { V.hist.push(JSON.stringify(V.anots)); if (V.hist.length > 80) V.hist.shift(); V.sucio = true; }
+function deshacer() {
+  cerrarEditor();
+  if (!V.hist.length) return Aula.toast("Nada que deshacer", "", "warn");
+  V.anots = JSON.parse(V.hist.pop()); V.sel = null; V.sucio = true; redibujarTodo();
+}
+function borrarObj(id) { cambio(); V.anots = V.anots.filter(o => o.id !== id); if (V.sel === id) V.sel = null; redibujarTodo(); }
+function seleccionar(id) { if (V.sel === id) return; V.sel = id; redibujarTodo(); }
+function redibujarTodo() { V.pages.forEach(dibujarAnots); }
+const pagina = i => V.pages.find(P => P.i === i);
+
+const dTrazo = pts => pts.map((p, i) => (i ? "L" : "M") + p[0] + " " + p[1]).join(" ");
+function dMarca(o) {
+  const s = o.s, x = o.x, y = o.y, f = n => r1(n);
+  return o.t === "bien"
+    ? `M${f(x - .45 * s)} ${f(y + .02 * s)} L${f(x - .12 * s)} ${f(y + .36 * s)} L${f(x + .5 * s)} ${f(y - .4 * s)}`
+    : `M${f(x - .36 * s)} ${f(y - .36 * s)} L${f(x + .36 * s)} ${f(y + .36 * s)} M${f(x + .36 * s)} ${f(y - .36 * s)} L${f(x - .36 * s)} ${f(y + .36 * s)}`;
+}
+const notaSello = () => UI.nota.value.trim().replace(".", ",") || "—";
+/** Textos del sello: [texto, tamaño, negrita, desplazamiento de la línea base desde el centro] */
+const textosSello = o => { const n = notaSello(), r = o.s;
+  return [["NOTA", r * .25, true, -r * .4], [n, r * (n.length > 3 ? .58 : .78), true, r * .29], ["de 20", r * .22, false, r * .62]]; };
+const ctxMedir = document.createElement("canvas").getContext("2d");
+const anchoTexto = (t, s) => { ctxMedir.font = `${s}px ${FUENTE}`; return ctxMedir.measureText(t).width; };
+
+function dibujarAnots(P) {
+  const svg = P.svg;
+  while (svg.firstChild) svg.firstChild.remove();
+  V.anots.filter(o => o.p === P.i && o.id !== V.editando).forEach(o => {
+    const g = svgEl("g", { "data-id": o.id, class: "anot" });
+    dibujarObj(g, o); svg.appendChild(g);
+    if (o.id === V.sel) {
+      const b = g.getBBox(), m = 4;
+      svg.appendChild(svgEl("rect", { x: b.x - m, y: b.y - m, width: b.width + 2 * m, height: b.height + 2 * m, fill: "none",
+        stroke: "#1e5bd6", "stroke-width": 1, "stroke-dasharray": "4 3", "pointer-events": "none" }));
+    }
+  });
+}
+function dibujarObj(g, o) {
+  if (o.t === "lapiz" || o.t === "resaltar") {
+    const d = dTrazo(o.pts), base = { d, fill: "none", "stroke-linecap": "round", "stroke-linejoin": "round" };
+    g.append(svgEl("path", Object.assign({}, base, { stroke: "transparent", "stroke-width": Math.max(o.w, 10) })),
+             svgEl("path", Object.assign({}, base, { stroke: o.c, "stroke-width": o.w, "stroke-opacity": o.t === "resaltar" ? .4 : 1 })));
+  } else if (o.t === "texto") {
+    const lineas = o.txt.split("\n");
+    g.append(svgEl("rect", { x: o.x, y: o.y, width: Math.max(10, ...lineas.map(l => anchoTexto(l, o.s))), height: lineas.length * o.s * 1.2, fill: "transparent" }));
+    lineas.forEach((l, i) => {
+      const t = svgEl("text", { x: o.x, y: r1(o.y + o.s * .9 + i * o.s * 1.2), fill: o.c, "font-size": o.s, "font-family": FUENTE });
+      t.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space", "preserve");
+      t.textContent = l; g.append(t);
+    });
+  } else if (o.t === "bien" || o.t === "mal") {
+    g.append(svgEl("circle", { cx: o.x, cy: o.y, r: o.s * .6, fill: "transparent" }),
+             svgEl("path", { d: dMarca(o), fill: "none", stroke: o.c, "stroke-width": r1(o.s * .13), "stroke-linecap": "round", "stroke-linejoin": "round" }));
+  } else if (o.t === "sello") {
+    const r = o.s;
+    g.append(svgEl("circle", { cx: o.x, cy: o.y, r, fill: "#fff", "fill-opacity": .85, stroke: o.c, "stroke-width": r * .06 }),
+             svgEl("circle", { cx: o.x, cy: o.y, r: r * .86, fill: "none", stroke: o.c, "stroke-width": r * .025 }));
+    textosSello(o).forEach(([txt, size, negrita, dy]) => {
+      const t = svgEl("text", { x: o.x, y: o.y + dy, fill: o.c, "font-size": size, "font-family": FUENTE, "text-anchor": "middle", "font-weight": negrita ? 700 : 400 });
+      t.textContent = txt; g.append(t);
+    });
+  }
+}
+
+/* ---------- ratón / dedo sobre la página ---------- */
+function punto(P, ev) { const r = P.svg.getBoundingClientRect(); return [(ev.clientX - r.left) * P.w / r.width, (ev.clientY - r.top) * P.h / r.height]; }
+function eventosPagina(P) {
+  P.svg.addEventListener("pointerdown", ev => {
+    if (ev.pointerType === "mouse" && ev.button !== 0) return;
+    const [x, y] = punto(P, ev);
+    const g = ev.target.closest && ev.target.closest("[data-id]");
+    const obj = g ? V.anots.find(o => o.id === g.dataset.id) : null;
+    switch (V.herr) {
+      case "mover":
+        if (!obj) return seleccionar(null);
+        ev.preventDefault(); seleccionar(obj.id); arrastrar(P, obj, ev, x, y); break;
+      case "borrar":
+        if (obj) borrarObj(obj.id); break;
+      case "lapiz": case "resaltar":
+        ev.preventDefault(); trazar(P, ev, x, y); break;
+      case "texto":
+        ev.preventDefault();
+        if (obj && obj.t === "texto") abrirEditorTexto(P, obj, false);
+        else { const s = TAM.texto[V.tam]; abrirEditorTexto(P, { id: nid(), p: P.i, t: "texto", c: V.color, s, x: r1(x), y: r1(y - s * .6), txt: "" }, true); }
+        break;
+      case "bien": case "mal":
+        cambio(); V.anots.push({ id: nid(), p: P.i, t: V.herr, c: V.color, x: r1(x), y: r1(y), s: TAM.marca[V.tam] }); dibujarAnots(P); break;
+      case "sello":
+        cambio(); V.anots.push({ id: nid(), p: P.i, t: "sello", c: V.color, x: r1(x), y: r1(y), s: TAM.sello[V.tam] }); dibujarAnots(P);
+        if (!UI.nota.value.trim()) { UI.nota.focus(); Aula.toast("Escribe la nota arriba", "El sello muestra la nota que pongas (0 a 20) y cambia si la corriges.", "warn"); }
+        break;
+    }
+  });
+  P.svg.addEventListener("dblclick", ev => {
+    if (V.herr !== "mover") return;
+    const g = ev.target.closest && ev.target.closest("[data-id]");
+    const obj = g ? V.anots.find(o => o.id === g.dataset.id) : null;
+    if (obj && obj.t === "texto") abrirEditorTexto(P, obj, false);
+  });
+}
+
+function trazar(P, ev, x, y) {
+  const hl = V.herr === "resaltar";
+  const o = { id: nid(), p: P.i, t: hl ? "resaltar" : "lapiz", c: hl ? AMARILLO : V.color, w: (hl ? TAM.resaltar : TAM.lapiz)[V.tam], pts: [[r1(x), r1(y)]] };
+  const vivo = svgEl("path", { fill: "none", stroke: o.c, "stroke-width": o.w, "stroke-linecap": "round", "stroke-linejoin": "round", "stroke-opacity": hl ? .4 : 1 });
+  P.svg.appendChild(vivo);
+  P.svg.setPointerCapture(ev.pointerId);
+  const mover = e2 => {
+    (e2.getCoalescedEvents ? e2.getCoalescedEvents() : [e2]).forEach(e3 => {
+      const [a, b] = punto(P, e3), u = o.pts[o.pts.length - 1];
+      if (Math.hypot(a - u[0], b - u[1]) >= 1.2) o.pts.push([r1(a), r1(b)]);
+    });
+    vivo.setAttribute("d", dTrazo(o.pts));
+  };
+  const fin = () => {
+    P.svg.removeEventListener("pointermove", mover); P.svg.removeEventListener("pointerup", fin); P.svg.removeEventListener("pointercancel", fin);
+    if (o.pts.length === 1) o.pts.push([r1(o.pts[0][0] + .3), o.pts[0][1]]);       // un toque = un punto
+    cambio(); V.anots.push(o); dibujarAnots(P);
+  };
+  P.svg.addEventListener("pointermove", mover); P.svg.addEventListener("pointerup", fin); P.svg.addEventListener("pointercancel", fin);
+}
+
+function arrastrar(P, obj, ev, x0, y0) {
+  P.svg.setPointerCapture(ev.pointerId);
+  let movido = false;
+  const mover = e2 => {
+    const [x, y] = punto(P, e2), dx = x - x0, dy = y - y0;
+    if (!movido && Math.hypot(dx, dy) < 1.5) return;
+    if (!movido) { cambio(); movido = true; }
+    if (obj.pts) obj.pts = obj.pts.map(p => [r1(p[0] + dx), r1(p[1] + dy)]);
+    else { obj.x = r1(obj.x + dx); obj.y = r1(obj.y + dy); }
+    x0 = x; y0 = y; dibujarAnots(P);
+  };
+  const fin = () => { P.svg.removeEventListener("pointermove", mover); P.svg.removeEventListener("pointerup", fin); P.svg.removeEventListener("pointercancel", fin); };
+  P.svg.addEventListener("pointermove", mover); P.svg.addEventListener("pointerup", fin); P.svg.addEventListener("pointercancel", fin);
+}
+
+function abrirEditorTexto(P, o, nuevo) {
+  cerrarEditor();
+  const z = V.zoom, ta = el("textarea", "txt-edit");
+  ta.value = o.txt; ta.spellcheck = true;
+  Object.assign(ta.style, { left: o.x * z + "px", top: o.y * z + "px", fontSize: o.s * z + "px", color: o.c });
+  const medir = () => { ta.style.width = "0px"; ta.style.height = "0px"; ta.style.width = (ta.scrollWidth + 8) + "px"; ta.style.height = ta.scrollHeight + "px"; };
+  V.editando = o.id; dibujarAnots(P);
+  P.div.appendChild(ta); medir();
+  ta.addEventListener("input", medir);
+  const ed = {
+    terminar(guardarlo) {
+      if (V.editor !== ed) return;
+      V.editor = null; V.editando = null; ta.remove();
+      const txt = ta.value.replace(/\s+$/, "");
+      if (guardarlo && txt !== o.txt) {
+        cambio();
+        if (!txt) V.anots = V.anots.filter(x => x.id !== o.id);
+        else { o.txt = txt; if (nuevo) V.anots.push(o); }
+      }
+      dibujarAnots(P);
+    }
+  };
+  V.editor = ed;
+  ta.addEventListener("blur", () => ed.terminar(true));
+  ta.addEventListener("keydown", e => {
+    e.stopPropagation();
+    if (e.key === "Escape") { e.preventDefault(); ed.terminar(false); }
+    else if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ed.terminar(true); }
+  });
+  ta.focus({ preventScroll: true });                                   // ya: se puede escribir de inmediato
+  setTimeout(() => { if (V.editor === ed && document.activeElement !== ta) ta.focus({ preventScroll: true }); }, 0);
+}
+function cerrarEditor() { if (V.editor) V.editor.terminar(true); }
+
+/* ---------- PDF corregido (pdf-lib) ---------- */
+/** Solo caracteres que la fuente estándar del PDF sabe escribir (español completo); lo demás sale como «?». */
+const WINANSI = /[^\x20-\x7E\xA0-\xFF€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ]/g;
+const seguro = s => String(s).replace(/\t/g, "  ").replace(WINANSI, "?");
+const aRgb = hex => { const n = parseInt(hex.slice(1), 16); return PDFLib.rgb((n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255); };
+
+async function construirPdf() {
+  await cargarLibs();
+  const { PDFDocument, StandardFonts, LineCapStyle } = PDFLib;
+  const doc = await PDFDocument.load(V.bytes.slice(), { ignoreEncryption: true });
+  const helv = await doc.embedFont(StandardFonts.Helvetica), negrita = await doc.embedFont(StandardFonts.HelveticaBold);
+  const pags = doc.getPages(), conJunta = new Set();
+  V.anots.forEach(o => {
+    const pg = pags[o.p]; if (!pg) return;
+    const cb = pg.getCropBox();
+    const X = x => cb.x + x, Y = y => cb.y + cb.height - y;
+    const col = aRgb(o.c);
+    const trazo = (d, ancho, opac) => {
+      if (!conJunta.has(o.p) && PDFLib.setLineJoin && PDFLib.LineJoinStyle) { pg.pushOperators(PDFLib.setLineJoin(PDFLib.LineJoinStyle.Round)); conJunta.add(o.p); }
+      pg.drawSvgPath(d, { x: cb.x, y: cb.y + cb.height, borderColor: col, borderWidth: ancho, borderOpacity: opac, borderLineCap: LineCapStyle.Round });
+    };
+    if (o.t === "lapiz" || o.t === "resaltar") trazo(dTrazo(o.pts), o.w, o.t === "resaltar" ? .4 : 1);
+    else if (o.t === "bien" || o.t === "mal") trazo(dMarca(o), r1(o.s * .13), 1);
+    else if (o.t === "texto") {
+      o.txt.split("\n").forEach((l, i) => { if (l.trim()) pg.drawText(seguro(l), { x: X(o.x), y: Y(o.y + o.s * .9 + i * o.s * 1.2), size: o.s, font: helv, color: col }); });
+    } else if (o.t === "sello") {
+      const r = o.s;
+      pg.drawCircle({ x: X(o.x), y: Y(o.y), size: r, color: PDFLib.rgb(1, 1, 1), opacity: .85, borderColor: col, borderWidth: r * .06 });
+      pg.drawCircle({ x: X(o.x), y: Y(o.y), size: r * .86, borderColor: col, borderWidth: r * .025 });
+      textosSello(o).forEach(([txt, size, esNegrita, dy]) => {
+        const f = esNegrita ? negrita : helv, t = seguro(txt);
+        pg.drawText(t, { x: X(o.x) - f.widthOfTextAtSize(t, size) / 2, y: Y(o.y + dy), size, font: f, color: col });
+      });
+    }
+  });
+  return await doc.save();
+}
+
+const nombreBase = () => { const a = D.alumnos.find(x => x.codigo === V.codigo); return `${a.grupo}-${String(a.n || "").padStart(2, "0")} - ${Aula.nombreBonito(a.nombre)} - ${D.tarea.titulo}`; };
+async function descargarPdf() {
+  if (!V.bytes) return;
+  cerrarEditor(); UI.bajar.disabled = true;
+  try { descargar(new Blob([V.anots.length ? await construirPdf() : V.bytes], { type: "application/pdf" }), (V.anots.length ? "CORREGIDO - " : "") + nombreBase() + ".pdf"); }
+  catch (ex) { Aula.toast("No se pudo crear el PDF", ex.message, "warn"); }
+  finally { UI.bajar.disabled = false; }
+}
+
+async function guardarNota(yAvanzar) {
+  if (!V.bytes) return;
+  cerrarEditor();
+  const txt = UI.nota.value.trim().replace(",", ".");
+  let nota = null;
+  if (txt !== "") {
+    nota = Number(txt);
+    if (!(nota >= 0 && nota <= 20)) { Aula.toast("Nota no válida", "Escribe un número de 0 a 20.", "warn"); UI.nota.focus(); return; }
+  } else if (!confirm("No escribiste la nota. ¿Guardar solo las correcciones (sin nota)?")) { UI.nota.focus(); return; }
+  const codigo = V.codigo, b = yAvanzar ? UI.guardarSig : UI.guardar, txtB = b.textContent;
+  [UI.guardar, UI.guardarSig].forEach(x => x.disabled = true); b.textContent = "Guardando…";
+  try {
+    const corregido = V.anots.length ? await aBase64(new Blob([await construirPdf()])) : null;
+    const r = await Aula.api("tareaCalificar", { id: tareaId, codigo, nota, comentario: UI.com.value.trim(),
+      anot: JSON.stringify(V.anots), corregido, quitarCorregido: !V.anots.length });
+    Object.assign(D.env[codigo], { nota: r.nota, comentario: UI.com.value.trim(), corregido: r.corregido, calificado: r.calificado });
+    if (V.codigo === codigo) V.sucio = false;
+    pintarLista(); actualizarStats();
+    Aula.toast(nota == null ? "Correcciones guardadas (sin nota)" : "Nota guardada: " + fmtNota(nota),
+      V.anots.length ? "El PDF corregido quedó en tu Drive, junto al original." : "");
+    if (yAvanzar) vecino(1);
+  } catch (ex) { Aula.toast("No se guardó", textoError(ex, true), "warn"); }
+  finally { b.textContent = txtB; UI.guardar.disabled = false; UI.guardarSig.disabled = UI.next.disabled; }
+}
+
+async function reiniciarEntrega() {
+  const a = D.alumnos.find(x => x.codigo === V.codigo);
+  if (!confirm(`¿Reiniciar la entrega de ${Aula.nombreBonito(a.nombre)}?\n\nSu PDF (y la corrección, si la hay) va a la papelera de tu Drive y podrá subirlo otra vez mientras la tarea esté abierta.`)) return;
+  try {
+    await Aula.api("tareaReiniciar", { id: tareaId, codigo: V.codigo });
+    delete D.env[V.codigo];
+    cerrarVisor(true); pintarLista(); actualizarStats();
+    Aula.toast("Entrega reiniciada", Aula.nombreBonito(a.nombre) + " puede volver a subir su PDF.");
+  } catch (ex) { Aula.toast("No se pudo reiniciar", textoError(ex, true), "warn"); }
+}
+
+(async () => {
+  const s = await Aula.listo;
+  document.getElementById("quien").textContent = Aula.quien(s);
+  document.getElementById("salir").onclick = () => Aula.salir();
+  if (!tareaId) return avisoCaja("Falta la tarea", "Entra desde la carpeta de tu clase.");
+  if (s.rol === "docente") vistaDocente(); else vistaAlumno();
+})();
+</script>
+</body>
+</html>
