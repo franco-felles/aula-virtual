@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-20T02:03:21.660Z",
+ "generado": "2026-11-20T11:03:14.877Z",
  "v": 1,
  "clases": [
   {
@@ -132,7 +132,7 @@
    "clase": "",
    "abierto": true,
    "repetir": true,
-   "npreg": 59
+   "npreg": 53
   }
  ]
 }
