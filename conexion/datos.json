@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-19T22:43:11.619Z",
+ "generado": "2026-11-20T02:03:21.660Z",
  "v": 1,
  "clases": [
   {
@@ -123,7 +123,7 @@
    "titulo": "Párrafos en Google Docs",
    "clase": "u1c9",
    "abierto": true,
-   "repetir": false,
+   "repetir": true,
    "npreg": 19
   },
   {
