@@ -16,7 +16,7 @@
    ========================================================== */
 
 const TOKEN_SEG = 6 * 60 * 60;
-const VERSION_API = 3;          // 2 = quizzes con mensaje por alternativa y RETRO · 3 = entregas en PDF (la web avisa si el Panel tiene una versión menor)
+const VERSION_API = 4;          // 2 = quizzes con mensaje por alternativa y RETRO · 3 = entregas en PDF · 4 = devolver evaluaciones (el alumno descarga su PDF corregido) (la web avisa si el Panel tiene una versión menor)
 const CAB_QUIZ = ["ID", "TITULO", "CLASE", "MOSTRAR", "ABIERTO", "NPREG", "PREGUNTAS", "ACTUALIZADO", "OCULTO", "REPETIR", "PUNTAJE", "ERRORES", "PENALIZAR", "RETRO"];
 const CAB_RES = ["QUIZ", "CODIGO", "ALUMNO", "GRUPO", "ACIERTOS", "TOTAL", "NOTA", "CORRECCION", "INCIDENTES", "HORA", "DETALLE", "INTENTOS", "DESCUENTO"];
 
@@ -39,7 +39,8 @@ const ACCIONES = {
   quizRendir: apiQuizRendir, quizEnviar: apiQuizEnviar, quizCorregir: apiQuizCorregir, quizReiniciar: apiQuizReiniciar,
   pasoVer: apiPasoVer, pasoFijar: apiPasoFijar,
   tareaLista: apiTareaLista, tareaGuardar: apiTareaGuardar, tareaOpciones: apiTareaOpciones, tareaBorrar: apiTareaBorrar,
-  tareaVer: apiTareaVer, tareaSubir: apiTareaSubir, tareaPdf: apiTareaPdf, tareaCalificar: apiTareaCalificar, tareaReiniciar: apiTareaReiniciar
+  tareaVer: apiTareaVer, tareaSubir: apiTareaSubir, tareaPdf: apiTareaPdf, tareaCalificar: apiTareaCalificar, tareaReiniciar: apiTareaReiniciar,
+  tareaMiPdf: apiTareaMiPdf
 };
 
 /* ======================= SESIÓN ======================= */
@@ -551,10 +552,11 @@ function apiQuizReiniciar(req) {
      carpeta de la clase / ENTREGAS PDF / <título> / G1-03 - APELLIDOS NOMBRES - <título>.pdf
    El docente lo abre en la web, lo corrige encima (lápiz, texto, ✓ ✗, sello con la nota) y guarda la nota (0–20)
    en la pestaña EnviosPDF. La versión corregida queda al lado («CORREGIDO - …pdf», con enlace de solo lectura).
-   Estado: OCULTO (no la ven) · cerrada (la ven, no pueden subir) · ABIERTO (pueden subir o reemplazar su PDF).
-   VER_NOTA: el alumno ve su nota, el comentario y su trabajo corregido.
+   Estado: OCULTO (no la ven) · cerrada (la ven, no pueden subir) · ABIERTO (pueden subir o reemplazar su PDF)
+           · DEVUELTO (cerrada; cada alumno ve su nota y descarga su PDF corregido desde la web).
+   VER_NOTA: el alumno ve su nota apenas se guarda, sin esperar a que la devuelvas.
    Una vez calificado, el alumno ya no puede reemplazar su PDF (el docente puede reiniciar su entrega). */
-const CAB_TAREA = ["ID", "TITULO", "CLASE", "INDICACIONES", "ABIERTO", "OCULTO", "VER_NOTA", "ACTUALIZADO"];
+const CAB_TAREA = ["ID", "TITULO", "CLASE", "INDICACIONES", "ABIERTO", "OCULTO", "VER_NOTA", "ACTUALIZADO", "DEVUELTO"];
 const CAB_ENVIO = ["TAREA", "CODIGO", "ALUMNO", "GRUPO", "N", "ARCHIVO_ID", "NOMBRE", "KB", "HORA", "VECES",
                    "NOTA", "COMENTARIO", "ANOTACIONES", "CORREGIDO_ID", "CALIFICADO"];
 const MAX_PDF_MB = 10;
@@ -563,7 +565,8 @@ const MAX_CELDA = 45000;      // una celda admite 50 000 caracteres; si las anot
 function tareasTodas(fresco) {
   const leer = () => leerTabla(tablaFija("Tareas", CAB_TAREA)).filas.filter(f => f.ID).map(f => ({
     id: String(f.ID), titulo: String(f.TITULO || ""), clase: normId(f.CLASE), indicaciones: String(f.INDICACIONES || ""),
-    abierto: SI_NO(f.ABIERTO, false), oculto: SI_NO(f.OCULTO, false), verNota: SI_NO(f.VER_NOTA, true), _fila: f._fila
+    abierto: SI_NO(f.ABIERTO, false), oculto: SI_NO(f.OCULTO, false), verNota: SI_NO(f.VER_NOTA, true),
+    devuelto: SI_NO(f.DEVUELTO, false) && !SI_NO(f.ABIERTO, false) && !SI_NO(f.OCULTO, false), _fila: f._fila
   }));
   return fresco ? leer() : datos("tareas", leer);
 }
@@ -573,7 +576,7 @@ function tareaDe(id, fresco) {
   return t;
 }
 const tareaPublica = t => ({ id: t.id, titulo: t.titulo, clase: t.clase, indicaciones: t.indicaciones,
-                             abierto: t.abierto, oculto: t.oculto, verNota: t.verNota });
+                             abierto: t.abierto, oculto: t.oculto, verNota: t.verNota, devuelto: t.devuelto });
 
 /** Entregas sin las anotaciones (pueden ser largas): así caben en la memoria. */
 function enviosTodos(fresco) {
@@ -589,7 +592,8 @@ const envioDocente = e => ({ codigo: e.CODIGO, nombre: e.NOMBRE, kb: Number(e.KB
   corregido: urlDrive(e.CORREGIDO_ID) });
 function envioAlumno(e, t) {
   const out = { nombre: e.NOMBRE, kb: Number(e.KB) || 0, hora: e.HORA, veces: Number(e.VECES) || 1, revisado: !vacio(e.NOTA) };
-  if (t.verNota && out.revisado) Object.assign(out, { nota: Number(e.NOTA), comentario: String(e.COMENTARIO || ""), corregido: urlDrive(e.CORREGIDO_ID) });
+  if ((t.verNota || t.devuelto) && out.revisado) Object.assign(out, { nota: Number(e.NOTA), comentario: String(e.COMENTARIO || ""), corregido: urlDrive(e.CORREGIDO_ID) });
+  if (t.devuelto) out.descargar = true;          // la web le muestra «Descargar mi evaluación»
   return out;
 }
 
@@ -598,7 +602,7 @@ function tareasParaLista(s, clase) {
   const docente = s.rol === "docente";
   const env = docente ? [] : enviosTodos();
   return tareasTodas().filter(t => (docente || !t.oculto) && (clase === null || t.clase === clase)).map(t => ({
-    id: t.id, titulo: t.titulo, clase: t.clase, abierto: t.abierto, oculto: t.oculto,
+    id: t.id, titulo: t.titulo, clase: t.clase, abierto: t.abierto, oculto: t.oculto, devuelto: t.devuelto,
     entregados: docente ? undefined : s.codigos.filter(c => env.some(e => e.TAREA === t.id && e.CODIGO === c))
   }));
 }
@@ -635,7 +639,8 @@ function apiTareaGuardar(req) {
     const sh = tablaFija("Tareas", CAB_TAREA), t = leerTabla(sh);
     const id = d.id || "tp" + Date.now().toString(36) + Utilities.getUuid().slice(0, 4);
     const fila = { ID: id, TITULO: titulo, CLASE: normId(d.clase), INDICACIONES: String(d.indicaciones || "").trim(),
-                   ABIERTO: !!d.abierto && !d.oculto, OCULTO: !!d.oculto, VER_NOTA: d.verNota !== false, ACTUALIZADO: new Date() };
+                   ABIERTO: !!d.abierto && !d.oculto, OCULTO: !!d.oculto, VER_NOTA: d.verNota !== false, ACTUALIZADO: new Date(),
+                   DEVUELTO: !!d.devuelto && !d.abierto && !d.oculto };
     const existente = t.filas.find(f => String(f.ID) === id);
     if (existente) escribirFila(sh, t, existente._fila, fila);
     else sh.appendRow(filaDesde(t.cab, fila));
@@ -654,6 +659,8 @@ function apiTareaOpciones(req) {
     const o = req.opciones || {}, cambios = { ACTUALIZADO: new Date() };
     if ("oculto" in o) { cambios.OCULTO = !!o.oculto; if (o.oculto) cambios.ABIERTO = false; }
     if ("abierto" in o) { cambios.ABIERTO = !!o.abierto; if (o.abierto) cambios.OCULTO = false; }
+    if ("devuelto" in o) { cambios.DEVUELTO = !!o.devuelto; if (o.devuelto) { cambios.ABIERTO = false; cambios.OCULTO = false; } }
+    if (cambios.ABIERTO || cambios.OCULTO) cambios.DEVUELTO = false;   // abrir u ocultar quita la devolución
     if ("verNota" in o) cambios.VER_NOTA = !!o.verNota;
     escribirFila(sh, t, f._fila, cambios);
     invalidarCache(["tareas"]);
@@ -819,6 +826,22 @@ function apiTareaReiniciar(req) {
   } finally { lock.releaseLock(); }
   viejos.forEach(aPapelera);
   return {};
+}
+
+/** Alumno: descarga su evaluación (la copia CORREGIDA si hay marcas; si no, su PDF). Solo con la tarea devuelta. */
+function apiTareaMiPdf(req) {
+  const s = sesionDe(req, "alumno");
+  const a = alumnoDeSesion(s, req.codigo);
+  const t = tareaDe(req.id);
+  if (!t.devuelto) throw new Error("Tu docente todavía no devuelve las evaluaciones.");
+  const e = enviosTodos().find(x => x.TAREA === t.id && x.CODIGO === a.CODIGO);
+  if (!e) throw new Error("No tienes entrega en esta tarea.");
+  let archivo = null, corregido = false;
+  if (e.CORREGIDO_ID) { try { archivo = DriveApp.getFileById(String(e.CORREGIDO_ID)); corregido = true; } catch (_) {} }
+  if (!archivo) { try { archivo = DriveApp.getFileById(String(e.ARCHIVO_ID)); } catch (_) {} }
+  if (!archivo) throw new Error("No se encuentra tu archivo. Avísale a tu docente.");
+  return { pdf: Utilities.base64Encode(archivo.getBlob().getBytes()), corregido,
+           nombre: (corregido ? "CORREGIDO - " : "") + limpiarNombre(t.titulo) + " - " + limpiarNombre(a["APELLIDOS Y NOMBRES"]) + ".pdf" };
 }
 
 /* ======================= MATERIALES POR PARTES =======================

@@ -234,12 +234,14 @@ function pintarClase(r, man, docente) {
   const tareas = r.tareas || [];
   const nAlT = (Aula.sesion().alumnos || []).length;
   const estadoTarea = t => {
-    if (docente) return t.oculto ? " · oculta" : !t.abierto ? " · cerrada" : " · abierta";
+    if (docente) return t.oculto ? " · oculta" : t.devuelto ? " · devuelta" : !t.abierto ? " · cerrada" : " · abierta";
+    if (t.devuelto) return " · ✓ devuelta";
     return nAlT && (t.entregados || []).length >= nAlT ? " · ✓ entregado" : !t.abierto ? " · cerrada" : "";
   };
   if (tareas.length) cont.appendChild(carpeta("upload", "Entregas en PDF", grid(tareas.map(t => ({
     titulo: t.titulo + estadoTarea(t), tipo: "entrega", url: "eecc/tarea.html?id=" + t.id, interna: true,
     descripcion: docente ? "Ver los PDF, corregirlos y poner nota"
+      : t.devuelto ? "Descarga tu evaluación corregida con tu nota"
       : nAlT && (t.entregados || []).length >= nAlT ? "Ver mi entrega y mi nota"
       : t.abierto ? "Sube aquí tu trabajo en PDF" : "Ver mi entrega"
   }))), tareas.length));

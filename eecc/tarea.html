@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Entrega en PDF · Aula Virtual</title>
 <!-- ÚNICA página de entrega en PDF: tarea.html?id=<id>  (las tareas se crean en docente/tareas.html)
-     alumno  -> sube su trabajo en PDF (puede cambiarlo mientras esté abierta y sin calificar); ve su nota si el docente lo permite
+     alumno  -> sube su trabajo en PDF (puede cambiarlo mientras esté abierta y sin calificar); ve su nota si el docente lo permite;
+                con la tarea «Devuelta» descarga su evaluación corregida (acción tareaMiPdf)
      docente -> entregas por grupo; abre cada PDF en el navegador, lo corrige encima (lápiz, resaltador, texto, ✓ ✗,
                 sello con la nota), guarda la nota 0–20 y descarga las notas en CSV (Excel) o el PDF corregido.
      Librerías (solo se cargan al abrir un PDF): pdf.js para mostrarlo, pdf-lib para escribir las marcas dentro del PDF. -->
@@ -216,7 +217,8 @@ function pintarAlumno() {
   const cab = el("section", "cab-t anim");
   cab.append(el("p", "eyebrow", "Entrega en PDF" + (A.clase ? " · " + nombreClase(A.clase) : "")), el("h1", "titulo", t.titulo));
   if (t.indicaciones) cab.append(el("div", "indic", t.indicaciones));
-  cab.append(el("span", "estado-t" + (t.abierto ? "" : " cerrada"), t.abierto ? "● Abierta: puedes subir tu PDF" : "Entrega cerrada"));
+  cab.append(el("span", "estado-t" + (t.abierto || t.devuelto ? "" : " cerrada"),
+    t.abierto ? "● Abierta: puedes subir tu PDF" : t.devuelto ? "✓ Evaluaciones devueltas: descarga la tuya" : "Entrega cerrada"));
 
   const ayuda = el("details", "ayuda");
   ayuda.innerHTML = `<summary>¿Cómo guardo mi trabajo como PDF?</summary>
@@ -244,16 +246,37 @@ function tarjetaAlumno(a) {
       n.append(big);
       if (e.comentario) n.append(el("div", "com", e.comentario));
       card.append(n);
-      if (e.corregido) {
+      if (e.corregido && !e.descargar) {
         const v = el("a", "btn ghost", "Ver mi trabajo corregido ↗"); v.href = e.corregido; v.target = "_blank"; v.rel = "noopener";
         v.style.marginTop = "14px"; card.append(v);
       }
     } else if (e.revisado) card.append(el("p", "revisado", "Tu docente ya revisó tu trabajo."));
-  } else card.append(el("p", "sin-env", "Aún no entregas tu trabajo."));
+    if (e.descargar) card.append(botonMiPdf(a));
+  } else card.append(el("p", "sin-env", t.devuelto ? "No entregaste esta evaluación." : "Aún no entregas tu trabajo."));
 
   if (t.abierto && !(e && e.revisado)) card.append(zonaSubir(a, !!e));
-  else if (!t.abierto && !e) card.append(el("div", "cerrada-box", "La entrega está cerrada. Si no llegaste a entregar, avísale a tu docente."));
+  else if (!t.abierto && !t.devuelto && !e) card.append(el("div", "cerrada-box", "La entrega está cerrada. Si no llegaste a entregar, avísale a tu docente."));
   return card;
+}
+
+/** Con la tarea devuelta: descarga su evaluación (con las marcas y el sello si el docente la corrigió encima). */
+function botonMiPdf(a) {
+  const b = el("button", "btn acc"); b.type = "button"; b.style.marginTop = "14px";
+  const texto = " Descargar mi evaluación (PDF)";
+  b.innerHTML = ICO.bajar; b.append(texto);
+  b.querySelector("svg").style.cssText = "width:18px;height:18px;vertical-align:-4px";
+  b.onclick = async () => {
+    b.disabled = true; b.lastChild.textContent = " Descargando…";
+    try {
+      const r = await Aula.api("tareaMiPdf", { id: tareaId, codigo: a.codigo });
+      const bin = atob(r.pdf), bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      descargar(new Blob([bytes], { type: "application/pdf" }), r.nombre || "evaluacion.pdf");
+      Aula.toast("Descargado", r.corregido ? "Está en tu carpeta Descargas, con las correcciones de tu docente." : "Está en tu carpeta Descargas.");
+    } catch (ex) { Aula.toast("No se pudo descargar", textoError(ex, false), "warn"); }
+    finally { b.disabled = false; b.lastChild.textContent = texto; }
+  };
+  return b;
 }
 
 function zonaSubir(a, reemplazo) {
@@ -324,7 +347,7 @@ function pintarDocente() {
   document.title = t.titulo + " · Entregas";
   const volver = el("a", "volver", "← Mis entregas en PDF"); volver.href = Aula.url("docente/tareas.html");
   const cab = el("div", "cab anim"), izq = el("div");
-  const estado = t.oculto ? "OCULTA" : t.abierto ? "ABIERTA" : "CERRADA";
+  const estado = t.oculto ? "OCULTA" : t.abierto ? "ABIERTA" : t.devuelto ? "DEVUELTA" : "CERRADA";
   const csv = el("button", "btn sm ghost", "Descargar notas (Excel)"); csv.type = "button"; csv.onclick = descargarCSV;
   const ed = el("a", "btn sm ghost", "Editar tarea"); ed.href = Aula.url("docente/tareas.html?editar=" + t.id);
   const bts = el("div", "tools"); bts.style.marginTop = "10px"; bts.append(csv, ed);

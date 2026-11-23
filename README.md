@@ -100,7 +100,7 @@ El alumno no ve `m1c1`: ve lo que diga la ficha del `<head>`:
 
 Para que el alumno **suba su trabajo en PDF sin cuenta de Google** (entra con su código) y tú lo corrijas en el navegador.
 
-- Se crean en **Entregas en PDF** (botón del inicio, modo docente): título, clase o EC donde aparece, indicaciones y si el alumno **ve su nota y la corrección**. Estado: **Oculta** · **Cerrada** (la ven, no suben) · **Abierta**.
+- Se crean en **Entregas en PDF** (botón del inicio, modo docente): título, clase o EC donde aparece, indicaciones y si el alumno **ve su nota y la corrección**. Estado: **Oculta** · **Abierta** · **Cerrada** (la ven, no suben) · **Devuelta** (cerrada; cada alumno ve su nota y pulsa «Descargar mi evaluación» para bajar su PDF con tus marcas y el sello). Con «Ven su nota apenas la guardes» apagado, la nota se ve recién al devolver.
 - El alumno la ve dentro de su carpeta («Entregas en PDF»), elige su PDF (máx. 10 MB) y lo envía. Puede cambiarlo mientras esté abierta y **no** lo hayas calificado. Si comparten PC, cada uno sube el suyo.
 - Se guarda en tu Drive: `carpeta de la clase / ENTREGAS PDF / <título> / G1-03 - APELLIDOS NOMBRES - <título>.pdf` (privado).
 - **Corregir**: «Ver entregas y calificar» → clic en el alumno. Herramientas: mover, lápiz, resaltador, texto, ✓, ✗, **sello con la nota** (al ponerlo queda seleccionado: en la barra azul ajustas su tamaño y la nota que muestra; vacío = la nota de arriba), borrar, deshacer (Ctrl+Z), colores, grosor y zoom. «Guardar y siguiente →» pasa al próximo alumno.

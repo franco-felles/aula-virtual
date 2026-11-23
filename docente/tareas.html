@@ -37,6 +37,7 @@
   .seg button.on { background: var(--ink); color: var(--paper); }
   .seg button.on.abierto { background: var(--moss); }
   .seg button.on.oculto { background: var(--mut); }
+  .seg button.on.devuelto { background: var(--acc); }
   .seg.grande button { padding: 11px 18px; font-size: .92rem; }
   .seg:has(button:disabled) { opacity: .6; }
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
@@ -88,10 +89,14 @@ const textoError = ex => /Acción desconocida/.test(ex.message) ? PANEL_VIEJO : 
 
 const ESTADOS = [
   ["oculto", "Oculta", "Los alumnos no la ven."],
-  ["cerrado", "Cerrada", "La ven, pero ya no pueden subir (sí ven su nota)."],
-  ["abierto", "Abierta", "Pueden subir su PDF (o cambiarlo mientras no lo califiques)."]
+  ["abierto", "Abierta", "Pueden subir su PDF (o cambiarlo mientras no lo califiques)."],
+  ["cerrado", "Cerrada", "La ven, pero ya no pueden subir."],
+  ["devuelto", "Devuelta", "Cerrada. Cada alumno ve su nota y descarga su evaluación corregida."]
 ];
-const estadoDe = t => t.oculto ? "oculto" : t.abierto ? "abierto" : "cerrado";
+const estadoDe = t => t.oculto ? "oculto" : t.abierto ? "abierto" : t.devuelto ? "devuelto" : "cerrado";
+const opcionesEstado = k => ({ oculto: k === "oculto", abierto: k === "abierto", devuelto: k === "devuelto" });
+const textoVer = t => t.devuelto ? "devuelta: descargan su evaluación" : t.verNota ? "ven su nota al guardarla" : "ven su nota al devolverla";
+const PANEL_SIN_DEVOLVER = "Para devolver evaluaciones, el Panel necesita el api.gs nuevo: pégalo en Apps Script y luego Implementar → Gestionar implementaciones → ✏ → Versión: Nueva versión → Implementar.";
 function segEstado(valor, alCambiar, grande) {
   const seg = el("div", "seg" + (grande ? " grande" : ""));
   ESTADOS.forEach(([k, txt, tip]) => {
@@ -145,7 +150,7 @@ function pintarLista(r) {
   const volver = el("a", "btn ghost", "← Inicio"); volver.href = Aula.url("index.html"); volver.style.marginBottom = "18px";
   const cab = el("div", "cab"), izq = el("div");
   izq.append(el("p", "eyebrow", "Docente"), el("h1", "titulo", "Entregas en PDF"),
-    el("p", "lede", "El alumno sube su trabajo en PDF sin necesitar cuenta de Google. Tú lo abres aquí, lo corriges encima, le pones el sello con la nota (0–20) y descargas las notas en Excel."));
+    el("p", "lede", "El alumno sube su trabajo en PDF sin necesitar cuenta de Google. Tú lo abres aquí, lo corriges encima, le pones el sello con la nota (0–20) y descargas las notas en Excel. Cuando termines de calificar, pásala a «Devuelta»: se cierra y cada alumno descarga su evaluación corregida."));
   const nuevo = boton("+ Nueva entrega", "acc lg"); nuevo.onclick = () => vistaEditor(null);
   cab.append(izq, nuevo);
   app.replaceChildren(volver, cab);
@@ -163,14 +168,23 @@ function filaTarea(t) {
   const fila = el("div", "tp" + (t.oculto ? " es-oculto" : ""));
   const info = el("div", "info"), chips = el("div", "chips");
   chips.append(el("span", "chip dest", d.texto), el("span", "chip", `${t.entregaron} entregaron · ${t.calificados} calificados`),
-    el("span", "chip", t.verNota ? "ven su nota y la corrección" : "no ven su nota"));
+    el("span", "chip ver", textoVer(t)));
   if (d.aviso && !t.oculto) chips.append(el("span", "chip warn", "⚠ " + d.aviso));
   info.append(el("span", "tit", t.titulo), chips);
   const seg = segEstado(estadoDe(t), async k => {
+    if (k === "devuelto" && t.entregaron > t.calificados) {
+      const falta = t.entregaron - t.calificados;
+      const ok = await confirmar({ titulo: `Faltan ${falta} sin nota`, ok: "Devolver igual",
+        texto: `${falta} alumno(s) entregaron y aún no tienen nota: descargarán su PDF tal como lo subieron. Puedes seguir calificando después; lo verán al volver a entrar.` });
+      if (!ok) return false;
+    }
     seg.bloquear(true);
     try {
-      const r = await Aula.api("tareaOpciones", { id: t.id, opciones: { oculto: k === "oculto", abierto: k === "abierto" } });
-      Object.assign(t, r.tarea); fila.classList.toggle("es-oculto", t.oculto); olvidar();
+      const r = await Aula.api("tareaOpciones", { id: t.id, opciones: opcionesEstado(k) });
+      Object.assign(t, r.tarea);
+      if (k === "devuelto" && !t.devuelto) { Aula.toast("Falta actualizar el Panel", PANEL_SIN_DEVOLVER, "warn"); return false; }
+      fila.classList.toggle("es-oculto", t.oculto); olvidar();
+      fila.querySelector(".chip.ver").textContent = textoVer(t);
       const e = ESTADOS.find(x => x[0] === k); Aula.toast(e[1], e[2]);
       return true;
     } catch (ex) { Aula.toast("No se pudo cambiar", textoError(ex), "warn"); return false; }
@@ -202,7 +216,7 @@ async function vistaEditor(t) {
     catch (ex) { app.replaceChildren(el("div", "panel-viejo", textoError(ex))); return; }
   }
   const nueva = !t;
-  t = t || { titulo: "", clase: "", indicaciones: "", verNota: true, oculto: true, abierto: false };
+  t = t || { titulo: "", clase: "", indicaciones: "", verNota: false, oculto: true, abierto: false, devuelto: false };
   const volver = boton("← Volver a la lista", "ghost"); volver.style.marginBottom = "18px"; volver.onclick = vistaLista;
   const h = el("h1", "titulo", nueva ? "Nueva entrega en PDF" : "Editar entrega");
 
@@ -221,13 +235,13 @@ async function vistaEditor(t) {
   iInd.placeholder = "Ej.: Descarga tu EC como PDF (Archivo → Descargar → Documento PDF) y súbelo aquí antes de salir del laboratorio.";
   cInd.append(el("span", "", "Indicaciones (opcional)"), iInd);
   const opc = el("label", "opc"), sw = el("input", "sw"); sw.type = "checkbox"; sw.checked = t.verNota !== false;
-  const tx = el("span", "txt"); tx.append(el("b", "", "Ven su nota y su trabajo corregido"), el("small", "", "Cuando guardes la nota, el alumno ve la nota, tu comentario y el PDF con tus marcas."));
+  const tx = el("span", "txt"); tx.append(el("b", "", "Ven su nota apenas la guardes"), el("small", "", "Apagado: la ven recién cuando pases la entrega a «Devuelta», todos a la vez (ahí también descargan su PDF corregido)."));
   opc.append(tx, sw);
   card.append(cTit, cCla, cInd, opc);
 
   const cardE = el("div", "card"); cardE.append(el("h2", "", "Estado"));
   const seg = segEstado(estadoDe(t), null, true);
-  const fe = el("div", "estado-fila"); fe.append(seg, el("small", "", "Oculta: no la ven · Cerrada: la ven, no pueden subir · Abierta: pueden subir."));
+  const fe = el("div", "estado-fila"); fe.append(seg, el("small", "", "Oculta: no la ven · Abierta: pueden subir · Cerrada: ya no suben · Devuelta: cerrada y cada alumno descarga su evaluación con la nota."));
   cardE.append(fe);
 
   const barra = el("div", "barra-guardar");
@@ -239,7 +253,7 @@ async function vistaEditor(t) {
     guardar.disabled = true;
     try {
       const r = await Aula.api("tareaGuardar", { tarea: { id: t.id, titulo: iTit.value, clase: sCla.value, indicaciones: iInd.value,
-        verNota: sw.checked, oculto: seg.valor === "oculto", abierto: seg.valor === "abierto" } });
+        verNota: sw.checked, ...opcionesEstado(seg.valor) } });
       olvidar(); Aula.toast(nueva ? "Entrega creada" : "Cambios guardados", seg.valor === "oculto" ? "Está oculta: ábrela cuando quieras que suban su PDF." : "");
       if (nueva) location.href = Aula.url("eecc/tarea.html?id=" + r.id); else vistaLista();
     } catch (ex) { Aula.toast("No se guardó", textoError(ex), "warn"); guardar.disabled = false; }
