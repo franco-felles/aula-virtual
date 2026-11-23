@@ -22,6 +22,10 @@
   .carp-h h2 { font-size: 1.1rem; margin: 0; }
   .carp-h .cuenta { font-family: var(--mono); font-size: .72rem; color: var(--mut); }
   .carp-h .linea { flex: 1; border-top: 1px solid var(--line); }
+  .carp-h.plegable { cursor: pointer; user-select: none; border-radius: 10px; }
+  .carp-h.plegable:hover h2 { color: var(--acc-d); }
+  .carp-h .ver { font: inherit; font-size: .8rem; font-weight: 600; color: var(--acc-d); background: var(--acc-bg); border: 0; border-radius: 8px; padding: 6px 11px; cursor: pointer; white-space: nowrap; }
+  .carp.cerrada > :not(.carp-h) { display: none; }
   .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
 
   a.item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; transition: border-color .15s, transform .15s, box-shadow .15s; }
@@ -92,13 +96,24 @@ const NOMBRE_TIPO = { interactivo: "Interactivo", juego: "Juego", presentacion: 
                       documento: "Documento", hoja: "Hoja de cálculo", encuesta: "Encuesta", pdf: "PDF", video: "Video", imagen: "Imagen",
                       archivo: "Archivo", enlace: "Enlace", web: "Sitio web", quiz: "Evaluación virtual", entrega: "Entrega en PDF" };
 
-function carpeta(icono, titulo, nodos, cuenta) {
+/** plegable = clave para recordar si se dejó abierta (empieza cerrada: solo se ve el título). */
+function carpeta(icono, titulo, nodos, cuenta, plegable) {
   const s = el("section", "carp anim");
   const h = el("div", "carp-h");
   const i = el("span", "ico"); i.innerHTML = SVG[icono];
   h.append(i, el("h2", "", titulo));
   if (cuenta !== undefined) h.append(el("span", "cuenta", String(cuenta)));
   h.append(el("span", "linea"));
+  if (plegable) {
+    const clave = "aula_pleg_" + plegable;
+    let abierta = false;
+    try { abierta = localStorage.getItem(clave) === "1"; } catch (_) {}
+    const b = el("button", "ver"); b.type = "button";
+    const fijar = v => { abierta = v; s.classList.toggle("cerrada", !v); b.textContent = v ? "Ocultar ▴" : "Mostrar ▾"; b.setAttribute("aria-expanded", v); };
+    h.classList.add("plegable"); h.append(b);
+    h.onclick = e => { if (e.target.closest("a")) return; fijar(!abierta); try { localStorage.setItem(clave, abierta ? "1" : "0"); } catch (_) {} };
+    fijar(abierta);
+  }
   s.appendChild(h);
   [].concat(nodos).forEach(n => s.appendChild(n));
   return s;
@@ -226,7 +241,8 @@ function pintarClase(r, man, docente) {
   document.title = $("titulo").textContent + " · Aula Virtual";
 
   // 1. Mi documento / documentos de los alumnos
-  if (docente) cont.appendChild(carpeta("users", "Documentos de los alumnos", listaDocente(r.docs), r.docs.filter(d => d.url).length + "/" + r.docs.length));
+  // (plegada por defecto para no tener que bajar por toda la lista hasta el material y los enlaces)
+  if (docente) cont.appendChild(carpeta("users", "Documentos de los alumnos", listaDocente(r.docs), r.docs.filter(d => d.url).length + "/" + r.docs.length, "docs"));
   else if (r.provisional && r.haySemilla) cont.appendChild(carpeta("doc", esEC ? "Mi evaluación" : "Mi documento", el("p", "vacio", "Buscando tu documento…")));
   else if (r.haySemilla || r.docs.some(d => d.url)) cont.appendChild(carpeta("doc", esEC ? "Mi evaluación" : "Mi documento", miDocumento(r.docs, esEC)));
 
