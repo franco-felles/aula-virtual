@@ -92,5 +92,15 @@
       "descripcion": "Teoría y práctica por partes (el docente las va abriendo): qué es un párrafo, interlineado, espacio entre párrafos, alineación, posiciones en la hoja (dedicatoria y epígrafe) y sangría, arreglando textos clásicos mal formateados; cierra con el Juramento de Florence Nightingale.",
       "orden": 1
     }
+  ],
+  "u2c1": [
+    {
+      "archivo": "m1c1.html",
+      "ruta": "clases/u2c1/material/m1c1.html",
+      "titulo": "Simulador de hoja de cálculo: tu primer turno",
+      "tipo": "interactivo",
+      "descripcion": "Una hoja de cálculo de práctica, igualita a Google Sheets, con el control de signos vitales de un paciente. Avanza por misiones: el nivel Base es el mínimo del día; Plata, Oro y Secreto son para ir más allá. Se guarda tu avance.",
+      "orden": 1
+    }
   ]
 }
