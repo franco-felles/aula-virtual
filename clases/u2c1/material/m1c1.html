@@ -173,6 +173,17 @@
   /* ====== introducción ====== */
   .intro { position: fixed; inset: 0; z-index: 400; background: var(--ink); overflow: auto; display: grid; place-items: center; padding: 24px 16px; }
   .intro .caja { width: min(980px, 100%); background: var(--paper); border-radius: 18px; padding: clamp(18px, 4vw, 40px); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+  /* en pantallas medianas y grandes, la teoría se escala para caber entera (como las presentaciones) */
+  body.escalar .intro { display: block; overflow: hidden; padding: 0; }
+  body.escalar .intro .caja { position: absolute; left: 50%; top: 50%; width: 1100px; padding: 34px 40px; transform: translate(-50%, -50%) scale(var(--s, 1)); }
+  .bfull { padding: 10px 14px; font-size: 1.1rem; }
+  .full-hoja { margin-left: auto; align-self: flex-start; border: 1px solid #c4c7c5; background: #fff; border-radius: 18px; padding: 5px 12px; font: 500 13px Roboto, Arial, sans-serif; color: #1f1f1f; }
+  .full-hoja:hover { background: #f1f3f4; }
+  .zoomsel { border: 0; background: none; font: 500 13px Roboto, Arial, sans-serif; color: #444746; height: 30px; border-radius: 4px; padding: 0 4px; cursor: pointer; }
+  .zoomsel:hover { background: #dfe3eb; }
+  @media (max-width: 700px) { .full-hoja span { display: none; } }
+  body.escalar .dos { grid-template-columns: 1.05fr .95fr; }
+  body.escalar .duelo { grid-template-columns: 1fr 1fr; }
   .intro .eti { color: var(--moss); }
   .intro h1 { font-size: clamp(1.7rem, 4.4vw, 2.8rem); margin: 0 0 8px; letter-spacing: -.02em; line-height: 1.05; }
   .intro .lead { font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.5; margin: 0 0 18px; max-width: 760px; }
@@ -488,6 +499,7 @@
     <div class="navt">
       <button class="btn ghost" id="bAtras">← Atrás</button>
       <div class="puntos" id="puntos"></div>
+      <button class="btn ghost bfull" type="button" title="Pantalla completa (F)" data-full>⛶</button>
       <button class="btn pri" id="bSig">Siguiente →</button>
     </div>
   </div>
@@ -504,6 +516,7 @@
           <button data-menu="archivo">Archivo</button><button data-menu="editar">Editar</button><button data-menu="ver">Ver</button><button data-menu="insertar">Insertar</button><button data-menu="formato">Formato</button><button data-menu="datos">Datos</button><button data-menu="ayuda">Ayuda</button>
         </nav>
       </div>
+      <button class="full-hoja" type="button" title="Pantalla completa" data-full>⛶ <span>Pantalla completa</span></button>
     </div>
     <div class="barra" id="barra">
       <button data-acc="deshacer" title="Deshacer">↶</button>
@@ -524,6 +537,10 @@
       <button data-acc="ajuste" title="Ajuste de texto">↵</button>
       <span class="sep"></span>
       <button data-acc="funciones" title="Funciones">Σ</button>
+      <span class="sep"></span>
+      <select id="zoomSel" class="zoomsel" title="Zoom de la hoja">
+        <option value="auto">Zoom: auto</option><option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="1.75">175%</option>
+      </select>
     </div>
     <div class="fx">
       <div class="nombre" id="nombre" title="Nombre de la celda seleccionada">A1</div>
@@ -969,6 +986,7 @@ function reglaAplica(rule, c, r, v) {
   return false;
 }
 let refsList = [];
+let ZOOM = 1;
 function render() {
   cache.clear();
   const h = H();
@@ -1123,11 +1141,12 @@ function actualizarAyuda() {
   h += '<div class="sec"><div class="tit">Tu fórmula</div><div class="prev">' + pintarRefs(t).html + "</div></div>";
   ayudaF.innerHTML = h; ayudaF.hidden = false;
   const r = el.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect();
-  const w = ayudaF.offsetWidth, hh = ayudaF.offsetHeight;
-  ayudaF.style.left = Math.max(8, Math.min(r.left - hr.left, hr.width - w - 8)) + "px";
+  ayudaF.style.zoom = ZOOM;
+  const w = ayudaF.offsetWidth * ZOOM, hh = ayudaF.offsetHeight * ZOOM;
+  ayudaF.style.left = Math.max(8, Math.min(r.left - hr.left, hr.width - w - 8)) / ZOOM + "px";
   let top = r.bottom - hr.top + 4;
   if (top + hh > hr.height - 40 && r.top - hr.top - hh - 4 > 0) top = r.top - hr.top - hh - 4;
-  ayudaF.style.top = top + "px";
+  ayudaF.style.top = top / ZOOM + "px";
 }
 function elegirFn(f) {
   if (!editing) return;
@@ -1220,7 +1239,7 @@ grid.addEventListener("dblclick", e => {
 $("asa").addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); if (editing) commit(null); arrastre = { tipo: "fill", src: { ...sel }, dest: null }; });
 document.addEventListener("pointermove", e => {
   if (!arrastre) return;
-  if (arrastre.tipo === "col") { const w = Math.max(30, Math.round(arrastre.w0 + e.clientX - arrastre.x0)); H().w[arrastre.c] = w; render(); return; }
+  if (arrastre.tipo === "col") { const w = Math.max(30, Math.round(arrastre.w0 + (e.clientX - arrastre.x0) / ZOOM)); H().w[arrastre.c] = w; render(); return; }
   const td = tdDesde(e.clientX, e.clientY);
   if (arrastre.tipo === "cols") { const th = document.elementFromPoint(e.clientX, e.clientY); const c = th && th.closest && th.closest("th") && th.closest("th").dataset.c; if (c !== undefined && c !== null) { selRango(arrastre.c0, 0, +c, ROWS - 1); anc = { c: Math.min(arrastre.c0, +c), r: 0 }; render(); } return; }
   if (!td) return;
@@ -1333,7 +1352,7 @@ function paleta(boton, colores, aplicar) {
   colores.forEach(col => { const b = document.createElement("button"); b.style.background = col; b.title = col; b.onclick = () => { aplicar(col); cerrarMenus(); }; p.appendChild(b); });
   const q = document.createElement("button"); q.className = "quitar"; q.textContent = "Restablecer"; q.onclick = () => { aplicar(""); cerrarMenus(); }; p.appendChild(q);
   const r = boton.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect();
-  p.style.left = (r.left - hr.left) + "px"; p.style.top = (r.bottom - hr.top + 4) + "px";
+  p.style.zoom = ZOOM; p.style.left = (r.left - hr.left) / ZOOM + "px"; p.style.top = (r.bottom - hr.top + 4) / ZOOM + "px";
   $("hoja").appendChild(p);
 }
 function formatoSel(fn) { if (editing) commit(null); snap(); cadaSel((c, r, a) => fn(celda(a, true))); limpiarVacias(); cambio(); }
@@ -1407,7 +1426,7 @@ function abrirMenu(boton, items) {
     m.appendChild(b);
   }
   const r = boton.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect();
-  m.style.left = Math.min(r.left - hr.left, hr.width - 250) + "px"; m.style.top = (r.bottom - hr.top + 2) + "px";
+  m.style.zoom = ZOOM; m.style.left = Math.max(0, Math.min(r.left - hr.left, hr.width - 250 * ZOOM)) / ZOOM + "px"; m.style.top = (r.bottom - hr.top + 2) / ZOOM + "px";
   $("hoja").appendChild(m);
 }
 const insertarFn = n => { if (editing) commit(null); iniciarEdicion("=" + n + "(", "edita"); };
@@ -1826,9 +1845,9 @@ function abrirIntro(n) {
   n = n || 0;
   if (n === 0) { llego = false; $("bLlegan").disabled = false; $("pIntro").textContent = "Presiona el botón amarillo primero."; }
   else { llego = true; $("bLlegan").disabled = true; $("pIntro").textContent = ""; }
-  $("intro").hidden = false; slide = n; irSlide(n);
+  $("intro").hidden = false; document.documentElement.style.fontSize = ""; slide = n; irSlide(n);
 }
-function cerrarIntro() { animId++; $("intro").hidden = true; S.intro = true; guardar(); render(); }
+function cerrarIntro() { animId++; $("intro").hidden = true; S.intro = true; guardar(); if (typeof adaptar === "function") adaptar(); else render(); }
 $("bLlegan").onclick = () => { llego = true; dibujarIntro(); $("bLlegan").disabled = true; $("bSig").disabled = false; $("pIntro").textContent = "Eso es una hoja de cálculo: una tabla que piensa. Antes de usarla, veamos cómo funciona por dentro."; };
 $("bSig").onclick = () => slide === SLIDES.length - 1 ? cerrarIntro() : irSlide(slide + 1);
 $("bAtras").onclick = () => irSlide(slide - 1);
@@ -1852,8 +1871,9 @@ function mini(el, anchos, filas, datos) {
 }
 function caja(m, box, c1, r1, c2, r2) {
   const a = m.td(c1, r1).getBoundingClientRect(), b = m.td(c2, r2).getBoundingClientRect(), o = m.area.getBoundingClientRect();
-  box.style.left = (a.left - o.left + m.area.scrollLeft - 1) + "px"; box.style.top = (a.top - o.top - 1) + "px";
-  box.style.width = (b.right - a.left + 1) + "px"; box.style.height = (b.bottom - a.top + 1) + "px";
+  const k = o.width ? m.area.offsetWidth / o.width : 1; // la teoría puede estar escalada: pasar a px sin escala
+  box.style.left = ((a.left - o.left) * k + m.area.scrollLeft - 1) + "px"; box.style.top = ((a.top - o.top) * k - 1) + "px";
+  box.style.width = ((b.right - a.left) * k + 1) + "px"; box.style.height = ((b.bottom - a.top) * k + 1) + "px";
 }
 function selMini(m, c1, r1, c2, r2) {
   if (c2 == null) { c2 = c1; r2 = r1; }
@@ -2148,8 +2168,44 @@ $("bReiniciar").onclick = () => {
 /* ===================== ARRANQUE ===================== */
 setSel(0, 0);
 render(); panel();
+/* ---------- adaptar a la pantalla ---------- */
+// Teoría: caja de 1100 px escalada para caber entera (igual que las presentaciones del curso)
+const cajaIntro = document.querySelector("#intro .caja");
+function ajustarIntro() {
+  const grande = innerWidth >= 760 && innerHeight >= 430;
+  document.body.classList.toggle("escalar", grande);
+  if (!grande) return;
+  const h = cajaIntro.offsetHeight;
+  const s = Math.min((innerWidth - 32) / 1100, (innerHeight - 24) / h, 1.8);
+  document.documentElement.style.setProperty("--s", s.toFixed(3));
+}
+if (window.ResizeObserver) new ResizeObserver(() => ajustarIntro()).observe(cajaIntro);
+// Simulador: zoom como el de Google Sheets; en «auto» crece con pantallas grandes (proyector, TV)
+const CLAVE_ZOOM = "u2c1-m1c1-zoom";
+let zoomPref = "auto";
+try { zoomPref = localStorage.getItem(CLAVE_ZOOM) || "auto"; } catch (e) {}
+$("zoomSel").value = zoomPref;
+function aplicarZoom() {
+  let z = zoomPref === "auto" ? Math.min(innerWidth / 1366, innerHeight / 740) : +zoomPref;
+  if (zoomPref === "auto") z = Math.max(1, Math.min(1.75, Math.round(z * 20) / 20));
+  ZOOM = z;
+  [".top", ".barra", ".fx", ".aviso-err", ".wrap", ".pest"].forEach(q => document.querySelector(q).style.zoom = z);
+  document.documentElement.style.fontSize = $("intro").hidden ? (16 * Math.max(1, z)) + "px" : "";
+  document.querySelector(".app").style.gridTemplateColumns = innerWidth > 900 ? "minmax(0, 1fr) " + Math.round(Math.min(380 * Math.max(1, z), innerWidth * .42)) + "px" : "";
+  cerrarMenus();
+  render();
+}
+$("zoomSel").addEventListener("change", () => { zoomPref = $("zoomSel").value; try { localStorage.setItem(CLAVE_ZOOM, zoomPref); } catch (e) {} aplicarZoom(); $("zoomSel").blur(); });
+// Pantalla completa
+function pantallaCompleta() { if (document.fullscreenElement) document.exitFullscreen(); else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }
+document.querySelectorAll("[data-full]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); pantallaCompleta(); }));
+document.addEventListener("fullscreenchange", () => document.querySelectorAll(".full-hoja span").forEach(x => x.textContent = document.fullscreenElement ? "Salir de pantalla completa" : "Pantalla completa"));
+document.addEventListener("keydown", e => { if (!$("intro").hidden && e.key.toLowerCase() === "f" && !e.target.closest("input, textarea, select") && !e.ctrlKey && !e.metaKey && !e.altKey) pantallaCompleta(); });
+function adaptar() { ajustarIntro(); aplicarZoom(); }
+addEventListener("resize", adaptar);
+document.addEventListener("fullscreenchange", adaptar);
 abrirIntro(0);
-addEventListener("resize", () => render());
+adaptar();
 </script>
 </body>
 </html>
