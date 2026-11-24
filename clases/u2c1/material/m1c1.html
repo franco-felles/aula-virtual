@@ -300,9 +300,10 @@
   .fbig span::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 4px; border-radius: 2px; background: var(--pc); transform: scaleX(0); transition: transform .45s; }
   .fbig span.lit::after { transform: scaleX(1); }
   .fbig span.foco { animation: latido .9s ease-in-out infinite; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; }
   .card { background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--pc); border-radius: 12px; padding: 10px 12px; opacity: .15; transform: translateY(14px); transition: opacity .45s, transform .45s, box-shadow .25s; cursor: pointer; font-size: .9rem; line-height: 1.45; }
   .card.show { opacity: 1; transform: none; }
+  .card.nohay.show { opacity: .6; border-style: dashed; }
   .card.foco { box-shadow: 0 0 0 3px var(--pc); }
   .card .sim { font: 600 1.15rem "IBM Plex Mono", monospace; color: var(--pc); word-break: break-all; }
   .card h4 { margin: 2px 0 4px; font-size: .95rem; }
@@ -466,14 +467,20 @@
     <section class="slide" data-s="partes">
       <p class="eti">Teoría · 6 de 6</p>
       <h1>Las partes de una función</h1>
-      <p class="lead">Una <b>función</b> es una fórmula que ya viene hecha: tú solo le dices <b>qué hacer</b> y <b>con qué datos</b>. Todas tienen las mismas partes. Toca cada parte para verla.</p>
-      <div class="btns" id="ctPx"><button class="chipb on" data-px="prom">=PROMEDIO(B2:B7)</button><button class="chipb" data-px="si">=SI(B4&gt;38;"Fiebre";"Normal")</button><button class="chipb" data-replay="partes">▶ Animar de nuevo</button></div>
+      <p class="lead">Una <b>función</b> es una fórmula que ya viene hecha: tú solo le dices <b>qué hacer</b> y <b>con qué datos</b>. Todas tienen las mismas partes. Elige un ejemplo y toca cada parte para verla.</p>
+      <div class="btns" id="ctPx"><button class="chipb on" data-px="suma">=SUMA(B2:B7)</button><button class="chipb" data-px="max">=MAX(C2,C5,C7)</button><button class="chipb" data-px="prom">=PROMEDIO(B2:B4,B6:B7)</button><button class="chipb" data-px="red">=REDONDEAR(B8,1)</button><button class="chipb" data-replay="partes">▶ Animar de nuevo</button></div>
       <div class="fbig" id="fBig"></div>
+      <div class="nota explica" id="fRes" style="text-align:center;margin-bottom:12px"></div>
       <div class="cards" id="fCards"></div>
       <div class="nota" style="margin-top:12px">💡 En el simulador, cuando escribas una función aparecerá una ayuda: te dirá si la <b>reconoce</b> ✓, te mostrará sus partes y en cuál estás escribiendo.</div>
       <div class="quiz" data-ok="1" data-bien="¡Bien! C2:C7 es el dato con el que trabaja la función. MAX es su nombre." data-mal="El argumento es lo que va dentro de los paréntesis.">
         <p>En <code>=MAX(C2:C7)</code>, ¿cuál es el argumento?</p>
         <div class="btns"><button class="chipb">MAX</button><button class="chipb">C2:C7</button><button class="chipb">=</button></div>
+        <div class="qfb"></div>
+      </div>
+      <div class="quiz" data-ok="2" data-bien="¡Exacto! B2, B5 y B7: tres argumentos, separados por dos comas." data-mal="Cuenta lo que hay entre los separadores (las comas) dentro de los paréntesis.">
+        <p>¿Cuántos argumentos tiene <code>=SUMA(B2,B5,B7)</code>?</p>
+        <div class="btns"><button class="chipb">1</button><button class="chipb">2</button><button class="chipb">3</button></div>
         <div class="qfb"></div>
       </div>
     </section>
@@ -602,7 +609,7 @@ class FErr { constructor(code, msg) { this.code = code; this.msg = msg; } }
 const FUNCS = ["SUMA", "PROMEDIO", "MAX", "MIN", "CONTAR", "CONTARA", "CONTAR.SI", "SI", "REDONDEAR", "ABS"];
 const ALIAS = { SUM: "SUMA", AVERAGE: "PROMEDIO", COUNT: "CONTAR", COUNTA: "CONTARA", COUNTIF: "CONTAR.SI", IF: "SI", ROUND: "REDONDEAR" };
 /* ficha de cada función: sus partes (argumentos) y para qué sirve */
-const VAL_ARGS = { a: ["valor1", "[valor2; …]"], ad: ["el primer número, celda o rango, por ejemplo B2:B7", "opcional: más números, celdas o rangos"] };
+const VAL_ARGS = { a: ["valor1", "[valor2, …]"], ad: ["el primer número, celda o rango, por ejemplo B2:B7", "opcional: más números, celdas o rangos"] };
 const FDEF = {
   "SUMA": { ...VAL_ARGS, d: "Suma todos los números." },
   "PROMEDIO": { ...VAL_ARGS, d: "Saca el promedio: suma todo y divide entre cuántos son." },
@@ -610,8 +617,8 @@ const FDEF = {
   "MIN": { ...VAL_ARGS, d: "Devuelve el número más bajo." },
   "CONTAR": { ...VAL_ARGS, d: "Cuenta cuántas celdas tienen números." },
   "CONTARA": { ...VAL_ARGS, d: "Cuenta cuántas celdas no están vacías (números o texto)." },
-  "CONTAR.SI": { a: ["rango", "condición"], ad: ["dónde contar, por ejemplo D2:D7", "qué contar, entre comillas, por ejemplo \"<95\""], d: "Cuenta las celdas que cumplen una condición." },
-  "SI": { a: ["condición", "valor_si_verdadero", "[valor_si_falso]"], ad: ["una comparación, por ejemplo B4>38", "lo que se muestra si se cumple (el texto va entre comillas)", "opcional: lo que se muestra si no se cumple"], d: "Elige qué mostrar según si se cumple una condición." },
+  "CONTAR.SI": { oculta: true, a: ["rango", "condición"], ad: ["dónde contar, por ejemplo D2:D7", "qué contar, entre comillas, por ejemplo \"<95\""], d: "Cuenta las celdas que cumplen una condición." },
+  "SI": { oculta: true, a: ["condición", "valor_si_verdadero", "[valor_si_falso]"], ad: ["una comparación, por ejemplo B4>38", "lo que se muestra si se cumple (el texto va entre comillas)", "opcional: lo que se muestra si no se cumple"], d: "Elige qué mostrar según si se cumple una condición." },
   "REDONDEAR": { a: ["número", "[decimales]"], ad: ["el número o la celda que quieres redondear", "opcional: cuántos decimales dejar (si no pones nada, 0)"], d: "Redondea un número." },
   "ABS": { a: ["número"], ad: ["el número o la celda"], d: "Quita el signo negativo (valor absoluto)." }
 };
@@ -778,7 +785,7 @@ function numeros(args, ctx) {
 function callFn(nombre, args, ctx) {
   const n = ALIAS[nombre] || nombre;
   const pide = (min, max) => {
-    if (args.length < min || args.length > max) throw new FErr("#N/A", n + (min === max ? " necesita " + min + " parte" + (min > 1 ? "s" : "") : " necesita entre " + min + " y " + max + " partes") + " separadas por «;» o «,».");
+    if (args.length < min || args.length > max) throw new FErr("#N/A", n + (min === max ? " necesita " + min + " parte" + (min > 1 ? "s" : "") : " necesita entre " + min + " y " + max + " partes") + " separadas por «,» (o «;»).");
   };
   switch (n) {
     case "SUMA": pide(1, 99); return numeros(args, ctx).reduce((s, x) => s + x, 0);
@@ -883,7 +890,7 @@ function hojaInicial() {
     B2: "36.8", B3: "37.2", B4: "38.4", B5: "38.9", B6: "37.6",
     C2: "78", C3: "84", C4: "96", C5: "104", C6: "88", C7: "80",
     D2: "98", D3: "97", D4: "94", D5: "93", D6: "96", D7: "97",
-    A8: "Promedio", A9: "Máximo", A10: "Mínimo", A12: "SatO₂ < 95"
+    A8: "Promedio", A9: "Máximo", A10: "Mínimo", A11: "Prom. redondeado", A12: "Variación (máx − mín)"
   };
   const cells = {}; for (const k in d) cells[k] = { v: d[k] };
   return { id: 0, nombre: "Signos vitales", titulo: "Signos vitales · Cama 4", cells, w: {}, rules: [] };
@@ -893,6 +900,7 @@ function estadoInicial() {
 }
 let S = estadoInicial();
 try { const g = JSON.parse(localStorage.getItem(CLAVE)); if (g && g.hojas && g.hojas.length === 2) S = Object.assign(estadoInicial(), g); } catch (e) {}
+(function migrar() { const h = S.hojas[0]; if (h.cells.A12 && h.cells.A12.v === "SatO₂ < 95") { h.cells.A11 = { v: "Prom. redondeado" }; h.cells.A12 = { v: "Variación (máx − mín)" }; delete h.cells.B12; h.rules = []; } })();
 let guardarT = 0;
 function guardar() { clearTimeout(guardarT); guardarT = setTimeout(() => { try { localStorage.setItem(CLAVE, JSON.stringify(S)); } catch (e) {} }, 250); }
 const H = () => S.hojas[S.cur];
@@ -1085,7 +1093,7 @@ function actualizarAyuda() {
   if (!editing || editing.en.value[0] !== "=") { ayudaF.hidden = true; acList = []; ultFn = ""; return; }
   const el = editing.en, t = el.value;
   const an = analizarF(t, el.selectionStart == null ? t.length : el.selectionStart);
-  acList = an.parcial ? Object.keys(FDEF).filter(f => f.startsWith(an.parcial)) : [];
+  acList = an.parcial ? Object.keys(FDEF).filter(f => !FDEF[f].oculta && f.startsWith(an.parcial)) : [];
   if (acIdx >= acList.length) acIdx = 0;
   let h = "";
   if (acList.length) {
@@ -1100,10 +1108,10 @@ function actualizarAyuda() {
       const i = rep ? Math.min(an.arg, d.a.length - 1) : an.arg;
       const partes = d.a.map((x, j) => j === i ? '<span class="cur">' + x + "</span>" : x);
       h += '<div class="sec"><span class="rec' + pop + '">✓ Función reconocida: ' + n + "</span>" +
-        '<div class="sint"><span class="nf">' + n + "</span>(" + partes.join("; ") + ")</div>" +
+        '<div class="sint"><span class="nf">' + n + "</span>(" + partes.join(", ") + ")</div>" +
         "<div>" + d.d + "</div>" +
         (i < d.a.length ? '<div class="argd">✏️ Estás escribiendo <b>' + d.a[i].replace(/[\[\]]/g, "") + "</b>: " + esc(d.ad[i]) + "</div>"
-                        : '<div class="argd" style="color:#a50e0e">⚠ ' + n + " solo tiene " + d.a.length + " parte" + (d.a.length > 1 ? "s" : "") + ": te sobra un «;».</div>") + "</div>";
+                        : '<div class="argd" style="color:#a50e0e">⚠ ' + n + " solo tiene " + d.a.length + " parte" + (d.a.length > 1 ? "s" : "") + ": te sobra un separador «,».</div>") + "</div>";
     } else {
       let mejor = null, dist = 99;
       for (const f of FUNCS) { const x = lev(an.fn, f); if (x < dist) { dist = x; mejor = f; } }
@@ -1410,8 +1418,8 @@ function menuFunciones(boton) {
     { t: "MAX", k: "el mayor", f: () => insertarFn("MAX") },
     { t: "MIN", k: "el menor", f: () => insertarFn("MIN") },
     { t: "CONTAR", k: "cuántos números", f: () => insertarFn("CONTAR") },
-    { t: "CONTAR.SI", k: "cuántos cumplen…", f: () => insertarFn("CONTAR.SI") },
-    { t: "SI", k: "si… entonces…", f: () => insertarFn("SI") }]);
+    { t: "CONTARA", k: "cuántos datos", f: () => insertarFn("CONTARA") },
+    { t: "REDONDEAR", k: "quita decimales", f: () => insertarFn("REDONDEAR") }]);
 }
 const MENUS = {
   archivo: () => [
@@ -1436,13 +1444,11 @@ const MENUS = {
   insertar: () => [{ sub: "Función" },
     { t: "SUMA", f: () => insertarFn("SUMA") }, { t: "PROMEDIO", f: () => insertarFn("PROMEDIO") },
     { t: "MAX", f: () => insertarFn("MAX") }, { t: "MIN", f: () => insertarFn("MIN") },
-    { t: "CONTAR.SI", f: () => insertarFn("CONTAR.SI") }, "-",
+    { t: "REDONDEAR", f: () => insertarFn("REDONDEAR") }, "-",
     { t: "Gráfico", f: () => toast("Los gráficos no están en este simulador. En Google Sheets: Insertar → Gráfico.") }],
   formato: () => [
     { t: "Negrita", f: () => accion("negrita") },
     { t: "Cursiva", f: () => accion("cursiva") },
-    "-",
-    { t: "Formato condicional", f: abrirFC },
     "-",
     ...menuAjuste(),
     "-",
@@ -1455,9 +1461,9 @@ const MENUS = {
   ayuda: () => [
     { t: "📖 Repasar la teoría", f: () => abrirIntro(1) },
     { t: "¿Qué es un rango?", f: () => toast("Un rango es un grupo de celdas en rectángulo: B2:B7 = desde B2 hasta B7. Los dos puntos se leen «hasta».") },
-    { t: "Partes de una función", f: () => toast("=PROMEDIO(B2:B7) → «=» ordena calcular · PROMEDIO es el nombre · entre ( ) van los argumentos · «;» separa un argumento del otro.") },
+    { t: "Partes de una función", f: () => toast("=PROMEDIO(B2:B7,C2) → símbolo igual «=» · etiqueta PROMEDIO · símbolo de apertura «(» · argumentos B2:B7 y C2 · separador «,» · símbolo de cierre «)».") },
     "-",
-    { t: "Funciones disponibles", f: () => toast("SUMA · PROMEDIO · MAX · MIN · CONTAR · CONTARA · CONTAR.SI · SI · REDONDEAR · ABS. Separa las partes con «;» o «,».") },
+    { t: "Funciones disponibles", f: () => toast("SUMA · PROMEDIO · MAX · MIN · CONTAR · CONTARA · REDONDEAR · ABS. Separa los argumentos con «,» (en algunas configuraciones, «;»).") },
     { t: "¿Qué significa #¿NOMBRE?", f: () => toast("#¿NOMBRE? = la hoja no reconoce una palabra: casi siempre es una función mal escrita.") },
     { t: "¿Qué significa #DIV/0!?", f: () => toast("#DIV/0! = estás dividiendo entre cero o entre una celda vacía.") },
     { t: "¿Qué significa #¡VALOR!?", f: () => toast("#¡VALOR! = intentas hacer una cuenta con texto (por ejemplo «37 °C» en vez de 37).") }
@@ -1676,34 +1682,39 @@ const MIS = [
     ok: () => "¡Tabla con bordes! Quita la cuadrícula en <b>Ver</b> para verla como saldría impresa."
   },
   {
-    id: "fiebre", nivel: 2, t: "Alerta de fiebre",
-    html: () => `<p>Que la fiebre salte a la vista sin tener que leer cada número.</p>
-      <ol><li>Selecciona <b>B2:B7</b>.</li><li>Ve al menú <b>Formato → Formato condicional</b>.</li><li>Elige <b>«Mayor que»</b>, escribe <b>38</b> y el estilo <b>rojo</b>.</li><li>Presiona <b>Listo</b>.</li></ol>`,
-    pistas: ["El panel se abre a la derecha de la hoja. Si seleccionaste antes B2:B7, el rango ya aparece escrito.", "Si te equivocaste, borra la regla con el 🗑 y créala de nuevo."],
-    saber: "Pruébalo: cambia la temperatura de las 22:00 (B6) a 38.5 y mira cómo se pinta sola. Así funcionan muchos sistemas de historia clínica electrónica: <b>los valores fuera de rango se marcan en rojo</b>.",
+    id: "redondear", nivel: 2, t: "Una función con dos argumentos",
+    html: () => `<p>El promedio de B8 tiene muchos decimales. En el registro basta <b>uno</b>.</p>
+      <p>En <b>B11</b> usa la función <code>REDONDEAR</code>. Necesita <b>dos argumentos</b> separados por una coma: <b>qué número</b> redondear y <b>cuántos decimales</b> dejar.</p>
+      <p style="text-align:center"><code style="font-size:1.05rem">=REDONDEAR(B8,1)</code></p>`,
+    pistas: ["Primer argumento: <b>B8</b> (la celda del promedio). Separador: <b>,</b> . Segundo argumento: <b>1</b> (un decimal).", "Mira la ayuda mientras escribes: después de la coma te dirá que ahora escribes los <b>decimales</b>."],
+    saber: "En algunas configuraciones de Google Sheets el separador es <b>;</b> en vez de <b>,</b>. Si una da error, prueba la otra. Aquí funcionan las dos.",
     check() {
-      const rs = h0().rules; if (!rs.length) return "";
-      const bien = rs.some(r => { const g = parseRange(r.range); return g && g.c1 <= 1 && g.c2 >= 1 && g.r1 <= 1 && g.r2 >= 6 && (r.op === "gt" || r.op === "gte") && r.val === 38; });
-      return bien || "Tienes una regla, pero revisa: debe aplicarse a <b>B2:B7</b> con «Mayor que» <b>38</b>.";
-    },
-    ok: () => "¡Alerta activada! 🚨 Las temperaturas de fiebre ya se ven en rojo."
-  },
-  {
-    id: "secreto", nivel: 3, t: "Cazadesaturaciones",
-    html: () => `<p>Una saturación de O₂ <b>menor de 95 %</b> es una alerta. En <b>B12</b> haz que la hoja <b>cuente</b> cuántas tomas de la columna D están por debajo de 95.</p>
-      <p>Esta vez no te damos la fórmula completa: la función se llama <code>CONTAR.SI</code> y necesita dos cosas, separadas por <code>;</code>: <b>dónde contar</b> y <b>qué condición</b>.</p>`,
-    pistas: ["Estructura: <code>=CONTAR.SI( rango ; condición )</code>. ¿Cuál es el rango de las saturaciones?", "La condición va entre comillas: <code>\"&lt;95\"</code>"],
-    saber: "En el Google Sheets de tu cuenta, según la configuración de país, las partes de una función se separan con <code>;</code> o con <code>,</code>. Si una da error, prueba la otra. Aquí funcionan las dos.",
-    check() {
-      const r = raw0("B12"); if (!r) return "";
-      const objetivo = numsCol("D").filter(x => x < 95).length; const v = v0("B12");
-      if (r[0] !== "=") return isNum(lit(r)) ? "Contaste a mano 😉 La idea es que la hoja cuente sola, por si cambian los datos." : "Las fórmulas empiezan con <b>=</b>.";
-      if (v instanceof FErr) return errTxt("B12");
-      if (!/CONTAR\.SI|COUNTIF/i.test(r)) return "Da un número, pero el reto es usar <b>CONTAR.SI</b>.";
-      if (v !== objetivo) return "CONTAR.SI funciona, pero no da lo esperado. Revisa el rango (columna D, filas 2 a 7) y la condición <code>\"&lt;95\"</code>.";
+      const r = raw0("B11"); if (!r) return "";
+      if (r[0] !== "=") return isNum(lit(r)) ? "Escribiste el número a mano. Usa la función REDONDEAR para que se actualice sola." : "Las fórmulas empiezan con <b>=</b>.";
+      const v = v0("B11"); if (v instanceof FErr) return errTxt("B11");
+      if (!/REDONDEAR|ROUND/i.test(r)) return "Da un número, pero el reto es usar <b>REDONDEAR</b>.";
+      const esp = Math.round(prom(numsCol("B")) * 10) / 10;
+      if (!casi(v, esp)) return "REDONDEAR funciona, pero revisa los argumentos: primero <b>B8</b>, luego una coma y <b>1</b>.";
       return true;
     },
-    ok: () => "¡Reto secreto superado! 🕵️ La hoja encontró " + fmt(v0("B12")) + " tomas con saturación baja."
+    ok: () => "¡Bien! " + fmt(v0("B11")) + " °C: dos argumentos, un separador, un resultado."
+  },
+  {
+    id: "variacion", nivel: 3, t: "¿Cuánto varió la temperatura?",
+    html: () => `<p>Reto: en <b>B12</b> calcula cuánto <b>varió</b> la temperatura en el turno: la más alta <b>menos</b> la más baja.</p>
+      <p>Esta vez no te damos la fórmula. Ya tienes el máximo y el mínimo en la hoja… o puedes usar las funciones.</p>`,
+    pistas: ["El signo de restar es <code>-</code>. ¿En qué celdas están el máximo y el mínimo?", "Dos caminos: <code>=B9-B10</code> o <code>=MAX(B2:B7)-MIN(B2:B7)</code>."],
+    saber: "Una fórmula puede combinar funciones con operaciones: <code>=MAX(B2:B7)-MIN(B2:B7)</code> tiene dos funciones, cada una con su etiqueta, sus símbolos de apertura y cierre y su argumento.",
+    check() {
+      const r = raw0("B12"); if (!r) return "";
+      const n = numsCol("B"), esp = Math.max(...n) - Math.min(...n), v = v0("B12");
+      if (r[0] !== "=") return isNum(lit(r)) ? "Lo calculaste a mano 😉 La idea es que la hoja lo calcule, por si cambian los datos." : "Las fórmulas empiezan con <b>=</b>.";
+      if (v instanceof FErr) return errTxt("B12");
+      if (!/[A-Z]{1,2}\d/i.test(r)) return "Usaste solo números. Usa <b>referencias</b> o funciones para que se actualice solo.";
+      if (!casi(v, esp)) return "Da " + fmt(v) + ", pero debería ser el máximo menos el mínimo. ¿Restaste en el orden correcto?";
+      return true;
+    },
+    ok: () => "¡Reto secreto superado! 🕵️ La temperatura varió " + fmt(v0("B12")) + " °C en el turno."
   }
 ];
 const ultimoDe = n => MIS.reduce((m, x, i) => x.nivel === n ? i : m, -1);
@@ -1751,7 +1762,7 @@ function panel() {
   const i = vista !== null ? vista : S.mis;
   const m = MIS[i];
   if (!m) {
-    h += '<div class="tarjeta final"><div class="medalla">🏅</div><h2>¡Turno completado!</h2><p>Superaste los cuatro niveles, incluido el secreto. Ahora ya sabes lo esencial de una hoja de cálculo: celdas, rangos, fórmulas, funciones, copiar fórmulas, bordes y formato condicional.</p><p>Ve a la pestaña <b>«Libre»</b> y arma tu propia tabla: por ejemplo, el control de glucosa de un paciente con su promedio y alertas de color.</p></div>';
+    h += '<div class="tarjeta final"><div class="medalla">🏅</div><h2>¡Turno completado!</h2><p>Superaste los cuatro niveles, incluido el secreto. Ahora ya sabes lo esencial de una hoja de cálculo: celdas, rangos, fórmulas, funciones, copiar fórmulas y bordes.</p><p>Ve a la pestaña <b>«Libre»</b> y arma tu propia tabla: por ejemplo, el control de glucosa de un paciente con su promedio, máximo y mínimo, y bordes.</p></div>';
     if (fb.msg) h = '<div class="fb bien" style="margin:0 0 12px">' + fb.msg + "</div>" + h;
   } else {
     h += '<div class="tarjeta"><span class="chip n' + m.nivel + '">Nivel ' + NIVELES[m.nivel].n + " · misión " + (MIS.filter((x, j) => x.nivel === m.nivel && j <= i).length) + " de " + MIS.filter(x => x.nivel === m.nivel).length + "</span>";
@@ -2070,19 +2081,31 @@ $("bPeso").onclick = async () => {
 };
 
 /* ---------- 6 · partes de una función ---------- */
-const PC = { igual: "#b3752c", nombre: "#1a73e8", par: "#9334e6", arg: "#188038", sep: "#d93025" };
+const PC = { igual: "#b3752c", nombre: "#1a73e8", abre: "#9334e6", arg: "#188038", sep: "#d93025", cierra: "#c2185b" };
+const ORDEN_P = ["igual", "nombre", "abre", "arg", "sep", "cierra"];
 const PX = {
-  prom: { p: [["=", "igual"], ["PROMEDIO", "nombre"], ["(", "par"], ["B2:B7", "arg"], [")", "par"]], c: ["igual", "nombre", "par", "arg"] },
-  si: { p: [["=", "igual"], ["SI", "nombre"], ["(", "par"], ["B4>38", "arg"], [";", "sep"], ['"Fiebre"', "arg"], [";", "sep"], ['"Normal"', "arg"], [")", "par"]], c: ["igual", "nombre", "par", "arg", "sep"] }
+  suma: { n: "SUMA", hace: "suma todo lo que haya", args: [["B2:B7", "un rango"]], res: "Suma todo lo que hay <b>desde B2 hasta B7</b>." },
+  max: { n: "MAX", hace: "busca el número más alto", args: [["C2", "una celda"], ["C5", "una celda"], ["C7", "una celda"]], res: "Busca el mayor entre <b>tres celdas sueltas</b>: C2, C5 y C7." },
+  prom: { n: "PROMEDIO", hace: "saca el promedio", args: [["B2:B4", "un rango"], ["B6:B7", "otro rango"]], res: "Promedia <b>dos grupos</b> de celdas y se salta B5." },
+  red: { n: "REDONDEAR", hace: "redondea un número", args: [["B8", "qué número redondear"], ["1", "cuántos decimales dejar"]], res: "Redondea lo que hay en <b>B8</b> a <b>1 decimal</b>. Aquí cada argumento cumple un papel distinto." }
 };
-let pxCur = "prom";
-function cardData(k, tipo) {
+let pxCur = "suma";
+const NUM = ["①", "②", "③", "④", "⑤"];
+function partesDe(ex) {
+  const p = [["=", "igual"], [ex.n, "nombre"], ["(", "abre"]];
+  ex.args.forEach(([a], i) => { if (i) p.push([",", "sep"]); p.push([a, "arg"]); });
+  p.push([")", "cierra"]);
+  return p;
+}
+function cardData(ex, tipo) {
+  const na = ex.args.length;
   switch (tipo) {
-    case "igual": return ["=", "Signo igual", "Avisa que viene un cálculo. Sin él, todo lo demás sería solo texto."];
-    case "nombre": return k === "prom" ? ["PROMEDIO", "Nombre de la función", "Dice <b>qué hacer</b>: PROMEDIO saca el promedio. Va justo después del =."] : ["SI", "Nombre de la función", "Dice <b>qué hacer</b>: SI elige entre dos respuestas según una condición."];
-    case "par": return ["( )", "Paréntesis", "Encierran los datos de la función. Van pegados al nombre, y todo paréntesis que se abre, se cierra."];
-    case "arg": return k === "prom" ? ["B2:B7", "Argumento", "El dato con el que trabaja la función: aquí, el <b>rango</b> de temperaturas."] : ['B4>38 · "Fiebre" · "Normal"', "Argumentos", "① la <b>condición</b> (¿B4 pasa de 38?) ② qué mostrar <b>si se cumple</b> ③ qué mostrar <b>si no</b>. El texto va entre comillas."];
-    case "sep": return [";", "Separador", "Separa un argumento del siguiente. Según la configuración de tu cuenta es <b>;</b> o <b>,</b>."];
+    case "igual": return ["=", "Símbolo igual", "Avisa que viene un cálculo. Sin él, todo lo demás sería solo texto."];
+    case "nombre": return [ex.n, "Etiqueta (nombre)", "Dice <b>qué hacer</b>: " + ex.n + " " + ex.hace + ". Va justo después del =."];
+    case "abre": return ["(", "Símbolo de apertura", "Va pegado a la etiqueta. Desde aquí empiezan los datos de la función."];
+    case "arg": return [ex.args.map(a => a[0]).join(" · "), na > 1 ? na + " argumentos" : "1 argumento", ex.args.map(([a, d], i) => (na > 1 ? NUM[i] + " " : "") + "<b>" + esc(a) + "</b>: " + d).join("<br>")];
+    case "sep": return na > 1 ? [",", "Separador", "Separa un argumento del siguiente. Aquí hay " + (na - 1) + (na > 2 ? " comas" : " coma") + ". En algunas configuraciones se usa <b>;</b>."] : ["—", "Separador", "<b>Aquí no hay:</b> con un solo argumento no se necesita separador."];
+    case "cierra": return [")", "Símbolo de cierre", "Termina la función. Todo paréntesis que se abre, se cierra."];
   }
 }
 function enfocar(tipo) {
@@ -2092,11 +2115,12 @@ function enfocar(tipo) {
 INIT.partes = id => animarPartes(pxCur, id);
 async function animarPartes(k, id) {
   pxCur = k; marcarBtn($("ctPx"), "data-px", k);
-  const ex = PX[k];
-  $("fBig").innerHTML = ex.p.map(([t, tipo]) => '<span data-t="' + tipo + '" style="--pc:' + PC[tipo] + '">' + esc(t) + "</span>").join("");
-  $("fCards").innerHTML = ex.c.map((tipo, i) => { const [sim, tit, txt] = cardData(k, tipo); return '<div class="card" data-t="' + tipo + '" style="--pc:' + PC[tipo] + '"><div class="sim">' + (i + 1) + ". " + esc(sim) + "</div><h4>" + tit + "</h4><div>" + txt + "</div></div>"; }).join("");
+  const ex = PX[k], na = ex.args.length;
+  $("fBig").innerHTML = partesDe(ex).map(([t, tipo]) => '<span data-t="' + tipo + '" style="--pc:' + PC[tipo] + '">' + esc(t) + "</span>").join("");
+  $("fCards").innerHTML = ORDEN_P.map((tipo, i) => { const [sim, tit, txt] = cardData(ex, tipo); return '<div class="card' + (tipo === "sep" && na === 1 ? " nohay" : "") + '" data-t="' + tipo + '" style="--pc:' + PC[tipo] + '"><div class="sim">' + (i + 1) + ". " + esc(sim) + "</div><h4>" + tit + "</h4><div>" + txt + "</div></div>"; }).join("");
+  explicar($("fRes"), ex.res + " <b>" + (na === 1 ? "Un argumento" : na + " argumentos") + "</b>" + (na > 1 ? ", separados por comas." : ", sin separador."));
   await sleep(500);
-  for (const tipo of ex.c) { if (!vivo(id)) return; enfocar(tipo); await sleep(1300); }
+  for (const tipo of ORDEN_P) { if (!vivo(id)) return; enfocar(tipo); await sleep(tipo === "sep" && na === 1 ? 900 : 1250); }
   if (vivo(id)) enfocar(null);
 }
 $("ctPx").addEventListener("click", e => { const b = e.target.closest("button[data-px]"); if (b) animarPartes(b.dataset.px, ++animId); });
@@ -2124,7 +2148,7 @@ $("bReiniciar").onclick = () => {
 /* ===================== ARRANQUE ===================== */
 setSel(0, 0);
 render(); panel();
-if (!S.intro) abrirIntro();
+abrirIntro(0);
 addEventListener("resize", () => render());
 </script>
 </body>
