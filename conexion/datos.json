@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-20T19:13:13.850Z",
+ "generado": "2026-11-24T01:43:14.589Z",
  "v": 1,
  "clases": [
   {
@@ -91,6 +91,15 @@
    "tema": "EC FINAL UNIDAD 1",
    "publicada": true,
    "conCopias": true
+  },
+  {
+   "id": "u2c1",
+   "tipo": "Clase",
+   "unidad": 2,
+   "n": 1,
+   "tema": "Google SHEETS",
+   "publicada": true,
+   "conCopias": false
   }
  ],
  "enlaces": {
