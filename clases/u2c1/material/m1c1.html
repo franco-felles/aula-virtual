@@ -6,7 +6,7 @@
 <!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
 <meta name="material-titulo" content="Simulador de hoja de cálculo: tu primer turno">
 <meta name="material-tipo" content="interactivo">
-<meta name="material-descripcion" content="Una hoja de cálculo de práctica, igualita a Google Sheets, con el control de signos vitales de un paciente. Avanza por misiones: el nivel Base es el mínimo del día; Plata, Oro y Secreto son para ir más allá. Se guarda tu avance.">
+<meta name="material-descripcion" content="Primero, teoría animada: qué tipos de datos admite una celda, qué pasa con el texto largo, qué es un rango, el signo =, las referencias y las partes de una función. Después, una hoja de cálculo de práctica igualita a Google Sheets con el control de signos vitales de un paciente, por misiones (Base es el mínimo del día). Se guarda tu avance.">
 <title>Simulador de hoja de cálculo</title>
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
@@ -196,7 +196,119 @@
   .btn:disabled { opacity: .45; cursor: default; }
   .intro .peq { font-size: .85rem; color: var(--mut); }
 
+  /* ====== desborde de texto, referencias de color y ayuda de funciones ====== */
+  .grid td .ovf { display: inline-block; overflow: hidden; vertical-align: top; white-space: nowrap; }
+  .refbox { position: absolute; pointer-events: none; z-index: 2; border: 2px solid; border-radius: 1px; animation: aparece .2s ease both; }
+  .ayuda-f { position: absolute; z-index: 65; width: min(380px, calc(100% - 16px)); background: #fff; border-radius: 8px; box-shadow: 0 4px 18px rgba(0,0,0,.28); font: 13px Roboto, Arial, sans-serif; color: #1f1f1f; overflow: hidden; animation: aparece .2s ease both; pointer-events: none; }
+  @keyframes aparece { from { opacity: 0; transform: translateY(-5px); } }
+  .ayuda-f .sug { pointer-events: auto; border-bottom: 1px solid #eee; }
+  .ayuda-f .sug button { display: flex; width: 100%; border: 0; background: none; padding: 6px 12px; gap: 10px; text-align: left; align-items: baseline; font: inherit; }
+  .ayuda-f .sug button.on, .ayuda-f .sug button:hover { background: #e8f0fe; }
+  .ayuda-f .sug b { font: 600 13px "IBM Plex Mono", monospace; min-width: 92px; color: #1a73e8; }
+  .ayuda-f .sug small { color: #5f6368; }
+  .ayuda-f .tip { font-size: 11px; color: #80868b; padding: 3px 12px 6px; }
+  .ayuda-f .sec { padding: 8px 12px; border-top: 1px solid #eee; line-height: 1.45; }
+  .ayuda-f .sec:first-child { border-top: 0; }
+  .ayuda-f .rec { display: inline-block; font-weight: 700; font-size: 11px; padding: 1px 9px; border-radius: 99px; background: #e6f4ea; color: #137333; }
+  .ayuda-f .rec.no { background: #fce8e6; color: #a50e0e; }
+  .ayuda-f .rec.pop { animation: pop .4s ease both; }
+  @keyframes pop { 0% { transform: scale(.5); opacity: 0; } 70% { transform: scale(1.1); } }
+  .ayuda-f .sint { font: 600 13px "IBM Plex Mono", monospace; margin: 6px 0 4px; }
+  .ayuda-f .sint .nf { color: #1a73e8; }
+  .ayuda-f .sint .cur { background: #fde293; border-radius: 3px; padding: 0 3px; }
+  .ayuda-f .prev { font: 600 13px "IBM Plex Mono", monospace; word-break: break-all; }
+  .ayuda-f .tit { font-size: 10.5px; color: #5f6368; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .ayuda-f .argd { color: #3c4043; }
+
+  /* ====== diapositivas de teoría ====== */
+  .slide { display: none; }
+  .slide.on { display: block; animation: entra .5s cubic-bezier(.2,.8,.2,1) both; }
+  .slide.on.atras { animation-name: entraAtras; }
+  @keyframes entra { from { opacity: 0; transform: translateX(46px); } }
+  @keyframes entraAtras { from { opacity: 0; transform: translateX(-46px); } }
+  .navt { display: flex; align-items: center; gap: 10px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .puntos { display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+  .puntos button { width: 10px; height: 10px; border-radius: 99px; border: 0; background: #d8d3c4; padding: 0; transition: width .3s, background .3s; }
+  .puntos button.on { width: 30px; background: var(--moss); }
+  .btn.ghost { background: none; border: 1px solid var(--line); color: var(--moss); }
+  .dos { display: grid; grid-template-columns: 1.05fr .95fr; gap: 22px; align-items: start; }
+  .nota { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: .95rem; line-height: 1.5; }
+  .nota + .nota, .nota + details, .prueba + .nota { margin-top: 10px; }
+  .nota b.k { color: var(--moss); }
+  .nota code, .lead code, .quiz code { font: 600 .9em "IBM Plex Mono", monospace; background: var(--soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+  .intro kbd { font: 600 .82em "IBM Plex Mono", monospace; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: #faf9f5; }
+  .explica.cambia { animation: fade .4s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } }
+  .btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .chipb { border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 6px 14px; font-weight: 600; font-size: .88rem; transition: background .2s, color .2s, transform .1s; }
+  .chipb:hover { background: var(--soft); }
+  .chipb:active { transform: scale(.95); }
+  .chipb.on { background: var(--moss); color: #fff; border-color: var(--moss); }
+  .chipb.bien { background: #e6f4ea; border-color: #137333; color: #137333; }
+  .chipb.mal { background: #fce8e6; border-color: #a50e0e; color: #a50e0e; animation: sacude .4s; }
+  @keyframes sacude { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .ctrl { margin-top: 8px; }
+  .ctrl > span { font-size: .74rem; font-weight: 700; color: var(--mut); text-transform: uppercase; letter-spacing: .05em; }
+  .ctrl .btns { margin: 4px 0 0; }
+  .quiz { background: #fffaf0; border: 1px dashed var(--amber); border-radius: 12px; padding: 10px 14px; margin-top: 14px; }
+  .quiz p { margin: 0; font-weight: 700; }
+  .quiz .btns { margin: 8px 0 0; }
+  .qfb { font-size: .9rem; line-height: 1.45; margin-top: 6px; min-height: 1.2em; }
+  .prueba { margin-top: 10px; background: #fff; border: 1px dashed var(--moss); border-radius: 12px; padding: 12px; }
+  .prueba label { font-weight: 700; font-size: .9rem; display: block; margin-bottom: 6px; }
+  .prueba .fila { display: flex; gap: 8px; margin-bottom: 8px; }
+  .prueba input { flex: 1; min-width: 0; font: 15px "IBM Plex Mono", monospace; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; }
+
+  /* mini hoja de las diapositivas */
+  .ms { display: inline-block; max-width: 100%; background: #fff; border: 1px solid #c4c7c5; border-radius: 8px; overflow: hidden; font: 13px Arial, sans-serif; color: #000; vertical-align: top; box-shadow: 0 6px 18px rgba(16,35,28,.08); }
+  .ms .msfx { display: flex; border-bottom: 1px solid #e2e3e3; height: 30px; align-items: center; }
+  .ms .msfx .nm { width: 58px; padding: 0 8px; border-right: 1px solid #e2e3e3; height: 100%; display: flex; align-items: center; font-family: Roboto, Arial, sans-serif; flex: none; }
+  .ms .msfx i { font: italic 600 14px Georgia, serif; color: #80868b; padding: 0 8px; border-right: 1px solid #e2e3e3; height: 100%; display: flex; align-items: center; }
+  .ms .msfx span { padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; font-family: Roboto, Arial, sans-serif; }
+  .ms .msg { position: relative; overflow-x: auto; overflow-y: hidden; }
+  .ms table { border-collapse: separate; border-spacing: 0; table-layout: fixed; transition: width .5s cubic-bezier(.2,.8,.2,1); user-select: none; -webkit-user-select: none; }
+  .ms th { background: #f8f9fa; color: #444746; font: 500 11px Roboto, Arial, sans-serif; border-right: 1px solid #c4c7c5; border-bottom: 1px solid #c4c7c5; height: 21px; padding: 0; transition: width .5s cubic-bezier(.2,.8,.2,1); }
+  .ms td { height: 26px; border-right: 1px solid #e2e3e3; border-bottom: 1px solid #e2e3e3; padding: 0 5px; white-space: nowrap; overflow: hidden; cursor: cell; }
+  .ms td.rel { position: relative; }
+  .ms .selm { position: absolute; border: 2px solid #1a73e8; background: rgba(26,115,232,.1); pointer-events: none; transition: left .45s cubic-bezier(.2,.8,.2,1), top .45s cubic-bezier(.2,.8,.2,1), width .45s cubic-bezier(.2,.8,.2,1), height .45s cubic-bezier(.2,.8,.2,1); border-radius: 1px; z-index: 3; }
+  .ms td.ok { animation: okf 1.2s ease; } @keyframes okf { 0%, 45% { background: #ceead6; } }
+  .ms td.mal { animation: malf 1.2s ease; } @keyframes malf { 0%, 45% { background: #fad2cf; } }
+  .ms td.flash { animation: flf 1s ease; } @keyframes flf { 0%, 30% { background: #fff3c4; } }
+  .dt { position: absolute; left: 5px; top: 50%; translate: 0 -50%; transition: transform .6s cubic-bezier(.2,.8,.2,1); white-space: nowrap; }
+  .esc::after { content: ""; display: inline-block; width: 1px; height: 14px; background: #000; margin-left: 1px; vertical-align: -2px; animation: parpa .8s steps(1) infinite; }
+  @keyframes parpa { 50% { opacity: 0; } }
+  .tchip { display: inline-block; font: 600 11px "IBM Plex Sans", sans-serif; padding: 2px 8px; border-radius: 99px; animation: pop .45s ease both; }
+  .t-texto { background: #e8f0fe; color: #174ea6; } .t-num { background: #e6f4ea; color: #137333; } .t-fecha { background: #fef7e0; color: #8a5a00; }
+  .t-log { background: #f3e8fd; color: #6a1b9a; } .t-form { background: #fce8e6; color: #a50e0e; }
+  .refm { position: absolute; border: 2px dashed var(--rc); background: color-mix(in srgb, var(--rc) 13%, transparent); pointer-events: none; z-index: 2; animation: dibuja .5s ease both; }
+  @keyframes dibuja { from { opacity: 0; transform: scale(1.5); } }
+  .refm.pulsa { animation: pulsa .5s ease 2; }
+  @keyframes pulsa { 50% { transform: scale(1.15); } }
+  .rgbig { font: 600 clamp(2.2rem, 6vw, 3.4rem) "IBM Plex Mono", monospace; text-align: center; background: var(--ink); color: #fff; border-radius: 14px; padding: 8px; min-height: 1.6em; margin-bottom: 10px; }
+  .rgbig span { display: inline-block; animation: pop .45s ease both; }
+  .rgbig .dp { color: #f0c27b; margin: 0 2px; }
+  .rgbig small { display: block; font: 600 .8rem "IBM Plex Sans", sans-serif; color: #cfe3d3; letter-spacing: .04em; }
+  .eqbig { display: flex; align-items: center; gap: 16px; justify-content: center; background: var(--ink); color: #fff; border-radius: 14px; padding: 10px 14px; margin-bottom: 10px; }
+  .eqbig span { font: 600 3.6rem "IBM Plex Mono", monospace; color: #f0c27b; line-height: 1; animation: latido 1.6s ease-in-out infinite; display: inline-block; }
+  .eqbig b { font-size: 1.25rem; }
+  @keyframes latido { 50% { transform: translateY(-6px) scale(1.06); } }
+  .ops { border-collapse: collapse; margin-top: 4px; }
+  .ops td { padding: 2px 10px 2px 0; }
+  .fbig { font: 600 clamp(1.3rem, 4vw, 2.4rem) "IBM Plex Mono", monospace; text-align: center; margin: 14px 0; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 22px 10px 26px; word-break: break-all; }
+  .fbig span { position: relative; display: inline-block; padding: 0 1px; color: #c4c7c5; cursor: pointer; transition: color .35s, transform .35s; }
+  .fbig span.lit { color: var(--pc); }
+  .fbig span::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 4px; border-radius: 2px; background: var(--pc); transform: scaleX(0); transition: transform .45s; }
+  .fbig span.lit::after { transform: scaleX(1); }
+  .fbig span.foco { animation: latido .9s ease-in-out infinite; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .card { background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--pc); border-radius: 12px; padding: 10px 12px; opacity: .15; transform: translateY(14px); transition: opacity .45s, transform .45s, box-shadow .25s; cursor: pointer; font-size: .9rem; line-height: 1.45; }
+  .card.show { opacity: 1; transform: none; }
+  .card.foco { box-shadow: 0 0 0 3px var(--pc); }
+  .card .sim { font: 600 1.15rem "IBM Plex Mono", monospace; color: var(--pc); word-break: break-all; }
+  .card h4 { margin: 2px 0 4px; font-size: .95rem; }
+
   @media (max-width: 900px) {
+    .dos { grid-template-columns: 1fr; }
     html, body { overflow: auto; }
     .app { position: static; display: flex; flex-direction: column; min-height: 100%; }
     .hoja { height: 78vh; flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
@@ -211,25 +323,165 @@
 <!-- ============ INTRODUCCIÓN ============ -->
 <div class="intro" id="intro" hidden>
   <div class="caja">
-    <p class="eti">Unidad 2 · Hojas de cálculo</p>
-    <h1>La tabla que hace las cuentas sola</h1>
-    <p class="lead">Ya hicieron tablas en Google Docs. Se ven bien, pero <b>no saben hacer cuentas</b>. Mira lo que pasa cuando llega más material al servicio:</p>
-    <div class="duelo">
-      <div class="lado">
-        <h3><i style="background:#4285f4"></i> Tabla en Google Docs</h3>
-        <table id="tDocs"></table>
-        <div class="veredicto" id="vDocs"></div>
+    <!-- 0 · gancho -->
+    <section class="slide" data-s="duelo">
+      <p class="eti">Unidad 2 · Hojas de cálculo</p>
+      <h1>La tabla que hace las cuentas sola</h1>
+      <p class="lead">Ya hicieron tablas en Google Docs. Se ven bien, pero <b>no saben hacer cuentas</b>. Mira lo que pasa cuando llega más material al servicio:</p>
+      <div class="duelo">
+        <div class="lado">
+          <h3><i style="background:#4285f4"></i> Tabla en Google Docs</h3>
+          <table id="tDocs"></table>
+          <div class="veredicto" id="vDocs"></div>
+        </div>
+        <div class="lado">
+          <h3><i style="background:#188038"></i> Hoja de cálculo (Google Sheets)</h3>
+          <table id="tSheets"></table>
+          <div class="veredicto" id="vSheets"></div>
+        </div>
       </div>
-      <div class="lado">
-        <h3><i style="background:#188038"></i> Hoja de cálculo (Google Sheets)</h3>
-        <table id="tSheets"></table>
-        <div class="veredicto" id="vSheets"></div>
+      <div class="acc">
+        <button class="btn sec" id="bLlegan">📦 Llegaron 2 cajas más de guantes</button>
+        <span class="peq" id="pIntro">Presiona el botón amarillo primero.</span>
       </div>
-    </div>
-    <div class="acc">
-      <button class="btn sec" id="bLlegan">📦 Llegaron 2 cajas más de guantes</button>
-      <button class="btn pri" id="bEmpezar" disabled>Empezar mi turno →</button>
-      <span class="peq" id="pIntro">Presiona el botón amarillo primero.</span>
+    </section>
+
+    <!-- 1 · tipos de datos -->
+    <section class="slide" data-s="tipos">
+      <p class="eti">Teoría · 1 de 6</p>
+      <h1>¿Qué cabe en una celda?</h1>
+      <p class="lead">Cada celda guarda <b>un solo dato</b>. Apenas presionas <kbd>Enter</kbd>, la hoja decide de qué tipo es, y <b>el lado hacia donde se alinea</b> te lo dice.</p>
+      <div class="dos">
+        <div>
+          <div id="msTipos"></div>
+          <div class="btns"><button class="chipb" data-replay="tipos">▶ Ver de nuevo</button></div>
+        </div>
+        <div>
+          <div class="nota"><b class="k">Texto</b> → se alinea a la <b>izquierda</b>. Nombres, diagnósticos, observaciones.</div>
+          <div class="nota"><b class="k">Números, fechas, horas y %</b> → a la <b>derecha</b>. Con estos la hoja puede hacer cuentas.</div>
+          <div class="nota"><b class="k">Lógicos</b> (VERDADERO / FALSO) → al <b>centro</b>. <b class="k">Fórmulas</b> → empiezan con <code>=</code> y la celda muestra el <b>resultado</b>.</div>
+          <div class="prueba">
+            <label for="tipoIn">Pruébalo: escribe un dato y presiona Enter</label>
+            <div class="fila"><input id="tipoIn" placeholder="ej.: 120/80 · 36.5 · 14:30" autocomplete="off" spellcheck="false"><button class="chipb on" id="tipoOk">Enter ↵</button></div>
+            <div id="msPrueba"></div>
+            <div class="qfb" id="tipoFb"></div>
+          </div>
+        </div>
+      </div>
+      <div class="quiz" data-ok="0" data-bien="¡Exacto! El «°C» lo convierte en texto y ya no se puede promediar. Escribe solo 37 y pon «(°C)» en el encabezado de la columna." data-mal="Míralo bien: tiene un espacio, un símbolo y una letra. Para la hoja eso ya no es un número.">
+        <p>¿Cómo leerá la hoja esto: <code>37 °C</code>?</p>
+        <div class="btns"><button class="chipb">Como texto</button><button class="chipb">Como número</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 2 · texto largo -->
+    <section class="slide" data-s="texto">
+      <p class="eti">Teoría · 2 de 6</p>
+      <h1>¿Y si escribo mucho texto?</h1>
+      <p class="lead">Una celda acepta textos largos (¡hasta 50 000 caracteres!), pero <b>no se agranda sola</b>. Lo que ves depende de la celda de al lado y del <b>ajuste de texto</b>. Toca los botones:</p>
+      <div class="dos">
+        <div>
+          <div id="msTexto"></div>
+          <div class="ctrl"><span>¿Hay algo en B1?</span><div class="btns" id="ctB1"><button class="chipb on" data-v="0">B1 vacía</button><button class="chipb" data-v="1">✍ Escribir en B1</button></div></div>
+          <div class="ctrl"><span>Formato → Ajuste de texto</span><div class="btns" id="ctAj"><button class="chipb on" data-v="desb">⇥ Desbordar</button><button class="chipb" data-v="ajus">↵ Ajustar</button><button class="chipb" data-v="reco">✂ Recortar</button></div></div>
+          <div class="ctrl"><span>Columna A</span><div class="btns" id="ctAn"><button class="chipb on" data-v="0">Ancho normal</button><button class="chipb" data-v="1">↔ Ensanchar</button></div></div>
+        </div>
+        <div>
+          <div class="nota explica" id="textoFb"></div>
+          <div class="nota">🔎 <b>El texto nunca se pierde.</b> Aunque se vea cortado, está completo dentro de la celda: selecciónala y léelo entero en la barra <b>fx</b>.</div>
+          <details><summary>Saber más</summary><p>La hoja de cálculo es para datos cortos: un número, una hora, un nombre. Para redactar una nota de enfermería completa conviene un documento de texto. Si en la hoja necesitas un texto largo, usa <b>Ajustar</b> para que se lea entero.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · rango -->
+    <section class="slide" data-s="rango">
+      <p class="eti">Teoría · 3 de 6</p>
+      <h1>¿Qué es un rango?</h1>
+      <p class="lead">Un <b>rango</b> es un grupo de celdas juntas, en forma de rectángulo. Se nombra con la <b>primera</b> celda, <b>dos puntos</b> y la <b>última</b>. Los dos puntos se leen <b>«hasta»</b>.</p>
+      <div class="dos">
+        <div>
+          <div id="msRango"></div>
+          <div class="btns" id="ctRg"><button class="chipb" data-rg="B2:B7">B2:B7</button><button class="chipb" data-rg="A1:D1">A1:D1</button><button class="chipb" data-rg="B2:D4">B2:D4</button><button class="chipb" data-rg="A1:D7">A1:D7</button><button class="chipb" data-rg="C4">C4</button></div>
+          <p class="peq" style="margin:0">También puedes <b>arrastrar con el mouse</b> sobre la tabla.</p>
+        </div>
+        <div>
+          <div class="rgbig" id="rgBig"></div>
+          <div class="nota explica" id="rgFb"></div>
+          <div class="nota">Lo usarás dentro de las funciones: <code>=PROMEDIO(B2:B7)</code> quiere decir «saca el promedio <b>desde B2 hasta B7</b>».</div>
+        </div>
+      </div>
+      <div class="quiz" data-ok="2" data-bien="¡Sí! 2 columnas (A y B) × 3 filas (1, 2 y 3) = 6 celdas." data-mal="Cuenta las columnas (de A hasta B) y las filas (de 1 hasta 3), y multiplica.">
+        <p>¿Cuántas celdas tiene el rango <code>A1:B3</code>?</p>
+        <div class="btns"><button class="chipb">2</button><button class="chipb">3</button><button class="chipb">6</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 4 · el signo = -->
+    <section class="slide" data-s="igual">
+      <p class="eti">Teoría · 4 de 6</p>
+      <h1>El signo = : la orden de calcular</h1>
+      <p class="lead">Para la hoja, todo lo que escribes es un dato… <b>salvo que empiece con =</b>. El signo igual le dice: «no copies esto, <b>calcúlalo</b>». Mira el balance de líquidos:</p>
+      <div class="dos">
+        <div>
+          <div id="msIgual"></div>
+          <div class="btns"><button class="chipb" data-ig="0">✍ Escribir B2+B3</button><button class="chipb" data-ig="1">✍ Escribir =B2+B3</button></div>
+        </div>
+        <div>
+          <div class="eqbig"><span>=</span><b>«¡calcula!»</b></div>
+          <div class="nota explica" id="igualFb">Mira cómo se escribe en B4…</div>
+          <div class="nota">Después del <code>=</code> puede ir un número (<code>=500+250</code>), una <b>referencia</b> (<code>=B2+B3</code>) o una <b>función</b> (<code>=SUMA(B2:B3)</code>).</div>
+        </div>
+      </div>
+      <div class="quiz" data-ok="1" data-bien="Correcto: sin el = es solo texto y la hoja no calcula nada." data-mal="Recuerda: sin el = la hoja no calcula, solo guarda lo que escribiste.">
+        <p>Si escribes <code>PROMEDIO(B2:B3)</code> <b>sin</b> el =, ¿qué mostrará la celda?</p>
+        <div class="btns"><button class="chipb">375</button><button class="chipb">PROMEDIO(B2:B3)</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 5 · referencias -->
+    <section class="slide" data-s="refs">
+      <p class="eti">Teoría · 5 de 6</p>
+      <h1>Referencias: usar la dirección, no el número</h1>
+      <p class="lead">Una <b>referencia</b> es el nombre de una celda escrito dentro de una fórmula. <code>=B2</code> no quiere decir «60»: quiere decir <b>«lo que haya en B2»</b>. Si el dato cambia, el resultado cambia solo.</p>
+      <div class="dos">
+        <div>
+          <div id="msRef"></div>
+          <div class="ctrl"><span>¿Qué hay en B4?</span><div class="btns" id="ctRf"><button class="chipb on" data-rf="f">Fórmula =B2*B3</button><button class="chipb" data-rf="m">El número 300 escrito a mano</button></div></div>
+          <div class="btns"><button class="btn sec" id="bPeso">⚖️ El paciente ahora pesa 72 kg</button></div>
+        </div>
+        <div>
+          <div class="nota explica" id="refFb"></div>
+          <div class="nota">🏥 Es como decir «el paciente de la <b>cama 4</b>»: la referencia apunta al <b>lugar</b>. Si cambia lo que hay ahí, la fórmula usa lo nuevo.</div>
+          <div class="nota">Para escribir una referencia, después del <code>=</code> <b>haz clic en la celda</b>: la hoja escribe su nombre por ti y la pinta de color.
+            <table class="ops"><tr><td><code>+</code> suma</td><td><code>-</code> resta</td><td><code>*</code> multiplica</td><td><code>/</code> divide</td></tr></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · partes de una función -->
+    <section class="slide" data-s="partes">
+      <p class="eti">Teoría · 6 de 6</p>
+      <h1>Las partes de una función</h1>
+      <p class="lead">Una <b>función</b> es una fórmula que ya viene hecha: tú solo le dices <b>qué hacer</b> y <b>con qué datos</b>. Todas tienen las mismas partes. Toca cada parte para verla.</p>
+      <div class="btns" id="ctPx"><button class="chipb on" data-px="prom">=PROMEDIO(B2:B7)</button><button class="chipb" data-px="si">=SI(B4&gt;38;"Fiebre";"Normal")</button><button class="chipb" data-replay="partes">▶ Animar de nuevo</button></div>
+      <div class="fbig" id="fBig"></div>
+      <div class="cards" id="fCards"></div>
+      <div class="nota" style="margin-top:12px">💡 En el simulador, cuando escribas una función aparecerá una ayuda: te dirá si la <b>reconoce</b> ✓, te mostrará sus partes y en cuál estás escribiendo.</div>
+      <div class="quiz" data-ok="1" data-bien="¡Bien! C2:C7 es el dato con el que trabaja la función. MAX es su nombre." data-mal="El argumento es lo que va dentro de los paréntesis.">
+        <p>En <code>=MAX(C2:C7)</code>, ¿cuál es el argumento?</p>
+        <div class="btns"><button class="chipb">MAX</button><button class="chipb">C2:C7</button><button class="chipb">=</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <div class="navt">
+      <button class="btn ghost" id="bAtras">← Atrás</button>
+      <div class="puntos" id="puntos"></div>
+      <button class="btn pri" id="bSig">Siguiente →</button>
     </div>
   </div>
 </div>
@@ -257,10 +509,12 @@
       <button data-acc="cursiva" title="Cursiva" class="ai">I</button>
       <button data-acc="colorTexto" title="Color de texto"><span style="font-weight:700">A</span><span class="colorbar" id="cbTexto" style="background:#000"></span></button>
       <button data-acc="relleno" title="Color de relleno">🪣<span class="colorbar" id="cbRelleno" style="background:#fff59d"></span></button>
+      <button data-acc="bordes" title="Bordes" style="font-size:18px">▦</button>
       <span class="sep"></span>
       <button data-acc="izq" title="Alinear a la izquierda">⇤</button>
       <button data-acc="centro" title="Centrar">↔</button>
       <button data-acc="der" title="Alinear a la derecha">⇥</button>
+      <button data-acc="ajuste" title="Ajuste de texto">↵</button>
       <span class="sep"></span>
       <button data-acc="funciones" title="Funciones">Σ</button>
     </div>
@@ -299,6 +553,7 @@
       <div class="mal" id="fcMal"></div>
       <div class="acc"><button class="canc" id="fcCanc">Cancelar</button><button class="listo" id="fcListo">Listo</button></div>
     </div>
+    <div class="ayuda-f" id="ayudaF" hidden></div>
   </section>
 
   <aside class="panel">
@@ -309,7 +564,7 @@
     </header>
     <div class="cuerpo" id="cuerpo"></div>
     <footer>
-      <button id="bIntro">▶ Ver la introducción</button>
+      <button id="bIntro">📖 Repasar la teoría</button>
       <button id="bReiniciar">↺ Empezar de cero</button>
     </footer>
   </aside>
@@ -346,6 +601,65 @@ const rangeTxt = g => (g.c1 === g.c2 && g.r1 === g.r2) ? addr(g.c1, g.r1) : addr
 class FErr { constructor(code, msg) { this.code = code; this.msg = msg; } }
 const FUNCS = ["SUMA", "PROMEDIO", "MAX", "MIN", "CONTAR", "CONTARA", "CONTAR.SI", "SI", "REDONDEAR", "ABS"];
 const ALIAS = { SUM: "SUMA", AVERAGE: "PROMEDIO", COUNT: "CONTAR", COUNTA: "CONTARA", COUNTIF: "CONTAR.SI", IF: "SI", ROUND: "REDONDEAR" };
+/* ficha de cada función: sus partes (argumentos) y para qué sirve */
+const VAL_ARGS = { a: ["valor1", "[valor2; …]"], ad: ["el primer número, celda o rango, por ejemplo B2:B7", "opcional: más números, celdas o rangos"] };
+const FDEF = {
+  "SUMA": { ...VAL_ARGS, d: "Suma todos los números." },
+  "PROMEDIO": { ...VAL_ARGS, d: "Saca el promedio: suma todo y divide entre cuántos son." },
+  "MAX": { ...VAL_ARGS, d: "Devuelve el número más alto." },
+  "MIN": { ...VAL_ARGS, d: "Devuelve el número más bajo." },
+  "CONTAR": { ...VAL_ARGS, d: "Cuenta cuántas celdas tienen números." },
+  "CONTARA": { ...VAL_ARGS, d: "Cuenta cuántas celdas no están vacías (números o texto)." },
+  "CONTAR.SI": { a: ["rango", "condición"], ad: ["dónde contar, por ejemplo D2:D7", "qué contar, entre comillas, por ejemplo \"<95\""], d: "Cuenta las celdas que cumplen una condición." },
+  "SI": { a: ["condición", "valor_si_verdadero", "[valor_si_falso]"], ad: ["una comparación, por ejemplo B4>38", "lo que se muestra si se cumple (el texto va entre comillas)", "opcional: lo que se muestra si no se cumple"], d: "Elige qué mostrar según si se cumple una condición." },
+  "REDONDEAR": { a: ["número", "[decimales]"], ad: ["el número o la celda que quieres redondear", "opcional: cuántos decimales dejar (si no pones nada, 0)"], d: "Redondea un número." },
+  "ABS": { a: ["número"], ad: ["el número o la celda"], d: "Quita el signo negativo (valor absoluto)." }
+};
+const RCOL = ["#1a73e8", "#d93025", "#9334e6", "#188038", "#e37400", "#c2185b"];
+const fnNegrita = s => s.replace(/([A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ.]*)(\s*\()/g, "<b>$1</b>$2");
+/* pinta cada referencia de un color (como Google Sheets) y devuelve la lista de rangos */
+function pintarRefs(t) {
+  const lista = [], mapa = {}; let html = "", last = 0;
+  if (!t || t[0] !== "=") return { html: esc(t || ""), lista };
+  const rx = /("[^"]*")|(\$?[A-Za-z]{1,2}\$?\d+(?::\$?[A-Za-z]{1,2}\$?\d+)?)(?![A-Za-z0-9_.(])/g;
+  let m;
+  while ((m = rx.exec(t))) {
+    const off = m.index;
+    if (m[2] && off > 0 && /[A-Za-z0-9_.]/.test(t[off - 1])) continue;
+    html += fnNegrita(esc(t.slice(last, off)));
+    if (m[1]) html += '<span style="color:#188038">' + esc(m[1]) + "</span>";
+    else {
+      const k = m[2].toUpperCase().replace(/\$/g, ""), g = parseRange(k);
+      if (!(k in mapa)) { mapa[k] = RCOL[Object.keys(mapa).length % RCOL.length]; if (g) lista.push({ k, g, col: mapa[k] }); }
+      html += '<span style="color:' + mapa[k] + ';font-weight:700">' + esc(m[2]) + "</span>";
+    }
+    last = off + m[0].length;
+  }
+  html += fnNegrita(esc(t.slice(last)));
+  return { html, lista };
+}
+/* ¿qué función se está escribiendo y en qué argumento está el cursor? */
+function analizarF(t, pos) {
+  if (!t || t[0] !== "=") return null;
+  const antes = t.slice(0, pos);
+  let enStr = false, palabra = "", pend = "";
+  const pila = [];
+  for (let i = 1; i < antes.length; i++) {
+    const ch = antes[i];
+    if (enStr) { if (ch === '"') enStr = false; continue; }
+    if (ch === '"') { enStr = true; palabra = ""; pend = ""; continue; }
+    if (/[A-Za-zÁÉÍÓÚÑáéíóúñ0-9_.$]/.test(ch)) { palabra += ch; pend = ""; continue; }
+    if (/\s/.test(ch)) { if (palabra) pend = palabra; palabra = ""; continue; }
+    if (ch === "(") { const n = (palabra || pend).toUpperCase(); pila.push({ n: /^[A-ZÁÉÍÓÚÑ]/.test(n) ? n : null, arg: 0 }); palabra = ""; pend = ""; continue; }
+    if (ch === ")") pila.pop();
+    else if ((ch === ";" || ch === ",") && pila.length) pila[pila.length - 1].arg++;
+    palabra = ""; pend = "";
+  }
+  let fn = null, arg = 0;
+  for (let i = pila.length - 1; i >= 0; i--) if (pila[i].n) { fn = pila[i].n; arg = pila[i].arg; break; }
+  const parcial = !enStr && /^[A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ.]*$/.test(palabra) ? palabra.toUpperCase() : null;
+  return { fn, arg, parcial };
+}
 
 function tokenize(s) {
   const t = []; let i = 0;
@@ -591,7 +905,7 @@ function restaurar(desde, hacia) {
   Object.assign(h, JSON.parse(pila.pop())); cambio();
 }
 const celda = (a, crear) => { const h = H(); if (!h.cells[a] && crear) h.cells[a] = { v: "" }; return h.cells[a]; };
-function limpiarVacias() { const h = H(); for (const k in h.cells) { const c = h.cells[k]; if (!c.v && !c.b && !c.i && !c.fc && !c.bg && !c.al && c.dec == null) delete h.cells[k]; } }
+function limpiarVacias() { const h = H(); for (const k in h.cells) { const c = h.cells[k]; if (!c.v && !c.b && !c.i && !c.fc && !c.bg && !c.al && !c.bd && !c.wr && c.dec == null) delete h.cells[k]; } }
 
 /* selección */
 let act = { c: 0, r: 0 }, anc = { c: 0, r: 0 }, sel = { c1: 0, r1: 0, c2: 0, r2: 0 };
@@ -646,7 +960,7 @@ function reglaAplica(rule, c, r, v) {
   switch (rule.op) { case "gt": return v > rule.val; case "gte": return v >= rule.val; case "lt": return v < rule.val; case "lte": return v <= rule.val; case "eq": return v === rule.val; }
   return false;
 }
-let refsEdit = new Set();
+let refsList = [];
 function render() {
   cache.clear();
   const h = H();
@@ -666,14 +980,36 @@ function render() {
     let fc = cell && cell.fc || "", bg = cell && cell.bg || "";
     for (const rule of h.rules) if (reglaAplica(rule, c, r, v)) { bg = rule.bg; fc = rule.fc; }
     td.style.color = fc; td.style.backgroundColor = bg;
+    // bordes: derecho e inferior pintan la línea de la cuadrícula; superior e izquierdo, una sombra interior
+    const bd = cell && cell.bd;
+    td.style.borderRightColor = bd && bd.r ? "#000" : "";
+    td.style.borderBottomColor = bd && bd.b ? "#000" : "";
+    td.style.boxShadow = bd && (bd.t || bd.l) ? [bd.t ? "inset 0 1px 0 #000" : "", bd.l ? "inset 1px 0 0 #000" : ""].filter(Boolean).join(",") : "";
+    // ajuste de texto: desbordar (normal), ajustar o recortar
+    const wr = cell && cell.wr;
+    td.style.whiteSpace = wr === "wrap" ? "normal" : "";
+    td.style.wordBreak = wr === "wrap" ? "break-word" : "";
+    td.style.overflow = "";
+    if (!wr && typeof v === "string" && v && al === "left") {
+      const tw = medir(v, cell && cell.b); let disp = anchoCol(c) - 6, k = c + 1;
+      if (tw > disp) {
+        while (k < COLS && disp < tw && !(h.cells[addr(k, r)] && h.cells[addr(k, r)].v)) { disp += anchoCol(k); k++; }
+        if (k > c + 1) { td.style.overflow = "visible"; td.innerHTML = '<span class="ovf" style="width:' + disp + 'px">' + esc(v) + "</span>"; }
+      }
+    }
     td.classList.toggle("err", v instanceof FErr);
     td.classList.toggle("inr", !unaCelda() && enSel(c, r) && !(c === anc.c && r === anc.r));
-    td.classList.toggle("ref", refsEdit.has(a));
   }
   colHs.forEach((el, c) => el.classList.toggle("hl", c >= sel.c1 && c <= sel.c2));
   rowHs.forEach((el, r) => el.classList.toggle("hl", r >= sel.r1 && r <= sel.r2));
   ubicarCaja($("selbox"), sel);
   $("selbox").classList.toggle("edita", !!editing);
+  wrap.querySelectorAll(".refbox").forEach(x => x.remove());
+  for (const x of refsList) {
+    if (x.g.c1 >= COLS || x.g.r1 >= ROWS) continue;
+    const d = document.createElement("div"); d.className = "refbox"; d.style.borderColor = x.col; d.style.background = x.col + "1a";
+    wrap.appendChild(d); ubicarCaja(d, { c1: x.g.c1, r1: x.g.r1, c2: Math.min(x.g.c2, COLS - 1), r2: Math.min(x.g.r2, ROWS - 1) });
+  }
   const a = addr(anc.c, anc.r), cell = h.cells[a];
   $("nombre").textContent = unaCelda() ? a : rangeTxt(sel);
   if (!editing) fbar.value = cell ? cell.v : "";
@@ -685,6 +1021,7 @@ function render() {
   document.querySelector('[data-acc="cursiva"]').classList.toggle("on", !!(cell && cell.i));
   if (clip && clip.hoja === S.cur) { $("copybox").hidden = false; ubicarCaja($("copybox"), clip.g); } else $("copybox").hidden = true;
   pestanas();
+  actualizarAyuda();
   guardar();
 }
 function rectCelda(c, r) { const td = tds[r][c]; return { x: td.offsetLeft, y: td.offsetTop, w: td.offsetWidth, h: td.offsetHeight }; }
@@ -710,7 +1047,7 @@ function pestanas() {
   p.appendChild(mas);
   S.hojas.forEach((h, i) => {
     const b = document.createElement("button"); b.className = "tab" + (i === S.cur ? " on" : ""); b.textContent = h.nombre;
-    b.onclick = () => { if (editing) commit(null); if (S.cur === i) return; S.cur = i; clip = null; setSel(0, 0); refsEdit.clear(); cerrarFC(); render(); panel(); };
+    b.onclick = () => { if (editing) commit(null); if (S.cur === i) return; S.cur = i; clip = null; setSel(0, 0); refsList = []; cerrarFC(); render(); panel(); };
     p.appendChild(b);
   });
 }
@@ -739,27 +1076,84 @@ function iniciarEdicion(texto, modo, enBarra) {
 }
 function ajustarEditor() { editor.style.width = Math.max(parseFloat(editor.style.minWidth) || 0, medir(editor.value) + 14) + "px"; }
 function marcarRefs() {
-  refsEdit = new Set();
+  refsList = editing ? pintarRefs(editing.en.value).lista : [];
+}
+/* ===== ayuda de funciones: sugerencias, función reconocida y sus partes ===== */
+const ayudaF = $("ayudaF");
+let acList = [], acIdx = 0, ultFn = "";
+function actualizarAyuda() {
+  if (!editing || editing.en.value[0] !== "=") { ayudaF.hidden = true; acList = []; ultFn = ""; return; }
+  const el = editing.en, t = el.value;
+  const an = analizarF(t, el.selectionStart == null ? t.length : el.selectionStart);
+  acList = an.parcial ? Object.keys(FDEF).filter(f => f.startsWith(an.parcial)) : [];
+  if (acIdx >= acList.length) acIdx = 0;
+  let h = "";
+  if (acList.length) {
+    h += '<div class="sug">' + acList.map((f, i) => '<button data-f="' + f + '" class="' + (i === acIdx ? "on" : "") + '"><b>' + f + "</b><small>" + FDEF[f].d + "</small></button>").join("") + '<div class="tip">Tab o Enter para elegir · ↑↓ para moverte</div></div>';
+  }
+  const claveFn = an.fn ? an.fn + (FDEF[ALIAS[an.fn] || an.fn] ? "+" : "-") : "";
+  const pop = claveFn !== ultFn ? " pop" : ""; ultFn = claveFn;
+  if (an.fn) {
+    const n = ALIAS[an.fn] || an.fn, d = FDEF[n];
+    if (d) {
+      const rep = /…/.test(d.a[d.a.length - 1]);
+      const i = rep ? Math.min(an.arg, d.a.length - 1) : an.arg;
+      const partes = d.a.map((x, j) => j === i ? '<span class="cur">' + x + "</span>" : x);
+      h += '<div class="sec"><span class="rec' + pop + '">✓ Función reconocida: ' + n + "</span>" +
+        '<div class="sint"><span class="nf">' + n + "</span>(" + partes.join("; ") + ")</div>" +
+        "<div>" + d.d + "</div>" +
+        (i < d.a.length ? '<div class="argd">✏️ Estás escribiendo <b>' + d.a[i].replace(/[\[\]]/g, "") + "</b>: " + esc(d.ad[i]) + "</div>"
+                        : '<div class="argd" style="color:#a50e0e">⚠ ' + n + " solo tiene " + d.a.length + " parte" + (d.a.length > 1 ? "s" : "") + ": te sobra un «;».</div>") + "</div>";
+    } else {
+      let mejor = null, dist = 99;
+      for (const f of FUNCS) { const x = lev(an.fn, f); if (x < dist) { dist = x; mejor = f; } }
+      h += '<div class="sec"><span class="rec no' + pop + '">✗ Función desconocida</span><div style="margin-top:4px">No existe «' + esc(an.fn) + "»." + (dist <= 2 ? " ¿Quisiste decir <b>" + mejor + "</b>?" : " Revisa cómo está escrita.") + "</div></div>";
+    }
+  } else if (!acList.length) {
+    h += '<div class="sec" style="color:#5f6368">Escribe el nombre de una función (por ejemplo <b>PRO</b>…) o haz clic en una celda para usar su dirección.</div>';
+  }
+  h += '<div class="sec"><div class="tit">Tu fórmula</div><div class="prev">' + pintarRefs(t).html + "</div></div>";
+  ayudaF.innerHTML = h; ayudaF.hidden = false;
+  const r = el.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect();
+  const w = ayudaF.offsetWidth, hh = ayudaF.offsetHeight;
+  ayudaF.style.left = Math.max(8, Math.min(r.left - hr.left, hr.width - w - 8)) + "px";
+  let top = r.bottom - hr.top + 4;
+  if (top + hh > hr.height - 40 && r.top - hr.top - hh - 4 > 0) top = r.top - hr.top - hh - 4;
+  ayudaF.style.top = top + "px";
+}
+function elegirFn(f) {
   if (!editing) return;
-  const t = editing.en.value;
-  if (t[0] !== "=") return;
-  t.replace(/("[^"]*")|(\$?[A-Za-z]{1,2}\$?\d+(?::\$?[A-Za-z]{1,2}\$?\d+)?)(?![A-Za-z0-9_.(])/g, (m, str, ref) => {
-    if (ref) { const g = parseRange(ref.replace(/\$/g, "")); if (g) for (let r = g.r1; r <= Math.min(g.r2, ROWS - 1); r++) for (let c = g.c1; c <= Math.min(g.c2, COLS - 1); c++) refsEdit.add(addr(c, r)); }
-    return m;
-  });
+  const el = editing.en, pos = el.selectionStart, v = el.value, antes = v.slice(0, pos);
+  const m = /[A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ.]*$/.exec(antes); if (!m) return;
+  const despues = v.slice(pos);
+  const ins = f + (despues[0] === "(" ? "" : "(");
+  el.value = antes.slice(0, antes.length - m[0].length) + ins + despues;
+  const n = pos - m[0].length + ins.length + (despues[0] === "(" ? 1 : 0);
+  el.setSelectionRange(n, n);
+  (el === editor ? fbar : editor).value = el.value;
+  ptr = null; acIdx = 0; ajustarEditor(); marcarRefs(); render();
+}
+ayudaF.addEventListener("pointerdown", e => { const b = e.target.closest("button[data-f]"); if (!b) return; e.preventDefault(); elegirFn(b.dataset.f); });
+["keyup", "click"].forEach(ev => { editor.addEventListener(ev, e => { if (!/Arrow(Up|Down)/.test(e.key || "")) actualizarAyuda(); }); fbar.addEventListener(ev, e => { if (!/Arrow(Up|Down)/.test(e.key || "")) actualizarAyuda(); }); });
+/* como Google Sheets: al presionar Enter, cierra los paréntesis que quedaron abiertos */
+function cerrarParentesis(t) {
+  if (!t || t[0] !== "=") return t;
+  let n = 0, s = false;
+  for (const ch of t) { if (ch === '"') s = !s; else if (!s && ch === "(") n++; else if (!s && ch === ")") n--; }
+  return n > 0 && !s ? t + ")".repeat(n) : t;
 }
 function commit(mover) {
   if (!editing) return;
-  const { c, r } = editing; const t = editing.en.value;
+  const { c, r } = editing; const t = cerrarParentesis(editing.en.value);
   const a = addr(c, r); const antes = H().cells[a] ? H().cells[a].v : "";
-  editing = null; ptr = null; editor.hidden = true; refsEdit = new Set();
+  editing = null; ptr = null; editor.hidden = true; refsList = [];
   if (t !== antes) { snap(); celda(a, true).v = t; limpiarVacias(); }
   if (mover) setSel(c + mover[0], r + mover[1]); else selRango(c, r, c, r);
   if (document.activeElement === editor || document.activeElement === fbar) document.activeElement.blur();
   if (mover) verCelda(act.c, act.r);
   cambio();
 }
-function cancelar() { if (!editing) return; editing = null; ptr = null; editor.hidden = true; refsEdit = new Set(); if (document.activeElement) document.activeElement.blur(); render(); }
+function cancelar() { if (!editing) return; editing = null; ptr = null; editor.hidden = true; refsList = []; if (document.activeElement) document.activeElement.blur(); render(); }
 function puedeSenalar() {
   if (!editing) return false;
   const el = editing.en, v = el.value;
@@ -777,8 +1171,8 @@ function senalar(g) {
   (el === editor ? fbar : editor).value = el.value;
   ajustarEditor(); marcarRefs(); render();
 }
-editor.addEventListener("input", () => { fbar.value = editor.value; ptr = null; ajustarEditor(); marcarRefs(); render(); });
-fbar.addEventListener("input", () => { if (!editing) return; editor.value = fbar.value; ptr = null; ajustarEditor(); marcarRefs(); render(); });
+editor.addEventListener("input", () => { fbar.value = editor.value; ptr = null; acIdx = 0; ajustarEditor(); marcarRefs(); render(); });
+fbar.addEventListener("input", () => { if (!editing) return; editor.value = fbar.value; ptr = null; acIdx = 0; ajustarEditor(); marcarRefs(); render(); });
 fbar.addEventListener("focus", () => { if (!editing) iniciarEdicion(undefined, "edita", true); else editing.en = fbar; });
 editor.addEventListener("focus", () => { if (editing) editing.en = editor; });
 
@@ -885,6 +1279,10 @@ document.addEventListener("keydown", e => {
   const t = e.target;
   if (editing && t !== editor && t !== fbar && !(t && /INPUT|SELECT|TEXTAREA/.test(t.tagName))) { editing.en.focus(); return; }
   if (editing && (t === editor || t === fbar)) {
+    if (!ayudaF.hidden && acList.length) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); acIdx = (acIdx + (e.key === "ArrowDown" ? 1 : -1) + acList.length) % acList.length; actualizarAyuda(); return; }
+      if (e.key === "Tab" || e.key === "Enter") { e.preventDefault(); elegirFn(acList[acIdx]); return; }
+    }
     if (e.key === "Enter") { e.preventDefault(); commit([0, e.shiftKey ? -1 : 1]); }
     else if (e.key === "Tab") { e.preventDefault(); commit([e.shiftKey ? -1 : 1, 0]); }
     else if (e.key === "Escape") { e.preventDefault(); cancelar(); }
@@ -951,7 +1349,39 @@ function accion(acc, boton) {
       formatoSel(x => x.dec = nuevo); break;
     }
     case "funciones": menuFunciones(boton); break;
+    case "bordes": abrirMenu(boton, [{ sub: "Bordes del rango " + rangeTxt(sel) },
+      { t: "▦  Todos los bordes", k: "como tabla", f: () => bordes("todos") },
+      { t: "▢  Bordes exteriores", k: "solo el contorno", f: () => bordes("ext") },
+      { t: "▁  Borde inferior", f: () => bordes("inf") },
+      "-",
+      { t: "✕  Quitar bordes", f: () => bordes("quitar") }]); boton.classList.remove("on"); break;
+    case "ajuste": abrirMenu(boton, menuAjuste()); boton.classList.remove("on"); break;
   }
+}
+function menuAjuste() {
+  return [{ sub: "Ajuste de texto" },
+    { t: "⇥  Desbordar", k: "se pasa a la celda vacía", f: () => formatoSel(x => delete x.wr) },
+    { t: "↵  Ajustar", k: "baja de línea", f: () => formatoSel(x => x.wr = "wrap") },
+    { t: "✂  Recortar", k: "se corta en el borde", f: () => formatoSel(x => x.wr = "clip") }];
+}
+function bordes(tipo) {
+  if (editing) commit(null);
+  snap(); const h = H();
+  cadaSel((c, r, a) => {
+    const x = celda(a, true);
+    if (tipo === "quitar") { delete x.bd; return; }
+    const b = x.bd || {};
+    if (tipo === "todos") { b.r = b.b = true; if (r === sel.r1) b.t = true; if (c === sel.c1) b.l = true; }
+    else if (tipo === "ext") { if (r === sel.r1) b.t = true; if (r === sel.r2) b.b = true; if (c === sel.c1) b.l = true; if (c === sel.c2) b.r = true; }
+    else if (tipo === "inf") { if (r === sel.r2) b.b = true; }
+    if (b.t || b.r || b.b || b.l) x.bd = b;
+  });
+  if (tipo === "quitar") { // también las líneas de las celdas vecinas que tocan el rango
+    for (let c = sel.c1; c <= sel.c2; c++) { const x = h.cells[addr(c, sel.r1 - 1)]; if (sel.r1 > 0 && x && x.bd) { delete x.bd.b; if (!x.bd.t && !x.bd.r && !x.bd.l) delete x.bd; } }
+    for (let r = sel.r1; r <= sel.r2; r++) { const x = h.cells[addr(sel.c1 - 1, r)]; if (sel.c1 > 0 && x && x.bd) { delete x.bd.r; if (!x.bd.t && !x.bd.b && !x.bd.l) delete x.bd; } }
+  }
+  limpiarVacias(); cambio();
+  if (tipo !== "quitar" && S.lineas) toast("Bordes listos ✔ Tip: en Ver → Mostrar líneas de cuadrícula puedes quitar la cuadrícula gris y ver la tabla como saldría impresa.");
 }
 $("barra").addEventListener("click", e => { const b = e.target.closest("button[data-acc]"); if (b) { e.stopPropagation(); accion(b.dataset.acc, b); } });
 $("barra").addEventListener("mousedown", e => { if (e.target.closest("button")) e.preventDefault(); });
@@ -1014,13 +1444,19 @@ const MENUS = {
     "-",
     { t: "Formato condicional", f: abrirFC },
     "-",
-    { t: "Borrar formato", f: () => formatoSel(x => { delete x.b; delete x.i; delete x.fc; delete x.bg; delete x.al; delete x.dec; }) }
+    ...menuAjuste(),
+    "-",
+    { t: "Borrar formato", f: () => formatoSel(x => { delete x.b; delete x.i; delete x.fc; delete x.bg; delete x.al; delete x.dec; delete x.bd; delete x.wr; }) }
   ],
   datos: () => [
     { t: "Ordenar hoja", f: () => toast("Ordenar no está en este simulador. En Google Sheets: Datos → Ordenar hoja.") },
     { t: "Crear un filtro", f: () => toast("Los filtros no están en este simulador. En Google Sheets: Datos → Crear un filtro.") }
   ],
   ayuda: () => [
+    { t: "📖 Repasar la teoría", f: () => abrirIntro(1) },
+    { t: "¿Qué es un rango?", f: () => toast("Un rango es un grupo de celdas en rectángulo: B2:B7 = desde B2 hasta B7. Los dos puntos se leen «hasta».") },
+    { t: "Partes de una función", f: () => toast("=PROMEDIO(B2:B7) → «=» ordena calcular · PROMEDIO es el nombre · entre ( ) van los argumentos · «;» separa un argumento del otro.") },
+    "-",
     { t: "Funciones disponibles", f: () => toast("SUMA · PROMEDIO · MAX · MIN · CONTAR · CONTARA · CONTAR.SI · SI · REDONDEAR · ABS. Separa las partes con «;» o «,».") },
     { t: "¿Qué significa #¿NOMBRE?", f: () => toast("#¿NOMBRE? = la hoja no reconoce una palabra: casi siempre es una función mal escrita.") },
     { t: "¿Qué significa #DIV/0!?", f: () => toast("#DIV/0! = estás dividiendo entre cero o entre una celda vacía.") },
@@ -1159,10 +1595,10 @@ const MIS = [
   },
   {
     id: "ancho", nivel: 0, t: "Que se lea todo",
-    html: () => `<p>Los encabezados están cortados («Frec. cardi…»). Vamos a ensanchar las columnas <b>B</b>, <b>C</b> y <b>D</b>.</p>
+    html: () => `<p>Los encabezados de B y C se ven <b>cortados</b> («Frec. cardi…») porque la celda de al lado tiene algo. El de D <b>se desborda</b> encima de la columna E, que está vacía. Ensancha <b>B</b>, <b>C</b> y <b>D</b> para que cada título quepa en su celda.</p>
       <ol><li>Arriba, pasa el mouse por la <b>línea entre las letras B y C</b>.</li><li>Cuando aparezca la línea azul, <b>arrastra</b> hacia la derecha.</li><li>Haz lo mismo con C y D.</li></ol>`,
     pistas: ["Truco: haz <b>doble clic</b> en esa línea y la columna se ajusta sola al texto más largo.", "La línea correcta es la del lado <b>derecho</b> de la letra de la columna que quieres ensanchar."],
-    saber: "En una hoja, el texto que no cabe se corta si la celda de al lado tiene algo. El dato sigue completo: selecciona C1 y míralo entero en la barra de fórmulas (<b>fx</b>).",
+    saber: "El texto que no cabe se corta si la celda de al lado tiene algo, y se desborda si está vacía. El dato sigue completo: selecciona C1 y míralo entero en la barra <b>fx</b>. Otra salida: <b>Formato → Ajuste de texto → Ajustar</b> (o el botón ↵) para que el texto baje de línea.",
     check() {
       const h = h0(); const faltan = [];
       ["B", "C", "D"].forEach((L, i) => { const a = L + "1", c = h.cells[a]; const need = medir(c ? c.v : "", c && c.b) + 6; if ((h.w[i + 1] || ANCHO) < need) faltan.push(L); });
@@ -1177,7 +1613,7 @@ const MIS = [
     html: () => `<p>¿Cuál fue la temperatura <b>promedio</b> del turno? No uses calculadora: que la hoja lo calcule.</p>
       <p>Toda fórmula empieza con el signo <b>=</b>. En <b>B8</b> escribe:</p>
       <p style="text-align:center"><code style="font-size:1.1rem">=PROMEDIO(B2:B7)</code></p><p>y presiona <kbd>Enter</kbd>.</p>`,
-    pistas: ["<code>B2:B7</code> significa «de B2 hasta B7»: todas las temperaturas.", "Truco: escribe <code>=PROMEDIO(</code> y luego <b>arrastra con el mouse de B2 a B7</b>: la hoja escribe el rango por ti. Cierra con <code>)</code> y Enter."],
+    pistas: ["<code>B2:B7</code> significa «de B2 hasta B7»: todas las temperaturas.", "Al escribir <code>=PRO</code> aparece una lista: elige <b>PROMEDIO</b> con <kbd>Tab</kbd>. La ayuda te dirá «✓ Función reconocida» y qué parte estás escribiendo.", "Truco: escribe <code>=PROMEDIO(</code> y luego <b>arrastra con el mouse de B2 a B7</b>: la hoja escribe el rango por ti. Cierra con <code>)</code> y Enter."],
     saber: "Selecciona B8 y mira la barra <b>fx</b>: la celda muestra el resultado, pero por dentro guarda la fórmula. Esa es la gran diferencia con una tabla de Docs.",
     check() { const r = revisarFormula("B8", "PROMEDIO|AVERAGE", prom(numsCol("B")), "PROMEDIO"); return r.ok || r.msg; },
     ok: () => "¡Primera fórmula! El promedio es " + fmt(v0("B8")) + " °C."
@@ -1222,6 +1658,22 @@ const MIS = [
       return ok ? "Llevas " + ok + " de 6 fórmulas. Falta completar hasta la columna D." : "";
     },
     ok: () => "¡6 fórmulas en un solo movimiento! Selecciona C8 y mira su fórmula en fx."
+  },
+  {
+    id: "bordes", nivel: 1, t: "Bordes de tabla",
+    html: () => `<p>La cuadrícula gris <b>no sale al imprimir</b>. Para que la tabla se vea como tabla, ponle bordes.</p>
+      <ol><li>Selecciona <b>A1:D7</b> (toda la tabla de datos).</li><li>Presiona el botón <b style="font-size:1.1em">▦</b> <b>Bordes</b> de la barra.</li><li>Elige <b>Todos los bordes</b>.</li></ol>`,
+    pistas: ["Clic en A1 y, sin soltar, arrastra hasta D7. El recuadro del nombre debe decir <b>A1:D7</b>.", "El botón ▦ está justo al lado del balde de pintura 🪣."],
+    saber: "Mira cómo quedaría impresa: menú <b>Ver → Mostrar líneas de cuadrícula</b> (quítale el ✓). Con <b>Bordes exteriores</b> solo se marca el contorno del rango; con <b>Borde inferior</b>, una línea debajo (ideal para los encabezados).",
+    check() {
+      let k = 0;
+      for (let r = 0; r <= 6; r++) for (let c = 0; c <= 3; c++) { const x = h0().cells[addr(c, r)], b = x && x.bd; if (b && b.r && b.b && (r > 0 || b.t) && (c > 0 || b.l)) k++; }
+      if (k === 28) return true;
+      if (k > 0) return "Vas bien: " + k + " de 28 celdas tienen todos sus bordes. ¿Seleccionaste <b>A1:D7</b> completo y elegiste <b>Todos los bordes</b>?";
+      if (S.cur === 0 && sel.c1 === 0 && sel.r1 === 0 && sel.c2 === 3 && sel.r2 === 6) return "¡Rango <b>A1:D7</b> bien seleccionado! Ahora el botón <b>▦</b> → <b>Todos los bordes</b>.";
+      return "";
+    },
+    ok: () => "¡Tabla con bordes! Quita la cuadrícula en <b>Ver</b> para verla como saldría impresa."
   },
   {
     id: "fiebre", nivel: 2, t: "Alerta de fiebre",
@@ -1299,7 +1751,7 @@ function panel() {
   const i = vista !== null ? vista : S.mis;
   const m = MIS[i];
   if (!m) {
-    h += '<div class="tarjeta final"><div class="medalla">🏅</div><h2>¡Turno completado!</h2><p>Superaste los cuatro niveles, incluido el secreto. Ahora ya sabes lo esencial de una hoja de cálculo: celdas, rangos, fórmulas, copiar fórmulas y formato condicional.</p><p>Ve a la pestaña <b>«Libre»</b> y arma tu propia tabla: por ejemplo, el control de glucosa de un paciente con su promedio y alertas de color.</p></div>';
+    h += '<div class="tarjeta final"><div class="medalla">🏅</div><h2>¡Turno completado!</h2><p>Superaste los cuatro niveles, incluido el secreto. Ahora ya sabes lo esencial de una hoja de cálculo: celdas, rangos, fórmulas, funciones, copiar fórmulas, bordes y formato condicional.</p><p>Ve a la pestaña <b>«Libre»</b> y arma tu propia tabla: por ejemplo, el control de glucosa de un paciente con su promedio y alertas de color.</p></div>';
     if (fb.msg) h = '<div class="fb bien" style="margin:0 0 12px">' + fb.msg + "</div>" + h;
   } else {
     h += '<div class="tarjeta"><span class="chip n' + m.nivel + '">Nivel ' + NIVELES[m.nivel].n + " · misión " + (MIS.filter((x, j) => x.nivel === m.nivel && j <= i).length) + " de " + MIS.filter(x => x.nivel === m.nivel).length + "</span>";
@@ -1338,10 +1790,330 @@ function dibujarIntro() {
   $("vDocs").innerHTML = llego ? '<span style="color:#a50e0e">❌ Cambió la cantidad… pero el subtotal y el total siguen igual. Hay que sacar la cuenta a mano otra vez (y rezar para no equivocarse).</span>' : "";
   $("vSheets").innerHTML = llego ? '<span style="color:#137333">✅ Subtotal y total se actualizaron solos. Cada celda tiene una fórmula: <code>=B2*C2</code>, <code>=SUMA(D2:D4)</code>.</span>' : "";
 }
-function abrirIntro() { llego = false; dibujarIntro(); $("bEmpezar").disabled = true; $("bLlegan").disabled = false; $("pIntro").textContent = "Presiona el botón amarillo primero."; $("intro").hidden = false; }
-$("bLlegan").onclick = () => { llego = true; dibujarIntro(); $("bLlegan").disabled = true; $("bEmpezar").disabled = false; $("pIntro").textContent = "Eso es una hoja de cálculo: una tabla que piensa. Vamos a usarla con datos de pacientes."; };
-$("bEmpezar").onclick = () => { $("intro").hidden = true; S.intro = true; guardar(); render(); };
-$("bIntro").onclick = abrirIntro;
+/* ---------- motor de diapositivas ---------- */
+const SLIDES = [...document.querySelectorAll("#intro .slide")];
+const INIT = {};
+let slide = 0, animId = 0;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const vivo = id => id === animId && !$("intro").hidden;
+(function puntos() {
+  SLIDES.forEach((s, i) => { const b = document.createElement("button"); b.title = s.querySelector("h1").textContent; b.onclick = () => { if (llego || i === 0) irSlide(i); }; $("puntos").appendChild(b); });
+})();
+function irSlide(n) {
+  const atras = n < slide;
+  slide = Math.max(0, Math.min(SLIDES.length - 1, n));
+  animId++;
+  SLIDES.forEach((s, i) => { s.classList.toggle("on", i === slide); s.classList.toggle("atras", atras); });
+  [...$("puntos").children].forEach((b, i) => b.classList.toggle("on", i === slide));
+  $("bAtras").style.visibility = slide === 0 ? "hidden" : "";
+  $("bSig").textContent = slide === SLIDES.length - 1 ? "Abrir el simulador →" : slide === 0 ? "Ver la teoría →" : "Siguiente →";
+  $("bSig").disabled = slide === 0 && !llego;
+  $("intro").scrollTop = 0;
+  const f = INIT[SLIDES[slide].dataset.s]; if (f) f(animId);
+}
+function abrirIntro(n) {
+  n = n || 0;
+  if (n === 0) { llego = false; $("bLlegan").disabled = false; $("pIntro").textContent = "Presiona el botón amarillo primero."; }
+  else { llego = true; $("bLlegan").disabled = true; $("pIntro").textContent = ""; }
+  $("intro").hidden = false; slide = n; irSlide(n);
+}
+function cerrarIntro() { animId++; $("intro").hidden = true; S.intro = true; guardar(); render(); }
+$("bLlegan").onclick = () => { llego = true; dibujarIntro(); $("bLlegan").disabled = true; $("bSig").disabled = false; $("pIntro").textContent = "Eso es una hoja de cálculo: una tabla que piensa. Antes de usarla, veamos cómo funciona por dentro."; };
+$("bSig").onclick = () => slide === SLIDES.length - 1 ? cerrarIntro() : irSlide(slide + 1);
+$("bAtras").onclick = () => irSlide(slide - 1);
+$("bIntro").onclick = () => abrirIntro(1);
+INIT.duelo = () => dibujarIntro();
+
+/* ---------- mini hoja reutilizable ---------- */
+function mini(el, anchos, filas, datos) {
+  let h = '<div class="msfx"><div class="nm">A1</div><i>fx</i><span></span></div><div class="msg"><table style="width:' + (30 + anchos.reduce((s, x) => s + x, 0)) + 'px"><thead><tr><th style="width:30px"></th>';
+  anchos.forEach((w, c) => h += '<th style="width:' + w + 'px">' + colName(c) + "</th>");
+  h += "</tr></thead><tbody>";
+  for (let r = 1; r <= filas; r++) {
+    h += "<tr><th>" + r + "</th>";
+    anchos.forEach((w, c) => { const v = datos && datos[colName(c) + r] != null ? datos[colName(c) + r] : ""; h += '<td data-c="' + c + '" data-r="' + r + '"' + (typeof v === "number" ? ' style="text-align:right"' : "") + ">" + esc(v) + "</td>"; });
+    h += "</tr>";
+  }
+  h += '</tbody></table><div class="selm" hidden></div></div>';
+  el.className = "ms"; el.innerHTML = h;
+  return { el, anchos, area: el.querySelector(".msg"), tabla: el.querySelector("table"), nm: el.querySelector(".nm"), fx: el.querySelector(".msfx span"), selm: el.querySelector(".selm"),
+    td: (c, r) => el.querySelector('td[data-c="' + c + '"][data-r="' + r + '"]'), th: c => el.querySelectorAll("thead th")[c + 1] };
+}
+function caja(m, box, c1, r1, c2, r2) {
+  const a = m.td(c1, r1).getBoundingClientRect(), b = m.td(c2, r2).getBoundingClientRect(), o = m.area.getBoundingClientRect();
+  box.style.left = (a.left - o.left + m.area.scrollLeft - 1) + "px"; box.style.top = (a.top - o.top - 1) + "px";
+  box.style.width = (b.right - a.left + 1) + "px"; box.style.height = (b.bottom - a.top + 1) + "px";
+}
+function selMini(m, c1, r1, c2, r2) {
+  if (c2 == null) { c2 = c1; r2 = r1; }
+  m.selm.hidden = false; caja(m, m.selm, c1, r1, c2, r2);
+  m.nm.textContent = colName(c1) + r1 + (c1 !== c2 || r1 !== r2 ? ":" + colName(c2) + r2 : "");
+}
+function cajasRef(m, lista) {
+  m.area.querySelectorAll(".refm").forEach(x => x.remove());
+  lista.forEach((x, i) => { const d = document.createElement("div"); d.className = "refm"; d.style.setProperty("--rc", x.col); d.style.animationDelay = i * .2 + "s"; m.area.appendChild(d); caja(m, d, x.g.c1, x.g.r1 + 1, x.g.c2, x.g.r2 + 1); });
+}
+async function escribir(sp, txt, id, alEscribir) {
+  for (let i = 1; i <= txt.length; i++) {
+    sp.textContent = txt.slice(0, i); if (alEscribir) alEscribir(sp.textContent);
+    await sleep(45 + Math.random() * 45); if (!vivo(id)) return false;
+  }
+  return true;
+}
+function alinear(td, sp, al) {
+  const libre = td.clientWidth - sp.offsetWidth - 10;
+  sp.style.transform = al === "der" ? "translateX(" + libre + "px)" : al === "centro" ? "translateX(" + libre / 2 + "px)" : "";
+}
+function destello(td, cls) { td.classList.remove("ok", "mal", "flash"); void td.offsetWidth; td.classList.add(cls); }
+function explicar(el, html) { el.innerHTML = html; el.classList.remove("cambia"); void el.offsetWidth; el.classList.add("cambia"); }
+function marcarBtn(cont, attr, v) { cont.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.getAttribute(attr) === String(v))); }
+
+/* ---------- 1 · tipos de datos ---------- */
+const TIPOS = [["Rosa Quispe", "texto", "Texto", "izq"], ["37.5", "num", "Número", "der"], ["24/11/2026", "fecha", "Fecha", "der"], ["14:30", "fecha", "Hora", "der"],
+  ["95%", "num", "Porcentaje", "der"], ["VERDADERO", "log", "Lógico (sí / no)", "centro"], ["37 °C", "texto", "Texto ⚠ por el «°C»", "izq"], ["=A2", "form", "Fórmula → muestra lo que hay en A2", "der", "37.5"]];
+INIT.tipos = async id => {
+  const m = mini($("msTipos"), [130, 200], TIPOS.length);
+  for (let i = 0; i < TIPOS.length; i++) {
+    const [txt, cls, nom, al, res] = TIPOS[i], r = i + 1, td = m.td(0, r);
+    td.classList.add("rel"); selMini(m, 0, r); m.fx.textContent = "";
+    const sp = document.createElement("span"); sp.className = "dt esc"; td.appendChild(sp);
+    if (!await escribir(sp, txt, id, t => m.fx.textContent = t)) return;
+    await sleep(280); if (!vivo(id)) return;
+    sp.classList.remove("esc");
+    if (res) sp.textContent = res;
+    alinear(td, sp, al);
+    m.td(1, r).innerHTML = '<span class="tchip t-' + cls + '">' + nom + "</span>";
+    await sleep(500); if (!vivo(id)) return;
+  }
+  selMini(m, 0, 8); m.fx.textContent = "=A2";
+};
+function clasificar(t) {
+  const s = t.trim();
+  if (!s) return null;
+  if (s[0] === "=") return { n: "Fórmula", cls: "form", al: "der", show: "(resultado)", msg: "Empieza con <b>=</b>: la hoja la calcula y en la celda muestra el resultado." };
+  if (/^[-+]?\d+([.,]\d+)?$/.test(s)) return { n: "Número", cls: "num", al: "der", msg: "Es un <b>número</b>: va a la derecha y se puede usar en cuentas." };
+  if (/^[-+]?\d+([.,]\d+)?\s?%$/.test(s)) return { n: "Porcentaje", cls: "num", al: "der", msg: "Es un <b>porcentaje</b>: por dentro es un número (95% = 0.95)." };
+  if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)) return { n: "Fecha", cls: "fecha", al: "der", msg: "La hoja la entiende como <b>fecha</b>: se puede ordenar y calcular días entre fechas." };
+  if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(s)) return { n: "Hora", cls: "fecha", al: "der", msg: "Es una <b>hora</b>: se puede ordenar y calcular cuánto tiempo pasó." };
+  if (/^(verdadero|falso|true|false)$/i.test(s)) return { n: "Lógico", cls: "log", al: "centro", show: /^(verdadero|true)$/i.test(s) ? "VERDADERO" : "FALSO", msg: "Es un valor <b>lógico</b> (sí / no): se centra." };
+  if (/^\d{2,3}\s?\/\s?\d{2,3}$/.test(s)) return { n: "Texto", cls: "texto", al: "izq", msg: "Así anotamos la <b>presión arterial</b>, pero para la hoja es <b>texto</b>. Si quieres hacer cuentas, usa dos columnas: sistólica y diastólica." };
+  if (/\d/.test(s)) return { n: "Texto", cls: "texto", al: "izq", msg: "Tiene números, pero también letras, espacios o símbolos: la hoja lo trata como <b>texto</b> y no podrá sumarlo. Escribe solo el número y pon la unidad en el encabezado." };
+  return { n: "Texto", cls: "texto", al: "izq", msg: "Es <b>texto</b>: va a la izquierda." };
+}
+let pruebaId = 0;
+async function probarTipo() {
+  const t = $("tipoIn").value, k = clasificar(t);
+  if (!k) { $("tipoIn").focus(); return; }
+  const id = ++pruebaId;
+  const m = mini($("msPrueba"), [260], 1), td = m.td(0, 1);
+  td.classList.add("rel"); selMini(m, 0, 1);
+  const sp = document.createElement("span"); sp.className = "dt esc"; td.appendChild(sp);
+  $("tipoFb").innerHTML = "";
+  for (let i = 1; i <= t.length; i++) { sp.textContent = t.slice(0, i); m.fx.textContent = sp.textContent; await sleep(28); if (id !== pruebaId) return; }
+  await sleep(200); if (id !== pruebaId) return;
+  sp.classList.remove("esc");
+  if (k.show) { sp.textContent = k.show; if (k.cls === "form") sp.style.color = "#80868b"; }
+  alinear(td, sp, k.al);
+  explicar($("tipoFb"), '<span class="tchip t-' + k.cls + '">' + k.n + "</span> " + k.msg);
+}
+$("tipoOk").onclick = probarTipo;
+$("tipoIn").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); probarTipo(); } });
+
+/* ---------- 2 · texto largo ---------- */
+const LARGO = "Paciente refiere dolor abdominal intenso desde hace 3 días";
+let TX = { b1: "0", aj: "desb", an: "0" }, mT = null;
+INIT.texto = async id => {
+  TX = { b1: "0", aj: "desb", an: "0" };
+  marcarBtn($("ctB1"), "data-v", "0"); marcarBtn($("ctAj"), "data-v", "desb"); marcarBtn($("ctAn"), "data-v", "0");
+  mT = mini($("msTexto"), [110, 90, 90], 3);
+  const td = mT.td(0, 1); td.style.overflow = "visible";
+  selMini(mT, 0, 1); explicar($("textoFb"), "Mira lo que pasa al escribir una observación larga en A1…");
+  const sp = document.createElement("span"); sp.className = "esc"; td.appendChild(sp);
+  for (let i = 1; i <= LARGO.length; i++) { sp.textContent = LARGO.slice(0, i); mT.fx.textContent = sp.textContent; await sleep(30); if (!vivo(id)) return; }
+  aplicarTexto();
+};
+function aplicarTexto() {
+  if (!mT) return;
+  const td = mT.td(0, 1), b1 = mT.td(1, 1), w = TX.an === "1" ? 250 : 110;
+  b1.innerHTML = TX.b1 === "1" ? '<span class="tchip" style="background:none;padding:0;font:13px Arial">Sí</span>' : "";
+  mT.th(0).style.width = w + "px"; mT.tabla.style.width = (30 + w + 180) + "px";
+  td.style.whiteSpace = TX.aj === "ajus" ? "normal" : "nowrap";
+  td.style.overflow = TX.aj === "desb" && TX.b1 === "0" ? "visible" : "hidden";
+  td.textContent = LARGO; mT.fx.textContent = LARGO;
+  destello(td, "flash");
+  selMini(mT, 0, 1); setTimeout(() => selMini(mT, 0, 1), 520);
+  let x;
+  if (TX.aj === "ajus") x = "↵ <b>Ajustar:</b> el texto baja a otra línea y la <b>fila se hace más alta</b>. Se lee todo sin invadir otras celdas.";
+  else if (TX.aj === "reco") x = "✂ <b>Recortar:</b> el texto se corta en el borde de la celda, aunque al lado esté vacío.";
+  else if (TX.b1 === "1") x = "✂ Como <b>B1 tiene un dato</b>, el texto de A1 <b>se ve cortado</b>. No se borró nada: mira la barra fx.";
+  else x = "⇥ <b>Desbordar</b> (lo normal): como B1 está vacía, el texto <b>se pasa por encima</b> de B1 y C1. Pero sigue guardado solo en A1.";
+  if (TX.an === "1") x += " Al <b>ensanchar la columna</b>, cabe más texto.";
+  explicar($("textoFb"), x);
+}
+[["ctB1", "b1"], ["ctAj", "aj"], ["ctAn", "an"]].forEach(([id, k]) => $(id).addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  animId++; TX[k] = b.dataset.v; marcarBtn($(id), "data-v", b.dataset.v); aplicarTexto();
+}));
+
+/* ---------- 3 · rango ---------- */
+const DATOS_R = { A1: "Hora", B1: "Temp", C1: "FC", D1: "SatO₂", A2: "06:00", A3: "10:00", A4: "14:00", A5: "18:00", A6: "22:00", A7: "02:00",
+  B2: 36.8, B3: 37.2, B4: 38.4, B5: 38.9, B6: 37.6, B7: 37, C2: 78, C3: 84, C4: 96, C5: 104, C6: 88, C7: 80, D2: 98, D3: 97, D4: 94, D5: 93, D6: 96, D7: 97 };
+const SIGNIF = { "B2:B7": "Todas las temperaturas del turno.", "A1:D1": "La fila de los encabezados.", "B2:D4": "Los tres signos vitales de las tres primeras tomas.", "A1:D7": "La tabla completa.", "C4": "La frecuencia cardiaca de las 14:00." };
+let mR = null, arrR = null;
+INIT.rango = id => {
+  mR = mini($("msRango"), [62, 62, 62, 62], 7, DATOS_R);
+  mR.area.addEventListener("pointerdown", e => { const td = e.target.closest("td"); if (!td) return; e.preventDefault(); animId++; arrR = { c: +td.dataset.c, r: +td.dataset.r }; rangoDe(arrR.c, arrR.r, arrR.c, arrR.r); });
+  mostrarRango("B2:B7", id);
+};
+document.addEventListener("pointermove", e => {
+  if (!arrR || !mR) return;
+  const el = document.elementFromPoint(e.clientX, e.clientY), td = el && el.closest && el.closest("#msRango td"); if (!td) return;
+  rangoDe(arrR.c, arrR.r, +td.dataset.c, +td.dataset.r);
+});
+document.addEventListener("pointerup", () => { arrR = null; });
+function textoRango(c1, r1, c2, r2) { return c1 === c2 && r1 === r2 ? colName(c1) + r1 : colName(c1) + r1 + ":" + colName(c2) + r2; }
+function rangoDe(ca, ra, cb, rb) {
+  const c1 = Math.min(ca, cb), c2 = Math.max(ca, cb), r1 = Math.min(ra, rb), r2 = Math.max(ra, rb), txt = textoRango(c1, r1, c2, r2);
+  selMini(mR, c1, r1, c2, r2); marcarBtn($("ctRg"), "data-rg", txt);
+  const [a, b] = txt.split(":");
+  $("rgBig").innerHTML = "<span>" + a + "</span>" + (b ? '<span class="dp">:</span><span>' + b + "</span>" : "") + "<small>" + (b ? "«desde " + a + " hasta " + b + "»" : "una sola celda") + "</small>";
+  $("rgBig").querySelectorAll("span").forEach(s => s.style.animation = "none");
+  explicar($("rgFb"), fbRango(txt, c1, r1, c2, r2));
+}
+function fbRango(txt, c1, r1, c2, r2) {
+  const nc = c2 - c1 + 1, nf = r2 - r1 + 1;
+  return (nc * nf === 1 ? "Una sola celda también cuenta como rango." : nc + " columna" + (nc > 1 ? "s" : "") + " × " + nf + " fila" + (nf > 1 ? "s" : "") + " = <b>" + nc * nf + " celdas</b>.") + (SIGNIF[txt] ? " " + SIGNIF[txt] : "");
+}
+async function mostrarRango(txt, id) {
+  const g = parseRange(txt), [a, b] = txt.split(":"), big = $("rgBig");
+  marcarBtn($("ctRg"), "data-rg", txt);
+  selMini(mR, g.c1, g.r1 + 1); big.innerHTML = "";
+  const add = (t, cls) => { const s = document.createElement("span"); s.textContent = t; if (cls) s.className = cls; big.appendChild(s); };
+  add(a); explicar($("rgFb"), "Empieza en <b>" + a + "</b>…");
+  await sleep(550); if (!vivo(id)) return;
+  if (b) {
+    add(":", "dp"); await sleep(350); if (!vivo(id)) return;
+    add(b); selMini(mR, g.c1, g.r1 + 1, g.c2, g.r2 + 1);
+  }
+  const sm = document.createElement("small"); sm.textContent = b ? "«desde " + a + " hasta " + b + "»" : "una sola celda"; big.appendChild(sm);
+  explicar($("rgFb"), fbRango(txt, g.c1, g.r1 + 1, g.c2, g.r2 + 1));
+}
+$("ctRg").addEventListener("click", e => { const b = e.target.closest("button[data-rg]"); if (b) mostrarRango(b.dataset.rg, ++animId); });
+
+/* ---------- 4 · el signo = ---------- */
+const DATOS_I = { A1: "Ingreso", B1: "ml", A2: "Suero", B2: 500, A3: "Vía oral", B3: 250, A4: "Total" };
+INIT.igual = async id => { if (!await demoIgual(0, id)) return; await sleep(1500); if (vivo(id)) demoIgual(1, id); };
+async function demoIgual(conIgual, id) {
+  const m = mini($("msIgual"), [110, 110], 4, DATOS_I), td = m.td(1, 4), txt = conIgual ? "=B2+B3" : "B2+B3";
+  td.classList.add("rel"); selMini(m, 1, 4); m.fx.textContent = "";
+  explicar($("igualFb"), "Escribiendo <b>" + txt + "</b> en B4…");
+  const sp = document.createElement("span"); sp.className = "dt esc"; td.appendChild(sp);
+  let nRefs = 0;
+  const ok = await escribir(sp, txt, id, t => {
+    const p = pintarRefs(t); m.fx.innerHTML = p.html;
+    if (p.lista.length !== nRefs) { nRefs = p.lista.length; cajasRef(m, p.lista); }
+  });
+  if (!ok) return false;
+  await sleep(450); if (!vivo(id)) return false;
+  sp.classList.remove("esc"); cajasRef(m, []);
+  if (conIgual) {
+    sp.textContent = "750"; alinear(td, sp, "der"); destello(td, "ok");
+    explicar($("igualFb"), "✅ <b>Con el =</b> la hoja <b>calculó</b>: 500 + 250 = <b>750</b>. La celda muestra el resultado, y la barra fx sigue mostrando la fórmula.");
+  } else {
+    destello(td, "mal");
+    explicar($("igualFb"), "❌ <b>Sin el =</b>, la hoja lo guardó <b>como texto</b>: muestra «B2+B3» tal cual, a la izquierda, y no sumó nada.");
+  }
+  return true;
+}
+document.querySelector('[data-s="igual"] .btns').addEventListener("click", e => { const b = e.target.closest("button[data-ig]"); if (b) demoIgual(+b.dataset.ig, ++animId); });
+
+/* ---------- 5 · referencias ---------- */
+let RF = { peso: 60, modo: "f" }, mF = null;
+INIT.refs = () => { RF = { peso: 60, modo: "f" }; marcarBtn($("ctRf"), "data-rf", "f"); dibujarRef(); };
+function dibujarRef() {
+  mF = mini($("msRef"), [150, 80], 4, { A1: "Dato", B1: "Valor", A2: "Peso (kg)", B2: RF.peso, A3: "Dosis (mg por kg)", B3: 5, A4: "Dosis total (mg)" });
+  const td = mF.td(1, 4); td.style.textAlign = "right"; td.style.fontWeight = "700";
+  td.textContent = RF.modo === "f" ? RF.peso * 5 : 300;
+  selMini(mF, 1, 4);
+  $("bPeso").textContent = RF.peso === 60 ? "⚖️ El paciente ahora pesa 72 kg" : "⚖️ Volver a 60 kg";
+  if (RF.modo === "f") {
+    const p = pintarRefs("=B2*B3"); mF.fx.innerHTML = p.html; cajasRef(mF, p.lista);
+    explicar($("refFb"), "B4 tiene la fórmula <code>=B2*B3</code>: multiplica <b style=\"color:" + RCOL[0] + "\">lo que haya en B2</b> por <b style=\"color:" + RCOL[1] + "\">lo que haya en B3</b>. Las celdas de colores son sus referencias.");
+  } else {
+    mF.fx.textContent = "300"; cajasRef(mF, []);
+    explicar($("refFb"), "Ahora B4 tiene el número <b>300</b> escrito a mano. Se ve igual que antes… Cambia el peso y mira qué pasa.");
+  }
+}
+function contar(el, a, b) {
+  const t0 = performance.now();
+  const paso = t => { const k = Math.min(1, (t - t0) / 700); el.textContent = Math.round(a + (b - a) * k); if (k < 1) requestAnimationFrame(paso); };
+  requestAnimationFrame(paso);
+}
+$("ctRf").addEventListener("click", e => { const b = e.target.closest("button[data-rf]"); if (!b) return; RF.modo = b.dataset.rf; marcarBtn($("ctRf"), "data-rf", RF.modo); dibujarRef(); });
+$("bPeso").onclick = async () => {
+  const id = ++animId, antes = RF.modo === "f" ? RF.peso * 5 : 300;
+  RF.peso = RF.peso === 60 ? 72 : 60;
+  $("bPeso").textContent = RF.peso === 60 ? "⚖️ El paciente ahora pesa 72 kg" : "⚖️ Volver a 60 kg";
+  const b2 = mF.td(1, 2), b4 = mF.td(1, 4);
+  b2.textContent = RF.peso; destello(b2, "flash");
+  explicar($("refFb"), "Cambiaste <b>solo B2</b> a " + RF.peso + " kg…");
+  await sleep(650); if (!vivo(id)) return;
+  if (RF.modo === "f") {
+    mF.area.querySelectorAll(".refm").forEach(x => { x.classList.remove("pulsa"); void x.offsetWidth; x.classList.add("pulsa"); });
+    await sleep(500); if (!vivo(id)) return;
+    contar(b4, antes, RF.peso * 5); destello(b4, "ok");
+    explicar($("refFb"), "✅ B4 se recalculó solo: " + RF.peso + " × 5 = <b>" + RF.peso * 5 + " mg</b>. La fórmula usa la <b>dirección</b> B2, no el número de antes.");
+  } else {
+    destello(b4, "mal");
+    explicar($("refFb"), RF.peso === 72 ? "❌ ¡Peligro! El peso cambió a 72 kg pero B4 sigue diciendo <b>300</b>, porque alguien lo escribió a mano. La dosis correcta sería <b>360 mg</b>." : "Con 60 kg, 300 coincide… solo por casualidad. Por eso en una hoja <b>nunca se escribe un resultado a mano</b>.");
+  }
+};
+
+/* ---------- 6 · partes de una función ---------- */
+const PC = { igual: "#b3752c", nombre: "#1a73e8", par: "#9334e6", arg: "#188038", sep: "#d93025" };
+const PX = {
+  prom: { p: [["=", "igual"], ["PROMEDIO", "nombre"], ["(", "par"], ["B2:B7", "arg"], [")", "par"]], c: ["igual", "nombre", "par", "arg"] },
+  si: { p: [["=", "igual"], ["SI", "nombre"], ["(", "par"], ["B4>38", "arg"], [";", "sep"], ['"Fiebre"', "arg"], [";", "sep"], ['"Normal"', "arg"], [")", "par"]], c: ["igual", "nombre", "par", "arg", "sep"] }
+};
+let pxCur = "prom";
+function cardData(k, tipo) {
+  switch (tipo) {
+    case "igual": return ["=", "Signo igual", "Avisa que viene un cálculo. Sin él, todo lo demás sería solo texto."];
+    case "nombre": return k === "prom" ? ["PROMEDIO", "Nombre de la función", "Dice <b>qué hacer</b>: PROMEDIO saca el promedio. Va justo después del =."] : ["SI", "Nombre de la función", "Dice <b>qué hacer</b>: SI elige entre dos respuestas según una condición."];
+    case "par": return ["( )", "Paréntesis", "Encierran los datos de la función. Van pegados al nombre, y todo paréntesis que se abre, se cierra."];
+    case "arg": return k === "prom" ? ["B2:B7", "Argumento", "El dato con el que trabaja la función: aquí, el <b>rango</b> de temperaturas."] : ['B4>38 · "Fiebre" · "Normal"', "Argumentos", "① la <b>condición</b> (¿B4 pasa de 38?) ② qué mostrar <b>si se cumple</b> ③ qué mostrar <b>si no</b>. El texto va entre comillas."];
+    case "sep": return [";", "Separador", "Separa un argumento del siguiente. Según la configuración de tu cuenta es <b>;</b> o <b>,</b>."];
+  }
+}
+function enfocar(tipo) {
+  $("fBig").querySelectorAll("span").forEach(s => { const si = s.dataset.t === tipo; if (si) s.classList.add("lit"); s.classList.toggle("foco", si); });
+  $("fCards").querySelectorAll(".card").forEach(c => { const si = c.dataset.t === tipo; if (si) c.classList.add("show"); c.classList.toggle("foco", si); });
+}
+INIT.partes = id => animarPartes(pxCur, id);
+async function animarPartes(k, id) {
+  pxCur = k; marcarBtn($("ctPx"), "data-px", k);
+  const ex = PX[k];
+  $("fBig").innerHTML = ex.p.map(([t, tipo]) => '<span data-t="' + tipo + '" style="--pc:' + PC[tipo] + '">' + esc(t) + "</span>").join("");
+  $("fCards").innerHTML = ex.c.map((tipo, i) => { const [sim, tit, txt] = cardData(k, tipo); return '<div class="card" data-t="' + tipo + '" style="--pc:' + PC[tipo] + '"><div class="sim">' + (i + 1) + ". " + esc(sim) + "</div><h4>" + tit + "</h4><div>" + txt + "</div></div>"; }).join("");
+  await sleep(500);
+  for (const tipo of ex.c) { if (!vivo(id)) return; enfocar(tipo); await sleep(1300); }
+  if (vivo(id)) enfocar(null);
+}
+$("ctPx").addEventListener("click", e => { const b = e.target.closest("button[data-px]"); if (b) animarPartes(b.dataset.px, ++animId); });
+["fBig", "fCards"].forEach(id => $(id).addEventListener("click", e => { const x = e.target.closest("[data-t]"); if (x) { animId++; enfocar(x.dataset.t); } }));
+
+/* ---------- botones comunes: repetir animación y preguntas rápidas ---------- */
+$("intro").addEventListener("click", e => {
+  const r = e.target.closest("[data-replay]");
+  if (r) { const id = ++animId; INIT[r.dataset.replay](id); return; }
+  const q = e.target.closest(".quiz button");
+  if (q) {
+    const box = q.closest(".quiz"), bs = [...box.querySelectorAll(".btns button")], i = bs.indexOf(q), ok = i === +box.dataset.ok;
+    bs.forEach(b => b.classList.remove("mal"));
+    void q.offsetWidth; q.classList.add(ok ? "bien" : "mal");
+    explicar(box.querySelector(".qfb"), (ok ? "✅ " : "🤔 ") + (ok ? box.dataset.bien : box.dataset.mal));
+  }
+});
 $("bReiniciar").onclick = () => {
   if (!confirm("¿Empezar de cero? Se borra todo lo que hiciste en las dos hojas y vuelves a la primera misión.")) return;
   S = estadoInicial(); S.intro = true; deshacer[0] = []; deshacer[1] = []; rehacer[0] = []; rehacer[1] = [];
