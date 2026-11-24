@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-24T01:43:14.589Z",
+ "generado": "2026-11-24T17:04:00.388Z",
  "v": 1,
  "clases": [
   {
@@ -99,7 +99,7 @@
    "n": 1,
    "tema": "Google SHEETS",
    "publicada": true,
-   "conCopias": false
+   "conCopias": true
   }
  ],
  "enlaces": {
