@@ -99,7 +99,7 @@
       "ruta": "clases/u2c1/material/m1c1.html",
       "titulo": "Simulador de hoja de cálculo: tu primer turno",
       "tipo": "interactivo",
-      "descripcion": "Una hoja de cálculo de práctica, igualita a Google Sheets, con el control de signos vitales de un paciente. Avanza por misiones: el nivel Base es el mínimo del día; Plata, Oro y Secreto son para ir más allá. Se guarda tu avance.",
+      "descripcion": "Primero, teoría animada: qué tipos de datos admite una celda, qué pasa con el texto largo, qué es un rango, el signo =, las referencias y las partes de una función. Después, una hoja de cálculo de práctica igualita a Google Sheets con el control de signos vitales de un paciente, por misiones (Base es el mínimo del día). Se guarda tu avance.",
       "orden": 1
     }
   ]
