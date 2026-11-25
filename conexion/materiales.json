@@ -102,5 +102,15 @@
       "descripcion": "Primero, teoría animada: qué tipos de datos admite una celda, qué pasa con el texto largo, qué es un rango, el signo =, las referencias y las partes de una función. Después, una hoja de cálculo de práctica igualita a Google Sheets con el control de signos vitales de un paciente, por misiones (Base es el mínimo del día). Se guarda tu avance.",
       "orden": 1
     }
+  ],
+  "u2c2": [
+    {
+      "archivo": "m1c2.html",
+      "ruta": "clases/u2c2/material/m1c2.html",
+      "titulo": "Condicionales: la hoja que decide",
+      "tipo": "interactivo",
+      "descripcion": "Primero, teoría animada: comparaciones (VERDADERO o FALSO), la función SI y sus tres argumentos, el texto entre comillas, el SI anidado, Y y O, CONTAR.SI y el formato condicional. Después, la hoja de práctica igualita a Google Sheets con el control de temperatura del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.",
+      "orden": 1
+    }
   ]
 }
