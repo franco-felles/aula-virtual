@@ -1,0 +1,2315 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
+<meta name="material-titulo" content="Condicionales: la hoja que decide">
+<meta name="material-tipo" content="interactivo">
+<meta name="material-descripcion" content="Primero, teoría animada: comparaciones (VERDADERO o FALSO), la función SI y sus tres argumentos, el texto entre comillas, el SI anidado, Y y O, CONTAR.SI y el formato condicional. Después, la hoja de práctica igualita a Google Sheets con el control de temperatura del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.">
+<title>Condicionales en la hoja</title>
+<script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
+<link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap">
+<style>
+  :root { --ink: #10231c; --paper: #f6f4ee; --moss: #35513f; --amber: #b3752c; --line: #d8d3c4; --mut: #7c7763; --soft: #ece8dc; --ok: #2f7d4a; --bad: #b3362c;
+          --gs: #188038; --sel: #1a73e8; --gl: #e2e3e3; --hd: #f8f9fa; --hdl: #d3e3fd; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--paper); font-family: "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); }
+  button { font: inherit; color: inherit; cursor: pointer; }
+
+  /* ====== estructura ====== */
+  .app { position: fixed; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr) 380px; }
+  .hoja { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #fff; font-family: Roboto, Arial, sans-serif; position: relative; border-right: 1px solid var(--line); }
+
+  /* barra superior tipo Sheets */
+  .top { display: flex; align-items: center; gap: 10px; padding: 8px 12px 2px; }
+  .logo { width: 30px; height: 38px; border-radius: 4px; background: var(--gs); position: relative; flex: none; }
+  .logo::after { content: ""; position: absolute; left: 7px; right: 7px; top: 13px; bottom: 9px; border: 2px solid #fff; background:
+      linear-gradient(#fff, #fff) 50% 0 / 2px 100% no-repeat, linear-gradient(#fff, #fff) 0 50% / 100% 2px no-repeat; }
+  .titulo-doc { font-size: 18px; color: #1f1f1f; line-height: 1.2; }
+  .menus { display: flex; gap: 0; margin-left: -6px; flex-wrap: wrap; }
+  .menus button { border: 0; background: none; padding: 2px 7px; border-radius: 4px; font-size: 14px; color: #1f1f1f; }
+  .menus button:hover, .menus button.on { background: #e8eaed; }
+  .barra { display: flex; align-items: center; gap: 2px; margin: 6px 10px; padding: 4px 8px; background: #edf2fa; border-radius: 24px; flex-wrap: wrap; }
+  .barra button { border: 0; background: none; min-width: 30px; height: 30px; border-radius: 4px; font-size: 15px; color: #444746; display: grid; place-items: center; padding: 0 5px; position: relative; }
+  .barra button:hover { background: #dfe3eb; }
+  .barra button.on { background: #d3e3fd; color: #041e49; }
+  .barra .sep { width: 1px; height: 20px; background: #c7c7c7; margin: 0 4px; }
+  .barra .ab { font-weight: 700; font-family: Georgia, serif; }
+  .barra .ai { font-style: italic; font-family: Georgia, serif; }
+  .barra .colorbar { position: absolute; left: 6px; right: 6px; bottom: 3px; height: 4px; border-radius: 2px; }
+  .barra .num { font: 600 12px "IBM Plex Mono", monospace; }
+  .paleta { position: absolute; z-index: 60; background: #fff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.25); padding: 8px; display: grid; grid-template-columns: repeat(6, 22px); gap: 5px; }
+  .paleta button { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,.15); }
+  .paleta .quitar { grid-column: 1 / -1; width: auto; border-radius: 4px; height: 26px; background: #f1f3f4; font-size: 12px; }
+
+  .fx { display: flex; align-items: stretch; border-top: 1px solid var(--gl); border-bottom: 1px solid var(--gl); height: 30px; }
+  .nombre { width: 90px; border: 0; border-right: 1px solid var(--gl); font: 14px Roboto, Arial, sans-serif; padding: 0 10px; color: #1f1f1f; display: flex; align-items: center; }
+  .fx i { font: italic 600 15px Georgia, serif; color: #80868b; display: grid; place-items: center; width: 34px; border-right: 1px solid var(--gl); }
+  .fx input { flex: 1; min-width: 0; border: 0; outline: none; font: 14px Roboto, Arial, sans-serif; padding: 0 8px; }
+  .aviso-err { background: #fce8e6; color: #a50e0e; font-size: 13px; padding: 5px 12px; border-bottom: 1px solid #f6c3be; }
+  .aviso-err b { font-family: "IBM Plex Mono", monospace; }
+
+  /* cuadrícula */
+  .wrap { flex: 1; overflow: auto; position: relative; min-height: 0; background: #fff; }
+  table.grid { border-collapse: separate; border-spacing: 0; table-layout: fixed; font: 13px Arial, sans-serif; color: #000; user-select: none; -webkit-user-select: none; }
+  .grid th { background: var(--hd); color: #444746; font: 500 11px Roboto, Arial, sans-serif; border-right: 1px solid #c4c7c5; border-bottom: 1px solid #c4c7c5; padding: 0; position: sticky; z-index: 3; }
+  .grid thead th { top: 0; height: 22px; }
+  .grid tbody th { left: 0; text-align: center; z-index: 2; }
+  .grid thead th.esq { left: 0; z-index: 4; }
+  .grid th.hl { background: var(--hdl); color: #041e49; font-weight: 700; }
+  .grid td { height: 21px; border-right: 1px solid var(--gl); border-bottom: 1px solid var(--gl); padding: 0 3px; white-space: nowrap; overflow: hidden; text-overflow: clip; cursor: cell; }
+  .grid td.inr { background-image: linear-gradient(rgba(26,115,232,.12), rgba(26,115,232,.12)); }
+  .grid td.ref { background-image: linear-gradient(rgba(242,153,0,.18), rgba(242,153,0,.18)); }
+  .grid td.err { position: relative; }
+  .grid td.err::after { content: ""; position: absolute; top: 0; right: 0; border-style: solid; border-width: 0 7px 7px 0; border-color: transparent #d93025 transparent transparent; }
+  .sin-lineas .grid td { border-color: transparent; }
+  .rz { position: absolute; right: -3px; top: 0; bottom: 0; width: 7px; cursor: col-resize; z-index: 5; }
+  .rz:hover, .rz.on { background: var(--sel); width: 4px; right: -2px; }
+  .colh { position: relative; }
+  .selbox, .copybox, .fillbox { position: absolute; pointer-events: none; z-index: 2; }
+  .selbox { border: 2px solid var(--sel); }
+  .selbox .asa { position: absolute; right: -5px; bottom: -5px; width: 8px; height: 8px; background: var(--sel); border: 1px solid #fff; pointer-events: auto; cursor: crosshair; border-radius: 1px; }
+  .selbox.edita .asa { display: none; }
+  .copybox { border: 2px dashed var(--sel); animation: hormigas 1s linear infinite; }
+  @keyframes hormigas { 50% { border-color: #8ab4f8; } }
+  .fillbox { border: 1px dashed #5f6368; background: rgba(95,99,104,.06); }
+  .editor { position: absolute; z-index: 6; border: 2px solid var(--sel); outline: none; font: 13px Arial, sans-serif; padding: 0 2px; box-shadow: 0 2px 6px rgba(0,0,0,.25); background: #fff; }
+
+  /* pestañas de hojas */
+  .pest { display: flex; align-items: center; gap: 4px; height: 38px; background: var(--hd); border-top: 1px solid var(--gl); padding: 0 8px; flex: none; }
+  .pest .mas { border: 0; background: none; width: 30px; height: 30px; border-radius: 50%; font-size: 20px; color: #444746; }
+  .pest .mas:hover { background: #e8eaed; }
+  .pest .tab { border: 0; background: none; padding: 6px 14px; border-radius: 6px 6px 0 0; font: 500 13px Roboto, Arial, sans-serif; color: #444746; }
+  .pest .tab.on { background: #e1e9f7; color: #0b57d0; box-shadow: inset 0 -3px 0 #0b57d0; }
+
+  /* menús desplegables */
+  .menu { position: absolute; z-index: 70; background: #fff; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.25); padding: 6px 0; min-width: 240px; font: 14px Roboto, Arial, sans-serif; }
+  .menu button { display: flex; justify-content: space-between; width: 100%; border: 0; background: none; padding: 7px 18px; text-align: left; gap: 16px; color: #1f1f1f; }
+  .menu button:hover { background: #f1f3f4; }
+  .menu button small { color: #80868b; }
+  .menu hr { border: 0; border-top: 1px solid #e0e0e0; margin: 5px 0; }
+  .menu .sub { font-size: 12px; color: #80868b; padding: 4px 18px; }
+
+  /* formato condicional (panel lateral dentro de la hoja) */
+  .fc { position: absolute; z-index: 50; top: 120px; right: 0; bottom: 38px; width: min(320px, 100%); background: #fff; box-shadow: -4px 0 16px rgba(0,0,0,.18); padding: 16px; overflow: auto; font: 14px Roboto, Arial, sans-serif; color: #1f1f1f; }
+  .fc h3 { margin: 0 0 12px; font: 500 16px Roboto, Arial, sans-serif; display: flex; justify-content: space-between; align-items: center; }
+  .fc h3 button { border: 0; background: none; font-size: 20px; color: #5f6368; }
+  .fc label { display: block; font-size: 12px; font-weight: 500; color: #444746; margin: 14px 0 5px; }
+  .fc input, .fc select { width: 100%; font: 14px Roboto, Arial, sans-serif; padding: 8px 10px; border: 1px solid #c4c7c5; border-radius: 4px; }
+  .fc .chips { display: flex; gap: 8px; }
+  .fc .chips button { flex: 1; height: 34px; border-radius: 6px; border: 2px solid transparent; font-weight: 700; }
+  .fc .chips button.on { border-color: var(--sel); }
+  .fc .acc { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+  .fc .acc button { border: 0; border-radius: 18px; padding: 8px 18px; font-weight: 500; }
+  .fc .listo { background: #0b57d0; color: #fff; }
+  .fc .canc { background: none; color: #0b57d0; }
+  .fc .regla { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 6px; font-size: 13px; }
+  .fc .regla i { width: 28px; height: 22px; border-radius: 4px; flex: none; font-style: normal; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .fc .regla span { flex: 1; }
+  .fc .regla button { border: 0; background: none; }
+  .fc .mal { color: #a50e0e; font-size: 13px; min-height: 1.2em; margin-top: 8px; }
+
+  /* ====== panel de misiones ====== */
+  .panel { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
+  .panel header { padding: 18px 20px 12px; background: var(--moss); color: #fff; }
+  .eti { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: #cfe3d3; margin: 0 0 4px; }
+  .panel h1 { font-size: 1.35rem; margin: 0; line-height: 1.15; }
+  .niveles { display: grid; gap: 6px; margin-top: 12px; }
+  .nivel { display: flex; align-items: center; gap: 8px; font-size: .8rem; }
+  .nivel .nom { width: 72px; font-weight: 700; }
+  .nivel .pts { display: flex; gap: 4px; flex: 1; }
+  .nivel .pts button { flex: 1; height: 9px; border-radius: 99px; border: 0; background: rgba(255,255,255,.22); padding: 0; }
+  .nivel .pts button.hecho { background: #8fd19e; }
+  .nivel .pts button.actual { background: #f0c27b; animation: late 1.4s ease-in-out infinite; }
+  .nivel .pts button:disabled { cursor: default; }
+  @keyframes late { 50% { opacity: .45; } }
+  .nivel .min { font: 600 .66rem "IBM Plex Mono", monospace; background: #f0c27b; color: var(--ink); padding: 1px 6px; border-radius: 99px; }
+  .nivel.lock { opacity: .5; }
+
+  .cuerpo { flex: 1; overflow: auto; padding: 16px 20px; }
+  .tarjeta { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: 0 6px 18px rgba(16,35,28,.06); }
+  .tarjeta .chip { display: inline-block; font: 600 .7rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-bottom: 6px; }
+  .chip.n0 { background: #e3efe6; color: var(--moss); } .chip.n1 { background: #eceff3; color: #4b5563; }
+  .chip.n2 { background: #fbf1e2; color: #8a5a1f; } .chip.n3 { background: #ece6f5; color: #5b3f86; }
+  .tarjeta h2 { font-size: 1.2rem; margin: 0 0 8px; }
+  .tarjeta p, .tarjeta li { font-size: .95rem; line-height: 1.5; margin: 0 0 8px; }
+  .tarjeta ol { padding-left: 1.2em; margin: 0 0 8px; }
+  .tarjeta code { font: 600 .9em "IBM Plex Mono", monospace; background: var(--soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+  .tarjeta kbd { font: 600 .82em "IBM Plex Mono", monospace; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: #faf9f5; }
+  .blanco { display: flex; flex-direction: column; align-items: center; background: var(--ink); color: #fff; border-radius: 12px; padding: 10px; margin: 10px 0; }
+  .blanco small { opacity: .75; font-size: .8rem; }
+  .blanco b { font: 600 2.6rem "IBM Plex Mono", monospace; color: #f0c27b; line-height: 1.1; }
+  .blanco span { font-size: .8rem; opacity: .85; }
+  .fb { margin-top: 10px; padding: 9px 12px; border-radius: 10px; font-size: .9rem; line-height: 1.45; background: #fbf1e2; border-left: 4px solid var(--amber); }
+  .fb.bien { background: #e3efe6; border-color: var(--ok); }
+  .pistas { margin-top: 10px; }
+  .pistas button { border: 1px dashed var(--amber); background: none; color: #8a5a1f; border-radius: 99px; padding: 4px 12px; font-size: .85rem; font-weight: 600; }
+  .pista { font-size: .9rem; background: #fffaf0; border-radius: 8px; padding: 8px 10px; margin-top: 8px; line-height: 1.45; }
+  .pista::before { content: "💡 "; }
+  details { margin-top: 12px; border-top: 1px solid var(--soft); padding-top: 10px; }
+  summary { font-weight: 700; font-size: .88rem; color: var(--moss); cursor: pointer; }
+  details p { font-size: .88rem !important; color: #3d4a43; margin-top: 8px !important; }
+  .hecha { font: 600 .8rem "IBM Plex Mono", monospace; color: var(--ok); }
+  .volver { border: 0; background: none; color: var(--moss); font-weight: 700; font-size: .85rem; padding: 0; margin-top: 10px; text-decoration: underline; }
+  .banner { border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; font-size: .92rem; line-height: 1.45; }
+  .banner.base { background: #e3efe6; border: 1px solid #b9d7c2; }
+  .banner.libre { background: #e8f0fe; border: 1px solid #c2d6fb; }
+  .banner b { display: block; font-size: 1rem; margin-bottom: 2px; }
+  .final { text-align: center; padding: 22px 16px; }
+  .final .medalla { font-size: 3.4rem; }
+  .panel footer { display: flex; gap: 8px; padding: 10px 20px 14px; border-top: 1px solid var(--line); }
+  .panel footer button { flex: 1; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 7px 8px; font-size: .8rem; font-weight: 600; color: var(--moss); }
+  .panel footer button:hover { background: var(--soft); }
+
+  /* toast y confeti */
+  .toast { position: fixed; left: 50%; bottom: 54px; translate: -50% 0; background: #303134; color: #fff; padding: 10px 16px; border-radius: 8px; font: 14px Roboto, Arial, sans-serif; z-index: 200; max-width: min(520px, 92vw); box-shadow: 0 6px 20px rgba(0,0,0,.3); animation: sube .25s ease both; }
+  @keyframes sube { from { opacity: 0; translate: -50% 10px; } }
+  .confeti { position: fixed; top: -20px; z-index: 300; pointer-events: none; font-size: 20px; animation: cae linear forwards; }
+  @keyframes cae { to { transform: translateY(110vh) rotate(540deg); opacity: .7; } }
+
+  /* ====== introducción ====== */
+  .intro { position: fixed; inset: 0; z-index: 400; background: var(--ink); overflow: auto; display: grid; place-items: center; padding: 24px 16px; }
+  .intro .caja { width: min(980px, 100%); background: var(--paper); border-radius: 18px; padding: clamp(18px, 4vw, 40px); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+  /* en pantallas medianas y grandes, la teoría se escala para caber entera (como las presentaciones) */
+  body.escalar .intro { display: block; overflow: hidden; padding: 0; }
+  body.escalar .intro .caja { position: absolute; left: 50%; top: 50%; width: 1100px; padding: 34px 40px; transform: translate(-50%, -50%) scale(var(--s, 1)); }
+  .bfull { padding: 10px 14px; font-size: 1.1rem; }
+  .full-hoja { margin-left: auto; align-self: flex-start; border: 1px solid #c4c7c5; background: #fff; border-radius: 18px; padding: 5px 12px; font: 500 13px Roboto, Arial, sans-serif; color: #1f1f1f; }
+  .full-hoja:hover { background: #f1f3f4; }
+  .zoomsel { border: 0; background: none; font: 500 13px Roboto, Arial, sans-serif; color: #444746; height: 30px; border-radius: 4px; padding: 0 4px; cursor: pointer; }
+  .zoomsel:hover { background: #dfe3eb; }
+  @media (max-width: 700px) { .full-hoja span { display: none; } }
+  body.escalar .dos { grid-template-columns: 1.05fr .95fr; }
+  body.escalar .duelo { grid-template-columns: 1fr 1fr; }
+  .intro .eti { color: var(--moss); }
+  .intro h1 { font-size: clamp(1.7rem, 4.4vw, 2.8rem); margin: 0 0 8px; letter-spacing: -.02em; line-height: 1.05; }
+  .intro .lead { font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.5; margin: 0 0 18px; max-width: 760px; }
+  .duelo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .lado { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .lado h3 { margin: 0 0 8px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+  .lado h3 i { width: 18px; height: 22px; border-radius: 3px; display: inline-block; }
+  .lado table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  .lado th, .lado td { border: 1px solid #d0d4d9; padding: 5px 8px; text-align: left; }
+  .lado th { background: #f1f3f4; font-weight: 600; }
+  .lado td.n { text-align: right; font-variant-numeric: tabular-nums; transition: background .3s; }
+  .lado tr.tot td { font-weight: 700; }
+  .lado .veredicto { min-height: 2.8em; font-size: .9rem; margin-top: 8px; font-weight: 600; line-height: 1.4; }
+  .lado td.mal { background: #fce8e6; color: #a50e0e; }
+  .lado td.bien { background: #e6f4ea; color: #137333; }
+  .lado td.cambia { background: #fff3c4; }
+  .intro .acc { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; align-items: center; }
+  .btn { border: 0; border-radius: 12px; padding: 12px 20px; font-weight: 700; font-size: 1rem; }
+  .btn.pri { background: var(--moss); color: #fff; }
+  .btn.sec { background: #f0c27b; color: var(--ink); }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .intro .peq { font-size: .85rem; color: var(--mut); }
+
+  /* ====== desborde de texto, referencias de color y ayuda de funciones ====== */
+  .grid td .ovf { display: inline-block; overflow: hidden; vertical-align: top; white-space: nowrap; }
+  .refbox { position: absolute; pointer-events: none; z-index: 2; border: 2px solid; border-radius: 1px; animation: aparece .2s ease both; }
+  .ayuda-f { position: absolute; z-index: 65; width: min(380px, calc(100% - 16px)); background: #fff; border-radius: 8px; box-shadow: 0 4px 18px rgba(0,0,0,.28); font: 13px Roboto, Arial, sans-serif; color: #1f1f1f; overflow: hidden; animation: aparece .2s ease both; pointer-events: none; }
+  @keyframes aparece { from { opacity: 0; transform: translateY(-5px); } }
+  .ayuda-f .sug { pointer-events: auto; border-bottom: 1px solid #eee; }
+  .ayuda-f .sug button { display: flex; width: 100%; border: 0; background: none; padding: 6px 12px; gap: 10px; text-align: left; align-items: baseline; font: inherit; }
+  .ayuda-f .sug button.on, .ayuda-f .sug button:hover { background: #e8f0fe; }
+  .ayuda-f .sug b { font: 600 13px "IBM Plex Mono", monospace; min-width: 92px; color: #1a73e8; }
+  .ayuda-f .sug small { color: #5f6368; }
+  .ayuda-f .tip { font-size: 11px; color: #80868b; padding: 3px 12px 6px; }
+  .ayuda-f .sec { padding: 8px 12px; border-top: 1px solid #eee; line-height: 1.45; }
+  .ayuda-f .sec:first-child { border-top: 0; }
+  .ayuda-f .rec { display: inline-block; font-weight: 700; font-size: 11px; padding: 1px 9px; border-radius: 99px; background: #e6f4ea; color: #137333; }
+  .ayuda-f .rec.no { background: #fce8e6; color: #a50e0e; }
+  .ayuda-f .rec.pop { animation: pop .4s ease both; }
+  @keyframes pop { 0% { transform: scale(.5); opacity: 0; } 70% { transform: scale(1.1); } }
+  .ayuda-f .sint { font: 600 13px "IBM Plex Mono", monospace; margin: 6px 0 4px; }
+  .ayuda-f .sint .nf { color: #1a73e8; }
+  .ayuda-f .sint .cur { background: #fde293; border-radius: 3px; padding: 0 3px; }
+  .ayuda-f .prev { font: 600 13px "IBM Plex Mono", monospace; word-break: break-all; }
+  .ayuda-f .tit { font-size: 10.5px; color: #5f6368; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .ayuda-f .argd { color: #3c4043; }
+
+  /* ====== diapositivas de teoría ====== */
+  .slide { display: none; }
+  .slide.on { display: block; animation: entra .5s cubic-bezier(.2,.8,.2,1) both; }
+  .slide.on.atras { animation-name: entraAtras; }
+  @keyframes entra { from { opacity: 0; transform: translateX(46px); } }
+  @keyframes entraAtras { from { opacity: 0; transform: translateX(-46px); } }
+  .navt { display: flex; align-items: center; gap: 10px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .puntos { display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+  .puntos button { width: 10px; height: 10px; border-radius: 99px; border: 0; background: #d8d3c4; padding: 0; transition: width .3s, background .3s; }
+  .puntos button.on { width: 30px; background: var(--moss); }
+  .btn.ghost { background: none; border: 1px solid var(--line); color: var(--moss); }
+  .dos { display: grid; grid-template-columns: 1.05fr .95fr; gap: 22px; align-items: start; }
+  .nota { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: .95rem; line-height: 1.5; }
+  .nota + .nota, .nota + details, .prueba + .nota { margin-top: 10px; }
+  .nota b.k { color: var(--moss); }
+  .nota code, .lead code, .quiz code { font: 600 .9em "IBM Plex Mono", monospace; background: var(--soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+  .intro kbd { font: 600 .82em "IBM Plex Mono", monospace; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: #faf9f5; }
+  .explica.cambia { animation: fade .4s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } }
+  .btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .chipb { border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 6px 14px; font-weight: 600; font-size: .88rem; transition: background .2s, color .2s, transform .1s; }
+  .chipb:hover { background: var(--soft); }
+  .chipb:active { transform: scale(.95); }
+  .chipb.on { background: var(--moss); color: #fff; border-color: var(--moss); }
+  .chipb.bien { background: #e6f4ea; border-color: #137333; color: #137333; }
+  .chipb.mal { background: #fce8e6; border-color: #a50e0e; color: #a50e0e; animation: sacude .4s; }
+  @keyframes sacude { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .ctrl { margin-top: 8px; }
+  .ctrl > span { font-size: .74rem; font-weight: 700; color: var(--mut); text-transform: uppercase; letter-spacing: .05em; }
+  .ctrl .btns { margin: 4px 0 0; }
+  .quiz { background: #fffaf0; border: 1px dashed var(--amber); border-radius: 12px; padding: 10px 14px; margin-top: 14px; }
+  .quiz p { margin: 0; font-weight: 700; }
+  .quiz .btns { margin: 8px 0 0; }
+  .qfb { font-size: .9rem; line-height: 1.45; margin-top: 6px; min-height: 1.2em; }
+  .prueba { margin-top: 10px; background: #fff; border: 1px dashed var(--moss); border-radius: 12px; padding: 12px; }
+  .prueba label { font-weight: 700; font-size: .9rem; display: block; margin-bottom: 6px; }
+  .prueba .fila { display: flex; gap: 8px; margin-bottom: 8px; }
+  .prueba input { flex: 1; min-width: 0; font: 15px "IBM Plex Mono", monospace; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; }
+
+  /* mini hoja de las diapositivas */
+  .ms { display: inline-block; max-width: 100%; background: #fff; border: 1px solid #c4c7c5; border-radius: 8px; overflow: hidden; font: 13px Arial, sans-serif; color: #000; vertical-align: top; box-shadow: 0 6px 18px rgba(16,35,28,.08); }
+  .ms .msfx { display: flex; border-bottom: 1px solid #e2e3e3; height: 30px; align-items: center; }
+  .ms .msfx .nm { width: 58px; padding: 0 8px; border-right: 1px solid #e2e3e3; height: 100%; display: flex; align-items: center; font-family: Roboto, Arial, sans-serif; flex: none; }
+  .ms .msfx i { font: italic 600 14px Georgia, serif; color: #80868b; padding: 0 8px; border-right: 1px solid #e2e3e3; height: 100%; display: flex; align-items: center; }
+  .ms .msfx span { padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; font-family: Roboto, Arial, sans-serif; }
+  .ms .msg { position: relative; overflow-x: auto; overflow-y: hidden; }
+  .ms table { border-collapse: separate; border-spacing: 0; table-layout: fixed; transition: width .5s cubic-bezier(.2,.8,.2,1); user-select: none; -webkit-user-select: none; }
+  .ms th { background: #f8f9fa; color: #444746; font: 500 11px Roboto, Arial, sans-serif; border-right: 1px solid #c4c7c5; border-bottom: 1px solid #c4c7c5; height: 21px; padding: 0; transition: width .5s cubic-bezier(.2,.8,.2,1); }
+  .ms td { height: 26px; border-right: 1px solid #e2e3e3; border-bottom: 1px solid #e2e3e3; padding: 0 5px; white-space: nowrap; overflow: hidden; cursor: cell; }
+  .ms td.rel { position: relative; }
+  .ms .selm { position: absolute; border: 2px solid #1a73e8; background: rgba(26,115,232,.1); pointer-events: none; transition: left .45s cubic-bezier(.2,.8,.2,1), top .45s cubic-bezier(.2,.8,.2,1), width .45s cubic-bezier(.2,.8,.2,1), height .45s cubic-bezier(.2,.8,.2,1); border-radius: 1px; z-index: 3; }
+  .ms td.ok { animation: okf 1.2s ease; } @keyframes okf { 0%, 45% { background: #ceead6; } }
+  .ms td.mal { animation: malf 1.2s ease; } @keyframes malf { 0%, 45% { background: #fad2cf; } }
+  .ms td.flash { animation: flf 1s ease; } @keyframes flf { 0%, 30% { background: #fff3c4; } }
+  .dt { position: absolute; left: 5px; top: 50%; translate: 0 -50%; transition: transform .6s cubic-bezier(.2,.8,.2,1); white-space: nowrap; }
+  .esc::after { content: ""; display: inline-block; width: 1px; height: 14px; background: #000; margin-left: 1px; vertical-align: -2px; animation: parpa .8s steps(1) infinite; }
+  @keyframes parpa { 50% { opacity: 0; } }
+  .tchip { display: inline-block; font: 600 11px "IBM Plex Sans", sans-serif; padding: 2px 8px; border-radius: 99px; animation: pop .45s ease both; }
+  .t-texto { background: #e8f0fe; color: #174ea6; } .t-num { background: #e6f4ea; color: #137333; } .t-fecha { background: #fef7e0; color: #8a5a00; }
+  .t-log { background: #f3e8fd; color: #6a1b9a; } .t-form { background: #fce8e6; color: #a50e0e; }
+  .refm { position: absolute; border: 2px dashed var(--rc); background: color-mix(in srgb, var(--rc) 13%, transparent); pointer-events: none; z-index: 2; animation: dibuja .5s ease both; }
+  @keyframes dibuja { from { opacity: 0; transform: scale(1.5); } }
+  .refm.pulsa { animation: pulsa .5s ease 2; }
+  @keyframes pulsa { 50% { transform: scale(1.15); } }
+  .rgbig { font: 600 clamp(2.2rem, 6vw, 3.4rem) "IBM Plex Mono", monospace; text-align: center; background: var(--ink); color: #fff; border-radius: 14px; padding: 8px; min-height: 1.6em; margin-bottom: 10px; }
+  .rgbig span { display: inline-block; animation: pop .45s ease both; }
+  .rgbig .dp { color: #f0c27b; margin: 0 2px; }
+  .rgbig small { display: block; font: 600 .8rem "IBM Plex Sans", sans-serif; color: #cfe3d3; letter-spacing: .04em; }
+  .eqbig { display: flex; align-items: center; gap: 16px; justify-content: center; background: var(--ink); color: #fff; border-radius: 14px; padding: 10px 14px; margin-bottom: 10px; }
+  .eqbig span { font: 600 3.6rem "IBM Plex Mono", monospace; color: #f0c27b; line-height: 1; animation: latido 1.6s ease-in-out infinite; display: inline-block; }
+  .eqbig b { font-size: 1.25rem; }
+  @keyframes latido { 50% { transform: translateY(-6px) scale(1.06); } }
+  .ops { border-collapse: collapse; margin-top: 4px; }
+  .ops td { padding: 2px 10px 2px 0; }
+  .fbig { font: 600 clamp(1.3rem, 4vw, 2.4rem) "IBM Plex Mono", monospace; text-align: center; margin: 14px 0; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 22px 10px 26px; word-break: break-all; }
+  .fbig span { position: relative; display: inline-block; padding: 0 1px; color: #c4c7c5; cursor: pointer; transition: color .35s, transform .35s; }
+  .fbig span.lit { color: var(--pc); }
+  .fbig span::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 4px; border-radius: 2px; background: var(--pc); transform: scaleX(0); transition: transform .45s; }
+  .fbig span.lit::after { transform: scaleX(1); }
+  .fbig span.foco { animation: latido .9s ease-in-out infinite; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; }
+  .card { background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--pc); border-radius: 12px; padding: 10px 12px; opacity: .15; transform: translateY(14px); transition: opacity .45s, transform .45s, box-shadow .25s; cursor: pointer; font-size: .9rem; line-height: 1.45; }
+  .card.show { opacity: 1; transform: none; }
+  .card.nohay.show { opacity: .6; border-style: dashed; }
+  .card.foco { box-shadow: 0 0 0 3px var(--pc); }
+  .card .sim { font: 600 1.15rem "IBM Plex Mono", monospace; color: var(--pc); word-break: break-all; }
+  .card h4 { margin: 2px 0 4px; font-size: .95rem; }
+
+  /* ====== condicionales: piezas de la teoría ====== */
+  .duelo td.c { text-align: center; font-weight: 700; transition: background .3s, color .3s; }
+  .lado td.fiebre { background: #fce8e6; color: #a50e0e; }
+  .lado td.normal { background: #e6f4ea; color: #137333; }
+  .lado td.hipo { background: #e8f0fe; color: #174ea6; }
+  .lado tr.mira td { box-shadow: inset 0 0 0 2px #f0c27b; }
+  .ms td.vv { color: #137333; font-weight: 700; text-align: center; }
+  .ms td.ff { color: #a50e0e; font-weight: 700; text-align: center; }
+  .opsg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 6px 0 10px; }
+  .opsg button { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 6px 4px; text-align: center; line-height: 1.2; transition: background .2s, transform .1s; }
+  .opsg button b { display: block; font: 600 1.3rem "IBM Plex Mono", monospace; color: var(--moss); }
+  .opsg button small { font-size: .74rem; color: var(--mut); }
+  .opsg button.on { background: var(--moss); border-color: var(--moss); }
+  .opsg button.on b, .opsg button.on small { color: #fff; }
+  .opsg button:active { transform: scale(.95); }
+  .pregunta { font: 600 1.1rem "IBM Plex Mono", monospace; text-align: center; background: var(--ink); color: #fff; border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+  .pregunta em { font-style: normal; color: #f0c27b; }
+  /* diagrama de decisión */
+  .flujo { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 10px 12px; }
+  .flujo svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .flujo .lin { fill: none; stroke: #d8d3c4; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; transition: stroke .35s; }
+  .flujo .lin.si { stroke: #2f7d4a; } .flujo .lin.no { stroke: #b3362c; }
+  .flujo .lin.va { stroke-dasharray: 10 8; animation: corre .6s linear infinite; }
+  @keyframes corre { to { stroke-dashoffset: -18; } }
+  .flujo .rombo { fill: #fffaf0; stroke: var(--amber); stroke-width: 3; transition: fill .3s; }
+  .flujo .rombo.on { fill: #fbe3bd; }
+  .flujo .caja-r { fill: #fff; stroke: #d8d3c4; stroke-width: 3; transition: fill .35s, stroke .35s; }
+  .flujo .caja-r.on { stroke: var(--pc); fill: color-mix(in srgb, var(--pc) 16%, #fff); }
+  .flujo text { font: 600 15px "IBM Plex Sans", sans-serif; fill: var(--ink); text-anchor: middle; dominant-baseline: middle; }
+  .flujo text.mono { font-family: "IBM Plex Mono", monospace; font-size: 14px; }
+  .flujo text.eti-si { fill: #2f7d4a; font-size: 13px; } .flujo text.eti-no { fill: #b3362c; font-size: 13px; }
+  .flujo .bola { fill: #f0c27b; stroke: var(--ink); stroke-width: 2; }
+  .tbtn { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 8px 0; }
+  .tbtn > span { font-size: .78rem; font-weight: 700; color: var(--mut); text-transform: uppercase; letter-spacing: .05em; margin-right: 4px; }
+  .lectura { font-size: 1.05rem; line-height: 1.6; text-align: center; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+  .lectura b { padding: 0 4px; border-radius: 5px; }
+  /* interruptores Y / O */
+  .circuitos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .circ { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; text-align: center; }
+  .circ h3 { margin: 0 0 2px; font: 600 1.35rem "IBM Plex Mono", monospace; color: var(--moss); }
+  .circ p { margin: 0 0 6px; font-size: .88rem; color: var(--mut); }
+  .circ svg { width: 100%; height: auto; }
+  .circ .cable { fill: none; stroke: #c4c7c5; stroke-width: 4; stroke-linecap: round; transition: stroke .3s; }
+  .circ .cable.vivo { stroke: #f0b429; }
+  .circ .foco { fill: #eceff1; stroke: #9aa0a6; stroke-width: 2.5; transition: fill .3s, filter .3s; }
+  .circ .foco.on { fill: #ffd54f; stroke: #e37400; filter: drop-shadow(0 0 10px #ffca28); }
+  .circ .res { font: 700 1rem "IBM Plex Mono", monospace; padding: 4px; border-radius: 8px; transition: background .3s, color .3s; }
+  .circ .res.v { background: #e6f4ea; color: #137333; } .circ .res.f { background: #fce8e6; color: #a50e0e; }
+  .circ text { font: 600 12px "IBM Plex Sans", sans-serif; fill: var(--ink); text-anchor: middle; }
+  .swt { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .sw { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 6px 14px 6px 6px; font-weight: 600; }
+  .sw i { width: 46px; height: 26px; border-radius: 99px; background: #d8d3c4; position: relative; transition: background .25s; flex: none; }
+  .sw i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: left .25s; }
+  .sw.on i { background: var(--ok); } .sw.on i::after { left: 23px; }
+  .sw small { display: block; font-weight: 400; color: var(--mut); font-size: .76rem; }
+  .contador { font: 600 3rem "IBM Plex Mono", monospace; text-align: center; color: #f0c27b; background: var(--ink); border-radius: 14px; line-height: 1.2; padding: 4px; }
+  .contador small { display: block; font: 600 .8rem "IBM Plex Sans", sans-serif; color: #cfe3d3; }
+  .contador.pop span { display: inline-block; animation: pop .35s ease both; }
+  .ms td.cuenta { box-shadow: inset 0 0 0 2px #f0b429; }
+  .ms td.pinta { background: #f4c7c3 !important; color: #a50e0e; transition: background .4s; }
+  .ms td.mira { background: #fff3c4; }
+  body.escalar .circuitos { grid-template-columns: 1fr 1fr; }
+
+  @media (max-width: 900px) {
+    .dos { grid-template-columns: 1fr; }
+    html, body { overflow: auto; }
+    .app { position: static; display: flex; flex-direction: column; min-height: 100%; }
+    .hoja { height: 78vh; flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
+    .panel { min-height: 60vh; }
+    .duelo { grid-template-columns: 1fr; }
+    .titulo-doc { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ INTRODUCCIÓN ============ -->
+<div class="intro" id="intro" hidden>
+  <div class="caja">
+    <!-- 0 · gancho -->
+    <section class="slide" data-s="gancho">
+      <p class="eti">Unidad 2 · Hojas de cálculo</p>
+      <h1>La hoja que toma decisiones</h1>
+      <p class="lead">Ya sabes que la hoja <b>calcula</b>. Hoy verás que también puede <b>decidir</b>: mirar cada dato, hacerse una pregunta y escribir la respuesta sola. Como una enfermera que revisa la lista del turno… pero sin cansarse nunca.</p>
+      <div class="dos">
+        <div class="lado">
+          <h3><i style="background:#188038"></i> Control de temperatura · Piso 3</h3>
+          <table id="tGancho"></table>
+        </div>
+        <div>
+          <div class="nota explica" id="gFb">En la columna <b>Estado</b> queremos que diga <b>«Fiebre»</b> si la temperatura es de 38 °C o más, y <b>«Normal»</b> si no. ¿Lo hacemos uno por uno?</div>
+          <div class="pregunta" id="gFormula" hidden></div>
+          <div class="acc" style="margin-top:10px">
+            <button class="btn sec" id="bRevisar">🌡️ Que la hoja revise a todos</button>
+            <button class="btn ghost" id="bToma" hidden>📥 Nueva toma: Rosa tiene 38.5 °C</button>
+          </div>
+          <p class="peq" id="pIntro">Presiona el botón amarillo primero.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 · comparaciones -->
+    <section class="slide" data-s="comparar">
+      <p class="eti">Teoría · 1 de 6</p>
+      <h1>Todo empieza con una pregunta de sí o no</h1>
+      <p class="lead">Para decidir, la hoja primero <b>compara</b>. Una comparación solo tiene dos respuestas posibles: <b style="color:#137333">VERDADERO</b> (sí se cumple) o <b style="color:#a50e0e">FALSO</b> (no se cumple). Elige un signo y un número:</p>
+      <div class="dos">
+        <div>
+          <div id="msComp"></div>
+          <div class="tbtn" id="ctNum"><span>Comparar con</span><button class="chipb" data-n="37.5">37.5</button><button class="chipb on" data-n="38">38</button><button class="chipb" data-n="39">39</button></div>
+        </div>
+        <div>
+          <div class="opsg" id="ctOp">
+            <button data-op=">"><b>&gt;</b><small>mayor que</small></button>
+            <button data-op="<"><b>&lt;</b><small>menor que</small></button>
+            <button data-op="=" ><b>=</b><small>igual a</small></button>
+            <button data-op=">=" class="on"><b>&gt;=</b><small>mayor o igual</small></button>
+            <button data-op="<="><b>&lt;=</b><small>menor o igual</small></button>
+            <button data-op="<>"><b>&lt;&gt;</b><small>distinto de</small></button>
+          </div>
+          <div class="pregunta" id="compPreg"></div>
+          <div class="nota explica" id="compFb"></div>
+        </div>
+      </div>
+      <div class="quiz" data-ok="1" data-bien="¡Exacto! 38 no es MAYOR que 38: es igual. Para incluir el 38 se usa >= (mayor o igual)." data-mal="Ojo con el signo: «>» es solo «mayor que». ¿38 es mayor que 38?">
+        <p>Si B2 tiene <code>38</code>, ¿qué muestra <code>=B2&gt;38</code>?</p>
+        <div class="btns"><button class="chipb">VERDADERO</button><button class="chipb">FALSO</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 2 · la función SI -->
+    <section class="slide" data-s="si">
+      <p class="eti">Teoría · 2 de 6</p>
+      <h1>La función SI: un camino para el sí y otro para el no</h1>
+      <p class="lead">SI hace la pregunta y, según la respuesta, <b>elige qué mostrar</b>. Tiene <b>tres argumentos</b>, separados por comas. Cambia la temperatura y mira por dónde va:</p>
+      <div class="fbig" id="siBig" style="margin:6px 0 12px"></div>
+      <div class="dos">
+        <div>
+          <div class="flujo" id="siFlujo"></div>
+          <div class="tbtn" id="ctSi"><span>B2 =</span><button class="chipb" data-t="36.5">36.5</button><button class="chipb" data-t="37.9">37.9</button><button class="chipb" data-t="38">38</button><button class="chipb" data-t="39.2">39.2</button></div>
+        </div>
+        <div>
+          <div class="lectura" id="siLee">Se lee: <b style="background:#e8f0fe">SI</b> B2 es mayor o igual a 38, <b style="background:#e6f4ea">entonces</b> «Fiebre»; <b style="background:#fce8e6">si no</b>, «Normal».</div>
+          <div class="cards" id="siCards" style="margin-top:10px"></div>
+          <div class="nota explica" id="siFb" style="margin-top:10px"></div>
+        </div>
+      </div>
+      <div class="quiz" data-ok="1" data-bien="¡Bien! 97 no es menor que 95, la condición es FALSO y se va por el tercer argumento: «OK»." data-mal="Primero responde la pregunta: ¿97 es menor que 95? Si es FALSO, la hoja muestra el tercer argumento.">
+        <p>En <code>=SI(D2&lt;95,"Oxígeno","OK")</code>, si D2 tiene <code>97</code>, ¿qué muestra la celda?</p>
+        <div class="btns"><button class="chipb">Oxígeno</button><button class="chipb">OK</button><button class="chipb">FALSO</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 3 · comillas -->
+    <section class="slide" data-s="comillas">
+      <p class="eti">Teoría · 3 de 6</p>
+      <h1>El texto va entre comillas</h1>
+      <p class="lead">Si SI tiene que escribir una <b>palabra</b>, va entre comillas: <code>"Fiebre"</code>. Sin comillas, la hoja cree que es el nombre de una función y se confunde. Mira:</p>
+      <div class="dos">
+        <div>
+          <div id="msCom"></div>
+          <div class="btns"><button class="chipb" data-cm="0">✍ Sin comillas</button><button class="chipb" data-cm="1">✍ Con comillas</button></div>
+        </div>
+        <div>
+          <div class="nota explica" id="comFb">Mira cómo se escribe en C2…</div>
+          <div class="nota"><b class="k">Palabras</b> → con comillas: <code>"Fiebre"</code>, <code>"Llamar al médico"</code>.<br><b class="k">Números y celdas</b> → sin comillas: <code>38</code>, <code>B2</code>.<br><b class="k">Celda en blanco</b> → dos comillas juntas: <code>""</code>.</div>
+          <details><summary>Saber más</summary><p>Las comillas son las dobles <b>"</b> (Shift + 2 en la mayoría de teclados). Las simples <b>'</b> no sirven. Mayúsculas o minúsculas dan igual para comparar: "fiebre" y "Fiebre" son lo mismo para la hoja.</p></details>
+        </div>
+      </div>
+      <div class="quiz" data-ok="2" data-bien="¡Correcto! La condición sin comillas (es una comparación) y las dos palabras con comillas." data-mal="Revisa: la condición B2>=38 NO va entre comillas (es una comparación), pero las palabras Fiebre y Normal SÍ.">
+        <p>¿Cuál está bien escrita?</p>
+        <div class="btns"><button class="chipb">=SI(B2&gt;=38,Fiebre,Normal)</button><button class="chipb">=SI("B2&gt;=38","Fiebre","Normal")</button><button class="chipb">=SI(B2&gt;=38,"Fiebre","Normal")</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 4 · SI anidado -->
+    <section class="slide" data-s="anidado">
+      <p class="eti">Teoría · 4 de 6</p>
+      <h1>¿Y si hay tres respuestas? Un SI dentro de otro</h1>
+      <p class="lead">Un SI solo tiene dos caminos. Para tres (Hipotermia, Normal, Fiebre), en el lugar del <b>«si no»</b> ponemos <b>otro SI</b> que hace una segunda pregunta. Se llama <b>SI anidado</b>.</p>
+      <div class="fbig" id="anBig" style="margin:6px 0 12px;font-size:clamp(1rem,2.6vw,1.7rem)"></div>
+      <div class="dos">
+        <div>
+          <div class="flujo" id="anFlujo"></div>
+          <div class="tbtn" id="ctAn2"><span>B2 =</span><button class="chipb" data-t="35.2">35.2</button><button class="chipb" data-t="36.8">36.8</button><button class="chipb" data-t="38.5">38.5</button></div>
+        </div>
+        <div>
+          <div class="nota explica" id="anFb"></div>
+          <div class="nota">🧩 Fíjate en los colores: el <b style="color:#c2185b">segundo SI</b> ocupa el lugar del tercer argumento del primero. Por eso al final hay <b>dos paréntesis de cierre</b> <code>))</code>: uno por cada SI.</div>
+          <div class="nota">🔢 El orden importa: la hoja hace las preguntas <b>de izquierda a derecha</b> y se queda con la primera que sea VERDADERO.</div>
+        </div>
+      </div>
+      <div class="quiz" data-ok="0" data-bien="¡Así es! 35.5 no llega a 38 (primera pregunta: FALSO), pero sí es menor que 36 (segunda: VERDADERO)." data-mal="Haz las preguntas en orden: ¿35.5 >= 38? Si no, pasa al segundo SI: ¿35.5 < 36?">
+        <p>Con <code>=SI(B2&gt;=38,"Fiebre",SI(B2&lt;36,"Hipotermia","Normal"))</code> y B2 = <code>35.5</code>, ¿qué sale?</p>
+        <div class="btns"><button class="chipb">Hipotermia</button><button class="chipb">Normal</button><button class="chipb">Fiebre</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 5 · Y / O -->
+    <section class="slide" data-s="yo">
+      <p class="eti">Teoría · 5 de 6</p>
+      <h1>Dos condiciones a la vez: Y · O</h1>
+      <p class="lead">A veces una sola pregunta no basta. <code>Y</code> exige que se cumplan <b>todas</b>; <code>O</code> se conforma con que se cumpla <b>al menos una</b>. Mueve los interruptores: cada uno es una condición.</p>
+      <div class="swt">
+        <button class="sw" data-sw="0"><i></i><span>Temp ≥ 38<small>¿tiene fiebre?</small></span></button>
+        <button class="sw" data-sw="1"><i></i><span>FC &gt; 100<small>¿tiene taquicardia?</small></span></button>
+      </div>
+      <div class="circuitos">
+        <div class="circ"><h3>Y( , )</h3><p>Interruptores en fila: la luz pasa solo si <b>los dos</b> están prendidos.</p><div id="cirY"></div><div class="res" id="resY"></div></div>
+        <div class="circ"><h3>O( , )</h3><p>Interruptores en paralelo: basta con que <b>uno</b> esté prendido.</p><div id="cirO"></div><div class="res" id="resO"></div></div>
+      </div>
+      <div class="nota" style="margin-top:12px">💊 Se usan <b>dentro de SI</b>, como condición: <code>=SI(Y(B2&gt;=38,C2&gt;100),"Llamar al médico","Vigilar")</code> → avisa solo si tiene fiebre <b>y</b> taquicardia.</div>
+      <div class="quiz" data-ok="0" data-bien="¡Sí! La temperatura no cumple, pero la saturación sí (88 < 90). Con O basta una." data-mal="Revisa cada condición: ¿37 >= 39? ¿88 < 90? Con O, basta que una sea VERDADERO.">
+        <p>Si B2 = <code>37</code> y D2 = <code>88</code>, ¿qué da <code>=O(B2&gt;=39,D2&lt;90)</code>?</p>
+        <div class="btns"><button class="chipb">VERDADERO</button><button class="chipb">FALSO</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+    <!-- 6 · CONTAR.SI y formato condicional -->
+    <section class="slide" data-s="contar">
+      <p class="eti">Teoría · 6 de 6</p>
+      <h1>Contar y pintar según una condición</h1>
+      <p class="lead"><code>CONTAR.SI</code> cuenta solo las celdas que cumplen una condición. El <b>formato condicional</b> las <b>pinta</b> solas. Los dos miran cada celda del rango y se preguntan: ¿cumple?</p>
+      <div class="dos">
+        <div>
+          <div id="msCont"></div>
+          <div class="btns" id="ctCont"><button class="chipb" data-ct="fiebre">=CONTAR.SI(C2:C7,"Fiebre")</button><button class="chipb" data-ct="sat">=CONTAR.SI(B2:B7,"&lt;95")</button><button class="chipb" data-ct="pinta">🎨 Formato condicional</button></div>
+        </div>
+        <div>
+          <div class="contador" id="contBig">0<small>celdas que cumplen</small></div>
+          <div class="nota explica" id="contFb" style="margin-top:10px"></div>
+          <div class="nota">CONTAR.SI tiene <b>dos argumentos</b>: <b>dónde</b> contar (un rango) y <b>qué</b> contar (la condición, <b>entre comillas</b>: <code>"Fiebre"</code>, <code>"&lt;95"</code>, <code>"&gt;=38"</code>).</div>
+        </div>
+      </div>
+      <div class="quiz" data-ok="1" data-bien="¡Correcto! El formato condicional no escribe nada: solo cambia el color de las celdas que cumplen la regla." data-mal="Piensa: ¿cuál de las dos herramientas escribe un número y cuál cambia colores?">
+        <p>Quieres que las saturaciones menores de 95 <b>se pongan rojas</b> solas. ¿Qué usas?</p>
+        <div class="btns"><button class="chipb">CONTAR.SI</button><button class="chipb">Formato → Formato condicional</button><button class="chipb">Pintarlas a mano con el balde</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
+
+
+    <div class="navt">
+      <button class="btn ghost" id="bAtras">← Atrás</button>
+      <div class="puntos" id="puntos"></div>
+      <button class="btn ghost bfull" type="button" title="Pantalla completa (F)" data-full>⛶</button>
+      <button class="btn pri" id="bSig">Siguiente →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APLICACIÓN ============ -->
+<div class="app">
+  <section class="hoja" id="hoja">
+    <div class="top">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="titulo-doc" id="tituloDoc">Control del turno · Piso 3</div>
+        <nav class="menus" id="menus">
+          <button data-menu="archivo">Archivo</button><button data-menu="editar">Editar</button><button data-menu="ver">Ver</button><button data-menu="insertar">Insertar</button><button data-menu="formato">Formato</button><button data-menu="datos">Datos</button><button data-menu="ayuda">Ayuda</button>
+        </nav>
+      </div>
+      <button class="full-hoja" type="button" title="Pantalla completa" data-full>⛶ <span>Pantalla completa</span></button>
+    </div>
+    <div class="barra" id="barra">
+      <button data-acc="deshacer" title="Deshacer">↶</button>
+      <button data-acc="rehacer" title="Rehacer">↷</button>
+      <span class="sep"></span>
+      <button data-acc="dec-" title="Disminuir decimales" class="num">.0←</button>
+      <button data-acc="dec+" title="Aumentar decimales" class="num">.00→</button>
+      <span class="sep"></span>
+      <button data-acc="negrita" title="Negrita" class="ab">B</button>
+      <button data-acc="cursiva" title="Cursiva" class="ai">I</button>
+      <button data-acc="colorTexto" title="Color de texto"><span style="font-weight:700">A</span><span class="colorbar" id="cbTexto" style="background:#000"></span></button>
+      <button data-acc="relleno" title="Color de relleno">🪣<span class="colorbar" id="cbRelleno" style="background:#fff59d"></span></button>
+      <button data-acc="bordes" title="Bordes" style="font-size:18px">▦</button>
+      <span class="sep"></span>
+      <button data-acc="izq" title="Alinear a la izquierda">⇤</button>
+      <button data-acc="centro" title="Centrar">↔</button>
+      <button data-acc="der" title="Alinear a la derecha">⇥</button>
+      <button data-acc="ajuste" title="Ajuste de texto">↵</button>
+      <span class="sep"></span>
+      <button data-acc="funciones" title="Funciones">Σ</button>
+      <span class="sep"></span>
+      <select id="zoomSel" class="zoomsel" title="Zoom de la hoja">
+        <option value="auto">Zoom: auto</option><option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="1.75">175%</option>
+      </select>
+    </div>
+    <div class="fx">
+      <div class="nombre" id="nombre" title="Nombre de la celda seleccionada">A1</div>
+      <i>fx</i>
+      <input id="fbar" autocomplete="off" spellcheck="false" aria-label="Barra de fórmulas">
+    </div>
+    <div class="aviso-err" id="avisoErr" hidden></div>
+    <div class="wrap" id="wrap">
+      <table class="grid" id="grid"></table>
+      <div class="selbox" id="selbox"><div class="asa" id="asa" title="Arrastra para copiar"></div></div>
+      <div class="copybox" id="copybox" hidden></div>
+      <div class="fillbox" id="fillbox" hidden></div>
+      <input class="editor" id="editor" hidden autocomplete="off" spellcheck="false">
+    </div>
+    <div class="pest" id="pest"></div>
+
+    <div class="fc" id="fc" hidden>
+      <h3>Formato condicional <button id="fcCerrar" title="Cerrar">×</button></h3>
+      <div id="fcReglas"></div>
+      <label for="fcRango">Aplicar al rango</label>
+      <input id="fcRango" placeholder="B2:B7" autocomplete="off">
+      <label for="fcOp">Dar formato a las celdas si…</label>
+      <select id="fcOp">
+        <option value="gt">Mayor que</option>
+        <option value="gte">Mayor o igual que</option>
+        <option value="lt">Menor que</option>
+        <option value="lte">Menor o igual que</option>
+        <option value="eq">Es igual a</option>
+        <option value="teq">El texto es exactamente</option>
+      </select>
+      <label for="fcVal">Valor</label>
+      <input id="fcVal" placeholder="Un número (38) o un texto (Fiebre)" autocomplete="off">
+      <label>Estilo de formato</label>
+      <div class="chips" id="fcChips"></div>
+      <div class="mal" id="fcMal"></div>
+      <div class="acc"><button class="canc" id="fcCanc">Cancelar</button><button class="listo" id="fcListo">Listo</button></div>
+    </div>
+    <div class="ayuda-f" id="ayudaF" hidden></div>
+  </section>
+
+  <aside class="panel">
+    <header>
+      <p class="eti">Unidad 2 · Práctica</p>
+      <h1>La hoja que decide</h1>
+      <div class="niveles" id="niveles"></div>
+    </header>
+    <div class="cuerpo" id="cuerpo"></div>
+    <footer>
+      <button id="bIntro">📖 Repasar la teoría</button>
+      <button id="bReiniciar">↺ Empezar de cero</button>
+    </footer>
+  </aside>
+</div>
+
+<script>
+"use strict";
+/* =====================================================================
+   SIMULADOR DE HOJA DE CÁLCULO
+   - Motor de fórmulas propio (SUMA, PROMEDIO, MAX, MIN, CONTAR, CONTAR.SI, SI…)
+   - Selección, rangos, asa de relleno, copiar/pegar, deshacer, formato condicional
+   - Clase 2: condicionales (comparaciones, SI, SI anidado, Y, O, CONTAR.SI, formato condicional)
+   - Misiones por niveles: Base (mínimo del día) · Plata · Oro · Secreto
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const COLS = 10, ROWS = 26, ANCHO = 100;
+const colName = c => { let s = ""; c++; while (c > 0) { const m = (c - 1) % 26; s = String.fromCharCode(65 + m) + s; c = Math.floor((c - 1) / 26); } return s; };
+const addr = (c, r) => colName(c) + (r + 1);
+function parseAddr(s) {
+  const m = /^\$?([A-Z]{1,2})\$?(\d+)$/.exec(String(s).toUpperCase().trim());
+  if (!m) return null;
+  let c = 0; for (const ch of m[1]) c = c * 26 + (ch.charCodeAt(0) - 64);
+  return { c: c - 1, r: +m[2] - 1 };
+}
+function parseRange(s) {
+  const p = String(s).toUpperCase().replace(/\s/g, "").split(":");
+  const a = parseAddr(p[0]); const b = p.length > 1 ? parseAddr(p[1]) : a;
+  if (!a || !b || p.length > 2) return null;
+  return { c1: Math.min(a.c, b.c), r1: Math.min(a.r, b.r), c2: Math.max(a.c, b.c), r2: Math.max(a.r, b.r) };
+}
+const rangeTxt = g => (g.c1 === g.c2 && g.r1 === g.r2) ? addr(g.c1, g.r1) : addr(g.c1, g.r1) + ":" + addr(g.c2, g.r2);
+
+/* ===================== MOTOR DE FÓRMULAS ===================== */
+class FErr { constructor(code, msg) { this.code = code; this.msg = msg; } }
+const FUNCS = ["SUMA", "PROMEDIO", "MAX", "MIN", "CONTAR", "CONTARA", "CONTAR.SI", "SI", "Y", "O", "REDONDEAR", "ABS"];
+const ALIAS = { SUM: "SUMA", AVERAGE: "PROMEDIO", COUNT: "CONTAR", COUNTA: "CONTARA", COUNTIF: "CONTAR.SI", IF: "SI", AND: "Y", OR: "O", ROUND: "REDONDEAR" };
+/* ficha de cada función: sus partes (argumentos) y para qué sirve */
+const VAL_ARGS = { a: ["valor1", "[valor2, …]"], ad: ["el primer número, celda o rango, por ejemplo B2:B7", "opcional: más números, celdas o rangos"] };
+const FDEF = {
+  "SUMA": { ...VAL_ARGS, d: "Suma todos los números." },
+  "PROMEDIO": { ...VAL_ARGS, d: "Saca el promedio: suma todo y divide entre cuántos son." },
+  "MAX": { ...VAL_ARGS, d: "Devuelve el número más alto." },
+  "MIN": { ...VAL_ARGS, d: "Devuelve el número más bajo." },
+  "CONTAR": { ...VAL_ARGS, d: "Cuenta cuántas celdas tienen números." },
+  "CONTARA": { ...VAL_ARGS, d: "Cuenta cuántas celdas no están vacías (números o texto)." },
+  "CONTAR.SI": { a: ["rango", "condición"], ad: ["dónde contar, por ejemplo D2:D7", "qué contar, entre comillas, por ejemplo \"<95\""], d: "Cuenta las celdas que cumplen una condición." },
+  "SI": { a: ["condición", "valor_si_verdadero", "valor_si_falso"], ad: ["la pregunta de sí o no, por ejemplo B2>=38", "lo que se muestra si se cumple (las palabras van entre comillas)", "lo que se muestra si no se cumple (también puede ser otro SI)"], d: "Elige qué mostrar según si se cumple una condición." },
+  "Y": { a: ["condición1", "[condición2, …]"], ad: ["la primera comparación, por ejemplo B2>=38", "más comparaciones: TODAS deben cumplirse"], d: "VERDADERO solo si se cumplen todas las condiciones." },
+  "O": { a: ["condición1", "[condición2, …]"], ad: ["la primera comparación, por ejemplo B2>=39", "más comparaciones: basta con que se cumpla UNA"], d: "VERDADERO si se cumple al menos una condición." },
+  "REDONDEAR": { a: ["número", "[decimales]"], ad: ["el número o la celda que quieres redondear", "opcional: cuántos decimales dejar (si no pones nada, 0)"], d: "Redondea un número." },
+  "ABS": { a: ["número"], ad: ["el número o la celda"], d: "Quita el signo negativo (valor absoluto)." }
+};
+const RCOL = ["#1a73e8", "#d93025", "#9334e6", "#188038", "#e37400", "#c2185b"];
+const fnNegrita = s => s.replace(/([A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ.]*)(\s*\()/g, "<b>$1</b>$2");
+/* pinta cada referencia de un color (como Google Sheets) y devuelve la lista de rangos */
+function pintarRefs(t) {
+  const lista = [], mapa = {}; let html = "", last = 0;
+  if (!t || t[0] !== "=") return { html: esc(t || ""), lista };
+  const rx = /("[^"]*")|(\$?[A-Za-z]{1,2}\$?\d+(?::\$?[A-Za-z]{1,2}\$?\d+)?)(?![A-Za-z0-9_.(])/g;
+  let m;
+  while ((m = rx.exec(t))) {
+    const off = m.index;
+    if (m[2] && off > 0 && /[A-Za-z0-9_.]/.test(t[off - 1])) continue;
+    html += fnNegrita(esc(t.slice(last, off)));
+    if (m[1]) html += '<span style="color:#188038">' + esc(m[1]) + "</span>";
+    else {
+      const k = m[2].toUpperCase().replace(/\$/g, ""), g = parseRange(k);
+      if (!(k in mapa)) { mapa[k] = RCOL[Object.keys(mapa).length % RCOL.length]; if (g) lista.push({ k, g, col: mapa[k] }); }
+      html += '<span style="color:' + mapa[k] + ';font-weight:700">' + esc(m[2]) + "</span>";
+    }
+    last = off + m[0].length;
+  }
+  html += fnNegrita(esc(t.slice(last)));
+  return { html, lista };
+}
+/* ¿qué función se está escribiendo y en qué argumento está el cursor? */
+function analizarF(t, pos) {
+  if (!t || t[0] !== "=") return null;
+  const antes = t.slice(0, pos);
+  let enStr = false, palabra = "", pend = "";
+  const pila = [];
+  for (let i = 1; i < antes.length; i++) {
+    const ch = antes[i];
+    if (enStr) { if (ch === '"') enStr = false; continue; }
+    if (ch === '"') { enStr = true; palabra = ""; pend = ""; continue; }
+    if (/[A-Za-zÁÉÍÓÚÑáéíóúñ0-9_.$]/.test(ch)) { palabra += ch; pend = ""; continue; }
+    if (/\s/.test(ch)) { if (palabra) pend = palabra; palabra = ""; continue; }
+    if (ch === "(") { const n = (palabra || pend).toUpperCase(); pila.push({ n: /^[A-ZÁÉÍÓÚÑ]/.test(n) ? n : null, arg: 0 }); palabra = ""; pend = ""; continue; }
+    if (ch === ")") pila.pop();
+    else if ((ch === ";" || ch === ",") && pila.length) pila[pila.length - 1].arg++;
+    palabra = ""; pend = "";
+  }
+  let fn = null, arg = 0;
+  for (let i = pila.length - 1; i >= 0; i--) if (pila[i].n) { fn = pila[i].n; arg = pila[i].arg; break; }
+  const parcial = !enStr && /^[A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ.]*$/.test(palabra) ? palabra.toUpperCase() : null;
+  return { fn, arg, parcial };
+}
+
+function tokenize(s) {
+  const t = []; let i = 0;
+  while (i < s.length) {
+    const ch = s[i];
+    if (/\s/.test(ch)) { i++; continue; }
+    if (ch === '"') {
+      const j = s.indexOf('"', i + 1);
+      if (j < 0) throw new FErr("#ERROR!", "Abriste comillas \" pero no las cerraste.");
+      t.push({ t: "str", v: s.slice(i + 1, j) }); i = j + 1; continue;
+    }
+    const rest = s.slice(i); let m;
+    if ((m = /^\d+(\.\d+)?/.exec(rest))) { t.push({ t: "num", v: parseFloat(m[0]) }); i += m[0].length; continue; }
+    if ((m = /^\$?[A-Za-z]{1,2}\$?\d+(:\$?[A-Za-z]{1,2}\$?\d+)?(?![A-Za-z0-9_.(])/.exec(rest))) { t.push({ t: "ref", v: m[0].toUpperCase().replace(/\$/g, "") }); i += m[0].length; continue; }
+    if ((m = /^[A-Za-zÁÉÍÓÚÑáéíóúñ_][A-Za-z0-9ÁÉÍÓÚÑáéíóúñ_.]*/.exec(rest))) { t.push({ t: "name", v: m[0].toUpperCase() }); i += m[0].length; continue; }
+    if ((m = /^(<=|>=|<>)/.exec(rest))) { t.push({ t: "op", v: m[0] }); i += 2; continue; }
+    if ("+-*/^&=<>%(),;:".includes(ch)) { t.push({ t: "op", v: ch }); i++; continue; }
+    throw new FErr("#ERROR!", "No entiendo el símbolo «" + ch + "».");
+  }
+  return t;
+}
+function lev(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+function parseF(tokens) {
+  let p = 0;
+  const pk = () => tokens[p];
+  const is = v => pk() && pk().t === "op" && pk().v === v;
+  const cmp = () => { let a = cat(); while (pk() && pk().t === "op" && ["=", "<>", "<", ">", "<=", ">="].includes(pk().v)) { const o = tokens[p++].v; a = { k: "bin", o, a, b: cat() }; } return a; };
+  const cat = () => { let a = add(); while (is("&")) { p++; a = { k: "bin", o: "&", a, b: add() }; } return a; };
+  const add = () => { let a = mul(); while (is("+") || is("-")) { const o = tokens[p++].v; a = { k: "bin", o, a, b: mul() }; } return a; };
+  const mul = () => { let a = pow(); while (is("*") || is("/")) { const o = tokens[p++].v; a = { k: "bin", o, a, b: pow() }; } return a; };
+  const pow = () => { let a = un(); while (is("^")) { p++; a = { k: "bin", o: "^", a, b: un() }; } return a; };
+  const un = () => {
+    if (is("-")) { p++; return { k: "neg", a: un() }; }
+    if (is("+")) { p++; return un(); }
+    let a = prim(); while (is("%")) { p++; a = { k: "pct", a }; } return a;
+  };
+  const prim = () => {
+    const tk = tokens[p];
+    if (!tk) throw new FErr("#ERROR!", "La fórmula está incompleta: le falta algo al final.");
+    p++;
+    if (tk.t === "num") return { k: "val", v: tk.v };
+    if (tk.t === "str") return { k: "val", v: tk.v };
+    if (tk.t === "ref") return { k: "ref", v: tk.v };
+    if (tk.t === "name") {
+      if (is("(")) {
+        p++; const args = [];
+        if (!is(")")) { for (;;) { args.push(cmp()); if (is(",") || is(";")) { p++; continue; } break; } }
+        if (!is(")")) throw new FErr("#ERROR!", pk() && pk().v === ":" ? "Ese «:» está fuera de lugar. Un rango se escribe así: B2:B7." : "Falta cerrar el paréntesis «)».");
+        p++; return { k: "fn", n: tk.v, args };
+      }
+      if (tk.v === "VERDADERO" || tk.v === "TRUE") return { k: "val", v: true };
+      if (tk.v === "FALSO" || tk.v === "FALSE") return { k: "val", v: false };
+      throw new FErr("#¿NOMBRE?", "No reconozco «" + tk.v + "». Si es una función, le faltan los paréntesis; si es texto, va entre comillas.");
+    }
+    if (tk.v === "(") { const e = cmp(); if (!is(")")) throw new FErr("#ERROR!", "Falta cerrar el paréntesis «)»."); p++; return e; }
+    throw new FErr("#ERROR!", "Hay un «" + tk.v + "» donde no corresponde.");
+  };
+  const e = cmp();
+  if (p < tokens.length) throw new FErr("#ERROR!", "Sobra algo en la fórmula: «" + tokens[p].v + "».");
+  return e;
+}
+function lit(raw) {
+  const s = String(raw).trim();
+  if (s === "") return null;
+  if (/^[-+]?\d+([.,]\d+)?$/.test(s)) return parseFloat(s.replace(",", "."));
+  if (/^(verdadero|true)$/i.test(s)) return true;
+  if (/^(falso|false)$/i.test(s)) return false;
+  return String(raw);
+}
+const isNum = v => typeof v === "number";
+function toNum(v) {
+  if (v === null) return 0;
+  if (isNum(v)) return v;
+  if (typeof v === "boolean") return v ? 1 : 0;
+  const n = lit(v);
+  if (isNum(n)) return n;
+  throw new FErr("#¡VALOR!", "«" + v + "» es texto y no se puede usar en una cuenta. ¿Hay letras o símbolos (como °C) junto al número?");
+}
+const toStr = v => v === null ? "" : typeof v === "boolean" ? (v ? "VERDADERO" : "FALSO") : String(v);
+function scalar(v) {
+  if (Array.isArray(v)) throw new FErr("#¡VALOR!", "Un rango (como B2:B7) solo puede ir dentro de una función, por ejemplo =SUMA(B2:B7).");
+  return v;
+}
+function compare(a, b, o) {
+  let x = a, y = b;
+  if (isNum(a) || isNum(b)) { x = a === null ? 0 : a; y = b === null ? 0 : b; }
+  if (typeof x === "string") x = x.toLowerCase();
+  if (typeof y === "string") y = y.toLowerCase();
+  switch (o) { case "=": return x === y; case "<>": return x !== y; case "<": return x < y; case ">": return x > y; case "<=": return x <= y; case ">=": return x >= y; }
+}
+function criterio(c) {
+  if (isNum(c)) return v => v === c;
+  const m = /^(<=|>=|<>|<|>|=)?(.*)$/.exec(String(c));
+  const op = m[1] || "="; const obj = m[2]; const n = lit(obj);
+  return v => {
+    if (isNum(n)) return isNum(v) && compare(v, n, op);
+    if (op === "=" || op === "<>") { const eq = toStr(v).toLowerCase() === obj.toLowerCase(); return op === "=" ? eq : !eq; }
+    return false;
+  };
+}
+function numeros(args, ctx) {
+  const out = [];
+  for (const a of args) {
+    const v = ev(a, ctx);
+    if (Array.isArray(v)) { for (const x of v) if (isNum(x)) out.push(x); }
+    else if (v !== null) out.push(toNum(v));
+  }
+  return out;
+}
+function callFn(nombre, args, ctx) {
+  const n = ALIAS[nombre] || nombre;
+  const pide = (min, max) => {
+    if (args.length < min || args.length > max) throw new FErr("#N/A", n + (min === max ? " necesita " + min + " parte" + (min > 1 ? "s" : "") : " necesita entre " + min + " y " + max + " partes") + " separadas por «,» (o «;»).");
+  };
+  switch (n) {
+    case "SUMA": pide(1, 99); return numeros(args, ctx).reduce((s, x) => s + x, 0);
+    case "PROMEDIO": { pide(1, 99); const v = numeros(args, ctx); if (!v.length) throw new FErr("#DIV/0!", "No hay números para promediar: el rango está vacío."); return v.reduce((s, x) => s + x, 0) / v.length; }
+    case "MAX": { pide(1, 99); const v = numeros(args, ctx); return v.length ? Math.max(...v) : 0; }
+    case "MIN": { pide(1, 99); const v = numeros(args, ctx); return v.length ? Math.min(...v) : 0; }
+    case "CONTAR": { pide(1, 99); let k = 0; for (const a of args) { const v = ev(a, ctx); if (Array.isArray(v)) k += v.filter(isNum).length; else if (isNum(v)) k++; } return k; }
+    case "CONTARA": { pide(1, 99); let k = 0; for (const a of args) { const v = ev(a, ctx); if (Array.isArray(v)) k += v.filter(x => x !== null && x !== "").length; else if (v !== null) k++; } return k; }
+    case "CONTAR.SI": {
+      pide(2, 2);
+      const r = ev(args[0], ctx);
+      if (!Array.isArray(r)) throw new FErr("#¡VALOR!", "La primera parte de CONTAR.SI debe ser un rango, por ejemplo D2:D7.");
+      const f = criterio(scalar(ev(args[1], ctx)));
+      return r.filter(f).length;
+    }
+    case "SI": { pide(2, 3); const c = scalar(ev(args[0], ctx)); return (typeof c === "boolean" ? c : toNum(c) !== 0) ? scalar(ev(args[1], ctx)) : (args[2] ? scalar(ev(args[2], ctx)) : false); }
+    case "Y": case "O": {
+      pide(1, 30);
+      const vs = [];
+      for (const a of args) { const v = ev(a, ctx); (Array.isArray(v) ? v : [v]).forEach(x => { if (x !== null && x !== "") vs.push(typeof x === "boolean" ? x : toNum(x) !== 0); }); }
+      return n === "Y" ? vs.every(Boolean) : vs.some(Boolean);
+    }
+    case "REDONDEAR": { pide(1, 2); const x = toNum(scalar(ev(args[0], ctx))); const d = args[1] ? toNum(scalar(ev(args[1], ctx))) : 0; const f = Math.pow(10, d); return Math.round(x * f) / f; }
+    case "ABS": pide(1, 1); return Math.abs(toNum(scalar(ev(args[0], ctx))));
+  }
+  let mejor = null, dist = 99;
+  for (const f of FUNCS) { const d = lev(nombre, f); if (d < dist) { dist = d; mejor = f; } }
+  throw new FErr("#¿NOMBRE?", "No conozco la función «" + nombre + "»." + (dist <= 2 ? " ¿Quisiste decir " + mejor + "?" : " Revisa cómo está escrita."));
+}
+function ev(n, ctx) {
+  switch (n.k) {
+    case "val": return n.v;
+    case "ref": {
+      if (n.v.includes(":")) {
+        const g = parseRange(n.v); const out = [];
+        for (let r = g.r1; r <= g.r2; r++) for (let c = g.c1; c <= g.c2; c++) out.push(cellVal(ctx.hoja, addr(c, r), ctx));
+        return out;
+      }
+      return cellVal(ctx.hoja, n.v, ctx);
+    }
+    case "neg": return -toNum(scalar(ev(n.a, ctx)));
+    case "pct": return toNum(scalar(ev(n.a, ctx))) / 100;
+    case "fn": return callFn(n.n, n.args, ctx);
+    case "bin": {
+      const a = scalar(ev(n.a, ctx)), b = scalar(ev(n.b, ctx));
+      switch (n.o) {
+        case "+": return toNum(a) + toNum(b);
+        case "-": return toNum(a) - toNum(b);
+        case "*": return toNum(a) * toNum(b);
+        case "/": { const d = toNum(b); if (d === 0) throw new FErr("#DIV/0!", "Estás dividiendo entre cero (o entre una celda vacía)."); return toNum(a) / d; }
+        case "^": return Math.pow(toNum(a), toNum(b));
+        case "&": return toStr(a) + toStr(b);
+        default: return compare(a, b, n.o);
+      }
+    }
+  }
+}
+const cache = new Map();
+function cellVal(hoja, a, ctx) {
+  const key = hoja.id + "!" + a;
+  if (cache.has(key)) { const v = cache.get(key); if (v instanceof FErr) throw v; return v; }
+  if (ctx.visit.has(key)) throw new FErr("#REF!", "Referencia circular: la fórmula se usa a sí misma (directa o indirectamente).");
+  const raw = hoja.cells[a] ? hoja.cells[a].v : "";
+  let v;
+  if (!raw || raw[0] !== "=") v = lit(raw || "");
+  else {
+    ctx.visit.add(key);
+    try {
+      if (raw.trim() === "=") throw new FErr("#ERROR!", "Escribiste el «=» pero nada más.");
+      v = scalar(ev(parseF(tokenize(raw.slice(1))), ctx));
+      if (isNum(v) && !isFinite(v)) v = new FErr("#NUM!", "El resultado es demasiado grande.");
+    } catch (e) { v = e instanceof FErr ? e : new FErr("#ERROR!", "No pude entender esta fórmula."); }
+    ctx.visit.delete(key);
+  }
+  cache.set(key, v);
+  if (v instanceof FErr) throw v;
+  return v;
+}
+function val(hoja, a) { try { return cellVal(hoja, a, { hoja, visit: new Set() }); } catch (e) { return e; } }
+function fmt(v, cell) {
+  if (v === null) return "";
+  if (v instanceof FErr) return v.code;
+  if (typeof v === "boolean") return v ? "VERDADERO" : "FALSO";
+  if (isNum(v)) {
+    if (cell && cell.dec != null) return v.toFixed(cell.dec);
+    if (Number.isInteger(v)) return String(v);
+    return String(parseFloat(v.toFixed(4)));
+  }
+  return String(v);
+}
+function shiftF(f, dr, dc) {
+  if (!f || f[0] !== "=") return f;
+  return f.split(/("[^"]*")/).map((part, i) => i % 2 ? part : part.replace(/(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?![A-Za-z0-9_.(])/g, (m, d1, col, d2, row, off, s) => {
+    if (off > 0 && /[A-Za-z0-9_.]/.test(s[off - 1])) return m;
+    const a = parseAddr(col + row); if (!a) return m;
+    const c = d1 ? a.c : a.c + dc, r = d2 ? a.r : a.r + dr;
+    if (c < 0 || r < 0) return "#REF!";
+    return d1 + colName(c) + d2 + (r + 1);
+  })).join("");
+}
+
+/* ===================== ESTADO ===================== */
+const CLAVE = "u2c2-m1c2-hoja-v1";
+function hojaInicial() {
+  const d = {
+    A1: "Paciente", B1: "Temp (°C)", C1: "FC (lpm)", D1: "SatO₂ (%)", E1: "¿Fiebre?", F1: "¿Oxígeno?", G1: "Clasificación", H1: "Aviso", I1: "Urgencia",
+    A2: "Rosa Quispe", A3: "Juan Mamani", A4: "Lucía Torres", A5: "Pedro Huamán", A6: "Ana Flores", A7: "Carlos Ramos", A8: "Elena Castro", A9: "Miguel Rojas",
+    B2: "36.5", B3: "38.6", B4: "37.2", B5: "35.4", B6: "39.1", B7: "36.9", B8: "38", B9: "37.8",
+    C2: "72", C3: "110", C4: "88", C5: "64", C6: "118", C7: "95", C8: "92", C9: "104",
+    D2: "98", D3: "93", D4: "97", D5: "96", D6: "89", D7: "88", D8: "94", D9: "97",
+    F2: "=SI(D2<95,Oxígeno,OK)",
+    A11: "Con fiebre", A12: "SatO₂ menor de 95"
+  };
+  const cells = {}; for (const k in d) cells[k] = { v: d[k] };
+  ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1"].forEach(k => cells[k].b = true);
+  return { id: 0, nombre: "Pacientes", titulo: "Control del turno · Piso 3", cells, w: { 0: 130, 6: 105, 7: 120 }, rules: [] };
+}
+function estadoInicial() {
+  return { hojas: [hojaInicial(), { id: 1, nombre: "Libre", titulo: "Mi hoja libre", cells: {}, w: {}, rules: [] }], cur: 0, mis: 0, intro: false, lineas: true };
+}
+let S = estadoInicial();
+try { const g = JSON.parse(localStorage.getItem(CLAVE)); if (g && g.hojas && g.hojas.length === 2) S = Object.assign(estadoInicial(), g); } catch (e) {}
+let guardarT = 0;
+function guardar() { clearTimeout(guardarT); guardarT = setTimeout(() => { try { localStorage.setItem(CLAVE, JSON.stringify(S)); } catch (e) {} }, 250); }
+const H = () => S.hojas[S.cur];
+const H0 = () => S.hojas[0];
+const deshacer = [[], []], rehacer = [[], []];
+function snap() { const h = H(); deshacer[S.cur].push(JSON.stringify({ cells: h.cells, w: h.w, rules: h.rules })); if (deshacer[S.cur].length > 100) deshacer[S.cur].shift(); rehacer[S.cur].length = 0; }
+function restaurar(desde, hacia) {
+  const pila = desde[S.cur]; if (!pila.length) return toast("No hay nada que " + (desde === deshacer ? "deshacer." : "rehacer."));
+  const h = H(); hacia[S.cur].push(JSON.stringify({ cells: h.cells, w: h.w, rules: h.rules }));
+  Object.assign(h, JSON.parse(pila.pop())); cambio();
+}
+const celda = (a, crear) => { const h = H(); if (!h.cells[a] && crear) h.cells[a] = { v: "" }; return h.cells[a]; };
+function limpiarVacias() { const h = H(); for (const k in h.cells) { const c = h.cells[k]; if (!c.v && !c.b && !c.i && !c.fc && !c.bg && !c.al && !c.bd && !c.wr && c.dec == null) delete h.cells[k]; } }
+
+/* selección */
+let act = { c: 0, r: 0 }, anc = { c: 0, r: 0 }, sel = { c1: 0, r1: 0, c2: 0, r2: 0 };
+function setSel(c, r, extender) {
+  c = Math.max(0, Math.min(COLS - 1, c)); r = Math.max(0, Math.min(ROWS - 1, r));
+  if (extender) act = { c, r }; else { act = { c, r }; anc = { c, r }; }
+  sel = { c1: Math.min(anc.c, act.c), r1: Math.min(anc.r, act.r), c2: Math.max(anc.c, act.c), r2: Math.max(anc.r, act.r) };
+  if (!extender) { act = { c, r }; }
+}
+function selRango(c1, r1, c2, r2) { anc = { c: c1, r: r1 }; act = { c: c2, r: r2 }; sel = { c1: Math.min(c1, c2), r1: Math.min(r1, r2), c2: Math.max(c1, c2), r2: Math.max(r1, r2) }; }
+const enSel = (c, r) => c >= sel.c1 && c <= sel.c2 && r >= sel.r1 && r <= sel.r2;
+const unaCelda = () => sel.c1 === sel.c2 && sel.r1 === sel.r2;
+function cadaSel(fn) { for (let r = sel.r1; r <= sel.r2; r++) for (let c = sel.c1; c <= sel.c2; c++) fn(c, r, addr(c, r)); }
+
+/* ===================== CONSTRUCCIÓN DE LA CUADRÍCULA ===================== */
+const grid = $("grid"), wrap = $("wrap"), editor = $("editor"), fbar = $("fbar");
+const tds = [];
+const colEls = [], colHs = [], rowHs = [];
+(function construir() {
+  const cg = document.createElement("colgroup");
+  const c0 = document.createElement("col"); c0.style.width = "46px"; cg.appendChild(c0);
+  for (let c = 0; c < COLS; c++) { const col = document.createElement("col"); cg.appendChild(col); colEls.push(col); }
+  grid.appendChild(cg);
+  const th = document.createElement("thead"); const tr = document.createElement("tr");
+  const esq = document.createElement("th"); esq.className = "esq"; esq.title = "Seleccionar todo"; tr.appendChild(esq);
+  esq.addEventListener("pointerdown", e => { e.preventDefault(); if (editing) commit(null); selRango(0, 0, COLS - 1, ROWS - 1); act = { c: 0, r: 0 }; render(); });
+  for (let c = 0; c < COLS; c++) {
+    const h = document.createElement("th"); h.className = "colh"; h.textContent = colName(c); h.dataset.c = c;
+    const rz = document.createElement("div"); rz.className = "rz"; rz.dataset.c = c; rz.title = "Arrastra para cambiar el ancho (doble clic: se ajusta solo)"; h.appendChild(rz);
+    tr.appendChild(h); colHs.push(h);
+  }
+  th.appendChild(tr); grid.appendChild(th);
+  const tb = document.createElement("tbody");
+  for (let r = 0; r < ROWS; r++) {
+    const row = document.createElement("tr"); const rh = document.createElement("th"); rh.textContent = r + 1; rh.dataset.r = r; row.appendChild(rh); rowHs.push(rh);
+    const fila = [];
+    for (let c = 0; c < COLS; c++) { const td = document.createElement("td"); td.dataset.c = c; td.dataset.r = r; row.appendChild(td); fila.push(td); }
+    tds.push(fila); tb.appendChild(row);
+  }
+  grid.appendChild(tb);
+})();
+
+/* medir texto (para el ancho de columnas) */
+const lienzo = document.createElement("canvas").getContext("2d");
+function medir(txt, negrita) { lienzo.font = (negrita ? "bold " : "") + "13px Arial, sans-serif"; return Math.ceil(lienzo.measureText(txt).width); }
+const anchoCol = c => H().w[c] || ANCHO;
+
+/* ===================== DIBUJAR ===================== */
+function reglaAplica(rule, c, r, v) {
+  const g = parseRange(rule.range); if (!g || c < g.c1 || c > g.c2 || r < g.r1 || r > g.r2) return false;
+  if (rule.op === "teq") return v !== null && toStr(v).trim().toLowerCase() === String(rule.val).trim().toLowerCase();
+  if (!isNum(v)) return false;
+  switch (rule.op) { case "gt": return v > rule.val; case "gte": return v >= rule.val; case "lt": return v < rule.val; case "lte": return v <= rule.val; case "eq": return v === rule.val; }
+  return false;
+}
+let refsList = [];
+let ZOOM = 1;
+function render() {
+  cache.clear();
+  const h = H();
+  $("tituloDoc").textContent = h.titulo;
+  $("hoja").classList.toggle("sin-lineas", !S.lineas);
+  let total = 46;
+  for (let c = 0; c < COLS; c++) { const w = anchoCol(c); colEls[c].style.width = w + "px"; total += w; }
+  grid.style.width = total + "px";
+  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+    const td = tds[r][c], a = addr(c, r), cell = h.cells[a];
+    const v = val(h, a);
+    td.textContent = fmt(v, cell);
+    let al = cell && cell.al ? cell.al : (isNum(v) ? "right" : typeof v === "boolean" || v instanceof FErr ? "center" : "left");
+    td.style.textAlign = al;
+    td.style.fontWeight = cell && cell.b ? "700" : "";
+    td.style.fontStyle = cell && cell.i ? "italic" : "";
+    let fc = cell && cell.fc || "", bg = cell && cell.bg || "";
+    for (const rule of h.rules) if (reglaAplica(rule, c, r, v)) { bg = rule.bg; fc = rule.fc; }
+    td.style.color = fc; td.style.backgroundColor = bg;
+    // bordes: derecho e inferior pintan la línea de la cuadrícula; superior e izquierdo, una sombra interior
+    const bd = cell && cell.bd;
+    td.style.borderRightColor = bd && bd.r ? "#000" : "";
+    td.style.borderBottomColor = bd && bd.b ? "#000" : "";
+    td.style.boxShadow = bd && (bd.t || bd.l) ? [bd.t ? "inset 0 1px 0 #000" : "", bd.l ? "inset 1px 0 0 #000" : ""].filter(Boolean).join(",") : "";
+    // ajuste de texto: desbordar (normal), ajustar o recortar
+    const wr = cell && cell.wr;
+    td.style.whiteSpace = wr === "wrap" ? "normal" : "";
+    td.style.wordBreak = wr === "wrap" ? "break-word" : "";
+    td.style.overflow = "";
+    if (!wr && typeof v === "string" && v && al === "left") {
+      const tw = medir(v, cell && cell.b); let disp = anchoCol(c) - 6, k = c + 1;
+      if (tw > disp) {
+        while (k < COLS && disp < tw && !(h.cells[addr(k, r)] && h.cells[addr(k, r)].v)) { disp += anchoCol(k); k++; }
+        if (k > c + 1) { td.style.overflow = "visible"; td.innerHTML = '<span class="ovf" style="width:' + disp + 'px">' + esc(v) + "</span>"; }
+      }
+    }
+    td.classList.toggle("err", v instanceof FErr);
+    td.classList.toggle("inr", !unaCelda() && enSel(c, r) && !(c === anc.c && r === anc.r));
+  }
+  colHs.forEach((el, c) => el.classList.toggle("hl", c >= sel.c1 && c <= sel.c2));
+  rowHs.forEach((el, r) => el.classList.toggle("hl", r >= sel.r1 && r <= sel.r2));
+  ubicarCaja($("selbox"), sel);
+  $("selbox").classList.toggle("edita", !!editing);
+  wrap.querySelectorAll(".refbox").forEach(x => x.remove());
+  for (const x of refsList) {
+    if (x.g.c1 >= COLS || x.g.r1 >= ROWS) continue;
+    const d = document.createElement("div"); d.className = "refbox"; d.style.borderColor = x.col; d.style.background = x.col + "1a";
+    wrap.appendChild(d); ubicarCaja(d, { c1: x.g.c1, r1: x.g.r1, c2: Math.min(x.g.c2, COLS - 1), r2: Math.min(x.g.r2, ROWS - 1) });
+  }
+  const a = addr(anc.c, anc.r), cell = h.cells[a];
+  $("nombre").textContent = unaCelda() ? a : rangeTxt(sel);
+  if (!editing) fbar.value = cell ? cell.v : "";
+  const v = val(h, a);
+  const av = $("avisoErr");
+  if (v instanceof FErr && !editing) { av.hidden = false; av.innerHTML = "⚠ <b>" + esc(v.code) + "</b> en " + a + ": " + esc(v.msg); } else av.hidden = true;
+  // estado de botones
+  document.querySelector('[data-acc="negrita"]').classList.toggle("on", !!(cell && cell.b));
+  document.querySelector('[data-acc="cursiva"]').classList.toggle("on", !!(cell && cell.i));
+  if (clip && clip.hoja === S.cur) { $("copybox").hidden = false; ubicarCaja($("copybox"), clip.g); } else $("copybox").hidden = true;
+  pestanas();
+  actualizarAyuda();
+  guardar();
+}
+function rectCelda(c, r) { const td = tds[r][c]; return { x: td.offsetLeft, y: td.offsetTop, w: td.offsetWidth, h: td.offsetHeight }; }
+function ubicarCaja(el, g) {
+  const a = rectCelda(g.c1, g.r1), b = rectCelda(g.c2, g.r2);
+  el.style.left = (a.x - 1) + "px"; el.style.top = (a.y - 1) + "px";
+  el.style.width = (b.x + b.w - a.x + 1) + "px"; el.style.height = (b.y + b.h - a.y + 1) + "px";
+}
+function verCelda(c, r) {
+  const q = rectCelda(c, r);
+  if (q.x - 46 < wrap.scrollLeft) wrap.scrollLeft = q.x - 46;
+  else if (q.x + q.w > wrap.scrollLeft + wrap.clientWidth) wrap.scrollLeft = q.x + q.w - wrap.clientWidth;
+  if (q.y - 22 < wrap.scrollTop) wrap.scrollTop = q.y - 22;
+  else if (q.y + q.h > wrap.scrollTop + wrap.clientHeight) wrap.scrollTop = q.y + q.h - wrap.clientHeight;
+}
+function pestanas() {
+  const p = $("pest");
+  if (p.dataset.k === S.cur + "") return;
+  p.dataset.k = S.cur;
+  p.innerHTML = "";
+  const mas = document.createElement("button"); mas.className = "mas"; mas.textContent = "+"; mas.title = "Agregar hoja";
+  mas.onclick = () => toast("En Google Sheets, este botón agrega otra pestaña al mismo archivo. Aquí ya tienes la pestaña «Libre» para experimentar.");
+  p.appendChild(mas);
+  S.hojas.forEach((h, i) => {
+    const b = document.createElement("button"); b.className = "tab" + (i === S.cur ? " on" : ""); b.textContent = h.nombre;
+    b.onclick = () => { if (editing) commit(null); if (S.cur === i) return; S.cur = i; clip = null; setSel(0, 0); refsList = []; cerrarFC(); render(); panel(); };
+    p.appendChild(b);
+  });
+}
+
+/* ===================== EDICIÓN ===================== */
+let editing = null; /* {c, r, modo:'escribe'|'edita', en: editor|fbar} */
+let ptr = null;     /* señalar celdas con el mouse mientras se escribe una fórmula */
+function iniciarEdicion(texto, modo, enBarra) {
+  const c = anc.c, r = anc.r;
+  selRango(c, r, c, r);
+  editing = { c, r, modo, en: enBarra ? fbar : editor };
+  const cell = H().cells[addr(c, r)];
+  const t = texto === undefined ? (cell ? cell.v : "") : texto;
+  editor.value = t; fbar.value = t;
+  verCelda(c, r);
+  const q = rectCelda(c, r);
+  editor.style.left = (q.x - 1) + "px"; editor.style.top = (q.y - 1) + "px"; editor.style.height = (q.h + 1) + "px";
+  editor.style.minWidth = (q.w + 2) + "px";
+  ajustarEditor();
+  editor.hidden = false;
+  const el = editing.en;
+  el.focus();
+  const n = el.value.length; try { el.setSelectionRange(n, n); } catch (e) {}
+  marcarRefs();
+  render();
+}
+function ajustarEditor() { editor.style.width = Math.max(parseFloat(editor.style.minWidth) || 0, medir(editor.value) + 14) + "px"; }
+function marcarRefs() {
+  refsList = editing ? pintarRefs(editing.en.value).lista : [];
+}
+/* ===== ayuda de funciones: sugerencias, función reconocida y sus partes ===== */
+const ayudaF = $("ayudaF");
+let acList = [], acIdx = 0, ultFn = "";
+function actualizarAyuda() {
+  if (!editing || editing.en.value[0] !== "=") { ayudaF.hidden = true; acList = []; ultFn = ""; return; }
+  const el = editing.en, t = el.value;
+  const an = analizarF(t, el.selectionStart == null ? t.length : el.selectionStart);
+  acList = an.parcial ? Object.keys(FDEF).filter(f => !FDEF[f].oculta && f.startsWith(an.parcial)) : [];
+  if (acIdx >= acList.length) acIdx = 0;
+  let h = "";
+  if (acList.length) {
+    h += '<div class="sug">' + acList.map((f, i) => '<button data-f="' + f + '" class="' + (i === acIdx ? "on" : "") + '"><b>' + f + "</b><small>" + FDEF[f].d + "</small></button>").join("") + '<div class="tip">Tab o Enter para elegir · ↑↓ para moverte</div></div>';
+  }
+  const claveFn = an.fn ? an.fn + (FDEF[ALIAS[an.fn] || an.fn] ? "+" : "-") : "";
+  const pop = claveFn !== ultFn ? " pop" : ""; ultFn = claveFn;
+  if (an.fn) {
+    const n = ALIAS[an.fn] || an.fn, d = FDEF[n];
+    if (d) {
+      const rep = /…/.test(d.a[d.a.length - 1]);
+      const i = rep ? Math.min(an.arg, d.a.length - 1) : an.arg;
+      const partes = d.a.map((x, j) => j === i ? '<span class="cur">' + x + "</span>" : x);
+      h += '<div class="sec"><span class="rec' + pop + '">✓ Función reconocida: ' + n + "</span>" +
+        '<div class="sint"><span class="nf">' + n + "</span>(" + partes.join(", ") + ")</div>" +
+        "<div>" + d.d + "</div>" +
+        (i < d.a.length ? '<div class="argd">✏️ Estás escribiendo <b>' + d.a[i].replace(/[\[\]]/g, "") + "</b>: " + esc(d.ad[i]) + "</div>"
+                        : '<div class="argd" style="color:#a50e0e">⚠ ' + n + " solo tiene " + d.a.length + " parte" + (d.a.length > 1 ? "s" : "") + ": te sobra un separador «,».</div>") + "</div>";
+    } else {
+      let mejor = null, dist = 99;
+      for (const f of FUNCS) { const x = lev(an.fn, f); if (x < dist) { dist = x; mejor = f; } }
+      h += '<div class="sec"><span class="rec no' + pop + '">✗ Función desconocida</span><div style="margin-top:4px">No existe «' + esc(an.fn) + "»." + (dist <= 2 ? " ¿Quisiste decir <b>" + mejor + "</b>?" : " Revisa cómo está escrita.") + "</div></div>";
+    }
+  } else if (!acList.length) {
+    h += '<div class="sec" style="color:#5f6368">Escribe el nombre de una función (por ejemplo <b>PRO</b>…) o haz clic en una celda para usar su dirección.</div>';
+  }
+  h += '<div class="sec"><div class="tit">Tu fórmula</div><div class="prev">' + pintarRefs(t).html + "</div></div>";
+  ayudaF.innerHTML = h; ayudaF.hidden = false;
+  const r = el.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect();
+  ayudaF.style.zoom = ZOOM;
+  const w = ayudaF.offsetWidth * ZOOM, hh = ayudaF.offsetHeight * ZOOM;
+  ayudaF.style.left = Math.max(8, Math.min(r.left - hr.left, hr.width - w - 8)) / ZOOM + "px";
+  let top = r.bottom - hr.top + 4;
+  if (top + hh > hr.height - 40 && r.top - hr.top - hh - 4 > 0) top = r.top - hr.top - hh - 4;
+  ayudaF.style.top = top / ZOOM + "px";
+}
+function elegirFn(f) {
+  if (!editing) return;
+  const el = editing.en, pos = el.selectionStart, v = el.value, antes = v.slice(0, pos);
+  const m = /[A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ.]*$/.exec(antes); if (!m) return;
+  const despues = v.slice(pos);
+  const ins = f + (despues[0] === "(" ? "" : "(");
+  el.value = antes.slice(0, antes.length - m[0].length) + ins + despues;
+  const n = pos - m[0].length + ins.length + (despues[0] === "(" ? 1 : 0);
+  el.setSelectionRange(n, n);
+  (el === editor ? fbar : editor).value = el.value;
+  ptr = null; acIdx = 0; ajustarEditor(); marcarRefs(); render();
+}
+ayudaF.addEventListener("pointerdown", e => { const b = e.target.closest("button[data-f]"); if (!b) return; e.preventDefault(); elegirFn(b.dataset.f); });
+["keyup", "click"].forEach(ev => { editor.addEventListener(ev, e => { if (!/Arrow(Up|Down)/.test(e.key || "")) actualizarAyuda(); }); fbar.addEventListener(ev, e => { if (!/Arrow(Up|Down)/.test(e.key || "")) actualizarAyuda(); }); });
+/* como Google Sheets: al presionar Enter, cierra los paréntesis que quedaron abiertos */
+function cerrarParentesis(t) {
+  if (!t || t[0] !== "=") return t;
+  let n = 0, s = false;
+  for (const ch of t) { if (ch === '"') s = !s; else if (!s && ch === "(") n++; else if (!s && ch === ")") n--; }
+  return n > 0 && !s ? t + ")".repeat(n) : t;
+}
+function commit(mover) {
+  if (!editing) return;
+  const { c, r } = editing; const t = cerrarParentesis(editing.en.value);
+  const a = addr(c, r); const antes = H().cells[a] ? H().cells[a].v : "";
+  editing = null; ptr = null; editor.hidden = true; refsList = [];
+  if (t !== antes) { snap(); celda(a, true).v = t; limpiarVacias(); }
+  if (mover) setSel(c + mover[0], r + mover[1]); else selRango(c, r, c, r);
+  if (document.activeElement === editor || document.activeElement === fbar) document.activeElement.blur();
+  if (mover) verCelda(act.c, act.r);
+  cambio();
+}
+function cancelar() { if (!editing) return; editing = null; ptr = null; editor.hidden = true; refsList = []; if (document.activeElement) document.activeElement.blur(); render(); }
+function puedeSenalar() {
+  if (!editing) return false;
+  const el = editing.en, v = el.value;
+  if (v[0] !== "=") return false;
+  const pos = el.selectionStart;
+  if (ptr && pos === ptr.ini + ptr.len) return true;
+  const antes = v.slice(0, pos).trimEnd();
+  return "=(+-*/^,;:<>&".includes(antes.slice(-1));
+}
+function senalar(g) {
+  const el = editing.en, v = el.value, ref = rangeTxt(g);
+  el.value = v.slice(0, ptr.ini) + ref + v.slice(ptr.ini + ptr.len);
+  ptr.len = ref.length;
+  const n = ptr.ini + ptr.len; el.setSelectionRange(n, n);
+  (el === editor ? fbar : editor).value = el.value;
+  ajustarEditor(); marcarRefs(); render();
+}
+editor.addEventListener("input", () => { fbar.value = editor.value; ptr = null; acIdx = 0; ajustarEditor(); marcarRefs(); render(); });
+fbar.addEventListener("input", () => { if (!editing) return; editor.value = fbar.value; ptr = null; acIdx = 0; ajustarEditor(); marcarRefs(); render(); });
+fbar.addEventListener("focus", () => { if (!editing) iniciarEdicion(undefined, "edita", true); else editing.en = fbar; });
+editor.addEventListener("focus", () => { if (editing) editing.en = editor; });
+
+/* ===================== MOUSE ===================== */
+let arrastre = null; /* 'sel' | 'ptr' | 'fill' | 'col' */
+const tdDesde = (x, y) => { const el = document.elementFromPoint(x, y); return el && el.closest ? el.closest("td") : null; };
+grid.addEventListener("pointerdown", e => {
+  const rz = e.target.closest(".rz");
+  if (rz) { e.preventDefault(); if (editing) commit(null); const c = +rz.dataset.c; snap(); arrastre = { tipo: "col", c, x0: e.clientX, w0: anchoCol(c) }; rz.classList.add("on"); return; }
+  const th = e.target.closest("th");
+  if (th && th.dataset.c !== undefined) { e.preventDefault(); if (editing) commit(null); const c = +th.dataset.c; if (e.shiftKey) selRango(anc.c, 0, c, ROWS - 1); else selRango(c, 0, c, ROWS - 1); anc = { c: Math.min(c, anc.c), r: 0 }; arrastre = { tipo: "cols", c0: c }; render(); return; }
+  if (th && th.dataset.r !== undefined) { e.preventDefault(); if (editing) commit(null); const r = +th.dataset.r; selRango(0, r, COLS - 1, r); act = { c: 0, r }; anc = { c: 0, r }; arrastre = { tipo: "rows", r0: r }; render(); return; }
+  const td = e.target.closest("td"); if (!td) return;
+  const c = +td.dataset.c, r = +td.dataset.r;
+  if (editing && puedeSenalar()) {
+    e.preventDefault();
+    const el = editing.en;
+    if (!ptr || el.selectionStart !== ptr.ini + ptr.len) ptr = { ini: el.selectionStart, len: 0 };
+    ptr.anc = { c, r };
+    senalar({ c1: c, r1: r, c2: c, r2: r });
+    arrastre = { tipo: "ptr" };
+    return;
+  }
+  if (editing) commit(null);
+  e.preventDefault();
+  if (e.shiftKey) selRango(anc.c, anc.r, c, r); else setSel(c, r);
+  arrastre = { tipo: "sel" };
+  render();
+  if (!e.shiftKey) alSeleccionar();
+});
+grid.addEventListener("dblclick", e => {
+  const rz = e.target.closest(".rz");
+  if (rz) { autoAncho(+rz.dataset.c); return; }
+  const td = e.target.closest("td"); if (!td || editing) return;
+  setSel(+td.dataset.c, +td.dataset.r); iniciarEdicion(undefined, "edita");
+});
+$("asa").addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); if (editing) commit(null); arrastre = { tipo: "fill", src: { ...sel }, dest: null }; });
+document.addEventListener("pointermove", e => {
+  if (!arrastre) return;
+  if (arrastre.tipo === "col") { const w = Math.max(30, Math.round(arrastre.w0 + (e.clientX - arrastre.x0) / ZOOM)); H().w[arrastre.c] = w; render(); return; }
+  const td = tdDesde(e.clientX, e.clientY);
+  if (arrastre.tipo === "cols") { const th = document.elementFromPoint(e.clientX, e.clientY); const c = th && th.closest && th.closest("th") && th.closest("th").dataset.c; if (c !== undefined && c !== null) { selRango(arrastre.c0, 0, +c, ROWS - 1); anc = { c: Math.min(arrastre.c0, +c), r: 0 }; render(); } return; }
+  if (!td) return;
+  const c = +td.dataset.c, r = +td.dataset.r;
+  if (arrastre.tipo === "sel") { if (act.c !== c || act.r !== r) { selRango(anc.c, anc.r, c, r); render(); } }
+  else if (arrastre.tipo === "ptr") { senalar({ c1: Math.min(ptr.anc.c, c), r1: Math.min(ptr.anc.r, r), c2: Math.max(ptr.anc.c, c), r2: Math.max(ptr.anc.r, r) }); }
+  else if (arrastre.tipo === "fill") {
+    const s = arrastre.src;
+    const dr = r > s.r2 ? r - s.r2 : r < s.r1 ? r - s.r1 : 0;
+    const dc = c > s.c2 ? c - s.c2 : c < s.c1 ? c - s.c1 : 0;
+    let d = null;
+    if (Math.abs(dr) >= Math.abs(dc) && dr) d = dr > 0 ? { c1: s.c1, c2: s.c2, r1: s.r1, r2: r } : { c1: s.c1, c2: s.c2, r1: r, r2: s.r2 };
+    else if (dc) d = dc > 0 ? { c1: s.c1, c2: c, r1: s.r1, r2: s.r2 } : { c1: c, c2: s.c2, r1: s.r1, r2: s.r2 };
+    arrastre.dest = d;
+    const fb = $("fillbox"); if (d) { fb.hidden = false; ubicarCaja(fb, d); } else fb.hidden = true;
+  }
+});
+document.addEventListener("pointerup", () => {
+  if (!arrastre) return;
+  const a = arrastre; arrastre = null;
+  document.querySelectorAll(".rz.on").forEach(x => x.classList.remove("on"));
+  if (a.tipo === "col") { cambio(); return; }
+  if (a.tipo === "ptr") { if (editing) editing.en.focus(); return; }
+  if (a.tipo === "fill") { $("fillbox").hidden = true; if (a.dest) rellenar(a.src, a.dest); return; }
+  if (a.tipo === "sel" && !unaCelda()) cambio();
+  if (a.tipo === "cols" || a.tipo === "rows") cambio();
+});
+function autoAncho(c) {
+  snap();
+  let w = 40; const h = H();
+  for (let r = 0; r < ROWS; r++) { const a = addr(c, r), cell = h.cells[a]; const t = fmt(val(h, a), cell); if (t) w = Math.max(w, medir(t, cell && cell.b) + 12); }
+  h.w[c] = w; cambio();
+}
+function rellenar(s, d) {
+  snap(); const h = H(); const hh = s.r2 - s.r1 + 1, ww = s.c2 - s.c1 + 1;
+  for (let r = d.r1; r <= d.r2; r++) for (let c = d.c1; c <= d.c2; c++) {
+    if (c >= s.c1 && c <= s.c2 && r >= s.r1 && r <= s.r2) continue;
+    const sr = s.r1 + (((r - s.r1) % hh) + hh) % hh, sc = s.c1 + (((c - s.c1) % ww) + ww) % ww;
+    const src = h.cells[addr(sc, sr)];
+    if (!src) { delete h.cells[addr(c, r)]; continue; }
+    const n = JSON.parse(JSON.stringify(src)); n.v = shiftF(n.v, r - sr, c - sc); h.cells[addr(c, r)] = n;
+  }
+  selRango(d.c1, d.r1, d.c2, d.r2); anc = { c: d.c1, r: d.r1 };
+  cambio();
+}
+
+/* ===================== TECLADO ===================== */
+let clip = null;
+function copiar() { const h = H(); const datos = []; for (let r = sel.r1; r <= sel.r2; r++) { const f = []; for (let c = sel.c1; c <= sel.c2; c++) { const x = h.cells[addr(c, r)]; f.push(x ? JSON.parse(JSON.stringify(x)) : null); } datos.push(f); } clip = { hoja: S.cur, g: { ...sel }, datos }; render(); toast("Copiado. Ahora selecciona dónde pegar y usa Ctrl+V (o Editar → Pegar)."); }
+function pegar() {
+  if (!clip) return toast("Primero copia algo (selecciona y Ctrl+C, o Editar → Copiar).");
+  snap(); const h = H(); const c0 = anc.c, r0 = anc.r;
+  clip.datos.forEach((f, i) => f.forEach((x, j) => {
+    const c = c0 + j, r = r0 + i; if (c >= COLS || r >= ROWS) return;
+    if (!x) { delete h.cells[addr(c, r)]; return; }
+    const n = JSON.parse(JSON.stringify(x)); n.v = shiftF(n.v, r - (clip.g.r1 + i), c - (clip.g.c1 + j)); h.cells[addr(c, r)] = n;
+  }));
+  selRango(c0, r0, Math.min(COLS - 1, c0 + clip.datos[0].length - 1), Math.min(ROWS - 1, r0 + clip.datos.length - 1)); anc = { c: c0, r: r0 };
+  cambio();
+}
+function borrarSel() { snap(); cadaSel((c, r, a) => { const x = H().cells[a]; if (x) x.v = ""; }); limpiarVacias(); cambio(); }
+document.addEventListener("keydown", e => {
+  if (!$("intro").hidden) return;
+  const t = e.target;
+  if (editing && t !== editor && t !== fbar && !(t && /INPUT|SELECT|TEXTAREA/.test(t.tagName))) { editing.en.focus(); return; }
+  if (editing && (t === editor || t === fbar)) {
+    if (!ayudaF.hidden && acList.length) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); acIdx = (acIdx + (e.key === "ArrowDown" ? 1 : -1) + acList.length) % acList.length; actualizarAyuda(); return; }
+      if (e.key === "Tab" || e.key === "Enter") { e.preventDefault(); elegirFn(acList[acIdx]); return; }
+    }
+    if (e.key === "Enter") { e.preventDefault(); commit([0, e.shiftKey ? -1 : 1]); }
+    else if (e.key === "Tab") { e.preventDefault(); commit([e.shiftKey ? -1 : 1, 0]); }
+    else if (e.key === "Escape") { e.preventDefault(); cancelar(); }
+    else if (editing.modo === "escribe" && editing.en === editor && editing.en.value[0] !== "=" && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+      e.preventDefault(); const m = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] }[e.key]; commit(m);
+    }
+    return;
+  }
+  if (t && /INPUT|SELECT|TEXTAREA/.test(t.tagName)) { if (e.key === "Escape") cerrarFC(); return; }
+  if (e.key === "Escape") { cerrarMenus(); cerrarFC(); if (clip) { clip = null; render(); } return; }
+  const k = e.key.toLowerCase();
+  if (e.ctrlKey || e.metaKey) {
+    if (k === "c") { e.preventDefault(); copiar(); }
+    else if (k === "v") { e.preventDefault(); pegar(); }
+    else if (k === "z") { e.preventDefault(); restaurar(deshacer, rehacer); }
+    else if (k === "y") { e.preventDefault(); restaurar(rehacer, deshacer); }
+    else if (k === "b") { e.preventDefault(); accion("negrita"); }
+    else if (k === "i") { e.preventDefault(); accion("cursiva"); }
+    return;
+  }
+  const mov = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] }[e.key];
+  if (mov) { e.preventDefault(); if (e.shiftKey) selRango(anc.c, anc.r, act.c + mov[0], act.r + mov[1]); else setSel(anc.c + (unaCelda() ? mov[0] : mov[0]), anc.r + mov[1]); clampSel(); verCelda(act.c, act.r); render(); if (!e.shiftKey) alSeleccionar(); return; }
+  if (e.key === "Tab") { e.preventDefault(); setSel(anc.c + (e.shiftKey ? -1 : 1), anc.r); verCelda(act.c, act.r); render(); alSeleccionar(); return; }
+  if (e.key === "Enter" || e.key === "F2") { e.preventDefault(); iniciarEdicion(undefined, "edita"); return; }
+  if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); borrarSel(); return; }
+  if (e.key.length === 1 && !e.altKey) { e.preventDefault(); iniciarEdicion(e.key, "escribe"); }
+});
+function clampSel() {
+  const cl = (v, m) => Math.max(0, Math.min(m - 1, v));
+  act = { c: cl(act.c, COLS), r: cl(act.r, ROWS) }; anc = { c: cl(anc.c, COLS), r: cl(anc.r, ROWS) };
+  sel = { c1: Math.min(anc.c, act.c), r1: Math.min(anc.r, act.r), c2: Math.max(anc.c, act.c), r2: Math.max(anc.r, act.r) };
+}
+
+/* ===================== BARRA DE HERRAMIENTAS ===================== */
+const COLORES_TXT = ["#000000", "#5f6368", "#d93025", "#e37400", "#188038", "#1a73e8", "#9334e6", "#a50e0e", "#b06000", "#0d652d", "#174ea6", "#ffffff"];
+const COLORES_BG = ["#f4c7c3", "#fce8b2", "#b7e1cd", "#c9daf8", "#d9d2e9", "#fff59d", "#ea4335", "#fbbc04", "#34a853", "#4285f4", "#efefef", "#cccccc"];
+function paleta(boton, colores, aplicar) {
+  cerrarMenus();
+  const p = document.createElement("div"); p.className = "paleta menu-flot";
+  colores.forEach(col => { const b = document.createElement("button"); b.style.background = col; b.title = col; b.onclick = () => { aplicar(col); cerrarMenus(); }; p.appendChild(b); });
+  const q = document.createElement("button"); q.className = "quitar"; q.textContent = "Restablecer"; q.onclick = () => { aplicar(""); cerrarMenus(); }; p.appendChild(q);
+  const r = boton.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect();
+  p.style.zoom = ZOOM; p.style.left = (r.left - hr.left) / ZOOM + "px"; p.style.top = (r.bottom - hr.top + 4) / ZOOM + "px";
+  $("hoja").appendChild(p);
+}
+function formatoSel(fn) { if (editing) commit(null); snap(); cadaSel((c, r, a) => fn(celda(a, true))); limpiarVacias(); cambio(); }
+function accion(acc, boton) {
+  const h = H(), cell = h.cells[addr(anc.c, anc.r)];
+  switch (acc) {
+    case "deshacer": restaurar(deshacer, rehacer); break;
+    case "rehacer": restaurar(rehacer, deshacer); break;
+    case "negrita": { const on = !(cell && cell.b); formatoSel(x => x.b = on); break; }
+    case "cursiva": { const on = !(cell && cell.i); formatoSel(x => x.i = on); break; }
+    case "izq": formatoSel(x => x.al = "left"); break;
+    case "centro": formatoSel(x => x.al = "center"); break;
+    case "der": formatoSel(x => x.al = "right"); break;
+    case "colorTexto": paleta(boton, COLORES_TXT, col => { $("cbTexto").style.background = col || "#000"; formatoSel(x => x.fc = col); }); break;
+    case "relleno": paleta(boton, COLORES_BG, col => { $("cbRelleno").style.background = col || "#fff59d"; formatoSel(x => x.bg = col); }); break;
+    case "dec+": case "dec-": {
+      const v = val(h, addr(anc.c, anc.r));
+      if (!isNum(v)) { toast("Los decimales solo se aplican a celdas con números."); break; }
+      const actual = cell && cell.dec != null ? cell.dec : ((fmt(v).split(".")[1] || "").length);
+      const nuevo = Math.max(0, Math.min(6, actual + (acc === "dec+" ? 1 : -1)));
+      formatoSel(x => x.dec = nuevo); break;
+    }
+    case "funciones": menuFunciones(boton); break;
+    case "bordes": abrirMenu(boton, [{ sub: "Bordes del rango " + rangeTxt(sel) },
+      { t: "▦  Todos los bordes", k: "como tabla", f: () => bordes("todos") },
+      { t: "▢  Bordes exteriores", k: "solo el contorno", f: () => bordes("ext") },
+      { t: "▁  Borde inferior", f: () => bordes("inf") },
+      "-",
+      { t: "✕  Quitar bordes", f: () => bordes("quitar") }]); boton.classList.remove("on"); break;
+    case "ajuste": abrirMenu(boton, menuAjuste()); boton.classList.remove("on"); break;
+  }
+}
+function menuAjuste() {
+  return [{ sub: "Ajuste de texto" },
+    { t: "⇥  Desbordar", k: "se pasa a la celda vacía", f: () => formatoSel(x => delete x.wr) },
+    { t: "↵  Ajustar", k: "baja de línea", f: () => formatoSel(x => x.wr = "wrap") },
+    { t: "✂  Recortar", k: "se corta en el borde", f: () => formatoSel(x => x.wr = "clip") }];
+}
+function bordes(tipo) {
+  if (editing) commit(null);
+  snap(); const h = H();
+  cadaSel((c, r, a) => {
+    const x = celda(a, true);
+    if (tipo === "quitar") { delete x.bd; return; }
+    const b = x.bd || {};
+    if (tipo === "todos") { b.r = b.b = true; if (r === sel.r1) b.t = true; if (c === sel.c1) b.l = true; }
+    else if (tipo === "ext") { if (r === sel.r1) b.t = true; if (r === sel.r2) b.b = true; if (c === sel.c1) b.l = true; if (c === sel.c2) b.r = true; }
+    else if (tipo === "inf") { if (r === sel.r2) b.b = true; }
+    if (b.t || b.r || b.b || b.l) x.bd = b;
+  });
+  if (tipo === "quitar") { // también las líneas de las celdas vecinas que tocan el rango
+    for (let c = sel.c1; c <= sel.c2; c++) { const x = h.cells[addr(c, sel.r1 - 1)]; if (sel.r1 > 0 && x && x.bd) { delete x.bd.b; if (!x.bd.t && !x.bd.r && !x.bd.l) delete x.bd; } }
+    for (let r = sel.r1; r <= sel.r2; r++) { const x = h.cells[addr(sel.c1 - 1, r)]; if (sel.c1 > 0 && x && x.bd) { delete x.bd.r; if (!x.bd.t && !x.bd.b && !x.bd.l) delete x.bd; } }
+  }
+  limpiarVacias(); cambio();
+  if (tipo !== "quitar" && S.lineas) toast("Bordes listos ✔ Tip: en Ver → Mostrar líneas de cuadrícula puedes quitar la cuadrícula gris y ver la tabla como saldría impresa.");
+}
+$("barra").addEventListener("click", e => { const b = e.target.closest("button[data-acc]"); if (b) { e.stopPropagation(); accion(b.dataset.acc, b); } });
+$("barra").addEventListener("mousedown", e => { if (e.target.closest("button")) e.preventDefault(); });
+
+/* ===================== MENÚS ===================== */
+function cerrarMenus() { document.querySelectorAll(".menu-flot").forEach(m => m.remove()); document.querySelectorAll(".menus button.on").forEach(b => b.classList.remove("on")); }
+function abrirMenu(boton, items) {
+  cerrarMenus(); boton.classList.add("on");
+  const m = document.createElement("div"); m.className = "menu menu-flot";
+  for (const it of items) {
+    if (it === "-") { m.appendChild(document.createElement("hr")); continue; }
+    if (it.sub) { const s = document.createElement("div"); s.className = "sub"; s.textContent = it.sub; m.appendChild(s); continue; }
+    const b = document.createElement("button"); b.innerHTML = "<span>" + it.t + "</span>" + (it.k ? "<small>" + it.k + "</small>" : "");
+    b.onclick = e => { e.stopPropagation(); cerrarMenus(); it.f(); };
+    m.appendChild(b);
+  }
+  const r = boton.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect();
+  m.style.zoom = ZOOM; m.style.left = Math.max(0, Math.min(r.left - hr.left, hr.width - 250 * ZOOM)) / ZOOM + "px"; m.style.top = (r.bottom - hr.top + 2) / ZOOM + "px";
+  $("hoja").appendChild(m);
+}
+const insertarFn = n => { if (editing) commit(null); iniciarEdicion("=" + n + "(", "edita"); };
+function menuFunciones(boton) {
+  abrirMenu(boton, [{ sub: "Funciones del simulador" },
+    { t: "SUMA", k: "suma todo", f: () => insertarFn("SUMA") },
+    { t: "PROMEDIO", k: "el promedio", f: () => insertarFn("PROMEDIO") },
+    { t: "MAX", k: "el mayor", f: () => insertarFn("MAX") },
+    { t: "MIN", k: "el menor", f: () => insertarFn("MIN") },
+    { t: "REDONDEAR", k: "quita decimales", f: () => insertarFn("REDONDEAR") },
+    "-", { sub: "Lógicas" },
+    { t: "SI", k: "elige según una condición", f: () => insertarFn("SI") },
+    { t: "Y", k: "todas se cumplen", f: () => insertarFn("Y") },
+    { t: "O", k: "al menos una se cumple", f: () => insertarFn("O") },
+    { t: "CONTAR.SI", k: "cuenta las que cumplen", f: () => insertarFn("CONTAR.SI") }]);
+}
+const MENUS = {
+  archivo: () => [
+    { t: "Nuevo", f: () => toast("En Google Sheets: Archivo → Nuevo → Hoja de cálculo. Aquí puedes usar la pestaña «Libre» de abajo.") },
+    { t: "Hacer una copia", f: () => toast("En Google Sheets esto crea TU propia copia en tu Drive. Así trabajarás las plantillas que te comparta el profe.") },
+    "-",
+    { t: "Descargar", k: "Excel · PDF", f: () => toast("Google Sheets puede descargar tu hoja como Excel (.xlsx), PDF o CSV.") },
+    { t: "Compartir", f: () => toast("Igual que en Docs: botón «Compartir» arriba a la derecha y eliges quién puede ver o editar.") }
+  ],
+  editar: () => [
+    { t: "Deshacer", f: () => restaurar(deshacer, rehacer) },
+    { t: "Rehacer", f: () => restaurar(rehacer, deshacer) },
+    "-",
+    { t: "Copiar", k: "Ctrl+C", f: copiar },
+    { t: "Pegar", k: "Ctrl+V", f: pegar },
+    { t: "Borrar valores", f: borrarSel }
+  ],
+  ver: () => [
+    { t: (S.lineas ? "✓ " : "") + "Mostrar líneas de cuadrícula", f: () => { S.lineas = !S.lineas; render(); } },
+    { t: "Ajustar ancho de columna " + colName(anc.c), f: () => autoAncho(anc.c) }
+  ],
+  insertar: () => [{ sub: "Función" },
+    { t: "SUMA", f: () => insertarFn("SUMA") }, { t: "PROMEDIO", f: () => insertarFn("PROMEDIO") },
+    { t: "MAX", f: () => insertarFn("MAX") }, { t: "MIN", f: () => insertarFn("MIN") },
+    { t: "REDONDEAR", f: () => insertarFn("REDONDEAR") }, "-", { sub: "Lógicas" },
+    { t: "SI", f: () => insertarFn("SI") }, { t: "Y", f: () => insertarFn("Y") }, { t: "O", f: () => insertarFn("O") }, { t: "CONTAR.SI", f: () => insertarFn("CONTAR.SI") }, "-",
+    { t: "Gráfico", f: () => toast("Los gráficos no están en este simulador. En Google Sheets: Insertar → Gráfico.") }],
+  formato: () => [
+    { t: "Negrita", f: () => accion("negrita") },
+    { t: "Cursiva", f: () => accion("cursiva") },
+    "-",
+    ...menuAjuste(),
+    "-",
+    { t: "Formato condicional", k: "pinta según una regla", f: abrirFC },
+    "-",
+    { t: "Borrar formato", f: () => formatoSel(x => { delete x.b; delete x.i; delete x.fc; delete x.bg; delete x.al; delete x.dec; delete x.bd; delete x.wr; }) }
+  ],
+  datos: () => [
+    { t: "Ordenar hoja", f: () => toast("Ordenar no está en este simulador. En Google Sheets: Datos → Ordenar hoja.") },
+    { t: "Crear un filtro", f: () => toast("Los filtros no están en este simulador. En Google Sheets: Datos → Crear un filtro.") }
+  ],
+  ayuda: () => [
+    { t: "📖 Repasar la teoría", f: () => abrirIntro(1) },
+    { t: "Partes de SI", f: () => toast('=SI(B2>=38,"Fiebre","Normal") → ① condición B2>=38 · ② lo que sale si se cumple: "Fiebre" · ③ lo que sale si no: "Normal". Las palabras van entre comillas.') },
+    { t: "Signos para comparar", f: () => toast("> mayor · < menor · = igual · >= mayor o igual · <= menor o igual · <> distinto.") },
+    "-",
+    { t: "Funciones disponibles", f: () => toast("SI · Y · O · CONTAR.SI · SUMA · PROMEDIO · MAX · MIN · CONTAR · CONTARA · REDONDEAR · ABS. Separa los argumentos con «,» (en algunas configuraciones, «;»).") },
+    { t: "¿Qué significa #¿NOMBRE?", f: () => toast("#¿NOMBRE? = la hoja no reconoce una palabra: una función mal escrita o un texto sin comillas.") },
+    { t: "¿Qué significa #DIV/0!?", f: () => toast("#DIV/0! = estás dividiendo entre cero o entre una celda vacía.") },
+    { t: "¿Qué significa #¡VALOR!?", f: () => toast("#¡VALOR! = intentas hacer una cuenta con texto (por ejemplo «37 °C» en vez de 37).") }
+  ]
+};
+$("menus").addEventListener("click", e => {
+  const b = e.target.closest("button[data-menu]"); if (!b) return;
+  e.stopPropagation();
+  if (b.classList.contains("on")) { cerrarMenus(); return; }
+  if (editing) commit(null);
+  abrirMenu(b, MENUS[b.dataset.menu]());
+});
+$("menus").addEventListener("mouseover", e => { const b = e.target.closest("button[data-menu]"); if (b && document.querySelector(".menus button.on") && !b.classList.contains("on")) abrirMenu(b, MENUS[b.dataset.menu]()); });
+document.addEventListener("click", e => { if (!e.target.closest(".menu-flot")) cerrarMenus(); });
+
+/* ===================== FORMATO CONDICIONAL ===================== */
+const ESTILOS = [{ n: "Rojo", bg: "#f4c7c3", fc: "#a50e0e" }, { n: "Amarillo", bg: "#fce8b2", fc: "#7a4f01" }, { n: "Verde", bg: "#b7e1cd", fc: "#0d652d" }, { n: "Azul", bg: "#c9daf8", fc: "#174ea6" }];
+let estiloFC = 0;
+const OPS = { gt: "es mayor que", gte: "es mayor o igual que", lt: "es menor que", lte: "es menor o igual que", eq: "es igual a", teq: "tiene exactamente el texto" };
+function abrirFC() {
+  if (editing) commit(null);
+  $("fc").hidden = false; $("fcRango").value = rangeTxt(sel); $("fcVal").value = ""; $("fcMal").textContent = ""; $("fcOp").value = "teq";
+  dibujarFC(); $("fcVal").focus();
+}
+function cerrarFC() { $("fc").hidden = true; }
+function dibujarFC() {
+  const ch = $("fcChips"); ch.innerHTML = "";
+  ESTILOS.forEach((s, i) => { const b = document.createElement("button"); b.style.background = s.bg; b.style.color = s.fc; b.textContent = "123"; b.title = s.n; b.className = i === estiloFC ? "on" : ""; b.onclick = () => { estiloFC = i; dibujarFC(); }; ch.appendChild(b); });
+  const lr = $("fcReglas"); lr.innerHTML = "";
+  H().rules.forEach((rule, i) => {
+    const d = document.createElement("div"); d.className = "regla";
+    d.innerHTML = '<i style="background:' + rule.bg + ";color:" + rule.fc + '">123</i><span><b>' + esc(rule.range) + "</b><br>La celda " + OPS[rule.op] + " " + esc(String(rule.val)) + '</span><button title="Eliminar regla">🗑</button>';
+    d.querySelector("button").onclick = () => { snap(); H().rules.splice(i, 1); dibujarFC(); cambio(); };
+    lr.appendChild(d);
+  });
+}
+$("fcCerrar").onclick = cerrarFC; $("fcCanc").onclick = cerrarFC;
+$("fcListo").onclick = () => {
+  const texto = $("fcOp").value === "teq", g = parseRange($("fcRango").value);
+  const v = texto ? $("fcVal").value.trim().replace(/^"(.*)"$/, "$1") : lit($("fcVal").value);
+  if (!g) { $("fcMal").textContent = "El rango no es válido. Escríbelo así: E2:E9"; return; }
+  if (texto && !v) { $("fcMal").textContent = "Escribe en «Valor» el texto que quieres buscar (por ejemplo Fiebre)."; return; }
+  if (!texto && !isNum(v)) { $("fcMal").textContent = "Para comparar números escribe un número (por ejemplo 38). Si quieres buscar una palabra, elige «El texto es exactamente»."; return; }
+  snap(); const s = ESTILOS[estiloFC];
+  H().rules.push({ range: rangeTxt(g), op: $("fcOp").value, val: v, bg: s.bg, fc: s.fc });
+  $("fcVal").value = ""; $("fcMal").textContent = "";
+  dibujarFC(); cambio(); toast("Regla creada ✔ Las celdas que la cumplan se pintan solas.");
+};
+
+/* ===================== UTILIDADES ===================== */
+let toastT = 0;
+function toast(msg) { document.querySelectorAll(".toast").forEach(t => t.remove()); const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); clearTimeout(toastT); toastT = setTimeout(() => t.remove(), 4200); }
+function confeti() {
+  const em = ["🎉", "✨", "💚", "⭐", "🩺", "💉"];
+  for (let i = 0; i < 36; i++) {
+    const s = document.createElement("span"); s.className = "confeti"; s.textContent = em[i % em.length];
+    s.style.left = Math.random() * 100 + "vw"; s.style.animationDuration = (1.6 + Math.random() * 1.6) + "s"; s.style.animationDelay = Math.random() * .4 + "s";
+    document.body.appendChild(s); setTimeout(() => s.remove(), 3800);
+  }
+}
+function cambio() { render(); revisar(); }
+
+/* ===================== MISIONES ===================== */
+/* ===================== MISIONES ===================== */
+const NIVELES = [{ n: "Base", min: true }, { n: "Plata" }, { n: "Oro" }, { n: "Secreto" }];
+const h0 = () => H0();
+const raw0 = a => (h0().cells[a] ? h0().cells[a].v : "").trim();
+const v0 = a => val(h0(), a);
+const casi = (a, b) => isNum(a) && isNum(b) && Math.abs(a - b) < 1e-9;
+const FILAS = [2, 3, 4, 5, 6, 7, 8, 9];
+/* compara textos sin importar mayúsculas, tildes ni espacios de más */
+const norm = s => toStr(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+const num0 = a => { const v = v0(a); return isNum(v) ? v : NaN; };
+/* lo que debería salir en cada fila, calculado con los datos actuales de la hoja */
+const ESP = {
+  E: r => num0("B" + r) >= 38 ? "Fiebre" : "Normal",
+  F: r => num0("D" + r) < 95 ? "Oxígeno" : "OK",
+  G: r => num0("B" + r) >= 38 ? "Fiebre" : num0("B" + r) < 36 ? "Hipotermia" : "Normal",
+  H: r => num0("B" + r) >= 38 && num0("C" + r) > 100 ? "Llamar al médico" : "Vigilar",
+  I: r => num0("B" + r) >= 39 || num0("D" + r) < 90 ? "URGENTE" : "Estable"
+};
+function errTxt(a) {
+  const v = v0(a); if (!(v instanceof FErr)) return "";
+  let x = "La celda " + a + " muestra <b>" + esc(v.code) + "</b>: " + esc(v.msg);
+  if (v.code === "#¿NOMBRE?" && /"/.test(raw0(a)) === false && /SI\s*\(/i.test(raw0(a))) x += " 👉 ¿Pusiste las palabras entre comillas?";
+  return x;
+}
+/* revisa una celda con fórmula: SI, el resultado esperado y errores comunes */
+function revisarCelda(a, rx, nombre, esperado) {
+  const r = raw0(a);
+  if (!r) return { ok: false, vacia: true, msg: "" };
+  if (r[0] !== "=") return { ok: false, msg: "En " + a + " escribiste el resultado a mano. Usa una fórmula con <b>" + nombre + "</b>: así, si cambia un dato, la respuesta cambia sola." };
+  const v = v0(a);
+  if (v instanceof FErr) return { ok: false, msg: errTxt(a) };
+  if (!rx.test(r)) return { ok: false, msg: "La fórmula de " + a + " funciona, pero aquí hay que usar <b>" + nombre + "</b>." };
+  if (norm(v) !== norm(esperado)) return { ok: false, msg: "En " + a + " sale «" + esc(fmt(v)) + "», pero debería decir «" + esc(esperado) + "». Revisa la condición y el orden: primero lo que va si se cumple, después lo que va si no." };
+  return { ok: true };
+}
+/* revisa toda una columna (filas 2 a 9) */
+function revisarCol(L, rx, nombre) {
+  let ok = 0, primero = "";
+  for (const r of FILAS) {
+    const x = revisarCelda(L + r, rx, nombre, ESP[L](r));
+    if (x.ok) ok++; else if (!primero && x.msg) primero = x.msg;
+  }
+  return { ok, msg: primero };
+}
+const sinEsp = a => raw0(a).replace(/\s/g, "").toUpperCase();
+let fb = { msg: "", bien: false };
+const MIS = [
+  {
+    id: "comparar", nivel: 0, t: "La primera pregunta",
+    html: () => `<p>Antes de decidir, la hoja tiene que <b>preguntar</b>. ¿La temperatura de Rosa (B2) es de <b>38 o más</b>?</p>
+      <p>En <b>E2</b> escribe:</p><p style="text-align:center"><code style="font-size:1.1rem">=B2&gt;=38</code></p><p>y presiona <kbd>Enter</kbd>.</p>`,
+    pistas: ["El signo <code>&gt;=</code> se escribe con dos teclas: primero <kbd>&gt;</kbd> y luego <kbd>=</kbd>, sin espacio.", "Puedes escribir <code>=</code> y luego <b>hacer clic en B2</b>: la hoja pone la referencia por ti. Después escribe <code>&gt;=38</code>."],
+    saber: "La celda muestra <b>FALSO</b> centrado: es un valor <b>lógico</b>. Rosa tiene 36.5, que no es mayor ni igual a 38. Esta pregunta será la <b>condición</b> de la función SI.",
+    check() {
+      const r = raw0("E2"); if (!r) return "";
+      if (r[0] !== "=") return "Empieza con <b>=</b>: así la hoja sabe que tiene que calcular la comparación.";
+      const v = v0("E2"); if (v instanceof FErr) return errTxt("E2");
+      if (typeof v !== "boolean") return /SI\s*\(/i.test(r) ? "¡Vas adelantado! 😄 Por ahora, solo la comparación: <code>=B2&gt;=38</code>." : "La celda debe mostrar VERDADERO o FALSO. Escribe una comparación: <code>=B2&gt;=38</code>.";
+      const s = sinEsp("E2");
+      if (!/B2/.test(s)) return "Compara la temperatura de <b>B2</b>.";
+      if (!/>=38|38<=/.test(s)) return /[^<>]>38|38</.test(s) ? "Casi: con <b>&gt;</b> solo, el 38 no contaría como fiebre. Usa <b>&gt;=</b> (mayor o igual)." : "La comparación debe ser <b>B2&gt;=38</b>.";
+      return true;
+    },
+    ok: () => "¡Primera pregunta lista! La respuesta fue " + fmt(v0("E2")) + ": Rosa no tiene fiebre."
+  },
+  {
+    id: "si", nivel: 0, t: "Que la hoja responda con palabras",
+    html: () => `<p>«FALSO» no le dice mucho a nadie. Mejor que diga <b>«Fiebre»</b> o <b>«Normal»</b>.</p>
+      <p>Reemplaza lo que hay en <b>E2</b> por:</p><p style="text-align:center"><code style="font-size:1rem">=SI(B2&gt;=38,"Fiebre","Normal")</code></p>
+      <ol><li><b>Condición:</b> B2&gt;=38</li><li><b>Si se cumple:</b> "Fiebre"</li><li><b>Si no:</b> "Normal"</li></ol>`,
+    pistas: ["Selecciona E2 y escribe encima: lo nuevo reemplaza a lo de antes.", "Las palabras van <b>entre comillas</b>. Si sale <b>#¿NOMBRE?</b>, te faltaron.", "Mira la ayuda mientras escribes: después de cada coma te dice qué argumento sigue."],
+    saber: "Selecciona E2 y mira la barra <b>fx</b>: la celda muestra «Normal», pero por dentro guarda la pregunta y las dos respuestas posibles.",
+    check() {
+      const r = raw0("E2"); if (!r || (r[0] === "=" && typeof v0("E2") === "boolean")) return "";
+      const x = revisarCelda("E2", /\b(SI|IF)\s*\(/i, "SI", ESP.E(2));
+      if (!x.ok) return x.msg;
+      const s = sinEsp("E2");
+      if (!/>=38|38<=/.test(s)) return "Da «Normal», pero revisa la condición: debe ser <b>B2&gt;=38</b> para que el 38 también cuente como fiebre.";
+      return true;
+    },
+    ok: () => "¡La hoja ya decide! Rosa: «" + fmt(v0("E2")) + "»."
+  },
+  {
+    id: "copiarSi", nivel: 0, t: "Revisar a todos los pacientes",
+    html: () => `<p>Ahora la misma pregunta para los <b>8 pacientes</b>, sin escribir la fórmula 8 veces.</p>
+      <ol><li>Selecciona <b>E2</b>.</li><li>Agarra el <b>cuadradito azul</b> de su esquina inferior derecha.</li><li>Arrástralo hacia abajo hasta <b>E9</b>.</li></ol>`,
+    pistas: ["El cursor cambia a una cruz ✚ cuando estás sobre el cuadradito.", "Otra forma: selecciona E2, <kbd>Ctrl</kbd>+<kbd>C</kbd>, selecciona E3:E9 y <kbd>Ctrl</kbd>+<kbd>V</kbd>."],
+    saber: "Selecciona E8 (Elena, 38 °C) y mira la fórmula: dice <code>B8</code>, no B2. La referencia se ajustó sola. Y como usaste <b>&gt;=</b>, sus 38 °C cuentan como fiebre.",
+    check() { const x = revisarCol("E", /\b(SI|IF)\s*\(/i, "SI"); return x.ok === 8 || (x.ok > 1 ? "Llevas " + x.ok + " de 8. " + x.msg : ""); },
+    ok: () => "¡8 pacientes revisados en un segundo! " + FILAS.filter(r => norm(v0("E" + r)) === "fiebre").length + " tienen fiebre."
+  },
+  {
+    id: "pintar", nivel: 0, t: "Que la fiebre salte a la vista",
+    html: () => `<p>Haz que las celdas que dicen «Fiebre» <b>se pinten de rojo solas</b>.</p>
+      <ol><li>Selecciona <b>E2:E9</b>.</li><li>Menú <b>Formato → Formato condicional</b>.</li><li>En «Dar formato a las celdas si…» elige <b>El texto es exactamente</b>.</li><li>En «Valor» escribe <code>Fiebre</code>, elige el estilo <b>rojo</b> y presiona <b>Listo</b>.</li></ol>`,
+    pistas: ["Formato está en la barra de menús de arriba, entre Insertar y Datos.", "En la casilla «Valor» del formato condicional no hacen falta comillas: escribe solo Fiebre."],
+    saber: "Ahora cambia la temperatura de un paciente a 39 y mira: su estado cambia a «Fiebre» <b>y</b> se pinta de rojo, todo solo. La fórmula decide qué escribir; el formato condicional decide de qué color.",
+    check() {
+      const rs = h0().rules; if (!rs.length) return "";
+      const cubre = g => g && g.c1 <= 4 && g.c2 >= 4 && g.r1 <= 1 && g.r2 >= 8;
+      const cubreB = g => g && g.c1 <= 1 && g.c2 >= 1 && g.r1 <= 1 && g.r2 >= 8;
+      for (const x of rs) {
+        const g = parseRange(x.range);
+        if (x.op === "teq" && norm(x.val) === "fiebre" && cubre(g)) return true;
+        if (cubreB(g) && x.op === "gte" && x.val === 38) return true;
+      }
+      const x = rs[rs.length - 1];
+      if (x.op === "teq" && norm(x.val) !== "fiebre") return "La regla busca el texto «" + esc(x.val) + "». Debe ser exactamente <b>Fiebre</b>.";
+      if (x.op !== "teq") return "Esa regla compara números, pero en la columna E hay palabras. Elige <b>El texto es exactamente</b>.";
+      return "La regla está bien, pero el rango no cubre <b>E2:E9</b> completo.";
+    },
+    ok: () => "¡Listo! Las fiebres se ven de lejos 🔴"
+  },
+  {
+    id: "comillas", nivel: 1, t: "El error de las comillas",
+    html: () => `<p>Un compañero escribió en <b>F2</b> una fórmula para saber quién necesita oxígeno, pero sale <b>#¿NOMBRE?</b>.</p>
+      <ol><li>Selecciona <b>F2</b> y mira su fórmula en la barra <b>fx</b>.</li><li>Corrígela para que funcione.</li><li>Cópiala hasta <b>F9</b>.</li></ol>`,
+    pistas: ["Haz clic en la barra fx para editar la fórmula sin borrarla toda.", "Oxígeno y OK son palabras… ¿cómo deben ir las palabras dentro de una fórmula?", "Debe quedar: <code>=SI(D2&lt;95,\"Oxígeno\",\"OK\")</code>"],
+    saber: "<b>#¿NOMBRE?</b> significa «no reconozco esta palabra». Sin comillas, la hoja pensó que Oxígeno era el nombre de una función o de algo guardado, y no lo encontró.",
+    check() {
+      const a = revisarCelda("F2", /\b(SI|IF)\s*\(/i, "SI", ESP.F(2));
+      const v = v0("F2");
+      if (!a.ok) return v instanceof FErr && raw0("F2") === "=SI(D2<95,Oxígeno,OK)" ? "" : a.msg;
+      const x = revisarCol("F", /\b(SI|IF)\s*\(/i, "SI");
+      if (x.ok === 8) return true;
+      return x.ok === 1 ? "¡F2 arreglada! ✓ Ahora cópiala hasta <b>F9</b> con el cuadradito azul." : "Llevas " + x.ok + " de 8. " + x.msg;
+    },
+    ok: () => "¡Arreglado! " + FILAS.filter(r => norm(v0("F" + r)) === "oxigeno").length + " pacientes necesitan oxígeno."
+  },
+  {
+    id: "contar", nivel: 1, t: "¿Cuántos son?",
+    html: () => `<p>La jefa de enfermería pregunta: ¿cuántos pacientes tienen fiebre? ¿Cuántos tienen la saturación baja?</p>
+      <ul><li>En <b>B11</b>: <code>=CONTAR.SI(E2:E9,"Fiebre")</code></li><li>En <b>B12</b>: <code>=CONTAR.SI(D2:D9,"&lt;95")</code></li></ul>`,
+    pistas: ["CONTAR.SI tiene dos argumentos: <b>dónde</b> contar y <b>qué</b> contar.", "La condición va entre comillas, también cuando es un número con signo: <code>\"&lt;95\"</code>."],
+    saber: "Fíjate que B12 cuenta directamente las saturaciones (columna D), sin necesitar la columna F. CONTAR.SI puede contar palabras <code>\"Fiebre\"</code> o comparar números <code>\"&lt;95\"</code>, <code>\"&gt;=38\"</code>.",
+    check() {
+      const fie = FILAS.filter(r => num0("B" + r) >= 38).length, sat = FILAS.filter(r => num0("D" + r) < 95).length;
+      const rx = /CONTAR\.SI|COUNTIF/i;
+      const chk = (a, esp) => {
+        const r = raw0(a); if (!r) return { ok: false, msg: "" };
+        if (r[0] !== "=") return { ok: false, msg: "En " + a + " escribiste el número a mano. Que lo cuente la hoja con <b>CONTAR.SI</b>." };
+        const v = v0(a); if (v instanceof FErr) return { ok: false, msg: errTxt(a) };
+        if (!rx.test(r)) return { ok: false, msg: "En " + a + " usa <b>CONTAR.SI</b>." };
+        if (!casi(v, esp)) return { ok: false, msg: "En " + a + " sale " + fmt(v) + ". Revisa el rango (filas 2 a 9) y la condición entre comillas." };
+        return { ok: true };
+      };
+      const a = chk("B11", fie), b = chk("B12", sat);
+      if (a.ok && b.ok) return true;
+      if (a.ok) return "B11 listo ✓. " + (b.msg || "Falta B12.");
+      return a.msg || (b.ok ? "B12 listo ✓. Falta B11." : b.msg);
+    },
+    ok: () => fmt(v0("B11")) + " con fiebre y " + fmt(v0("B12")) + " con saturación baja. ¡Reporte listo!"
+  },
+  {
+    id: "anidado", nivel: 2, t: "Tres respuestas: SI anidado",
+    html: () => `<p>Pedro tiene 35.4 °C: eso no es «Normal», es <b>hipotermia</b>. En <b>G2</b> haz una clasificación con tres respuestas y cópiala hasta <b>G9</b>:</p>
+      <p style="text-align:center"><code style="font-size:.88rem;white-space:normal">=SI(B2&gt;=38,"Fiebre",SI(B2&lt;36,"Hipotermia","Normal"))</code></p>`,
+    pistas: ["El segundo SI va en el lugar del «si no» del primero.", "Al final van <b>dos</b> paréntesis de cierre: uno por cada SI. Si te olvidas, la hoja los cierra al presionar Enter."],
+    saber: "Puedes anidar varios SI para más respuestas, pero si son muchas la fórmula se vuelve difícil de leer. Para eso Google Sheets tiene <code>SI.CONJUNTO</code> (IFS), que hace varias preguntas seguidas sin anidar.",
+    check() {
+      const x = revisarCol("G", /\b(SI|IF)\s*\(.*\b(SI|IF)\s*\(/i, "dos SI (uno dentro del otro)");
+      if (x.ok === 8) return true;
+      if (x.ok === 0 && raw0("G2") && !/\b(SI|IF)\s*\(.*\b(SI|IF)\s*\(/i.test(raw0("G2")) && raw0("G2")[0] === "=") return "Aquí hacen falta <b>dos SI</b>, uno dentro del otro, para tener tres respuestas.";
+      return x.ok ? "Llevas " + x.ok + " de 8. " + x.msg : x.msg;
+    },
+    ok: () => "¡Tres caminos! Pedro ahora dice «" + fmt(v0("G5")) + "»."
+  },
+  {
+    id: "y", nivel: 2, t: "Dos condiciones: Y",
+    html: () => `<p>El protocolo dice: <b>llamar al médico</b> si el paciente tiene fiebre (38 o más) <b>y además</b> taquicardia (FC mayor de 100). Si no, <b>vigilar</b>.</p>
+      <p>En <b>H2</b>, y luego cópiala hasta <b>H9</b>:</p>
+      <p style="text-align:center"><code style="font-size:.85rem;white-space:normal">=SI(Y(B2&gt;=38,C2&gt;100),"Llamar al médico","Vigilar")</code></p>`,
+    pistas: ["Y va dentro de SI, en el lugar de la condición. Sus dos condiciones van separadas por coma.", "Mira a Miguel (fila 9): tiene FC 104 pero 37.8 °C. Con Y debe salir «Vigilar»."],
+    saber: "Si usaras <code>O</code> en vez de <code>Y</code>, avisarías al médico con solo una de las dos. Con Y solo se avisa cuando se cumplen <b>las dos</b>.",
+    check() {
+      const x = revisarCol("H", /\b(Y|AND)\s*\(/i, "Y dentro de SI");
+      if (x.ok === 8) return true;
+      return x.ok ? "Llevas " + x.ok + " de 8. " + x.msg : x.msg;
+    },
+    ok: () => "¡Bien! Hay que llamar al médico por " + FILAS.filter(r => norm(v0("H" + r)) === "llamar al medico").length + " pacientes."
+  },
+  {
+    id: "o", nivel: 3, t: "Alerta de urgencia",
+    html: () => `<p>Reto final: en <b>I2:I9</b> marca <b>«URGENTE»</b> si el paciente tiene temperatura de <b>39 o más</b> <b>o</b> saturación <b>menor de 90</b>. Si no, <b>«Estable»</b>.</p>
+      <p>Esta vez no te damos la fórmula. Basta con que se cumpla <b>una</b> de las dos condiciones…</p>`,
+    pistas: ["«Basta con una» → la función es <code>O</code>.", "Se parece a la de la columna H: cambia Y por O y ajusta las dos condiciones.", "<code>=SI(O(B2&gt;=39,D2&lt;90),\"URGENTE\",\"Estable\")</code>"],
+    saber: "Carlos (fila 7) tiene temperatura normal, pero su saturación es 88: con <b>O</b> igual sale URGENTE. Con <b>Y</b> se te habría pasado.",
+    check() {
+      const x = revisarCol("I", /\b(O|OR)\s*\(/i, "O dentro de SI");
+      if (x.ok === 8) return true;
+      return x.ok ? "Llevas " + x.ok + " de 8. " + x.msg : x.msg;
+    },
+    ok: () => "¡Reto secreto superado! 🕵️ " + FILAS.filter(r => norm(v0("I" + r)) === "urgente").length + " pacientes urgentes detectados."
+  }
+];
+const ultimoDe = n => MIS.reduce((m, x, i) => x.nivel === n ? i : m, -1);
+let vista = null; /* índice de misión completada que se está repasando */
+let pistasVistas = 0;
+function alSeleccionar() {
+  if (S.cur !== 0) return;
+  const m = MIS[S.mis];
+  if (m && m.alSel && unaCelda()) { m.alSel(addr(anc.c, anc.r)); guardar(); panel(); }
+  revisar();
+}
+let bloqueo = false;
+function revisar() {
+  if (bloqueo) return;
+  const m = MIS[S.mis]; if (!m) return;
+  const r = m.check();
+  if (r === true) {
+    bloqueo = true;
+    const msg = m.ok();
+    S.mis++; vista = null; pistasVistas = 0;
+    fb = { msg: "✅ " + msg, bien: true, de: m.t };
+    confeti(); guardar(); panel();
+    setTimeout(() => { bloqueo = false; fb = { msg: "", bien: false }; panel(); revisar(); }, 3200);
+  } else if (!m.alSel) {
+    const nuevo = typeof r === "string" ? r : "";
+    if (nuevo !== fb.msg) { fb = { msg: nuevo, bien: false }; panel(); }
+  }
+}
+function panel() {
+  // niveles
+  const nv = $("niveles"); nv.innerHTML = "";
+  NIVELES.forEach((N, n) => {
+    const idx = MIS.map((m, i) => m.nivel === n ? i : -1).filter(i => i >= 0);
+    const abierto = idx[0] <= S.mis;
+    const d = document.createElement("div"); d.className = "nivel" + (abierto ? "" : " lock");
+    d.innerHTML = '<span class="nom">' + (abierto || n < 3 ? N.n : "???") + (abierto ? "" : " 🔒") + '</span><span class="pts"></span>' + (N.min ? '<span class="min">mínimo de hoy</span>' : "");
+    const pts = d.querySelector(".pts");
+    idx.forEach(i => { const b = document.createElement("button"); b.title = i < S.mis ? MIS[i].t + " ✓" : i === S.mis ? MIS[i].t : "Bloqueada"; b.className = i < S.mis ? "hecho" : i === S.mis ? "actual" : ""; b.disabled = i > S.mis; b.onclick = () => { vista = i < S.mis ? i : null; panel(); }; pts.appendChild(b); });
+    nv.appendChild(d);
+  });
+  // cuerpo
+  const cu = $("cuerpo"); let h = "";
+  if (S.cur !== 0) h += '<div class="banner libre"><b>Estás en la hoja «Libre» 🧪</b>Aquí puedes experimentar lo que quieras: fórmulas, colores, lo que se te ocurra. Las misiones se revisan en la pestaña <b>«Pacientes»</b>.</div>';
+  if (S.mis > ultimoDe(0) && S.mis <= ultimoDe(1) && vista === null) h += '<div class="banner base"><b>✅ ¡Mínimo de hoy cumplido!</b>Si te queda tiempo, sigue con el nivel Plata. Si un compañero está atascado, ¡dale una mano!</div>';
+  const i = vista !== null ? vista : S.mis;
+  const m = MIS[i];
+  if (!m) {
+    h += '<div class="tarjeta final"><div class="medalla">🏅</div><h2>¡Turno completado!</h2><p>Superaste los cuatro niveles, incluido el secreto. Ya sabes hacer que la hoja decida: comparaciones, SI, SI anidado, Y, O, CONTAR.SI y formato condicional.</p><p>Ve a la pestaña <b>«Libre»</b> y arma tu propio control: por ejemplo, glucosa de varios pacientes con una columna que diga «Hipoglucemia», «Normal» o «Hiperglucemia», y que se pinte sola.</p></div>';
+    if (fb.msg) h = '<div class="fb bien" style="margin:0 0 12px">' + fb.msg + "</div>" + h;
+  } else {
+    h += '<div class="tarjeta"><span class="chip n' + m.nivel + '">Nivel ' + NIVELES[m.nivel].n + " · misión " + (MIS.filter((x, j) => x.nivel === m.nivel && j <= i).length) + " de " + MIS.filter(x => x.nivel === m.nivel).length + "</span>";
+    h += "<h2>" + m.t + "</h2>" + m.html();
+    if (vista !== null) h += '<p class="hecha">✓ Misión completada</p><button class="volver" id="bVolver">← Volver a la misión actual</button>';
+    else {
+      if (fb.msg) h += '<div class="fb' + (fb.bien ? " bien" : "") + '">' + fb.msg + "</div>";
+      h += '<div class="pistas">';
+      for (let p = 0; p < pistasVistas && p < m.pistas.length; p++) h += '<div class="pista">' + m.pistas[p] + "</div>";
+      if (pistasVistas < m.pistas.length) h += '<button id="bPista" style="margin-top:8px">💡 ' + (pistasVistas ? "Otra pista" : "Necesito una pista") + "</button>";
+      h += "</div>";
+    }
+    if (m.saber) h += "<details><summary>Saber más</summary><p>" + m.saber + "</p></details>";
+    h += "</div>";
+  }
+  cu.innerHTML = h;
+  const bp = $("bPista"); if (bp) bp.onclick = () => { pistasVistas++; panel(); };
+  const bv = $("bVolver"); if (bv) bv.onclick = () => { vista = null; panel(); };
+}
+
+/* ===================== INTRODUCCIÓN ===================== */
+const PAC = [["Rosa Quispe", 36.5], ["Juan Mamani", 38.6], ["Lucía Torres", 37.2], ["Ana Flores", 39.1], ["Carlos Ramos", 36.9], ["Elena Castro", 38]];
+let llego = false, gTemps = PAC.map(p => p[1]), gHechos = 0;
+const estadoDe = t => t >= 38 ? "Fiebre" : "Normal";
+function dibujarIntro(mira) {
+  let t = "<tr><th></th><th>A · Paciente</th><th>B · Temp (°C)</th><th>C · Estado</th></tr>";
+  PAC.forEach(([n], i) => {
+    const hecho = i < gHechos, e = estadoDe(gTemps[i]);
+    t += '<tr class="' + (i === mira ? "mira" : "") + '"><th>' + (i + 2) + "</th><td>" + n + '</td><td class="n" id="gT' + i + '">' + gTemps[i].toFixed(1) + '</td><td class="c ' + (hecho ? (e === "Fiebre" ? "fiebre" : "normal") : "") + '" id="gE' + i + '">' + (hecho ? e : "") + "</td></tr>";
+  });
+  $("tGancho").innerHTML = t;
+}
+async function revisarGancho(id) {
+  gHechos = 0; dibujarIntro();
+  const f = $("gFormula"); f.hidden = false;
+  for (let i = 0; i < PAC.length; i++) {
+    const r = i + 2;
+    f.innerHTML = 'C' + r + ' → =SI(<em>B' + r + '</em>&gt;=38,"Fiebre","Normal")';
+    dibujarIntro(i);
+    explicar($("gFb"), "¿" + PAC[i][0].split(" ")[0] + " tiene <b>" + gTemps[i].toFixed(1) + " °C</b>… es 38 o más? → <b>" + (gTemps[i] >= 38 ? "Sí" : "No") + "</b>, entonces: <b>" + estadoDe(gTemps[i]) + "</b>.");
+    await sleep(i < 2 ? 1300 : 650); if (!vivo(id)) return;
+    gHechos = i + 1; dibujarIntro(i);
+    await sleep(250); if (!vivo(id)) return;
+  }
+  dibujarIntro();
+  f.innerHTML = 'C2 → =SI(<em>B2</em>&gt;=38,"Fiebre","Normal")';
+  explicar($("gFb"), "✅ Una sola fórmula, copiada hacia abajo, revisó a todos. Elena tiene <b>justo 38</b> y también cuenta como fiebre: la pregunta era «38 <b>o más</b>». Ahora mira qué pasa si llega una nueva toma…");
+  $("bToma").hidden = false;
+}
+/* ---------- motor de diapositivas ---------- */
+const SLIDES = [...document.querySelectorAll("#intro .slide")];
+const INIT = {};
+let slide = 0, animId = 0;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const vivo = id => id === animId && !$("intro").hidden;
+(function puntos() {
+  SLIDES.forEach((s, i) => { const b = document.createElement("button"); b.title = s.querySelector("h1").textContent; b.onclick = () => { if (llego || i === 0) irSlide(i); }; $("puntos").appendChild(b); });
+})();
+function irSlide(n) {
+  const atras = n < slide;
+  slide = Math.max(0, Math.min(SLIDES.length - 1, n));
+  animId++;
+  SLIDES.forEach((s, i) => { s.classList.toggle("on", i === slide); s.classList.toggle("atras", atras); });
+  [...$("puntos").children].forEach((b, i) => b.classList.toggle("on", i === slide));
+  $("bAtras").style.visibility = slide === 0 ? "hidden" : "";
+  $("bSig").textContent = slide === SLIDES.length - 1 ? "Abrir el simulador →" : slide === 0 ? "Ver la teoría →" : "Siguiente →";
+  $("bSig").disabled = slide === 0 && !llego;
+  $("intro").scrollTop = 0;
+  const f = INIT[SLIDES[slide].dataset.s]; if (f) f(animId);
+}
+function abrirIntro(n) {
+  n = n || 0;
+  gTemps = PAC.map(p => p[1]); $("bToma").hidden = true; $("bToma").textContent = "📥 Nueva toma: Rosa tiene 38.5 °C"; $("gFormula").hidden = true;
+  if (n === 0) { llego = false; gHechos = 0; $("bRevisar").disabled = false; $("pIntro").textContent = "Presiona el botón amarillo primero."; }
+  else { llego = true; gHechos = PAC.length; $("bRevisar").disabled = true; $("pIntro").textContent = ""; }
+  $("intro").hidden = false; document.documentElement.style.fontSize = ""; slide = n; irSlide(n);
+}
+function cerrarIntro() { animId++; $("intro").hidden = true; S.intro = true; guardar(); if (typeof adaptar === "function") adaptar(); else render(); }
+$("bSig").onclick = () => slide === SLIDES.length - 1 ? cerrarIntro() : irSlide(slide + 1);
+$("bAtras").onclick = () => irSlide(slide - 1);
+$("bIntro").onclick = () => abrirIntro(1);
+INIT.gancho = () => dibujarIntro();
+
+/* ---------- mini hoja reutilizable ---------- */
+function mini(el, anchos, filas, datos) {
+  let h = '<div class="msfx"><div class="nm">A1</div><i>fx</i><span></span></div><div class="msg"><table style="width:' + (30 + anchos.reduce((s, x) => s + x, 0)) + 'px"><thead><tr><th style="width:30px"></th>';
+  anchos.forEach((w, c) => h += '<th style="width:' + w + 'px">' + colName(c) + "</th>");
+  h += "</tr></thead><tbody>";
+  for (let r = 1; r <= filas; r++) {
+    h += "<tr><th>" + r + "</th>";
+    anchos.forEach((w, c) => { const v = datos && datos[colName(c) + r] != null ? datos[colName(c) + r] : ""; h += '<td data-c="' + c + '" data-r="' + r + '"' + (typeof v === "number" ? ' style="text-align:right"' : "") + ">" + esc(v) + "</td>"; });
+    h += "</tr>";
+  }
+  h += '</tbody></table><div class="selm" hidden></div></div>';
+  el.className = "ms"; el.innerHTML = h;
+  return { el, anchos, area: el.querySelector(".msg"), tabla: el.querySelector("table"), nm: el.querySelector(".nm"), fx: el.querySelector(".msfx span"), selm: el.querySelector(".selm"),
+    td: (c, r) => el.querySelector('td[data-c="' + c + '"][data-r="' + r + '"]'), th: c => el.querySelectorAll("thead th")[c + 1] };
+}
+function caja(m, box, c1, r1, c2, r2) {
+  const a = m.td(c1, r1).getBoundingClientRect(), b = m.td(c2, r2).getBoundingClientRect(), o = m.area.getBoundingClientRect();
+  const k = o.width ? m.area.offsetWidth / o.width : 1; // la teoría puede estar escalada: pasar a px sin escala
+  box.style.left = ((a.left - o.left) * k + m.area.scrollLeft - 1) + "px"; box.style.top = ((a.top - o.top) * k - 1) + "px";
+  box.style.width = ((b.right - a.left) * k + 1) + "px"; box.style.height = ((b.bottom - a.top) * k + 1) + "px";
+}
+function selMini(m, c1, r1, c2, r2) {
+  if (c2 == null) { c2 = c1; r2 = r1; }
+  m.selm.hidden = false; caja(m, m.selm, c1, r1, c2, r2);
+  m.nm.textContent = colName(c1) + r1 + (c1 !== c2 || r1 !== r2 ? ":" + colName(c2) + r2 : "");
+}
+function cajasRef(m, lista) {
+  m.area.querySelectorAll(".refm").forEach(x => x.remove());
+  lista.forEach((x, i) => { const d = document.createElement("div"); d.className = "refm"; d.style.setProperty("--rc", x.col); d.style.animationDelay = i * .2 + "s"; m.area.appendChild(d); caja(m, d, x.g.c1, x.g.r1 + 1, x.g.c2, x.g.r2 + 1); });
+}
+async function escribir(sp, txt, id, alEscribir) {
+  for (let i = 1; i <= txt.length; i++) {
+    sp.textContent = txt.slice(0, i); if (alEscribir) alEscribir(sp.textContent);
+    await sleep(45 + Math.random() * 45); if (!vivo(id)) return false;
+  }
+  return true;
+}
+function alinear(td, sp, al) {
+  const libre = td.clientWidth - sp.offsetWidth - 10;
+  sp.style.transform = al === "der" ? "translateX(" + libre + "px)" : al === "centro" ? "translateX(" + libre / 2 + "px)" : "";
+}
+function destello(td, cls) { td.classList.remove("ok", "mal", "flash"); void td.offsetWidth; td.classList.add(cls); }
+function explicar(el, html) { el.innerHTML = html; el.classList.remove("cambia"); void el.offsetWidth; el.classList.add("cambia"); }
+function marcarBtn(cont, attr, v) { cont.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.getAttribute(attr) === String(v))); }
+
+/* ---------- 0 · gancho ---------- */
+$("bRevisar").onclick = () => {
+  llego = true; $("bRevisar").disabled = true; $("bSig").disabled = false;
+  $("pIntro").textContent = "Eso hace la función SI. Antes de usarla, veamos cómo piensa.";
+  revisarGancho(++animId);
+};
+$("bToma").onclick = () => {
+  animId++; gHechos = PAC.length;
+  gTemps[0] = gTemps[0] === 36.5 ? 38.5 : 36.5;
+  dibujarIntro();
+  ["gT0", "gE0"].forEach(id => { const td = $(id); td.style.background = "#fff3c4"; setTimeout(() => td.style.background = "", 900); });
+  $("bToma").textContent = gTemps[0] === 36.5 ? "📥 Nueva toma: Rosa tiene 38.5 °C" : "📥 Rosa vuelve a 36.5 °C";
+  explicar($("gFb"), gTemps[0] === 38.5 ? "⚡ Cambió <b>solo la temperatura</b> de Rosa y su estado pasó a <b>Fiebre</b> al instante. Nadie tuvo que volver a revisar la lista." : "Y si baja, vuelve a «Normal» sola. La fórmula siempre mira el dato <b>actual</b>.");
+};
+
+/* ---------- 1 · comparaciones ---------- */
+const COMP = [["Rosa", 36.5], ["Juan", 38], ["Ana", 39.4], ["Lucía", 37.5], ["Elena", 38.6], ["Pedro", 35.9]];
+const OPN = { ">": "mayor que", "<": "menor que", "=": "igual a", ">=": "mayor o igual a", "<=": "menor o igual a", "<>": "distinto de" };
+let CP = { op: ">=", n: 38 };
+INIT.comparar = id => animarComp(id);
+async function animarComp(id) {
+  const datos = { A1: "Paciente", B1: "Temp", C1: "¿Cumple?" };
+  COMP.forEach(([n, t], i) => { datos["A" + (i + 2)] = n; datos["B" + (i + 2)] = t; });
+  const m = mini($("msComp"), [80, 70, 120], 7, datos);
+  marcarBtn($("ctOp"), "data-op", CP.op); marcarBtn($("ctNum"), "data-n", CP.n);
+  $("compPreg").innerHTML = "¿La temperatura es <em>" + OPN[CP.op] + " " + CP.n + "</em>?";
+  explicar($("compFb"), "Mira cómo la hoja responde la pregunta para cada paciente…");
+  let si = 0;
+  for (let i = 0; i < COMP.length; i++) {
+    const r = i + 2, f = "=B" + r + CP.op + CP.n, td = m.td(2, r), t = COMP[i][1];
+    selMini(m, 2, r);
+    const p = pintarRefs(f); m.fx.innerHTML = p.html; cajasRef(m, p.lista);
+    if (i === 0) {
+      td.classList.add("rel"); const sp = document.createElement("span"); sp.className = "dt esc"; td.appendChild(sp);
+      if (!await escribir(sp, f, id)) return;
+      await sleep(300); if (!vivo(id)) return;
+    } else { await sleep(380); if (!vivo(id)) return; }
+    const ok = compare(t, CP.n, CP.op); if (ok) si++;
+    td.innerHTML = ""; td.textContent = ok ? "VERDADERO" : "FALSO"; td.className = ok ? "vv" : "ff"; destello(td, ok ? "ok" : "mal");
+  }
+  cajasRef(m, []);
+  let x = "<b>" + si + " de " + COMP.length + "</b> cumplen la condición <code>" + esc(CP.op) + " " + CP.n + "</code>.";
+  if (CP.n === 38 && CP.op === ">") x += " ⚠ Juan tiene <b>justo 38</b> y salió FALSO: 38 no es <i>mayor</i> que 38. Para incluirlo, usa <b>&gt;=</b>.";
+  else if (CP.n === 38 && CP.op === ">=") x += " Juan, con <b>justo 38</b>, sí entra: <b>&gt;=</b> incluye el número.";
+  else if (CP.op === "=") x += " Con <b>=</b> solo cumple quien tiene exactamente ese número.";
+  else if (CP.op === "<>") x += " <b>&lt;&gt;</b> es lo contrario de =: todos menos el que es igual.";
+  explicar($("compFb"), x);
+}
+$("ctOp").addEventListener("click", e => { const b = e.target.closest("button[data-op]"); if (!b) return; CP.op = b.dataset.op; animarComp(++animId); });
+$("ctNum").addEventListener("click", e => { const b = e.target.closest("button[data-n]"); if (!b) return; CP.n = +b.dataset.n; animarComp(++animId); });
+
+/* ---------- diagramas de decisión (SVG) ---------- */
+const NS = "http://www.w3.org/2000/svg";
+function svgEl(tag, at, txt) { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (txt != null) e.textContent = txt; return e; }
+function rombo(svg, cx, cy, hw, hh, id) {
+  const g = svgEl("g", {});
+  g.appendChild(svgEl("polygon", { points: [cx, cy - hh, cx + hw, cy, cx, cy + hh, cx - hw, cy].join(" "), class: "rombo", id: id }));
+  g.appendChild(svgEl("text", { x: cx, y: cy - 9, id: id + "q" }));
+  g.appendChild(svgEl("text", { x: cx, y: cy + 13, class: "mono", id: id + "v" }));
+  svg.appendChild(g);
+}
+function cajaR(svg, cx, y, w, txt, col, id) {
+  svg.appendChild(svgEl("rect", { x: cx - w / 2, y, width: w, height: 44, rx: 10, class: "caja-r", id, style: "--pc:" + col }));
+  svg.appendChild(svgEl("text", { x: cx, y: y + 23, id: id + "t" }, txt));
+}
+function linea(svg, d, id) { svg.appendChild(svgEl("path", { d, class: "lin", id })); }
+function etiq(svg, x, y, si) { svg.appendChild(svgEl("text", { x, y, class: si ? "eti-si" : "eti-no" }, si ? "Sí ✓" : "No ✗")); }
+const VERDE = "#188038", ROJO = "#d93025", AZUL = "#1a73e8";
+function flujoSimple(el) {
+  const svg = svgEl("svg", { viewBox: "0 0 400 222" });
+  linea(svg, "M95,55 H60 V168", "fS"); linea(svg, "M305,55 H340 V168", "fN");
+  rombo(svg, 200, 55, 105, 44, "fR");
+  cajaR(svg, 60, 170, 116, "\"Fiebre\"", VERDE, "fA"); cajaR(svg, 340, 170, 116, "\"Normal\"", ROJO, "fB");
+  etiq(svg, 38, 120, true); etiq(svg, 362, 120, false);
+  el.innerHTML = ""; el.appendChild(svg);
+}
+function flujoDoble(el) {
+  const svg = svgEl("svg", { viewBox: "-5 0 465 318" });
+  linea(svg, "M70,50 H55 V268", "aS1"); linea(svg, "M270,50 H330 V120", "aN1");
+  linea(svg, "M230,158 H195 V268", "aS2"); linea(svg, "M330,196 V268", "aN2");
+  rombo(svg, 170, 50, 100, 40, "aR1"); rombo(svg, 330, 158, 100, 38, "aR2");
+  cajaR(svg, 55, 270, 112, "\"Fiebre\"", VERDE, "aA"); cajaR(svg, 195, 270, 120, "\"Hipotermia\"", AZUL, "aB"); cajaR(svg, 335, 270, 112, "\"Normal\"", "#e37400", "aC");
+  etiq(svg, 32, 160, true); etiq(svg, 302, 90, false); etiq(svg, 172, 225, true); etiq(svg, 360, 235, false);
+  el.innerHTML = ""; el.appendChild(svg);
+}
+const q = id => document.getElementById(id);
+function limpiarFlujo(el) { el.querySelectorAll(".lin").forEach(x => x.setAttribute("class", "lin")); el.querySelectorAll(".rombo").forEach(x => x.setAttribute("class", "rombo")); el.querySelectorAll(".caja-r").forEach(x => x.setAttribute("class", "caja-r")); }
+const prender = (id, cls) => q(id).setAttribute("class", cls);
+
+/* ---------- 2 · la función SI ---------- */
+const SIP = [["=", "#b3752c"], ["SI", "#5f6368"], ["(", "#9334e6"], ["B2>=38", AZUL, "c"], [",", "#9aa0a6"], ["\"Fiebre\"", VERDE, "v"], [",", "#9aa0a6"], ["\"Normal\"", ROJO, "f"], [")", "#9334e6"]];
+let siT = 36.5;
+function cartasSi() {
+  const c = [["c", AZUL, "① condición", "B2>=38", "La <b>pregunta</b> de sí o no. Siempre es una comparación."], ["v", VERDE, "② valor si verdadero", "\"Fiebre\"", "Lo que se muestra si la respuesta es <b>sí</b>."], ["f", ROJO, "③ valor si falso", "\"Normal\"", "Lo que se muestra si la respuesta es <b>no</b>."]];
+  $("siCards").innerHTML = c.map(([k, col, t, s, d]) => '<div class="card show" data-k="' + k + '" style="--pc:' + col + '"><div class="sim">' + esc(s) + "</div><h4>" + t + "</h4><div>" + d + "</div></div>").join("");
+}
+INIT.si = id => {
+  $("siBig").innerHTML = SIP.map(([t, col, k]) => '<span style="--pc:' + col + '"' + (k ? ' data-k="' + k + '"' : "") + ">" + esc(t) + "</span>").join("");
+  cartasSi(); flujoSimple($("siFlujo")); animarSi(siT, id);
+};
+async function animarSi(t, id) {
+  siT = t; marcarBtn($("ctSi"), "data-t", t);
+  const big = $("siBig").querySelectorAll("span"), cards = $("siCards").querySelectorAll(".card");
+  const luz = k => { big.forEach(s => { s.classList.toggle("lit", !s.dataset.k || s.dataset.k === k || k === "*"); s.classList.toggle("foco", s.dataset.k === k); }); cards.forEach(c => c.classList.toggle("foco", c.dataset.k === k)); };
+  const el = $("siFlujo"); limpiarFlujo(el);
+  q("fRq").textContent = "¿B2 >= 38?"; q("fRv").textContent = "";
+  luz("c"); prender("fR", "rombo on");
+  explicar($("siFb"), "Primero, la <b style=\"color:" + AZUL + "\">condición</b>: ¿" + t + " es mayor o igual a 38?");
+  await sleep(900); if (!vivo(id)) return;
+  const ok = t >= 38;
+  q("fRv").textContent = t + " >= 38 → " + (ok ? "VERDADERO" : "FALSO");
+  await sleep(900); if (!vivo(id)) return;
+  prender(ok ? "fS" : "fN", "lin " + (ok ? "si" : "no") + " va");
+  luz(ok ? "v" : "f");
+  await sleep(800); if (!vivo(id)) return;
+  prender(ok ? "fA" : "fB", "caja-r on"); prender(ok ? "fS" : "fN", "lin " + (ok ? "si" : "no"));
+  explicar($("siFb"), ok ? "Es <b>VERDADERO</b> → la hoja toma el <b style=\"color:" + VERDE + "\">segundo argumento</b> y la celda muestra <b>Fiebre</b>." : "Es <b>FALSO</b> → la hoja salta al <b style=\"color:" + ROJO + "\">tercer argumento</b> y la celda muestra <b>Normal</b>.");
+}
+$("ctSi").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (b) animarSi(+b.dataset.t, ++animId); });
+
+/* ---------- 3 · comillas ---------- */
+INIT.comillas = async id => { if (!await demoComillas(0, id)) return; await sleep(1600); if (vivo(id)) demoComillas(1, id); };
+async function demoComillas(con, id) {
+  const m = mini($("msCom"), [80, 56, 250], 2, { A1: "Paciente", B1: "Temp", C1: "Estado", A2: "Juan", B2: 38.6 });
+  const td = m.td(2, 2), txt = con ? '=SI(B2>=38,"Fiebre","Normal")' : "=SI(B2>=38,Fiebre,Normal)";
+  td.classList.add("rel"); selMini(m, 2, 2); td.style.overflow = "visible";
+  explicar($("comFb"), "Escribiendo en C2 " + (con ? "<b>con</b>" : "<b>sin</b>") + " comillas…");
+  const sp = document.createElement("span"); sp.className = "dt esc"; td.appendChild(sp);
+  let nR = 0;
+  const ok = await escribir(sp, txt, id, t => { const p = pintarRefs(t); m.fx.innerHTML = p.html; if (p.lista.length !== nR) { nR = p.lista.length; cajasRef(m, p.lista); } });
+  if (!ok) return false;
+  await sleep(450); if (!vivo(id)) return false;
+  sp.classList.remove("esc"); cajasRef(m, []); td.style.overflow = "";
+  if (con) {
+    sp.textContent = "Fiebre"; destello(td, "ok");
+    explicar($("comFb"), "✅ <b>Con comillas</b>, la hoja sabe que <span style=\"color:#188038\">\"Fiebre\"</span> es una palabra que debe escribir tal cual. Mira en la barra fx: el texto entre comillas sale en verde.");
+  } else {
+    sp.textContent = "#¿NOMBRE?"; sp.style.color = "#a50e0e"; alinear(td, sp, "centro"); destello(td, "mal");
+    explicar($("comFb"), "❌ <b>Sin comillas</b> sale <b>#¿NOMBRE?</b>: la hoja buscó algo llamado «Fiebre» (como si fuera una función o una celda) y no lo encontró.");
+  }
+  return true;
+}
+document.querySelector('[data-s="comillas"] .btns').addEventListener("click", e => { const b = e.target.closest("button[data-cm]"); if (b) demoComillas(+b.dataset.cm, ++animId); });
+
+/* ---------- 4 · SI anidado ---------- */
+const ANP = [["=", "#b3752c"], ["SI(", AZUL], ["B2>=38", AZUL], [",", "#9aa0a6"], ["\"Fiebre\"", VERDE], [",", "#9aa0a6"], ["SI(", "#c2185b"], ["B2<36", "#c2185b"], [",", "#9aa0a6"], ["\"Hipotermia\"", "#c2185b"], [",", "#9aa0a6"], ["\"Normal\"", "#c2185b"], [")", "#c2185b"], [")", AZUL]];
+let anT = 35.2;
+INIT.anidado = id => {
+  $("anBig").innerHTML = ANP.map(([t, col]) => '<span class="lit" style="--pc:' + col + '">' + esc(t) + "</span>").join("");
+  flujoDoble($("anFlujo")); animarAn(anT, id);
+};
+async function animarAn(t, id) {
+  anT = t; marcarBtn($("ctAn2"), "data-t", t);
+  const el = $("anFlujo"); limpiarFlujo(el);
+  q("aR1q").textContent = "¿B2 >= 38?"; q("aR1v").textContent = ""; q("aR2q").textContent = "¿B2 < 36?"; q("aR2v").textContent = "";
+  prender("aR1", "rombo on");
+  explicar($("anFb"), "Primera pregunta: ¿" + t + " es mayor o igual a 38?");
+  await sleep(900); if (!vivo(id)) return;
+  const a = t >= 38; q("aR1v").textContent = t + " → " + (a ? "VERDADERO" : "FALSO");
+  await sleep(800); if (!vivo(id)) return;
+  if (a) {
+    prender("aS1", "lin si va"); await sleep(700); if (!vivo(id)) return;
+    prender("aA", "caja-r on"); prender("aS1", "lin si");
+    explicar($("anFb"), "✅ VERDADERO a la primera: sale <b>Fiebre</b> y la hoja <b>ya no hace</b> la segunda pregunta.");
+    return;
+  }
+  prender("aN1", "lin no va"); await sleep(700); if (!vivo(id)) return;
+  prender("aN1", "lin no"); prender("aR2", "rombo on");
+  explicar($("anFb"), "FALSO → en vez de una respuesta, el «si no» tiene <b style=\"color:#c2185b\">otro SI</b>. Segunda pregunta: ¿" + t + " es menor que 36?");
+  await sleep(1000); if (!vivo(id)) return;
+  const b = t < 36; q("aR2v").textContent = t + " → " + (b ? "VERDADERO" : "FALSO");
+  await sleep(800); if (!vivo(id)) return;
+  prender(b ? "aS2" : "aN2", "lin " + (b ? "si" : "no") + " va"); await sleep(700); if (!vivo(id)) return;
+  prender(b ? "aB" : "aC", "caja-r on"); prender(b ? "aS2" : "aN2", "lin " + (b ? "si" : "no"));
+  explicar($("anFb"), b ? "✅ Sale <b>Hipotermia</b>: no tenía fiebre, pero sí está por debajo de 36." : "✅ Ninguna de las dos preguntas fue VERDADERO: sale <b>Normal</b>.");
+}
+$("ctAn2").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (b) animarAn(+b.dataset.t, ++animId); });
+
+/* ---------- 5 · Y / O ---------- */
+let SW = [false, false];
+function palanca(svg, x, y, on, id) {
+  svg.appendChild(svgEl("circle", { cx: x, cy: y, r: 4, fill: "#5f6368" }));
+  svg.appendChild(svgEl("circle", { cx: x + 40, cy: y, r: 4, fill: "#5f6368" }));
+  svg.appendChild(svgEl("line", { x1: x, y1: y, x2: x + 40, y2: y, stroke: on ? "#2f7d4a" : "#5f6368", "stroke-width": 5, "stroke-linecap": "round", id, style: "transform-origin:" + x + "px " + y + "px;transform:rotate(" + (on ? 0 : -32) + "deg);transition:transform .3s" }));
+}
+function dibujarYO() {
+  const [a, b] = SW;
+  // Y: en serie
+  let s = svgEl("svg", { viewBox: "0 0 300 100" });
+  s.appendChild(svgEl("path", { d: "M30,50 H80", class: "cable vivo" }));
+  s.appendChild(svgEl("path", { d: "M120,50 H170", class: "cable" + (a ? " vivo" : "") }));
+  s.appendChild(svgEl("path", { d: "M210,50 H252", class: "cable" + (a && b ? " vivo" : "") }));
+  s.appendChild(svgEl("text", { x: 18, y: 55, style: "font-size:20px" }, "⚡"));
+  palanca(s, 80, 50, a); palanca(s, 170, 50, b);
+  s.appendChild(svgEl("text", { x: 100, y: 82 }, "Temp ≥ 38")); s.appendChild(svgEl("text", { x: 190, y: 82 }, "FC > 100"));
+  s.appendChild(svgEl("circle", { cx: 270, cy: 50, r: 17, class: "foco" + (a && b ? " on" : "") }));
+  $("cirY").innerHTML = ""; $("cirY").appendChild(s);
+  // O: en paralelo
+  s = svgEl("svg", { viewBox: "0 0 300 120" });
+  s.appendChild(svgEl("path", { d: "M30,60 H70 M70,25 V95 M70,25 H110 M70,95 H110", class: "cable vivo" }));
+  s.appendChild(svgEl("path", { d: "M150,25 H220", class: "cable" + (a ? " vivo" : "") }));
+  s.appendChild(svgEl("path", { d: "M150,95 H220", class: "cable" + (b ? " vivo" : "") }));
+  s.appendChild(svgEl("path", { d: "M220,25 V95 M220,60 H252", class: "cable" + (a || b ? " vivo" : "") }));
+  s.appendChild(svgEl("text", { x: 18, y: 65, style: "font-size:20px" }, "⚡"));
+  palanca(s, 110, 25, a); palanca(s, 110, 95, b);
+  s.appendChild(svgEl("text", { x: 130, y: 50 }, "Temp ≥ 38")); s.appendChild(svgEl("text", { x: 130, y: 118 }, "FC > 100"));
+  s.appendChild(svgEl("circle", { cx: 270, cy: 60, r: 17, class: "foco" + (a || b ? " on" : "") }));
+  $("cirO").innerHTML = ""; $("cirO").appendChild(s);
+  const ry = a && b, ro = a || b;
+  $("resY").className = "res " + (ry ? "v" : "f"); $("resY").textContent = (ry ? "VERDADERO" : "FALSO") + (ry ? " · las dos se cumplen" : a || b ? " · falta una" : " · ninguna se cumple");
+  $("resO").className = "res " + (ro ? "v" : "f"); $("resO").textContent = (ro ? "VERDADERO" : "FALSO") + (ro ? (ry ? " · se cumplen las dos" : " · basta con una") : " · ninguna se cumple");
+  document.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", SW[+x.dataset.sw]));
+}
+INIT.yo = async id => {
+  SW = [false, false]; dibujarYO();
+  // pequeña demostración automática
+  for (const p of [[true, false], [true, true], [false, true]]) { await sleep(1300); if (!vivo(id)) return; SW = p; dibujarYO(); }
+};
+document.querySelector(".swt").addEventListener("click", e => { const b = e.target.closest(".sw"); if (!b) return; animId++; SW[+b.dataset.sw] = !SW[+b.dataset.sw]; dibujarYO(); });
+
+/* ---------- 6 · CONTAR.SI y formato condicional ---------- */
+const CONT = [["Rosa", 98, "Normal"], ["Juan", 93, "Fiebre"], ["Lucía", 97, "Normal"], ["Pedro", 96, "Normal"], ["Ana", 89, "Fiebre"], ["Elena", 96, "Fiebre"]];
+let mC = null;
+INIT.contar = id => animarCont("fiebre", id);
+async function animarCont(k, id) {
+  marcarBtn($("ctCont"), "data-ct", k);
+  const d = { A1: "Paciente", B1: "SatO₂", C1: "Estado", A8: k === "pinta" ? "" : "Total" };
+  CONT.forEach(([n, s, e], i) => { d["A" + (i + 2)] = n; d["B" + (i + 2)] = s; d["C" + (i + 2)] = e; });
+  mC = mini($("msCont"), [80, 70, 90], 8, d);
+  const col = k === "sat" ? 1 : 2, prueba = k === "sat" ? (v => v < 95) : (v => v === "Fiebre");
+  const f = k === "sat" ? '=CONTAR.SI(B2:B7,"<95")' : k === "fiebre" ? '=CONTAR.SI(C2:C7,"Fiebre")' : "Formato condicional · C2:C7";
+  const big = $("contBig"); let n = 0;
+  big.innerHTML = "0<small>" + (k === "pinta" ? "celdas pintadas" : "celdas que cumplen") + "</small>";
+  if (k === "pinta") { mC.fx.textContent = "El texto es exactamente: Fiebre"; explicar($("contFb"), "<b>Formato → Formato condicional</b> · rango <b>C2:C7</b> · «El texto es exactamente» <b>Fiebre</b> · estilo rojo."); }
+  else { const p = pintarRefs(f); mC.fx.innerHTML = p.html; explicar($("contFb"), "Revisa el rango <b>" + (k === "sat" ? "B2:B7" : "C2:C7") + "</b> celda por celda: ¿" + (k === "sat" ? "es menor que 95" : "dice «Fiebre»") + "?"); }
+  selMini(mC, col, 2, col, 7);
+  await sleep(700); if (!vivo(id)) return;
+  for (let i = 0; i < CONT.length; i++) {
+    const td = mC.td(col, i + 2), v = CONT[i][col];
+    td.classList.add("mira"); await sleep(420); if (!vivo(id)) return;
+    td.classList.remove("mira");
+    if (prueba(v)) { n++; td.classList.add(k === "pinta" ? "pinta" : "cuenta"); big.classList.remove("pop"); void big.offsetWidth; big.classList.add("pop"); big.innerHTML = "<span>" + n + "</span><small>" + (k === "pinta" ? "celdas pintadas" : "celdas que cumplen") + "</small>"; }
+  }
+  if (k !== "pinta") { const td = mC.td(1, 8); td.textContent = n; td.style.textAlign = "right"; td.style.fontWeight = "700"; destello(td, "ok"); selMini(mC, 1, 8); mC.fx.innerHTML = pintarRefs(f).html; }
+  explicar($("contFb"), k === "pinta" ? "🎨 Las 3 celdas que dicen «Fiebre» se pintaron solas. Si mañana cambia un estado, el color cambia también." : "✅ Resultado: <b>" + n + "</b>. " + (k === "sat" ? "Fíjate que <code>\"&lt;95\"</code> va entre comillas aunque tenga un número." : "La palabra va entre comillas, igual que en SI."));
+}
+$("ctCont").addEventListener("click", e => { const b = e.target.closest("button[data-ct]"); if (b) animarCont(b.dataset.ct, ++animId); });
+/* ---------- botones comunes: repetir animación y preguntas rápidas ---------- */
+$("intro").addEventListener("click", e => {
+  const r = e.target.closest("[data-replay]");
+  if (r) { const id = ++animId; INIT[r.dataset.replay](id); return; }
+  const q = e.target.closest(".quiz button");
+  if (q) {
+    const box = q.closest(".quiz"), bs = [...box.querySelectorAll(".btns button")], i = bs.indexOf(q), ok = i === +box.dataset.ok;
+    bs.forEach(b => b.classList.remove("mal"));
+    void q.offsetWidth; q.classList.add(ok ? "bien" : "mal");
+    explicar(box.querySelector(".qfb"), (ok ? "✅ " : "🤔 ") + (ok ? box.dataset.bien : box.dataset.mal));
+  }
+});
+$("bReiniciar").onclick = () => {
+  if (!confirm("¿Empezar de cero? Se borra todo lo que hiciste en las dos hojas y vuelves a la primera misión.")) return;
+  S = estadoInicial(); S.intro = true; deshacer[0] = []; deshacer[1] = []; rehacer[0] = []; rehacer[1] = [];
+  clip = null; vista = null; pistasVistas = 0; fb = { msg: "", bien: false };
+  setSel(0, 0); $("pest").dataset.k = ""; cerrarFC(); render(); panel(); toast("Listo: hoja nueva y misiones desde el inicio.");
+};
+
+/* ===================== ARRANQUE ===================== */
+setSel(0, 0);
+render(); panel();
+/* ---------- adaptar a la pantalla ---------- */
+// Teoría: caja de 1100 px escalada para caber entera (igual que las presentaciones del curso)
+const cajaIntro = document.querySelector("#intro .caja");
+function ajustarIntro() {
+  const grande = innerWidth >= 760 && innerHeight >= 430;
+  document.body.classList.toggle("escalar", grande);
+  if (!grande) return;
+  const h = cajaIntro.offsetHeight;
+  const s = Math.min((innerWidth - 32) / 1100, (innerHeight - 24) / h, 1.8);
+  document.documentElement.style.setProperty("--s", s.toFixed(3));
+}
+if (window.ResizeObserver) new ResizeObserver(() => ajustarIntro()).observe(cajaIntro);
+// Simulador: zoom como el de Google Sheets; en «auto» crece con pantallas grandes (proyector, TV)
+const CLAVE_ZOOM = "u2c2-m1c2-zoom";
+let zoomPref = "auto";
+try { zoomPref = localStorage.getItem(CLAVE_ZOOM) || "auto"; } catch (e) {}
+$("zoomSel").value = zoomPref;
+function aplicarZoom() {
+  let z = zoomPref === "auto" ? Math.min(innerWidth / 1366, innerHeight / 740) : +zoomPref;
+  if (zoomPref === "auto") z = Math.max(1, Math.min(1.75, Math.round(z * 20) / 20));
+  ZOOM = z;
+  [".top", ".barra", ".fx", ".aviso-err", ".wrap", ".pest"].forEach(q => document.querySelector(q).style.zoom = z);
+  document.documentElement.style.fontSize = $("intro").hidden ? (16 * Math.max(1, z)) + "px" : "";
+  document.querySelector(".app").style.gridTemplateColumns = innerWidth > 900 ? "minmax(0, 1fr) " + Math.round(Math.min(380 * Math.max(1, z), innerWidth * .42)) + "px" : "";
+  cerrarMenus();
+  render();
+}
+$("zoomSel").addEventListener("change", () => { zoomPref = $("zoomSel").value; try { localStorage.setItem(CLAVE_ZOOM, zoomPref); } catch (e) {} aplicarZoom(); $("zoomSel").blur(); });
+// Pantalla completa
+function pantallaCompleta() { if (document.fullscreenElement) document.exitFullscreen(); else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }
+document.querySelectorAll("[data-full]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); pantallaCompleta(); }));
+document.addEventListener("fullscreenchange", () => document.querySelectorAll(".full-hoja span").forEach(x => x.textContent = document.fullscreenElement ? "Salir de pantalla completa" : "Pantalla completa"));
+document.addEventListener("keydown", e => { if (!$("intro").hidden && e.key.toLowerCase() === "f" && !e.target.closest("input, textarea, select") && !e.ctrlKey && !e.metaKey && !e.altKey) pantallaCompleta(); });
+function adaptar() { ajustarIntro(); aplicarZoom(); }
+addEventListener("resize", adaptar);
+document.addEventListener("fullscreenchange", adaptar);
+abrirIntro(0);
+adaptar();
+</script>
+</body>
+</html>
