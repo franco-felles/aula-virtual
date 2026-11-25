@@ -343,6 +343,13 @@
   .lado tr.mira td { box-shadow: inset 0 0 0 2px #f0c27b; }
   .ms td.vv { color: #137333; font-weight: 700; text-align: center; }
   .ms td.ff { color: #a50e0e; font-weight: 700; text-align: center; }
+  .ms td.edit { padding: 0; cursor: text; }
+  .ms .msin { display: block; width: 100%; height: 26px; border: 0; margin: 0; background: transparent; font: inherit; color: inherit; text-align: right; padding: 0 5px; box-sizing: border-box; outline: none; }
+  .ms .msin:hover { background: #f1f3f4; }
+  .ms .msin:focus { background: #fff; box-shadow: inset 0 0 0 2px #1a73e8; }
+  .ms td.preg { color: #9aa0a6; text-align: center; cursor: pointer; }
+  .ms td.preg:hover, .ms td.vv:hover, .ms td.ff:hover { background: #f1f3f4; }
+  .ms td.vv, .ms td.ff { cursor: pointer; }
   .opsg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 6px 0 10px; }
   .opsg button { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 6px 4px; text-align: center; line-height: 1.2; transition: background .2s, transform .1s; }
   .opsg button b { display: block; font: 600 1.3rem "IBM Plex Mono", monospace; color: var(--moss); }
@@ -468,6 +475,7 @@
         <div>
           <div id="msComp"></div>
           <div class="tbtn" id="ctNum"><span>Comparar con</span><button class="chipb" data-n="37.5">37.5</button><button class="chipb on" data-n="38">38</button><button class="chipb" data-n="39">39</button></div>
+          <div class="btns"><button class="btn ghost" id="bCompAnim"><i class="ic" data-ic="play"></i> Ver la animación</button><button class="btn ghost" id="bCompBorra"><i class="ic" data-ic="reiniciar"></i> Borrar respuestas</button></div>
         </div>
         <div>
           <div class="opsg" id="ctOp">
@@ -2250,35 +2258,110 @@ const COMP = [["Rosa", 36.5], ["Juan", 38], ["Ana", 39.4], ["Lucía", 37.5], ["E
 const OPN = { ">": "mayor que", "<": "menor que", "=": "igual a", ">=": "mayor o igual a", "<=": "menor o igual a", "<>": "distinto de" };
 let CP = { op: ">=", n: 38 };
 const datosComp = () => { const d = { A1: "Paciente", B1: "Temp", C1: "¿Cumple?" }; COMP.forEach(([n, t], i) => { d["A" + (i + 2)] = n; d["B" + (i + 2)] = t; }); return d; };
-INIT.comparar = id => animarComp(id);
-async function animarComp(id) {
-  const m = mini($("msComp"), [80, 70, 120], 7, datosComp());
+/* Por defecto la comparación se hace en clase con el docente: la columna C empieza con «?».
+   1.er toque en una celda de C: se selecciona y aparece la pregunta; 2.º toque: la respuesta.
+   Las temperaturas (columna B) se pueden cambiar. La animación queda en un botón. */
+const compVis = new Set();   // filas (índice de COMP) cuya respuesta ya se mostró
+let compM = null, compSelI = -1;
+const compF = i => "=B" + (i + 2) + CP.op + CP.n;
+const compOk = i => compare(COMP[i][1], CP.n, CP.op);
+INIT.comparar = () => nuevaPrueba();
+function dibujarComp() {
+  const m = compM = mini($("msComp"), [80, 70, 120], 7, datosComp());
   marcarBtn($("ctOp"), "data-op", CP.op); marcarBtn($("ctNum"), "data-n", CP.n);
   $("compPreg").innerHTML = "¿La temperatura es <em>" + OPN[CP.op] + " " + CP.n + "</em>?";
-  explicar($("compFb"), "Mira cómo la hoja responde la pregunta para cada paciente…");
-  let si = 0;
-  for (let i = 0; i < COMP.length; i++) {
-    const r = i + 2, f = "=B" + r + CP.op + CP.n, td = m.td(2, r), t = COMP[i][1];
-    selMini(m, 2, r);
-    const p = pintarRefs(f); m.fx.innerHTML = p.html; cajasRef(m, p.lista);
-    if (i === 0) {
-      td.classList.add("rel"); const sp = document.createElement("span"); sp.className = "dt esc"; td.appendChild(sp);
-      if (!await escribir(sp, f, id)) return;
-      await sleep(300); if (!vivo(id)) return;
-    } else { await sleep(380); if (!vivo(id)) return; }
-    const ok = compare(t, CP.n, CP.op); if (ok) si++;
-    td.innerHTML = ""; td.textContent = ok ? "VERDADERO" : "FALSO"; td.className = ok ? "vv" : "ff"; destello(td, ok ? "ok" : "mal");
-  }
-  cajasRef(m, []);
+  COMP.forEach((p, i) => {
+    const r = i + 2, tb = m.td(1, r);
+    tb.classList.add("edit"); tb.style.textAlign = "";
+    tb.innerHTML = '<input class="msin" inputmode="decimal" autocomplete="off" spellcheck="false" data-i="' + i + '" value="' + p[1] + '" aria-label="Temperatura de ' + esc(p[0]) + '">';
+    pintarResp(i, false);
+  });
+  if (compSelI >= 0) selComp(compSelI, false);
+  else { m.selm.hidden = true; m.nm.textContent = "C2"; m.fx.textContent = ""; }
+}
+function pintarResp(i, anim) {
+  const td = compM.td(2, i + 2);
+  td.innerHTML = "";
+  if (!compVis.has(i)) { td.className = "preg"; td.textContent = "?"; return; }
+  const ok = compOk(i);
+  td.textContent = ok ? "VERDADERO" : "FALSO"; td.className = ok ? "vv" : "ff";
+  if (anim) destello(td, ok ? "ok" : "mal");
+}
+function selComp(i, avisar) {
+  const m = compM, r = i + 2, f = compF(i);
+  compSelI = i; selMini(m, 2, r);
+  const p = pintarRefs(f); m.fx.innerHTML = p.html; cajasRef(m, p.lista);
+  if (!avisar) return;
+  const [n, t] = COMP[i];
+  if (!compVis.has(i)) explicar($("compFb"), "<b>" + esc(n) + "</b>: ¿<b>" + fmt(t) + "</b> es " + OPN[CP.op] + " <b>" + CP.n + "</b>? Respóndelo y toca otra vez la celda para comprobarlo.");
+  else explicar($("compFb"), "<b>" + esc(n) + "</b>: " + fmt(t) + " " + (compOk(i) ? "<b>sí</b>" : "<b>no</b>") + " es " + OPN[CP.op] + " " + CP.n + ", por eso la celda dice " + outHtml(compOk(i)) + ".");
+}
+function resumenComp() {
+  const si = COMP.filter((_, i) => compOk(i)).length;
   let x = "<b>" + si + " de " + COMP.length + "</b> cumplen la prueba <code>" + esc(CP.op) + " " + CP.n + "</code>.";
-  if (CP.n === 38 && CP.op === ">") x += " Ojo: Juan tiene <b>justo 38</b> y salió FALSO: 38 no es <i>mayor</i> que 38. Para incluirlo, usa <b>&gt;=</b>.";
-  else if (CP.n === 38 && CP.op === ">=") x += " Juan, con <b>justo 38</b>, sí entra: <b>&gt;=</b> incluye el número.";
+  const justo = COMP.find(p => p[1] === CP.n);
+  if (justo && CP.op === ">") x += " Ojo: " + esc(justo[0]) + " tiene <b>justo " + CP.n + "</b> y salió FALSO: " + CP.n + " no es <i>mayor</i> que " + CP.n + ". Para incluirlo, usa <b>&gt;=</b>.";
+  else if (justo && CP.op === ">=") x += " " + esc(justo[0]) + ", con <b>justo " + CP.n + "</b>, sí entra: <b>&gt;=</b> incluye el número.";
   else if (CP.op === "=") x += " Con <b>=</b> solo cumple quien tiene exactamente ese número.";
   else if (CP.op === "<>") x += " <b>&lt;&gt;</b> es lo contrario de =: todos menos el que es igual.";
   explicar($("compFb"), x);
 }
-$("ctOp").addEventListener("click", e => { const b = e.target.closest("button[data-op]"); if (!b) return; CP.op = b.dataset.op; animarComp(++animId); });
-$("ctNum").addEventListener("click", e => { const b = e.target.closest("button[data-n]"); if (!b) return; CP.n = +b.dataset.n; animarComp(++animId); });
+function avisoComp() {
+  explicar($("compFb"), "Toca una celda de la columna <b>C</b> y respondan juntos: el primer toque muestra la pregunta y el segundo, la respuesta. También puedes cambiar las temperaturas de la columna <b>B</b>.");
+}
+function nuevaPrueba() { animId++; compVis.clear(); compSelI = -1; dibujarComp(); avisoComp(); }
+async function animarComp(id) {
+  compVis.clear(); compSelI = -1; dibujarComp();
+  const m = compM;
+  explicar($("compFb"), "Mira cómo la hoja responde la pregunta para cada paciente…");
+  for (let i = 0; i < COMP.length; i++) {
+    const r = i + 2, f = compF(i), td = m.td(2, r);
+    selComp(i, false);
+    if (i === 0) {
+      td.innerHTML = ""; td.className = "rel"; const sp = document.createElement("span"); sp.className = "dt esc"; td.appendChild(sp);
+      if (!await escribir(sp, f, id)) return;
+      await sleep(300); if (!vivo(id)) return;
+    } else { await sleep(380); if (!vivo(id)) return; }
+    compVis.add(i); pintarResp(i, true);
+  }
+  cajasRef(m, []);
+  resumenComp();
+}
+$("ctOp").addEventListener("click", e => { const b = e.target.closest("button[data-op]"); if (!b) return; CP.op = b.dataset.op; nuevaPrueba(); });
+$("ctNum").addEventListener("click", e => { const b = e.target.closest("button[data-n]"); if (!b) return; CP.n = +b.dataset.n; nuevaPrueba(); });
+$("bCompAnim").onclick = () => animarComp(++animId);
+$("bCompBorra").onclick = nuevaPrueba;
+$("msComp").addEventListener("click", e => {
+  const td = e.target.closest('td[data-c="2"]'); if (!td) return;
+  const i = +td.dataset.r - 2; if (i < 0 || i >= COMP.length) return;
+  animId++;
+  if (compSelI === i && !compVis.has(i)) {        // 2.º toque: mostrar la respuesta
+    compVis.add(i); pintarResp(i, true);
+    if (compVis.size === COMP.length) { selComp(i, false); resumenComp(); } else selComp(i, true);
+    return;
+  }
+  selComp(i, true);
+});
+/* cambiar una temperatura: se guarda al salir de la celda o con Enter (y baja a la siguiente) */
+function guardarTemp(inp) {
+  const i = +inp.dataset.i, txt = inp.value.trim().replace(",", "."), v = parseFloat(txt);
+  if (txt === String(COMP[i][1])) return false;
+  if (!/^-?\d+(\.\d+)?$/.test(txt) || !isFinite(v)) { inp.value = COMP[i][1]; toast("Escribe solo el número, por ejemplo 37.8"); return false; }
+  animId++; COMP[i][1] = v; compVis.delete(i); compSelI = i; dibujarComp();
+  explicar($("compFb"), "Cambiaste la temperatura de <b>" + esc(COMP[i][0]) + "</b> a <b>" + fmt(v) + "</b>. ¿" + fmt(v) + " es " + OPN[CP.op] + " " + CP.n + "? Toca su celda en la columna C para comprobarlo.");
+  return true;
+}
+$("msComp").addEventListener("focusout", e => { if (e.target.classList.contains("msin")) guardarTemp(e.target); });
+$("msComp").addEventListener("keydown", e => {
+  const inp = e.target; if (!inp.classList.contains("msin")) return;
+  if (e.key === "Escape") { inp.value = COMP[+inp.dataset.i][1]; inp.blur(); return; }
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  const i = +inp.dataset.i;
+  guardarTemp(inp);
+  const sig = $("msComp").querySelector('.msin[data-i="' + ((i + 1) % COMP.length) + '"]');
+  if (sig) { sig.focus(); sig.select(); }
+});
 conEnter($("inComp"), $("okComp"), () => {
   const f = $("inComp").value, el = $("resComp");
   if (sinIgual(f, el)) return;
