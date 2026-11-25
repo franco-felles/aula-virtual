@@ -109,7 +109,7 @@
       "ruta": "clases/u2c2/material/m1c2.html",
       "titulo": "Condicionales: la hoja que decide",
       "tipo": "interactivo",
-      "descripcion": "Primero, teoría animada: comparaciones (VERDADERO o FALSO), la función SI y sus tres argumentos, el texto entre comillas, el SI anidado, Y y O, CONTAR.SI y el formato condicional. Después, la hoja de práctica igualita a Google Sheets con el control de temperatura del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.",
+      "descripcion": "Teoría animada para escribir y probar: repaso de referencias (=C4), la prueba lógica, cómo leer la función SI, SI por dentro, las comillas, CONTAR y CONTARA, CONTAR.SI con formato condicional y, al final, las partes de SI. Después, la hoja de práctica igualita a Google Sheets con el control del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.",
       "orden": 1
     }
   ]
