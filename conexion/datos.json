@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-25T02:23:13.158Z",
+ "generado": "2026-11-25T11:03:24.634Z",
  "v": 1,
  "clases": [
   {
@@ -160,6 +160,14 @@
    "abierto": true,
    "repetir": true,
    "npreg": 53
+  },
+  {
+   "id": "qzmwvmu4ju055d",
+   "titulo": "Funciones, SI y conteo · Unidad 2",
+   "clase": "u2c2",
+   "abierto": false,
+   "repetir": false,
+   "npreg": 30
   }
  ]
 }
