@@ -426,7 +426,7 @@
           <table id="tGancho"></table>
         </div>
         <div>
-          <div class="nota explica" id="gFb">En la columna <b>Estado</b> queremos que diga <b>«Fiebre»</b> si la temperatura es de 38 °C o más, y <b>«Normal»</b> si no. ¿Lo hacemos uno por uno?</div>
+          <div class="nota explica" id="gFb">En la columna <b>Estado</b> queremos que diga <b>«Fiebre»</b> si la temperatura es de 38 °C o más, y, de lo contrario, <b>«Normal»</b>. ¿Lo hacemos uno por uno?</div>
           <div class="pregunta" id="gFormula" hidden></div>
           <div class="acc" style="margin-top:10px">
             <button class="btn sec" id="bRevisar"><i class="ic" data-ic="termo"></i> Que la hoja revise a todos</button>
@@ -498,7 +498,7 @@
     <section class="slide" data-s="leer">
       <p class="eti">Teoría · 3 de 8</p>
       <h1>Antes de escribir SI, aprende a leerla</h1>
-      <p class="lead">Una función se entiende mejor si la <b>lees en voz alta</b>. Con SI hay un truco: la <b>primera coma</b> se lee <b style="color:#188038">«entonces»</b> y la <b>segunda coma</b> se lee <b style="color:#d93025">«si no»</b>.</p>
+      <p class="lead">Una función se entiende mejor si la <b>lees en voz alta</b>. Con SI hay un truco: la <b>primera coma</b> se lee <b style="color:#188038">«entonces»</b> y la <b>segunda coma</b> se lee <b style="color:#d93025">«de lo contrario»</b>.</p>
       <div class="btns" id="ctLee"><button class="chipb on" data-l="0">Temperatura</button><button class="chipb" data-l="1">Saturación</button><button class="chipb" data-l="2">Frecuencia cardiaca</button>
         <button class="chipb" id="bLeer"><i class="ic" data-ic="play"></i> Leer de nuevo</button><button class="chipb" id="bOir"><i class="ic" data-ic="voz"></i> Escuchar</button></div>
       <div class="fbig lectura-f" id="leeBig" style="margin:8px 0 10px"></div>
@@ -521,12 +521,12 @@
           <div class="tbtn" id="ctSi"><span>B2 =</span><button class="chipb" data-t="36.5">36.5</button><button class="chipb" data-t="37.9">37.9</button><button class="chipb" data-t="38">38</button><button class="chipb" data-t="39.2">39.2</button><input id="inSiT" placeholder="otra" inputmode="decimal" aria-label="Escribe una temperatura"></div>
         </div>
         <div>
-          <div class="lectura"><b style="background:#e8f0fe">SI</b> B2 es mayor o igual a 38, <b style="background:#e6f4ea">entonces</b> «Fiebre», <b style="background:#fce8e6">si no</b> «Normal».</div>
+          <div class="lectura"><b style="background:#e8f0fe">SI</b> B2 es mayor o igual a 38, <b style="background:#e6f4ea">entonces</b> «Fiebre», <b style="background:#fce8e6">de lo contrario</b> «Normal».</div>
           <div class="pregunta" style="margin-top:10px" id="siCelda"></div>
           <div class="nota explica" id="siFb"></div>
         </div>
       </div>
-      <div class="quiz" data-ok="1" data-bien="¡Bien! 97 no es menor que 95: la prueba es FALSO y sale lo que va después de «si no»: «OK»." data-mal="Léela: SI D2 es menor que 95, entonces «Oxígeno», si no «OK». ¿97 es menor que 95?">
+      <div class="quiz" data-ok="1" data-bien="¡Bien! 97 no es menor que 95: la prueba es FALSO y sale lo que va después de «de lo contrario»: «OK»." data-mal="Léela: SI D2 es menor que 95, entonces «Oxígeno», de lo contrario «OK». ¿97 es menor que 95?">
         <p>En <code>=SI(D2&lt;95,"Oxígeno","OK")</code>, si D2 tiene <code>97</code>, ¿qué muestra la celda?</p>
         <div class="btns"><button class="chipb">Oxígeno</button><button class="chipb">OK</button><button class="chipb">FALSO</button></div>
         <div class="qfb"></div>
@@ -625,11 +625,11 @@
       <div class="nota explica" id="fRes" style="text-align:center;margin-bottom:12px"></div>
       <div class="cards" id="fCards"></div>
       <div class="escribe">
-        <div class="reto">Reto: escribe un SI que muestre <b>«Taquicardia»</b> si la frecuencia cardiaca de <b>C2</b> es <b>mayor que 100</b>, y <b>«Normal»</b> si no.</div>
+        <div class="reto">Reto: escribe un SI que muestre <b>«Taquicardia»</b> si la frecuencia cardiaca de <b>C2</b> es <b>mayor que 100</b>, y <b>«Normal»</b> de lo contrario.</div>
         <div class="fila"><div class="fxin"><i>fx</i><input id="inParte" placeholder="=SI(" autocomplete="off" spellcheck="false"></div><button class="chipb on" id="okParte">Enter</button></div>
         <div class="res" id="resParte"></div>
       </div>
-      <div class="quiz" data-ok="2" data-bien="¡Bien! El tercer argumento, después de la segunda coma (el «si no»), es el valor si es falso." data-mal="Cuenta los argumentos: 1.º la prueba, 2.º lo que sale si es verdadero, 3.º lo que sale si es falso.">
+      <div class="quiz" data-ok="2" data-bien="¡Bien! El tercer argumento, después de la segunda coma (el «de lo contrario»), es el valor si es falso." data-mal="Cuenta los argumentos: 1.º la prueba, 2.º lo que sale si es verdadero, 3.º lo que sale si es falso.">
         <p>En <code>=SI(D2&lt;95,"Oxígeno","OK")</code>, ¿cuál es el <b>valor_si_falso</b>?</p>
         <div class="btns"><button class="chipb">D2&lt;95</button><button class="chipb">"Oxígeno"</button><button class="chipb">"OK"</button></div>
         <div class="qfb"></div>
@@ -793,7 +793,7 @@ const FDEF = {
   "CONTAR": { ...VAL_ARGS, d: "Cuenta cuántas celdas tienen números (no cuenta texto ni vacías)." },
   "CONTARA": { ...VAL_ARGS, d: "Cuenta cuántas celdas no están vacías: números y texto." },
   "CONTAR.SI": { a: ["intervalo", "criterio"], ad: ["dónde contar, por ejemplo E2:E9", "qué contar, entre comillas, por ejemplo \"Fiebre\" o \"<95\""], d: "Cuenta las celdas que cumplen una condición." },
-  "SI": { a: ["expresión_lógica", "valor_si_verdadero", "valor_si_falso"], ad: ["la prueba lógica, por ejemplo B2>=38", "lo que se muestra si se cumple: se lee «entonces» (las palabras van entre comillas)", "lo que se muestra si no se cumple: se lee «si no»"], d: "Elige qué mostrar según si se cumple una condición." },
+  "SI": { a: ["expresión_lógica", "valor_si_verdadero", "valor_si_falso"], ad: ["la prueba lógica, por ejemplo B2>=38", "lo que se muestra si se cumple: se lee «entonces» (las palabras van entre comillas)", "lo que se muestra si no se cumple: se lee «de lo contrario»"], d: "Elige qué mostrar según si se cumple una condición." },
   "Y": { a: ["condición1", "[condición2, …]"], ad: ["la primera comparación, por ejemplo B2>=38", "más comparaciones: TODAS deben cumplirse"], d: "VERDADERO solo si se cumplen todas las condiciones." },
   "O": { a: ["condición1", "[condición2, …]"], ad: ["la primera comparación, por ejemplo B2>=39", "más comparaciones: basta con que se cumpla UNA"], d: "VERDADERO si se cumple al menos una condición." },
   "REDONDEAR": { a: ["valor", "[posiciones]"], ad: ["el número o la celda que quieres redondear", "opcional: cuántos decimales dejar (si no pones nada, 0)"], d: "Redondea un número." },
@@ -1667,7 +1667,7 @@ const MENUS = {
   extensiones: () => [{ t: "Complementos", f: () => toast("Extensiones agrega funciones extra a Google Sheets. No está en este simulador.") }],
   ayuda: () => [
     { t: "Repasar la teoría", f: () => abrirIntro(1) },
-    { t: "Cómo leer SI", f: () => toast('=SI(B2>=38,"Fiebre","Normal") se lee: SI B2 es mayor o igual a 38, ENTONCES «Fiebre», SI NO «Normal». La 1.ª coma es «entonces» y la 2.ª, «si no».') },
+    { t: "Cómo leer SI", f: () => toast('=SI(B2>=38,"Fiebre","Normal") se lee: SI B2 es mayor o igual a 38, ENTONCES «Fiebre», SI NO «Normal». La 1.ª coma es «entonces» y la 2.ª, «de lo contrario».') },
     { t: "CONTAR, CONTARA y CONTAR.SI", f: () => toast("CONTAR cuenta números · CONTARA cuenta todo lo que no está vacío · CONTAR.SI cuenta solo lo que cumple un criterio entre comillas.") },
     { t: "Signos para comparar", f: () => toast("> mayor · < menor · = igual · >= mayor o igual · <= menor o igual · <> distinto.") },
     "-",
@@ -1827,7 +1827,7 @@ const MIS = [
     id: "si", nivel: 0, t: "Que la hoja responda con palabras",
     html: () => `<p>«FALSO» no le dice mucho a nadie. Mejor que diga <b>«Fiebre»</b> o <b>«Normal»</b>. Reemplaza lo que hay en <b>E2</b> por:</p>
       <p style="text-align:center"><code style="font-size:1rem">=SI(B2&gt;=38,"Fiebre","Normal")</code></p>
-      <p><b>Léela antes de escribirla:</b> SI B2 es mayor o igual a 38, <b>entonces</b> «Fiebre», <b>si no</b> «Normal».</p>`,
+      <p><b>Léela antes de escribirla:</b> SI B2 es mayor o igual a 38, <b>entonces</b> «Fiebre», <b>de lo contrario</b> «Normal».</p>`,
     pistas: ["Selecciona E2 y escribe encima: lo nuevo reemplaza a lo de antes.", "Las palabras van <b>entre comillas</b>. Si sale <b>#¿NOMBRE?</b>, te faltaron.", "Mira la ayuda mientras escribes: después de cada coma te dice qué argumento sigue."],
     saber: "Selecciona E2 y mira la barra <b>fx</b>: la celda muestra «Normal», pero por dentro guarda la pregunta y las dos respuestas posibles.",
     check() {
@@ -1933,7 +1933,7 @@ const MIS = [
     html: () => `<p>La práctica de hoy <b>ya terminó</b>: esto es solo un reto para pensar.</p>
       <p>Pedro tiene <b>35.4 °C</b> y la hoja dice «Normal». Pero eso no es normal: es <b>hipotermia</b>.</p>
       <p><b>¿Cómo harías para que la hoja diga tres cosas</b> (Fiebre, Hipotermia o Normal) en <b>G2:G9</b>? Un SI solo tiene dos caminos…</p>`,
-    pistas: ["Lee tu SI de la columna E: «SI es 38 o más, entonces Fiebre, <b>si no</b>…». ¿Y si en el «si no», en vez de una palabra, hicieras otra pregunta?"],
+    pistas: ["Lee tu SI de la columna E: «SI es 38 o más, entonces Fiebre, <b>de lo contrario</b>…». ¿Y si en el «de lo contrario», en vez de una palabra, hicieras otra pregunta?"],
     saber: "Si no te sale, no te preocupes: es justamente lo que veremos más adelante.",
     check() {
       const x = revisarCol("G", /\b(SI|IF)\s*\(.*\b(SI|IF)\s*\(/i, "SI");
@@ -2294,19 +2294,19 @@ const VERDE = "#188038", ROJO = "#d93025", AZUL = "#1a73e8", MORADO = "#9334e6",
 const LCOL = { nombre: AZUL, c: MORADO, s1: VERDE, v: VERDE, s2: ROJO, f: ROJO, cierra: GRIS };
 const LEE = [
   { f: [["=SI(", "nombre"], ["B2>=38", "c"], [",", "s1"], ['"Fiebre"', "v"], [",", "s2"], ['"Normal"', "f"], [")", "cierra"]],
-    l: [["SI", "nombre"], ["B2 es mayor o igual a 38", "c"], ["entonces", "s1"], ["«Fiebre»", "v"], ["si no", "s2"], ["«Normal»", "f"]],
-    voz: "Si B2 es mayor o igual a 38, entonces Fiebre. Si no, Normal.",
-    reto: "SI la temperatura de <b>B2</b> es <b>menor que 36</b>, entonces <b>«Hipotermia»</b>, si no <b>«Normal»</b>.",
+    l: [["SI", "nombre"], ["B2 es mayor o igual a 38", "c"], ["entonces", "s1"], ["«Fiebre»", "v"], ["de lo contrario", "s2"], ["«Normal»", "f"]],
+    voz: "Si B2 es mayor o igual a 38, entonces Fiebre. De lo contrario, Normal.",
+    reto: "SI la temperatura de <b>B2</b> es <b>menor que 36</b>, entonces <b>«Hipotermia»</b>, de lo contrario <b>«Normal»</b>.",
     pr: [{ datos: { B2: 35.2 }, esp: "Hipotermia" }, { datos: { B2: 36.8 }, esp: "Normal" }, { datos: { B2: 36 }, esp: "Normal" }] },
   { f: [["=SI(", "nombre"], ["D2<95", "c"], [",", "s1"], ['"Oxígeno"', "v"], [",", "s2"], ['"OK"', "f"], [")", "cierra"]],
-    l: [["SI", "nombre"], ["D2 es menor que 95", "c"], ["entonces", "s1"], ["«Oxígeno»", "v"], ["si no", "s2"], ["«OK»", "f"]],
-    voz: "Si D2 es menor que 95, entonces Oxígeno. Si no, OK.",
-    reto: "SI la saturación de <b>D2</b> es <b>mayor o igual a 95</b>, entonces <b>«Bien»</b>, si no <b>«Revisar»</b>.",
+    l: [["SI", "nombre"], ["D2 es menor que 95", "c"], ["entonces", "s1"], ["«Oxígeno»", "v"], ["de lo contrario", "s2"], ["«OK»", "f"]],
+    voz: "Si D2 es menor que 95, entonces Oxígeno. De lo contrario, OK.",
+    reto: "SI la saturación de <b>D2</b> es <b>mayor o igual a 95</b>, entonces <b>«Bien»</b>, de lo contrario <b>«Revisar»</b>.",
     pr: [{ datos: { D2: 97 }, esp: "Bien" }, { datos: { D2: 93 }, esp: "Revisar" }, { datos: { D2: 95 }, esp: "Bien" }] },
   { f: [["=SI(", "nombre"], ["C2>100", "c"], [",", "s1"], ['"Taquicardia"', "v"], [",", "s2"], ['"Normal"', "f"], [")", "cierra"]],
-    l: [["SI", "nombre"], ["C2 es mayor que 100", "c"], ["entonces", "s1"], ["«Taquicardia»", "v"], ["si no", "s2"], ["«Normal»", "f"]],
-    voz: "Si C2 es mayor que 100, entonces Taquicardia. Si no, Normal.",
-    reto: "SI la frecuencia cardiaca de <b>C2</b> es <b>menor que 60</b>, entonces <b>«Bradicardia»</b>, si no <b>«Normal»</b>.",
+    l: [["SI", "nombre"], ["C2 es mayor que 100", "c"], ["entonces", "s1"], ["«Taquicardia»", "v"], ["de lo contrario", "s2"], ["«Normal»", "f"]],
+    voz: "Si C2 es mayor que 100, entonces Taquicardia. De lo contrario, Normal.",
+    reto: "SI la frecuencia cardiaca de <b>C2</b> es <b>menor que 60</b>, entonces <b>«Bradicardia»</b>, de lo contrario <b>«Normal»</b>.",
     pr: [{ datos: { C2: 55 }, esp: "Bradicardia" }, { datos: { C2: 72 }, esp: "Normal" }, { datos: { C2: 60 }, esp: "Normal" }] }
 ];
 let leeI = 0;
@@ -2355,8 +2355,8 @@ function flujoSimple(el) {
     svg.appendChild(svgEl("rect", { x: cx - 58, y: 170, width: 116, height: 44, rx: 10, class: "caja-r", id, style: "--pc:" + col }));
     svg.appendChild(svgEl("text", { x: cx, y: 193 }, t));
   });
-  svg.appendChild(svgEl("text", { x: 34, y: 120, class: "eti-si" }, "Sí → entonces"));
-  svg.appendChild(svgEl("text", { x: 368, y: 120, class: "eti-no" }, "No → si no"));
+  svg.appendChild(svgEl("text", { x: 70, y: 120, class: "eti-si", style: "text-anchor:start" }, "Sí → entonces"));
+  svg.appendChild(svgEl("text", { x: 330, y: 145, class: "eti-no", style: "text-anchor:end" }, "No → de lo contrario"));
   el.innerHTML = ""; el.appendChild(svg);
 }
 const q = id => document.getElementById(id);
@@ -2379,7 +2379,7 @@ async function animarSi(t, id) {
   await sleep(800); if (!vivo(id)) return;
   prender(ok ? "fA" : "fB", "caja-r on"); prender(ok ? "fS" : "fN", "lin " + (ok ? "si" : "no"));
   $("siCelda").innerHTML = "B2 = " + t + " → la celda muestra <em>" + (ok ? "Fiebre" : "Normal") + "</em>";
-  explicar($("siFb"), ok ? "Es <b>VERDADERO</b> → la hoja sigue el camino del <b style=\"color:" + VERDE + "\">«entonces»</b>: muestra <b>Fiebre</b>." : "Es <b>FALSO</b> → la hoja sigue el camino del <b style=\"color:" + ROJO + "\">«si no»</b>: muestra <b>Normal</b>.");
+  explicar($("siFb"), ok ? "Es <b>VERDADERO</b> → la hoja sigue el camino del <b style=\"color:" + VERDE + "\">«entonces»</b>: muestra <b>Fiebre</b>." : "Es <b>FALSO</b> → la hoja sigue el camino del <b style=\"color:" + ROJO + "\">«de lo contrario»</b>: muestra <b>Normal</b>.");
 }
 $("ctSi").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (b) animarSi(+b.dataset.t, ++animId); });
 $("inSiT").addEventListener("keydown", e => { if (e.key !== "Enter") return; e.preventDefault(); const t = parseFloat($("inSiT").value.replace(",", ".")); if (isFinite(t)) animarSi(t, ++animId); else toast("Escribe un número, por ejemplo 37.8"); });
@@ -2507,7 +2507,7 @@ conEnter($("inCrit"), $("okCrit"), async () => {
 const PC = { igual: "#b3752c", nombre: "#1a73e8", abre: "#9334e6", arg: "#188038", sep: "#d93025", cierra: "#c2185b" };
 const ORDEN_P = ["igual", "nombre", "abre", "arg", "sep", "cierra"];
 const PX = {
-  si: { n: "SI", hace: "elige qué mostrar según una prueba lógica", args: [["B2>=38", "<b>expresión lógica</b> (la prueba)"], ['"Fiebre"', "<b>valor si verdadero</b> («entonces»)"], ['"Normal"', "<b>valor si falso</b> («si no»)"]], res: "SI tiene <b>tres argumentos</b> y cada uno cumple un papel distinto: la prueba, el «entonces» y el «si no»." },
+  si: { n: "SI", hace: "elige qué mostrar según una prueba lógica", args: [["B2>=38", "<b>expresión lógica</b> (la prueba)"], ['"Fiebre"', "<b>valor si verdadero</b> («entonces»)"], ['"Normal"', "<b>valor si falso</b> («de lo contrario»)"]], res: "SI tiene <b>tres argumentos</b> y cada uno cumple un papel distinto: la prueba, el «entonces» y el «de lo contrario»." },
   csi: { n: "CONTAR.SI", hace: "cuenta las celdas que cumplen una condición", args: [["E2:E9", "<b>intervalo</b>: dónde contar"], ['"Fiebre"', "<b>criterio</b>: qué contar (entre comillas)"]], res: "CONTAR.SI tiene <b>dos argumentos</b>: dónde contar y qué contar." },
   cnt: { n: "CONTAR", hace: "cuenta las celdas que tienen números", args: [["C2:C9", "<b>valor</b>: el rango donde contar"]], res: "CONTAR tiene <b>un argumento</b>: el rango. No necesita condición." }
 };
@@ -2526,7 +2526,7 @@ function cardData(ex, tipo) {
     case "nombre": return [ex.n, "Etiqueta (nombre)", "Dice <b>qué hacer</b>: " + ex.n + " " + ex.hace + "."];
     case "abre": return ["(", "Símbolo de apertura", "Va pegado a la etiqueta. Desde aquí empiezan los argumentos."];
     case "arg": return [ex.args.map(a => a[0]).join(" · "), na > 1 ? na + " argumentos" : "1 argumento", ex.args.map(([a, d], i) => (na > 1 ? NUM[i] + " " : "") + "<b>" + esc(a) + "</b>: " + d).join("<br>")];
-    case "sep": return na > 1 ? [",", "Separador", (ex.n === "SI" ? "La 1.ª coma se lee «entonces»; la 2.ª, «si no»." : "Separa un argumento del siguiente.") + " A veces es <b>;</b>."] : ["—", "Separador", "<b>Aquí no hay:</b> con un solo argumento no hace falta."];
+    case "sep": return na > 1 ? [",", "Separador", (ex.n === "SI" ? "La 1.ª coma se lee «entonces»; la 2.ª, «de lo contrario»." : "Separa un argumento del siguiente.") + " A veces es <b>;</b>."] : ["—", "Separador", "<b>Aquí no hay:</b> con un solo argumento no hace falta."];
     case "cierra": return [")", "Símbolo de cierre", "Termina la función. Todo paréntesis que se abre, se cierra."];
   }
 }
