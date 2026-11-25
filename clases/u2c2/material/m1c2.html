@@ -6,7 +6,7 @@
 <!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
 <meta name="material-titulo" content="Condicionales: la hoja que decide">
 <meta name="material-tipo" content="interactivo">
-<meta name="material-descripcion" content="Primero, teoría animada: comparaciones (VERDADERO o FALSO), la función SI y sus tres argumentos, el texto entre comillas, el SI anidado, Y y O, CONTAR.SI y el formato condicional. Después, la hoja de práctica igualita a Google Sheets con el control de temperatura del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.">
+<meta name="material-descripcion" content="Teoría animada para escribir y probar: repaso de referencias (=C4), la prueba lógica, cómo leer la función SI, SI por dentro, las comillas, CONTAR y CONTARA, CONTAR.SI con formato condicional y, al final, las partes de SI. Después, la hoja de práctica igualita a Google Sheets con el control del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.">
 <title>Condicionales en la hoja</title>
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
@@ -148,7 +148,6 @@
   .pistas { margin-top: 10px; }
   .pistas button { border: 1px dashed var(--amber); background: none; color: #8a5a1f; border-radius: 99px; padding: 4px 12px; font-size: .85rem; font-weight: 600; }
   .pista { font-size: .9rem; background: #fffaf0; border-radius: 8px; padding: 8px 10px; margin-top: 8px; line-height: 1.45; }
-  .pista::before { content: "💡 "; }
   details { margin-top: 12px; border-top: 1px solid var(--soft); padding-top: 10px; }
   summary { font-weight: 700; font-size: .88rem; color: var(--moss); cursor: pointer; }
   details p { font-size: .88rem !important; color: #3d4a43; margin-top: 8px !important; }
@@ -319,11 +318,28 @@
   .card .sim { font: 600 1.15rem "IBM Plex Mono", monospace; color: var(--pc); word-break: break-all; }
   .card h4 { margin: 2px 0 4px; font-size: .95rem; }
 
+  /* ====== íconos (SVG, sin emojis: se ven igual en Windows 10) ====== */
+  i.ic { display: inline-flex; width: 1.2em; height: 1.2em; vertical-align: -.25em; font-style: normal; flex: none; }
+  i.ic svg { width: 100%; height: 100%; fill: currentColor; }
+  .barra i.ic { width: 20px; height: 20px; vertical-align: 0; }
+  .barra .dd { display: flex; align-items: center; gap: 0; padding: 0 2px 0 4px; }
+  .barra .dd i.ic + i.ic { width: 16px; height: 16px; margin-left: -2px; }
+  .barra .fuente { min-width: 96px; justify-content: space-between; font: 14px Roboto, Arial, sans-serif; color: #1f1f1f; }
+  .barra .tam { display: flex; align-items: center; border: 1px solid #747775; border-radius: 4px; height: 26px; margin: 0 2px; }
+  .barra .tam button { min-width: 24px; height: 24px; }
+  .barra .tam span { font: 14px Roboto, Arial, sans-serif; width: 28px; text-align: center; }
+  .barra .fmt { font: 500 14px Roboto, Arial, sans-serif; color: #444746; }
+  .barra .colorbar { left: 7px; right: 7px; bottom: 4px; height: 3px; }
+  .menu button .mi { display: flex; align-items: center; gap: 10px; }
+  .menu button .mi i.ic { width: 18px; height: 18px; color: #444746; }
+  .pest .todas { border: 0; background: none; width: 30px; height: 30px; border-radius: 50%; color: #444746; display: grid; place-items: center; }
+  .pest .todas:hover { background: #e8eaed; }
+  .confeti { width: 9px; height: 14px; border-radius: 2px; }
+
   /* ====== condicionales: piezas de la teoría ====== */
-  .duelo td.c { text-align: center; font-weight: 700; transition: background .3s, color .3s; }
+  .lado td.c { text-align: center; font-weight: 700; transition: background .3s, color .3s; }
   .lado td.fiebre { background: #fce8e6; color: #a50e0e; }
   .lado td.normal { background: #e6f4ea; color: #137333; }
-  .lado td.hipo { background: #e8f0fe; color: #174ea6; }
   .lado tr.mira td { box-shadow: inset 0 0 0 2px #f0c27b; }
   .ms td.vv { color: #137333; font-weight: 700; text-align: center; }
   .ms td.ff { color: #a50e0e; font-weight: 700; text-align: center; }
@@ -336,6 +352,27 @@
   .opsg button:active { transform: scale(.95); }
   .pregunta { font: 600 1.1rem "IBM Plex Mono", monospace; text-align: center; background: var(--ink); color: #fff; border-radius: 12px; padding: 10px; margin-bottom: 10px; }
   .pregunta em { font-style: normal; color: #f0c27b; }
+  /* casilla para escribir fórmulas en la teoría (parece la barra fx) */
+  .escribe { margin-top: 10px; background: #fff; border: 1px dashed var(--moss); border-radius: 12px; padding: 10px 12px; }
+  .escribe label { font-weight: 700; font-size: .9rem; display: block; margin-bottom: 6px; }
+  .escribe .fila { display: flex; gap: 8px; align-items: stretch; }
+  .escribe .fxin { flex: 1; min-width: 0; display: flex; align-items: center; border: 1px solid #c4c7c5; border-radius: 8px; overflow: hidden; background: #fff; }
+  .escribe .fxin i { font: italic 600 14px Georgia, serif; color: #80868b; padding: 0 9px; border-right: 1px solid #e2e3e3; align-self: stretch; display: flex; align-items: center; }
+  .escribe .fxin input { flex: 1; min-width: 0; border: 0; outline: none; font: 15px "IBM Plex Mono", monospace; padding: 8px 10px; }
+  .escribe .fxin:focus-within { border-color: #1a73e8; box-shadow: 0 0 0 1px #1a73e8; }
+  .escribe .res { margin-top: 8px; font-size: .92rem; line-height: 1.45; min-height: 1.3em; }
+  .escribe .res .out { display: inline-block; font: 700 1rem "IBM Plex Mono", monospace; padding: 2px 10px; border-radius: 6px; background: var(--soft); margin-right: 6px; }
+  .escribe .res .out.v { background: #e6f4ea; color: #137333; } .escribe .res .out.f { background: #fce8e6; color: #a50e0e; } .escribe .res .out.e { background: #fce8e6; color: #a50e0e; }
+  .escribe .ej { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .escribe .ej button { border: 1px solid var(--line); background: #faf9f5; border-radius: 99px; padding: 3px 10px; font: 600 .82rem "IBM Plex Mono", monospace; }
+  .reto { background: #fbf1e2; border-radius: 10px; padding: 8px 12px; font-size: .95rem; line-height: 1.45; margin-bottom: 8px; }
+  /* lectura de la función */
+  .lee { font-size: 1.25rem; line-height: 1.7; text-align: center; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; min-height: 3.6em; }
+  .lee span { opacity: .12; transition: opacity .35s, background .35s; padding: 1px 4px; border-radius: 6px; }
+  .lee span.on { opacity: 1; }
+  .lee span.foco { background: color-mix(in srgb, var(--pc) 18%, #fff); }
+  .lee span b { color: var(--pc); }
+  .fbig.lectura-f span { cursor: default; }
   /* diagrama de decisión */
   .flujo { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 10px 12px; }
   .flujo svg { display: block; width: 100%; height: auto; overflow: visible; }
@@ -350,38 +387,18 @@
   .flujo text { font: 600 15px "IBM Plex Sans", sans-serif; fill: var(--ink); text-anchor: middle; dominant-baseline: middle; }
   .flujo text.mono { font-family: "IBM Plex Mono", monospace; font-size: 14px; }
   .flujo text.eti-si { fill: #2f7d4a; font-size: 13px; } .flujo text.eti-no { fill: #b3362c; font-size: 13px; }
-  .flujo .bola { fill: #f0c27b; stroke: var(--ink); stroke-width: 2; }
   .tbtn { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 8px 0; }
   .tbtn > span { font-size: .78rem; font-weight: 700; color: var(--mut); text-transform: uppercase; letter-spacing: .05em; margin-right: 4px; }
+  .tbtn input { width: 90px; font: 15px "IBM Plex Mono", monospace; padding: 5px 8px; border: 1px solid var(--line); border-radius: 99px; text-align: center; }
   .lectura { font-size: 1.05rem; line-height: 1.6; text-align: center; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
   .lectura b { padding: 0 4px; border-radius: 5px; }
-  /* interruptores Y / O */
-  .circuitos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .circ { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; text-align: center; }
-  .circ h3 { margin: 0 0 2px; font: 600 1.35rem "IBM Plex Mono", monospace; color: var(--moss); }
-  .circ p { margin: 0 0 6px; font-size: .88rem; color: var(--mut); }
-  .circ svg { width: 100%; height: auto; }
-  .circ .cable { fill: none; stroke: #c4c7c5; stroke-width: 4; stroke-linecap: round; transition: stroke .3s; }
-  .circ .cable.vivo { stroke: #f0b429; }
-  .circ .foco { fill: #eceff1; stroke: #9aa0a6; stroke-width: 2.5; transition: fill .3s, filter .3s; }
-  .circ .foco.on { fill: #ffd54f; stroke: #e37400; filter: drop-shadow(0 0 10px #ffca28); }
-  .circ .res { font: 700 1rem "IBM Plex Mono", monospace; padding: 4px; border-radius: 8px; transition: background .3s, color .3s; }
-  .circ .res.v { background: #e6f4ea; color: #137333; } .circ .res.f { background: #fce8e6; color: #a50e0e; }
-  .circ text { font: 600 12px "IBM Plex Sans", sans-serif; fill: var(--ink); text-anchor: middle; }
-  .swt { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
-  .sw { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 6px 14px 6px 6px; font-weight: 600; }
-  .sw i { width: 46px; height: 26px; border-radius: 99px; background: #d8d3c4; position: relative; transition: background .25s; flex: none; }
-  .sw i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: left .25s; }
-  .sw.on i { background: var(--ok); } .sw.on i::after { left: 23px; }
-  .sw small { display: block; font-weight: 400; color: var(--mut); font-size: .76rem; }
   .contador { font: 600 3rem "IBM Plex Mono", monospace; text-align: center; color: #f0c27b; background: var(--ink); border-radius: 14px; line-height: 1.2; padding: 4px; }
   .contador small { display: block; font: 600 .8rem "IBM Plex Sans", sans-serif; color: #cfe3d3; }
   .contador.pop span { display: inline-block; animation: pop .35s ease both; }
-  .ms td.cuenta { box-shadow: inset 0 0 0 2px #f0b429; }
+  .ms td.cuenta { box-shadow: inset 0 0 0 2px #f0b429; background: #fff8e1; }
   .ms td.pinta { background: #f4c7c3 !important; color: #a50e0e; transition: background .4s; }
   .ms td.mira { background: #fff3c4; }
-  body.escalar .circuitos { grid-template-columns: 1fr 1fr; }
-
+  .ms td.salta { opacity: .45; }
   @media (max-width: 900px) {
     .dos { grid-template-columns: 1fr; }
     html, body { overflow: auto; }
@@ -412,19 +429,41 @@
           <div class="nota explica" id="gFb">En la columna <b>Estado</b> queremos que diga <b>«Fiebre»</b> si la temperatura es de 38 °C o más, y <b>«Normal»</b> si no. ¿Lo hacemos uno por uno?</div>
           <div class="pregunta" id="gFormula" hidden></div>
           <div class="acc" style="margin-top:10px">
-            <button class="btn sec" id="bRevisar">🌡️ Que la hoja revise a todos</button>
-            <button class="btn ghost" id="bToma" hidden>📥 Nueva toma: Rosa tiene 38.5 °C</button>
+            <button class="btn sec" id="bRevisar"><i class="ic" data-ic="termo"></i> Que la hoja revise a todos</button>
+            <button class="btn ghost" id="bToma" hidden>Nueva toma: Rosa tiene 38.5 °C</button>
           </div>
           <p class="peq" id="pIntro">Presiona el botón amarillo primero.</p>
         </div>
       </div>
     </section>
 
-    <!-- 1 · comparaciones -->
+    <!-- 1 · repaso: referencias simples -->
+    <section class="slide" data-s="refs">
+      <p class="eti">Teoría · 1 de 8 · Repaso</p>
+      <h1>Recuerda: la fórmula más corta es una dirección</h1>
+      <p class="lead">En la clase anterior usaste <code>=B2*B3</code>. Pero una fórmula no siempre necesita una cuenta: <code>=B4</code> solo dice <b>«trae lo que hay en B4»</b>. Así se arma una ficha o un resumen sin copiar los datos a mano.</p>
+      <div class="dos">
+        <div>
+          <div id="msRefs"></div>
+          <div class="btns"><button class="btn ghost" id="bRefCambia">Cambiar la temperatura de Ana</button></div>
+        </div>
+        <div>
+          <div class="escribe">
+            <label for="inRef">Escribe una referencia para la celda D2 (la ficha)</label>
+            <div class="fila"><div class="fxin"><i>fx</i><input id="inRef" value="=A4" autocomplete="off" spellcheck="false"></div><button class="chipb on" id="okRef">Enter</button></div>
+            <div class="ej"><button>=A4</button><button>=B4</button><button>=C3</button><button>B4</button></div>
+            <div class="res" id="resRef"></div>
+          </div>
+          <div class="nota">Sin el <code>=</code>, «B4» es solo texto. Con el <code>=</code>, es una <b>referencia</b>: si el dato cambia, la ficha cambia sola.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · prueba lógica -->
     <section class="slide" data-s="comparar">
-      <p class="eti">Teoría · 1 de 6</p>
-      <h1>Todo empieza con una pregunta de sí o no</h1>
-      <p class="lead">Para decidir, la hoja primero <b>compara</b>. Una comparación solo tiene dos respuestas posibles: <b style="color:#137333">VERDADERO</b> (sí se cumple) o <b style="color:#a50e0e">FALSO</b> (no se cumple). Elige un signo y un número:</p>
+      <p class="eti">Teoría · 2 de 8</p>
+      <h1>La prueba lógica: una pregunta de sí o no</h1>
+      <p class="lead">Para decidir, la hoja primero <b>compara</b>. Una prueba lógica solo tiene dos respuestas: <b style="color:#137333">VERDADERO</b> (sí se cumple) o <b style="color:#a50e0e">FALSO</b> (no se cumple). Son los valores <b>lógicos</b> que vimos en los tipos de datos: van <b>al centro</b> de la celda.</p>
       <div class="dos">
         <div>
           <div id="msComp"></div>
@@ -434,7 +473,7 @@
           <div class="opsg" id="ctOp">
             <button data-op=">"><b>&gt;</b><small>mayor que</small></button>
             <button data-op="<"><b>&lt;</b><small>menor que</small></button>
-            <button data-op="=" ><b>=</b><small>igual a</small></button>
+            <button data-op="="><b>=</b><small>igual a</small></button>
             <button data-op=">=" class="on"><b>&gt;=</b><small>mayor o igual</small></button>
             <button data-op="<="><b>&lt;=</b><small>menor o igual</small></button>
             <button data-op="<>"><b>&lt;&gt;</b><small>distinto de</small></button>
@@ -443,6 +482,11 @@
           <div class="nota explica" id="compFb"></div>
         </div>
       </div>
+      <div class="escribe">
+        <label for="inComp">Ahora tú: escribe una prueba lógica sobre la tabla</label>
+        <div class="fila"><div class="fxin"><i>fx</i><input id="inComp" placeholder="por ejemplo =B4<37" autocomplete="off" spellcheck="false"></div><button class="chipb on" id="okComp">Enter</button></div>
+        <div class="res" id="resComp"></div>
+      </div>
       <div class="quiz" data-ok="1" data-bien="¡Exacto! 38 no es MAYOR que 38: es igual. Para incluir el 38 se usa >= (mayor o igual)." data-mal="Ojo con el signo: «>» es solo «mayor que». ¿38 es mayor que 38?">
         <p>Si B2 tiene <code>38</code>, ¿qué muestra <code>=B2&gt;38</code>?</p>
         <div class="btns"><button class="chipb">VERDADERO</button><button class="chipb">FALSO</button></div>
@@ -450,39 +494,59 @@
       </div>
     </section>
 
-    <!-- 2 · la función SI -->
+    <!-- 3 · leer la función SI -->
+    <section class="slide" data-s="leer">
+      <p class="eti">Teoría · 3 de 8</p>
+      <h1>Antes de escribir SI, aprende a leerla</h1>
+      <p class="lead">Una función se entiende mejor si la <b>lees en voz alta</b>. Con SI hay un truco: la <b>primera coma</b> se lee <b style="color:#188038">«entonces»</b> y la <b>segunda coma</b> se lee <b style="color:#d93025">«si no»</b>.</p>
+      <div class="btns" id="ctLee"><button class="chipb on" data-l="0">Temperatura</button><button class="chipb" data-l="1">Saturación</button><button class="chipb" data-l="2">Frecuencia cardiaca</button>
+        <button class="chipb" id="bLeer"><i class="ic" data-ic="play"></i> Leer de nuevo</button><button class="chipb" id="bOir"><i class="ic" data-ic="voz"></i> Escuchar</button></div>
+      <div class="fbig lectura-f" id="leeBig" style="margin:8px 0 10px"></div>
+      <div class="lee" id="leeTxt"></div>
+      <div class="escribe">
+        <div class="reto" id="retoLee"></div>
+        <div class="fila"><div class="fxin"><i>fx</i><input id="inLee" placeholder="escribe aquí la fórmula" autocomplete="off" spellcheck="false"></div><button class="chipb on" id="okLee">Enter</button></div>
+        <div class="res" id="resLee"></div>
+      </div>
+    </section>
+
+    <!-- 4 · SI, visual -->
     <section class="slide" data-s="si">
-      <p class="eti">Teoría · 2 de 6</p>
-      <h1>La función SI: un camino para el sí y otro para el no</h1>
-      <p class="lead">SI hace la pregunta y, según la respuesta, <b>elige qué mostrar</b>. Tiene <b>tres argumentos</b>, separados por comas. Cambia la temperatura y mira por dónde va:</p>
-      <div class="fbig" id="siBig" style="margin:6px 0 12px"></div>
+      <p class="eti">Teoría · 4 de 8</p>
+      <h1>SI por dentro: un camino para el sí y otro para el no</h1>
+      <p class="lead">La hoja hace la prueba lógica y, según la respuesta, toma un camino. Cambia la temperatura (o escribe una) y mira por dónde va:</p>
       <div class="dos">
         <div>
           <div class="flujo" id="siFlujo"></div>
-          <div class="tbtn" id="ctSi"><span>B2 =</span><button class="chipb" data-t="36.5">36.5</button><button class="chipb" data-t="37.9">37.9</button><button class="chipb" data-t="38">38</button><button class="chipb" data-t="39.2">39.2</button></div>
+          <div class="tbtn" id="ctSi"><span>B2 =</span><button class="chipb" data-t="36.5">36.5</button><button class="chipb" data-t="37.9">37.9</button><button class="chipb" data-t="38">38</button><button class="chipb" data-t="39.2">39.2</button><input id="inSiT" placeholder="otra" inputmode="decimal" aria-label="Escribe una temperatura"></div>
         </div>
         <div>
-          <div class="lectura" id="siLee">Se lee: <b style="background:#e8f0fe">SI</b> B2 es mayor o igual a 38, <b style="background:#e6f4ea">entonces</b> «Fiebre»; <b style="background:#fce8e6">si no</b>, «Normal».</div>
-          <div class="cards" id="siCards" style="margin-top:10px"></div>
-          <div class="nota explica" id="siFb" style="margin-top:10px"></div>
+          <div class="lectura"><b style="background:#e8f0fe">SI</b> B2 es mayor o igual a 38, <b style="background:#e6f4ea">entonces</b> «Fiebre», <b style="background:#fce8e6">si no</b> «Normal».</div>
+          <div class="pregunta" style="margin-top:10px" id="siCelda"></div>
+          <div class="nota explica" id="siFb"></div>
         </div>
       </div>
-      <div class="quiz" data-ok="1" data-bien="¡Bien! 97 no es menor que 95, la condición es FALSO y se va por el tercer argumento: «OK»." data-mal="Primero responde la pregunta: ¿97 es menor que 95? Si es FALSO, la hoja muestra el tercer argumento.">
+      <div class="quiz" data-ok="1" data-bien="¡Bien! 97 no es menor que 95: la prueba es FALSO y sale lo que va después de «si no»: «OK»." data-mal="Léela: SI D2 es menor que 95, entonces «Oxígeno», si no «OK». ¿97 es menor que 95?">
         <p>En <code>=SI(D2&lt;95,"Oxígeno","OK")</code>, si D2 tiene <code>97</code>, ¿qué muestra la celda?</p>
         <div class="btns"><button class="chipb">Oxígeno</button><button class="chipb">OK</button><button class="chipb">FALSO</button></div>
         <div class="qfb"></div>
       </div>
     </section>
 
-    <!-- 3 · comillas -->
+    <!-- 5 · comillas -->
     <section class="slide" data-s="comillas">
-      <p class="eti">Teoría · 3 de 6</p>
-      <h1>El texto va entre comillas</h1>
+      <p class="eti">Teoría · 5 de 8</p>
+      <h1>Las palabras van entre comillas</h1>
       <p class="lead">Si SI tiene que escribir una <b>palabra</b>, va entre comillas: <code>"Fiebre"</code>. Sin comillas, la hoja cree que es el nombre de una función y se confunde. Mira:</p>
       <div class="dos">
         <div>
           <div id="msCom"></div>
-          <div class="btns"><button class="chipb" data-cm="0">✍ Sin comillas</button><button class="chipb" data-cm="1">✍ Con comillas</button></div>
+          <div class="btns"><button class="chipb" data-cm="0"><i class="ic" data-ic="lapiz"></i> Sin comillas</button><button class="chipb" data-cm="1"><i class="ic" data-ic="lapiz"></i> Con comillas</button></div>
+          <div class="escribe">
+            <label for="inCom">Escríbelo tú en C2 (Juan tiene 38.6)</label>
+            <div class="fila"><div class="fxin"><i>fx</i><input id="inCom" placeholder='=SI(B2>=38,"Fiebre","Normal")' autocomplete="off" spellcheck="false"></div><button class="chipb on" id="okCom">Enter</button></div>
+            <div class="res" id="resCom"></div>
+          </div>
         </div>
         <div>
           <div class="nota explica" id="comFb">Mira cómo se escribe en C2…</div>
@@ -490,86 +554,92 @@
           <details><summary>Saber más</summary><p>Las comillas son las dobles <b>"</b> (Shift + 2 en la mayoría de teclados). Las simples <b>'</b> no sirven. Mayúsculas o minúsculas dan igual para comparar: "fiebre" y "Fiebre" son lo mismo para la hoja.</p></details>
         </div>
       </div>
-      <div class="quiz" data-ok="2" data-bien="¡Correcto! La condición sin comillas (es una comparación) y las dos palabras con comillas." data-mal="Revisa: la condición B2>=38 NO va entre comillas (es una comparación), pero las palabras Fiebre y Normal SÍ.">
+      <div class="quiz" data-ok="2" data-bien="¡Correcto! La prueba lógica sin comillas (es una comparación) y las dos palabras con comillas." data-mal="Revisa: la prueba B2>=38 NO va entre comillas (es una comparación), pero las palabras Fiebre y Normal SÍ.">
         <p>¿Cuál está bien escrita?</p>
         <div class="btns"><button class="chipb">=SI(B2&gt;=38,Fiebre,Normal)</button><button class="chipb">=SI("B2&gt;=38","Fiebre","Normal")</button><button class="chipb">=SI(B2&gt;=38,"Fiebre","Normal")</button></div>
         <div class="qfb"></div>
       </div>
     </section>
 
-    <!-- 4 · SI anidado -->
-    <section class="slide" data-s="anidado">
-      <p class="eti">Teoría · 4 de 6</p>
-      <h1>¿Y si hay tres respuestas? Un SI dentro de otro</h1>
-      <p class="lead">Un SI solo tiene dos caminos. Para tres (Hipotermia, Normal, Fiebre), en el lugar del <b>«si no»</b> ponemos <b>otro SI</b> que hace una segunda pregunta. Se llama <b>SI anidado</b>.</p>
-      <div class="fbig" id="anBig" style="margin:6px 0 12px;font-size:clamp(1rem,2.6vw,1.7rem)"></div>
+    <!-- 6 · CONTAR y CONTARA -->
+    <section class="slide" data-s="contar2">
+      <p class="eti">Teoría · 6 de 8</p>
+      <h1>¿Cuántos datos hay? CONTAR y CONTARA</h1>
+      <p class="lead">Las dos cuentan celdas, pero no las mismas. <code>CONTAR</code> cuenta solo las que tienen <b>números</b> (las que se alinean a la derecha). <code>CONTARA</code> cuenta <b>todas las que no están vacías</b>: números y texto.</p>
       <div class="dos">
         <div>
-          <div class="flujo" id="anFlujo"></div>
-          <div class="tbtn" id="ctAn2"><span>B2 =</span><button class="chipb" data-t="35.2">35.2</button><button class="chipb" data-t="36.8">36.8</button><button class="chipb" data-t="38.5">38.5</button></div>
+          <div id="msCnt"></div>
+          <div class="btns" id="ctCnt"><button class="chipb" data-f="=CONTAR(B2:B9)">=CONTAR(B2:B9)</button><button class="chipb" data-f="=CONTARA(B2:B9)">=CONTARA(B2:B9)</button><button class="chipb" data-f="=CONTARA(A2:A9)">=CONTARA(A2:A9)</button></div>
         </div>
         <div>
-          <div class="nota explica" id="anFb"></div>
-          <div class="nota">🧩 Fíjate en los colores: el <b style="color:#c2185b">segundo SI</b> ocupa el lugar del tercer argumento del primero. Por eso al final hay <b>dos paréntesis de cierre</b> <code>))</code>: uno por cada SI.</div>
-          <div class="nota">🔢 El orden importa: la hoja hace las preguntas <b>de izquierda a derecha</b> y se queda con la primera que sea VERDADERO.</div>
+          <div class="contador" id="cntBig">0<small>celdas contadas</small></div>
+          <div class="nota explica" id="cntFb" style="margin-top:10px"></div>
+          <div class="escribe">
+            <label for="inCnt">Escribe tu propia fórmula de conteo</label>
+            <div class="fila"><div class="fxin"><i>fx</i><input id="inCnt" placeholder="=CONTAR(B2:B9)" autocomplete="off" spellcheck="false"></div><button class="chipb on" id="okCnt">Enter</button></div>
+            <div class="res" id="resCnt"></div>
+          </div>
         </div>
       </div>
-      <div class="quiz" data-ok="0" data-bien="¡Así es! 35.5 no llega a 38 (primera pregunta: FALSO), pero sí es menor que 36 (segunda: VERDADERO)." data-mal="Haz las preguntas en orden: ¿35.5 >= 38? Si no, pasa al segundo SI: ¿35.5 < 36?">
-        <p>Con <code>=SI(B2&gt;=38,"Fiebre",SI(B2&lt;36,"Hipotermia","Normal"))</code> y B2 = <code>35.5</code>, ¿qué sale?</p>
-        <div class="btns"><button class="chipb">Hipotermia</button><button class="chipb">Normal</button><button class="chipb">Fiebre</button></div>
+      <div class="quiz" data-ok="0" data-bien="¡Correcto! «pendiente» es texto: CONTARA lo cuenta, CONTAR no." data-mal="CONTAR solo cuenta números. «pendiente» es texto, aunque esté en una columna de números.">
+        <p>En la FC de Miguel dice <code>pendiente</code>. ¿Quién la cuenta?</p>
+        <div class="btns"><button class="chipb">Solo CONTARA</button><button class="chipb">Solo CONTAR</button><button class="chipb">Las dos</button></div>
         <div class="qfb"></div>
       </div>
     </section>
 
-    <!-- 5 · Y / O -->
-    <section class="slide" data-s="yo">
-      <p class="eti">Teoría · 5 de 6</p>
-      <h1>Dos condiciones a la vez: Y · O</h1>
-      <p class="lead">A veces una sola pregunta no basta. <code>Y</code> exige que se cumplan <b>todas</b>; <code>O</code> se conforma con que se cumpla <b>al menos una</b>. Mueve los interruptores: cada uno es una condición.</p>
-      <div class="swt">
-        <button class="sw" data-sw="0"><i></i><span>Temp ≥ 38<small>¿tiene fiebre?</small></span></button>
-        <button class="sw" data-sw="1"><i></i><span>FC &gt; 100<small>¿tiene taquicardia?</small></span></button>
-      </div>
-      <div class="circuitos">
-        <div class="circ"><h3>Y( , )</h3><p>Interruptores en fila: la luz pasa solo si <b>los dos</b> están prendidos.</p><div id="cirY"></div><div class="res" id="resY"></div></div>
-        <div class="circ"><h3>O( , )</h3><p>Interruptores en paralelo: basta con que <b>uno</b> esté prendido.</p><div id="cirO"></div><div class="res" id="resO"></div></div>
-      </div>
-      <div class="nota" style="margin-top:12px">💊 Se usan <b>dentro de SI</b>, como condición: <code>=SI(Y(B2&gt;=38,C2&gt;100),"Llamar al médico","Vigilar")</code> → avisa solo si tiene fiebre <b>y</b> taquicardia.</div>
-      <div class="quiz" data-ok="0" data-bien="¡Sí! La temperatura no cumple, pero la saturación sí (88 < 90). Con O basta una." data-mal="Revisa cada condición: ¿37 >= 39? ¿88 < 90? Con O, basta que una sea VERDADERO.">
-        <p>Si B2 = <code>37</code> y D2 = <code>88</code>, ¿qué da <code>=O(B2&gt;=39,D2&lt;90)</code>?</p>
-        <div class="btns"><button class="chipb">VERDADERO</button><button class="chipb">FALSO</button></div>
-        <div class="qfb"></div>
-      </div>
-    </section>
-
-    <!-- 6 · CONTAR.SI y formato condicional -->
+    <!-- 7 · CONTAR.SI y formato condicional -->
     <section class="slide" data-s="contar">
-      <p class="eti">Teoría · 6 de 6</p>
-      <h1>Contar y pintar según una condición</h1>
-      <p class="lead"><code>CONTAR.SI</code> cuenta solo las celdas que cumplen una condición. El <b>formato condicional</b> las <b>pinta</b> solas. Los dos miran cada celda del rango y se preguntan: ¿cumple?</p>
+      <p class="eti">Teoría · 7 de 8</p>
+      <h1>CONTAR.SI: contar solo lo que cumple</h1>
+      <p class="lead"><code>CONTAR.SI</code> es CONTAR con una pregunta: mira cada celda del rango y cuenta <b>solo las que cumplen</b> la condición. Y si en vez de contarlas quieres <b>pintarlas</b>, está el <b>formato condicional</b>.</p>
       <div class="dos">
         <div>
           <div id="msCont"></div>
-          <div class="btns" id="ctCont"><button class="chipb" data-ct="fiebre">=CONTAR.SI(C2:C7,"Fiebre")</button><button class="chipb" data-ct="sat">=CONTAR.SI(B2:B7,"&lt;95")</button><button class="chipb" data-ct="pinta">🎨 Formato condicional</button></div>
+          <div class="btns" id="ctCont"><button class="chipb" data-ct="fiebre">=CONTAR.SI(C2:C7,"Fiebre")</button><button class="chipb" data-ct="sat">=CONTAR.SI(B2:B7,"&lt;95")</button><button class="chipb" data-ct="pinta"><i class="ic" data-ic="paleta"></i> Formato condicional</button></div>
         </div>
         <div>
           <div class="contador" id="contBig">0<small>celdas que cumplen</small></div>
           <div class="nota explica" id="contFb" style="margin-top:10px"></div>
-          <div class="nota">CONTAR.SI tiene <b>dos argumentos</b>: <b>dónde</b> contar (un rango) y <b>qué</b> contar (la condición, <b>entre comillas</b>: <code>"Fiebre"</code>, <code>"&lt;95"</code>, <code>"&gt;=38"</code>).</div>
+          <div class="escribe">
+            <label for="inCrit">Escribe la condición (con comillas)</label>
+            <div class="fila"><div class="fxin"><i>fx</i><span style="font:15px 'IBM Plex Mono',monospace;padding-left:8px;white-space:nowrap">=CONTAR.SI(B2:B7,</span><input id="inCrit" placeholder='">=96"' autocomplete="off" spellcheck="false" style="padding-left:2px"><span style="font:15px 'IBM Plex Mono',monospace;padding-right:8px">)</span></div><button class="chipb on" id="okCrit">Enter</button></div>
+            <div class="res" id="resCrit"></div>
+          </div>
         </div>
       </div>
-      <div class="quiz" data-ok="1" data-bien="¡Correcto! El formato condicional no escribe nada: solo cambia el color de las celdas que cumplen la regla." data-mal="Piensa: ¿cuál de las dos herramientas escribe un número y cuál cambia colores?">
+      <div class="quiz" data-ok="1" data-bien="¡Correcto! El formato condicional no escribe nada: solo cambia el color de las celdas que cumplen la regla." data-mal="Piensa: ¿cuál de las herramientas escribe un número y cuál cambia colores?">
         <p>Quieres que las saturaciones menores de 95 <b>se pongan rojas</b> solas. ¿Qué usas?</p>
         <div class="btns"><button class="chipb">CONTAR.SI</button><button class="chipb">Formato → Formato condicional</button><button class="chipb">Pintarlas a mano con el balde</button></div>
         <div class="qfb"></div>
       </div>
     </section>
 
+    <!-- 8 · partes de SI (al final: es lo más complejo) -->
+    <section class="slide" data-s="partes">
+      <p class="eti">Teoría · 8 de 8</p>
+      <h1>Las partes de SI (las mismas de toda función)</h1>
+      <p class="lead">En la clase anterior viste que toda función tiene <b>6 partes</b>. SI también: lo especial es que sus <b>tres argumentos</b> cumplen papeles distintos. Elige un ejemplo y toca cada parte.</p>
+      <div class="btns" id="ctPx"><button class="chipb on" data-px="si">=SI(B2&gt;=38,"Fiebre","Normal")</button><button class="chipb" data-px="csi">=CONTAR.SI(E2:E9,"Fiebre")</button><button class="chipb" data-px="cnt">=CONTAR(C2:C9)</button><button class="chipb" data-replay="partes"><i class="ic" data-ic="replay"></i> Animar de nuevo</button></div>
+      <div class="fbig" id="fBig"></div>
+      <div class="nota explica" id="fRes" style="text-align:center;margin-bottom:12px"></div>
+      <div class="cards" id="fCards"></div>
+      <div class="escribe">
+        <div class="reto">Reto: escribe un SI que muestre <b>«Taquicardia»</b> si la frecuencia cardiaca de <b>C2</b> es <b>mayor que 100</b>, y <b>«Normal»</b> si no.</div>
+        <div class="fila"><div class="fxin"><i>fx</i><input id="inParte" placeholder="=SI(" autocomplete="off" spellcheck="false"></div><button class="chipb on" id="okParte">Enter</button></div>
+        <div class="res" id="resParte"></div>
+      </div>
+      <div class="quiz" data-ok="2" data-bien="¡Bien! El tercer argumento, después de la segunda coma (el «si no»), es el valor si es falso." data-mal="Cuenta los argumentos: 1.º la prueba, 2.º lo que sale si es verdadero, 3.º lo que sale si es falso.">
+        <p>En <code>=SI(D2&lt;95,"Oxígeno","OK")</code>, ¿cuál es el <b>valor_si_falso</b>?</p>
+        <div class="btns"><button class="chipb">D2&lt;95</button><button class="chipb">"Oxígeno"</button><button class="chipb">"OK"</button></div>
+        <div class="qfb"></div>
+      </div>
+    </section>
 
     <div class="navt">
       <button class="btn ghost" id="bAtras">← Atrás</button>
       <div class="puntos" id="puntos"></div>
-      <button class="btn ghost bfull" type="button" title="Pantalla completa (F)" data-full>⛶</button>
+      <button class="btn ghost bfull" type="button" title="Pantalla completa (F)" data-full><i data-ic="pantalla"></i></button>
       <button class="btn pri" id="bSig">Siguiente →</button>
     </div>
   </div>
@@ -583,34 +653,50 @@
       <div>
         <div class="titulo-doc" id="tituloDoc">Control del turno · Piso 3</div>
         <nav class="menus" id="menus">
-          <button data-menu="archivo">Archivo</button><button data-menu="editar">Editar</button><button data-menu="ver">Ver</button><button data-menu="insertar">Insertar</button><button data-menu="formato">Formato</button><button data-menu="datos">Datos</button><button data-menu="ayuda">Ayuda</button>
+          <button data-menu="archivo">Archivo</button><button data-menu="editar">Editar</button><button data-menu="ver">Ver</button><button data-menu="insertar">Insertar</button><button data-menu="formato">Formato</button><button data-menu="datos">Datos</button><button data-menu="herramientas">Herramientas</button><button data-menu="extensiones">Extensiones</button><button data-menu="ayuda">Ayuda</button>
         </nav>
       </div>
-      <button class="full-hoja" type="button" title="Pantalla completa" data-full>⛶ <span>Pantalla completa</span></button>
+      <button class="full-hoja" type="button" title="Pantalla completa" data-full><i data-ic="pantalla"></i> <span>Pantalla completa</span></button>
     </div>
     <div class="barra" id="barra">
-      <button data-acc="deshacer" title="Deshacer">↶</button>
-      <button data-acc="rehacer" title="Rehacer">↷</button>
-      <span class="sep"></span>
-      <button data-acc="dec-" title="Disminuir decimales" class="num">.0←</button>
-      <button data-acc="dec+" title="Aumentar decimales" class="num">.00→</button>
-      <span class="sep"></span>
-      <button data-acc="negrita" title="Negrita" class="ab">B</button>
-      <button data-acc="cursiva" title="Cursiva" class="ai">I</button>
-      <button data-acc="colorTexto" title="Color de texto"><span style="font-weight:700">A</span><span class="colorbar" id="cbTexto" style="background:#000"></span></button>
-      <button data-acc="relleno" title="Color de relleno">🪣<span class="colorbar" id="cbRelleno" style="background:#fff59d"></span></button>
-      <button data-acc="bordes" title="Bordes" style="font-size:18px">▦</button>
-      <span class="sep"></span>
-      <button data-acc="izq" title="Alinear a la izquierda">⇤</button>
-      <button data-acc="centro" title="Centrar">↔</button>
-      <button data-acc="der" title="Alinear a la derecha">⇥</button>
-      <button data-acc="ajuste" title="Ajuste de texto">↵</button>
-      <span class="sep"></span>
-      <button data-acc="funciones" title="Funciones">Σ</button>
-      <span class="sep"></span>
-      <select id="zoomSel" class="zoomsel" title="Zoom de la hoja">
+      <button data-acc="buscar" title="Menús de búsqueda"><i data-ic="buscar"></i></button>
+      <button data-acc="deshacer" title="Deshacer"><i data-ic="deshacer"></i></button>
+      <button data-acc="rehacer" title="Rehacer"><i data-ic="rehacer"></i></button>
+      <button data-acc="imprimir" title="Imprimir"><i data-ic="imprimir"></i></button>
+      <button data-acc="brocha" title="Copiar formato"><i data-ic="brocha"></i></button>
+      <select id="zoomSel" class="zoomsel" title="Zoom">
         <option value="auto">Zoom: auto</option><option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="1.75">175%</option>
       </select>
+      <span class="sep"></span>
+      <button data-acc="moneda" title="Formato de moneda" class="fmt">$</button>
+      <button data-acc="porcentaje" title="Formato de porcentaje" class="fmt">%</button>
+      <button data-acc="dec-" title="Disminuir decimales" class="fmt">.0<small style="font-size:9px">←</small></button>
+      <button data-acc="dec+" title="Aumentar decimales" class="fmt">.00<small style="font-size:9px">→</small></button>
+      <button data-acc="masFormatos" title="Más formatos" class="fmt">123</button>
+      <span class="sep"></span>
+      <button data-acc="fuente" title="Fuente" class="dd fuente">Arial <i data-ic="flecha"></i></button>
+      <span class="sep"></span>
+      <span class="tam"><button data-acc="tamMenos" title="Reducir tamaño de fuente">−</button><span>10</span><button data-acc="tamMas" title="Aumentar tamaño de fuente">+</button></span>
+      <span class="sep"></span>
+      <button data-acc="negrita" title="Negrita"><i data-ic="negrita"></i></button>
+      <button data-acc="cursiva" title="Cursiva"><i data-ic="cursiva"></i></button>
+      <button data-acc="tachado" title="Tachado"><i data-ic="tachado"></i></button>
+      <button data-acc="colorTexto" title="Color del texto"><i data-ic="colorTexto"></i><span class="colorbar" id="cbTexto" style="background:#000"></span></button>
+      <span class="sep"></span>
+      <button data-acc="relleno" title="Color de relleno"><i data-ic="relleno"></i><span class="colorbar" id="cbRelleno" style="background:#fff59d"></span></button>
+      <button data-acc="bordes" title="Bordes"><i data-ic="bordes"></i></button>
+      <button data-acc="combinar" title="Combinar celdas" class="dd"><i data-ic="combinar"></i><i data-ic="flecha"></i></button>
+      <span class="sep"></span>
+      <button data-acc="alinH" title="Alineación horizontal" class="dd"><i data-ic="izq"></i><i data-ic="flecha"></i></button>
+      <button data-acc="alinV" title="Alineación vertical" class="dd"><i data-ic="vertical"></i><i data-ic="flecha"></i></button>
+      <button data-acc="ajuste" title="Ajuste de texto" class="dd"><i data-ic="ajuste"></i><i data-ic="flecha"></i></button>
+      <button data-acc="rotar" title="Rotación de texto" class="dd"><i data-ic="rotar"></i><i data-ic="flecha"></i></button>
+      <span class="sep"></span>
+      <button data-acc="enlace" title="Insertar enlace"><i data-ic="enlace"></i></button>
+      <button data-acc="comentario" title="Insertar comentario"><i data-ic="comentario"></i></button>
+      <button data-acc="grafico" title="Insertar gráfico"><i data-ic="grafico"></i></button>
+      <button data-acc="filtro" title="Crear un filtro"><i data-ic="filtro"></i></button>
+      <button data-acc="funciones" title="Funciones" class="dd"><i data-ic="funciones"></i><i data-ic="flecha"></i></button>
     </div>
     <div class="fx">
       <div class="nombre" id="nombre" title="Nombre de la celda seleccionada">A1</div>
@@ -628,9 +714,9 @@
     <div class="pest" id="pest"></div>
 
     <div class="fc" id="fc" hidden>
-      <h3>Formato condicional <button id="fcCerrar" title="Cerrar">×</button></h3>
+      <h3>Reglas de formato condicional <button id="fcCerrar" title="Cerrar"><i data-ic="cerrar"></i></button></h3>
       <div id="fcReglas"></div>
-      <label for="fcRango">Aplicar al rango</label>
+      <label for="fcRango">Aplicar al intervalo</label>
       <input id="fcRango" placeholder="B2:B7" autocomplete="off">
       <label for="fcOp">Dar formato a las celdas si…</label>
       <select id="fcOp">
@@ -659,8 +745,8 @@
     </header>
     <div class="cuerpo" id="cuerpo"></div>
     <footer>
-      <button id="bIntro">📖 Repasar la teoría</button>
-      <button id="bReiniciar">↺ Empezar de cero</button>
+      <button id="bIntro"><i data-ic="libro"></i> Repasar la teoría</button>
+      <button id="bReiniciar"><i data-ic="reiniciar"></i> Empezar de cero</button>
     </footer>
   </aside>
 </div>
@@ -671,7 +757,7 @@
    SIMULADOR DE HOJA DE CÁLCULO
    - Motor de fórmulas propio (SUMA, PROMEDIO, MAX, MIN, CONTAR, CONTAR.SI, SI…)
    - Selección, rangos, asa de relleno, copiar/pegar, deshacer, formato condicional
-   - Clase 2: condicionales (comparaciones, SI, SI anidado, Y, O, CONTAR.SI, formato condicional)
+   - Clase 2: referencias, prueba lógica, SI, CONTAR, CONTARA, CONTAR.SI y formato condicional
    - Misiones por niveles: Base (mínimo del día) · Plata · Oro · Secreto
    ===================================================================== */
 const $ = id => document.getElementById(id);
@@ -704,13 +790,13 @@ const FDEF = {
   "PROMEDIO": { ...VAL_ARGS, d: "Saca el promedio: suma todo y divide entre cuántos son." },
   "MAX": { ...VAL_ARGS, d: "Devuelve el número más alto." },
   "MIN": { ...VAL_ARGS, d: "Devuelve el número más bajo." },
-  "CONTAR": { ...VAL_ARGS, d: "Cuenta cuántas celdas tienen números." },
-  "CONTARA": { ...VAL_ARGS, d: "Cuenta cuántas celdas no están vacías (números o texto)." },
-  "CONTAR.SI": { a: ["rango", "condición"], ad: ["dónde contar, por ejemplo D2:D7", "qué contar, entre comillas, por ejemplo \"<95\""], d: "Cuenta las celdas que cumplen una condición." },
-  "SI": { a: ["condición", "valor_si_verdadero", "valor_si_falso"], ad: ["la pregunta de sí o no, por ejemplo B2>=38", "lo que se muestra si se cumple (las palabras van entre comillas)", "lo que se muestra si no se cumple (también puede ser otro SI)"], d: "Elige qué mostrar según si se cumple una condición." },
+  "CONTAR": { ...VAL_ARGS, d: "Cuenta cuántas celdas tienen números (no cuenta texto ni vacías)." },
+  "CONTARA": { ...VAL_ARGS, d: "Cuenta cuántas celdas no están vacías: números y texto." },
+  "CONTAR.SI": { a: ["intervalo", "criterio"], ad: ["dónde contar, por ejemplo E2:E9", "qué contar, entre comillas, por ejemplo \"Fiebre\" o \"<95\""], d: "Cuenta las celdas que cumplen una condición." },
+  "SI": { a: ["expresión_lógica", "valor_si_verdadero", "valor_si_falso"], ad: ["la prueba lógica, por ejemplo B2>=38", "lo que se muestra si se cumple: se lee «entonces» (las palabras van entre comillas)", "lo que se muestra si no se cumple: se lee «si no»"], d: "Elige qué mostrar según si se cumple una condición." },
   "Y": { a: ["condición1", "[condición2, …]"], ad: ["la primera comparación, por ejemplo B2>=38", "más comparaciones: TODAS deben cumplirse"], d: "VERDADERO solo si se cumplen todas las condiciones." },
   "O": { a: ["condición1", "[condición2, …]"], ad: ["la primera comparación, por ejemplo B2>=39", "más comparaciones: basta con que se cumpla UNA"], d: "VERDADERO si se cumple al menos una condición." },
-  "REDONDEAR": { a: ["número", "[decimales]"], ad: ["el número o la celda que quieres redondear", "opcional: cuántos decimales dejar (si no pones nada, 0)"], d: "Redondea un número." },
+  "REDONDEAR": { a: ["valor", "[posiciones]"], ad: ["el número o la celda que quieres redondear", "opcional: cuántos decimales dejar (si no pones nada, 0)"], d: "Redondea un número." },
   "ABS": { a: ["número"], ad: ["el número o la celda"], d: "Quita el signo negativo (valor absoluto)." }
 };
 const RCOL = ["#1a73e8", "#d93025", "#9334e6", "#188038", "#e37400", "#c2185b"];
@@ -979,20 +1065,21 @@ function shiftF(f, dr, dc) {
 }
 
 /* ===================== ESTADO ===================== */
-const CLAVE = "u2c2-m1c2-hoja-v1";
+const CLAVE = "u2c2-m1c2-hoja-v2";
 function hojaInicial() {
   const d = {
-    A1: "Paciente", B1: "Temp (°C)", C1: "FC (lpm)", D1: "SatO₂ (%)", E1: "¿Fiebre?", F1: "¿Oxígeno?", G1: "Clasificación", H1: "Aviso", I1: "Urgencia",
+    A1: "Paciente", B1: "Temp (°C)", C1: "FC (lpm)", D1: "SatO₂ (%)", E1: "¿Fiebre?", F1: "¿Oxígeno?", G1: "Clasificación",
     A2: "Rosa Quispe", A3: "Juan Mamani", A4: "Lucía Torres", A5: "Pedro Huamán", A6: "Ana Flores", A7: "Carlos Ramos", A8: "Elena Castro", A9: "Miguel Rojas",
     B2: "36.5", B3: "38.6", B4: "37.2", B5: "35.4", B6: "39.1", B7: "36.9", B8: "38", B9: "37.8",
-    C2: "72", C3: "110", C4: "88", C5: "64", C6: "118", C7: "95", C8: "92", C9: "104",
+    C2: "72", C3: "110", C4: "88", C5: "64", C6: "118", C7: "95", C8: "92", C9: "pendiente",
     D2: "98", D3: "93", D4: "97", D5: "96", D6: "89", D7: "88", D8: "94", D9: "97",
     F2: "=SI(D2<95,Oxígeno,OK)",
-    A11: "Con fiebre", A12: "SatO₂ menor de 95"
+    A11: "Con fiebre", A12: "SatO₂ menor de 95", A13: "Pacientes registrados", A14: "FC tomadas", A15: "Temp. promedio", A16: "Temp. máxima",
+    A17: "Ficha de observación (cama 5)", A18: "Paciente", A19: "Temperatura", A20: "¿Fiebre?"
   };
   const cells = {}; for (const k in d) cells[k] = { v: d[k] };
-  ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1"].forEach(k => cells[k].b = true);
-  return { id: 0, nombre: "Pacientes", titulo: "Control del turno · Piso 3", cells, w: { 0: 130, 6: 105, 7: 120 }, rules: [] };
+  ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "A17"].forEach(k => cells[k].b = true);
+  return { id: 0, nombre: "Pacientes", titulo: "Control del turno · Piso 3", cells, w: { 0: 150, 6: 105 }, rules: [] };
 }
 function estadoInicial() {
   return { hojas: [hojaInicial(), { id: 1, nombre: "Libre", titulo: "Mi hoja libre", cells: {}, w: {}, rules: [] }], cur: 0, mis: 0, intro: false, lineas: true };
@@ -1123,7 +1210,7 @@ function render() {
   if (!editing) fbar.value = cell ? cell.v : "";
   const v = val(h, a);
   const av = $("avisoErr");
-  if (v instanceof FErr && !editing) { av.hidden = false; av.innerHTML = "⚠ <b>" + esc(v.code) + "</b> en " + a + ": " + esc(v.msg); } else av.hidden = true;
+  if (v instanceof FErr && !editing) { av.hidden = false; av.innerHTML = ico("alerta") + " <b>" + esc(v.code) + "</b> en " + a + ": " + esc(v.msg); } else av.hidden = true;
   // estado de botones
   document.querySelector('[data-acc="negrita"]').classList.toggle("on", !!(cell && cell.b));
   document.querySelector('[data-acc="cursiva"]').classList.toggle("on", !!(cell && cell.i));
@@ -1150,9 +1237,10 @@ function pestanas() {
   if (p.dataset.k === S.cur + "") return;
   p.dataset.k = S.cur;
   p.innerHTML = "";
-  const mas = document.createElement("button"); mas.className = "mas"; mas.textContent = "+"; mas.title = "Agregar hoja";
+  const mas = document.createElement("button"); mas.className = "mas todas"; mas.innerHTML = ico("mas"); mas.title = "Agregar hoja";
   mas.onclick = () => toast("En Google Sheets, este botón agrega otra pestaña al mismo archivo. Aquí ya tienes la pestaña «Libre» para experimentar.");
   p.appendChild(mas);
+  const todas = document.createElement("button"); todas.className = "todas"; todas.innerHTML = ico("lista"); todas.title = "Todas las hojas"; todas.onclick = () => toast("Todas las hojas: muestra la lista de pestañas del archivo."); p.appendChild(todas);
   S.hojas.forEach((h, i) => {
     const b = document.createElement("button"); b.className = "tab" + (i === S.cur ? " on" : ""); b.textContent = h.nombre;
     b.onclick = () => { if (editing) commit(null); if (S.cur === i) return; S.cur = i; clip = null; setSel(0, 0); refsList = []; cerrarFC(); render(); panel(); };
@@ -1210,8 +1298,8 @@ function actualizarAyuda() {
       h += '<div class="sec"><span class="rec' + pop + '">✓ Función reconocida: ' + n + "</span>" +
         '<div class="sint"><span class="nf">' + n + "</span>(" + partes.join(", ") + ")</div>" +
         "<div>" + d.d + "</div>" +
-        (i < d.a.length ? '<div class="argd">✏️ Estás escribiendo <b>' + d.a[i].replace(/[\[\]]/g, "") + "</b>: " + esc(d.ad[i]) + "</div>"
-                        : '<div class="argd" style="color:#a50e0e">⚠ ' + n + " solo tiene " + d.a.length + " parte" + (d.a.length > 1 ? "s" : "") + ": te sobra un separador «,».</div>") + "</div>";
+        (i < d.a.length ? '<div class="argd">Estás escribiendo <b>' + d.a[i].replace(/[\[\]]/g, "") + "</b>: " + esc(d.ad[i]) + "</div>"
+                        : '<div class="argd" style="color:#a50e0e">' + n + " solo tiene " + d.a.length + " parte" + (d.a.length > 1 ? "s" : "") + ": te sobra un separador «,».</div>") + "</div>";
     } else {
       let mejor = null, dist = 99;
       for (const f of FUNCS) { const x = lev(an.fn, f); if (x < dist) { dist = x; mejor = f; } }
@@ -1458,20 +1546,37 @@ function accion(acc, boton) {
       formatoSel(x => x.dec = nuevo); break;
     }
     case "funciones": menuFunciones(boton); break;
+    case "alinH": abrirMenu(boton, [{ t: '<span class="mi">' + ico("izq") + "Izquierda</span>", f: () => accion("izq") }, { t: '<span class="mi">' + ico("centro") + "Centro</span>", f: () => accion("centro") }, { t: '<span class="mi">' + ico("der") + "Derecha</span>", f: () => accion("der") }]); break;
+    case "buscar": toast("En Google Sheets, aquí escribes el nombre de una opción (por ejemplo «formato condicional») y te lleva a ella."); break;
+    case "imprimir": toast("Imprimir: en Google Sheets abre la vista previa. Allí ves que la cuadrícula gris no sale; solo los bordes."); break;
+    case "brocha": toast("Copiar formato: copia colores, negrita y bordes de una celda a otra. No está en este simulador."); break;
+    case "moneda": toast("Formato de moneda: muestra el número como dinero (S/ 25.00). No está en este simulador."); break;
+    case "porcentaje": toast("Formato de porcentaje: 0.95 se ve como 95%. No está en este simulador."); break;
+    case "masFormatos": toast("Más formatos: número, fecha, hora, moneda… No está en este simulador."); break;
+    case "fuente": toast("Fuente: en Google Sheets la predeterminada es Arial. Aquí no se puede cambiar."); break;
+    case "tamMenos": case "tamMas": toast("Tamaño de fuente: en Google Sheets lo cambias con − y +. Aquí no se puede cambiar."); break;
+    case "tachado": toast("Tachado: raya el texto, por ejemplo una indicación suspendida. No está en este simulador."); break;
+    case "combinar": toast("Combinar celdas: une varias celdas en una, como en las tablas de Docs. No está en este simulador."); break;
+    case "alinV": toast("Alineación vertical: arriba, en medio o abajo de la celda. No está en este simulador."); break;
+    case "rotar": toast("Rotación de texto: inclina el texto. No está en este simulador."); break;
+    case "enlace": toast("Insertar enlace: convierte el texto en un link. No está en este simulador."); break;
+    case "comentario": toast("Insertar comentario: deja una nota para tus compañeros en la celda. No está en este simulador."); break;
+    case "grafico": toast("Insertar gráfico: lo verás más adelante. No está en este simulador."); break;
+    case "filtro": toast("Crear un filtro: muestra solo las filas que quieras. No está en este simulador."); break;
     case "bordes": abrirMenu(boton, [{ sub: "Bordes del rango " + rangeTxt(sel) },
-      { t: "▦  Todos los bordes", k: "como tabla", f: () => bordes("todos") },
-      { t: "▢  Bordes exteriores", k: "solo el contorno", f: () => bordes("ext") },
-      { t: "▁  Borde inferior", f: () => bordes("inf") },
+      { t: '<span class="mi">' + ico("bordes") + "Todos los bordes</span>", k: "como tabla", f: () => bordes("todos") },
+      { t: "Bordes exteriores", k: "solo el contorno", f: () => bordes("ext") },
+      { t: "Borde inferior", f: () => bordes("inf") },
       "-",
-      { t: "✕  Quitar bordes", f: () => bordes("quitar") }]); boton.classList.remove("on"); break;
+      { t: '<span class="mi">' + ico("cerrar") + "Quitar bordes</span>", f: () => bordes("quitar") }]); boton.classList.remove("on"); break;
     case "ajuste": abrirMenu(boton, menuAjuste()); boton.classList.remove("on"); break;
   }
 }
 function menuAjuste() {
   return [{ sub: "Ajuste de texto" },
-    { t: "⇥  Desbordar", k: "se pasa a la celda vacía", f: () => formatoSel(x => delete x.wr) },
-    { t: "↵  Ajustar", k: "baja de línea", f: () => formatoSel(x => x.wr = "wrap") },
-    { t: "✂  Recortar", k: "se corta en el borde", f: () => formatoSel(x => x.wr = "clip") }];
+    { t: "Desbordar", k: "se pasa a la celda vacía", f: () => formatoSel(x => delete x.wr) },
+    { t: "Ajustar", k: "baja de línea", f: () => formatoSel(x => x.wr = "wrap") },
+    { t: "Recortar", k: "se corta en el borde", f: () => formatoSel(x => x.wr = "clip") }];
 }
 function bordes(tipo) {
   if (editing) commit(null);
@@ -1490,7 +1595,7 @@ function bordes(tipo) {
     for (let r = sel.r1; r <= sel.r2; r++) { const x = h.cells[addr(sel.c1 - 1, r)]; if (sel.c1 > 0 && x && x.bd) { delete x.bd.r; if (!x.bd.t && !x.bd.b && !x.bd.l) delete x.bd; } }
   }
   limpiarVacias(); cambio();
-  if (tipo !== "quitar" && S.lineas) toast("Bordes listos ✔ Tip: en Ver → Mostrar líneas de cuadrícula puedes quitar la cuadrícula gris y ver la tabla como saldría impresa.");
+  if (tipo !== "quitar" && S.lineas) toast("Bordes listos. Tip: en Ver → Mostrar líneas de cuadrícula puedes quitar la cuadrícula gris y ver la tabla como saldría impresa.");
 }
 $("barra").addEventListener("click", e => { const b = e.target.closest("button[data-acc]"); if (b) { e.stopPropagation(); accion(b.dataset.acc, b); } });
 $("barra").addEventListener("mousedown", e => { if (e.target.closest("button")) e.preventDefault(); });
@@ -1512,19 +1617,13 @@ function abrirMenu(boton, items) {
   $("hoja").appendChild(m);
 }
 const insertarFn = n => { if (editing) commit(null); iniciarEdicion("=" + n + "(", "edita"); };
-function menuFunciones(boton) {
-  abrirMenu(boton, [{ sub: "Funciones del simulador" },
-    { t: "SUMA", k: "suma todo", f: () => insertarFn("SUMA") },
-    { t: "PROMEDIO", k: "el promedio", f: () => insertarFn("PROMEDIO") },
-    { t: "MAX", k: "el mayor", f: () => insertarFn("MAX") },
-    { t: "MIN", k: "el menor", f: () => insertarFn("MIN") },
-    { t: "REDONDEAR", k: "quita decimales", f: () => insertarFn("REDONDEAR") },
-    "-", { sub: "Lógicas" },
-    { t: "SI", k: "elige según una condición", f: () => insertarFn("SI") },
-    { t: "Y", k: "todas se cumplen", f: () => insertarFn("Y") },
-    { t: "O", k: "al menos una se cumple", f: () => insertarFn("O") },
-    { t: "CONTAR.SI", k: "cuenta las que cumplen", f: () => insertarFn("CONTAR.SI") }]);
+function itemsFunciones() {
+  return [{ t: "SUMA", f: () => insertarFn("SUMA") }, { t: "PROMEDIO", f: () => insertarFn("PROMEDIO") }, { t: "CONTAR", f: () => insertarFn("CONTAR") }, { t: "MAX", f: () => insertarFn("MAX") }, { t: "MIN", f: () => insertarFn("MIN") },
+    "-", { sub: "Lógicas" }, { t: "SI", k: "elige según una prueba lógica", f: () => insertarFn("SI") },
+    { sub: "Matemáticas" }, { t: "CONTAR.SI", k: "cuenta las que cumplen", f: () => insertarFn("CONTAR.SI") }, { t: "REDONDEAR", k: "quita decimales", f: () => insertarFn("REDONDEAR") },
+    { sub: "Estadísticas" }, { t: "CONTARA", k: "cuenta las no vacías", f: () => insertarFn("CONTARA") }];
 }
+function menuFunciones(boton) { abrirMenu(boton, itemsFunciones()); }
 const MENUS = {
   archivo: () => [
     { t: "Nuevo", f: () => toast("En Google Sheets: Archivo → Nuevo → Hoja de cálculo. Aquí puedes usar la pestaña «Libre» de abajo.") },
@@ -1545,12 +1644,11 @@ const MENUS = {
     { t: (S.lineas ? "✓ " : "") + "Mostrar líneas de cuadrícula", f: () => { S.lineas = !S.lineas; render(); } },
     { t: "Ajustar ancho de columna " + colName(anc.c), f: () => autoAncho(anc.c) }
   ],
-  insertar: () => [{ sub: "Función" },
-    { t: "SUMA", f: () => insertarFn("SUMA") }, { t: "PROMEDIO", f: () => insertarFn("PROMEDIO") },
-    { t: "MAX", f: () => insertarFn("MAX") }, { t: "MIN", f: () => insertarFn("MIN") },
-    { t: "REDONDEAR", f: () => insertarFn("REDONDEAR") }, "-", { sub: "Lógicas" },
-    { t: "SI", f: () => insertarFn("SI") }, { t: "Y", f: () => insertarFn("Y") }, { t: "O", f: () => insertarFn("O") }, { t: "CONTAR.SI", f: () => insertarFn("CONTAR.SI") }, "-",
-    { t: "Gráfico", f: () => toast("Los gráficos no están en este simulador. En Google Sheets: Insertar → Gráfico.") }],
+  insertar: () => [
+    { t: "Gráfico", f: () => toast("Los gráficos no están en este simulador. En Google Sheets: Insertar → Gráfico.") },
+    "-", { sub: "Función" }, ...itemsFunciones(), "-",
+    { t: "Casilla de verificación", f: () => toast("En Google Sheets pone una casilla que marca VERDADERO o FALSO. No está en este simulador.") },
+    { t: "Comentario", f: () => toast("Comentario: deja una nota para tus compañeros en la celda. No está en este simulador.") }],
   formato: () => [
     { t: "Negrita", f: () => accion("negrita") },
     { t: "Cursiva", f: () => accion("cursiva") },
@@ -1565,9 +1663,12 @@ const MENUS = {
     { t: "Ordenar hoja", f: () => toast("Ordenar no está en este simulador. En Google Sheets: Datos → Ordenar hoja.") },
     { t: "Crear un filtro", f: () => toast("Los filtros no están en este simulador. En Google Sheets: Datos → Crear un filtro.") }
   ],
+  herramientas: () => [{ t: "Ortografía", f: () => toast("Herramientas → Ortografía revisa lo escrito. No está en este simulador.") }],
+  extensiones: () => [{ t: "Complementos", f: () => toast("Extensiones agrega funciones extra a Google Sheets. No está en este simulador.") }],
   ayuda: () => [
-    { t: "📖 Repasar la teoría", f: () => abrirIntro(1) },
-    { t: "Partes de SI", f: () => toast('=SI(B2>=38,"Fiebre","Normal") → ① condición B2>=38 · ② lo que sale si se cumple: "Fiebre" · ③ lo que sale si no: "Normal". Las palabras van entre comillas.') },
+    { t: "Repasar la teoría", f: () => abrirIntro(1) },
+    { t: "Cómo leer SI", f: () => toast('=SI(B2>=38,"Fiebre","Normal") se lee: SI B2 es mayor o igual a 38, ENTONCES «Fiebre», SI NO «Normal». La 1.ª coma es «entonces» y la 2.ª, «si no».') },
+    { t: "CONTAR, CONTARA y CONTAR.SI", f: () => toast("CONTAR cuenta números · CONTARA cuenta todo lo que no está vacío · CONTAR.SI cuenta solo lo que cumple un criterio entre comillas.") },
     { t: "Signos para comparar", f: () => toast("> mayor · < menor · = igual · >= mayor o igual · <= menor o igual · <> distinto.") },
     "-",
     { t: "Funciones disponibles", f: () => toast("SI · Y · O · CONTAR.SI · SUMA · PROMEDIO · MAX · MIN · CONTAR · CONTARA · REDONDEAR · ABS. Separa los argumentos con «,» (en algunas configuraciones, «;»).") },
@@ -1602,7 +1703,7 @@ function dibujarFC() {
   const lr = $("fcReglas"); lr.innerHTML = "";
   H().rules.forEach((rule, i) => {
     const d = document.createElement("div"); d.className = "regla";
-    d.innerHTML = '<i style="background:' + rule.bg + ";color:" + rule.fc + '">123</i><span><b>' + esc(rule.range) + "</b><br>La celda " + OPS[rule.op] + " " + esc(String(rule.val)) + '</span><button title="Eliminar regla">🗑</button>';
+    d.innerHTML = '<i style="background:' + rule.bg + ";color:" + rule.fc + '">123</i><span><b>' + esc(rule.range) + "</b><br>La celda " + OPS[rule.op] + " " + esc(String(rule.val)) + '</span><button title="Eliminar regla">' + ico("basura") + '</button>';
     d.querySelector("button").onclick = () => { snap(); H().rules.splice(i, 1); dibujarFC(); cambio(); };
     lr.appendChild(d);
   });
@@ -1617,23 +1718,22 @@ $("fcListo").onclick = () => {
   snap(); const s = ESTILOS[estiloFC];
   H().rules.push({ range: rangeTxt(g), op: $("fcOp").value, val: v, bg: s.bg, fc: s.fc });
   $("fcVal").value = ""; $("fcMal").textContent = "";
-  dibujarFC(); cambio(); toast("Regla creada ✔ Las celdas que la cumplan se pintan solas.");
+  dibujarFC(); cambio(); toast("Regla creada. Las celdas que la cumplan se pintan solas.");
 };
 
 /* ===================== UTILIDADES ===================== */
 let toastT = 0;
 function toast(msg) { document.querySelectorAll(".toast").forEach(t => t.remove()); const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); clearTimeout(toastT); toastT = setTimeout(() => t.remove(), 4200); }
 function confeti() {
-  const em = ["🎉", "✨", "💚", "⭐", "🩺", "💉"];
-  for (let i = 0; i < 36; i++) {
-    const s = document.createElement("span"); s.className = "confeti"; s.textContent = em[i % em.length];
-    s.style.left = Math.random() * 100 + "vw"; s.style.animationDuration = (1.6 + Math.random() * 1.6) + "s"; s.style.animationDelay = Math.random() * .4 + "s";
-    document.body.appendChild(s); setTimeout(() => s.remove(), 3800);
+  const col = ["#188038", "#1a73e8", "#f0b429", "#d93025", "#9334e6", "#35513f"];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement("span"); c.className = "confeti"; c.style.background = col[i % col.length];
+    c.style.left = Math.random() * 100 + "vw"; c.style.animationDuration = (1.6 + Math.random() * 1.6) + "s"; c.style.animationDelay = Math.random() * .4 + "s";
+    document.body.appendChild(c); setTimeout(() => c.remove(), 3800);
   }
 }
 function cambio() { render(); revisar(); }
 
-/* ===================== MISIONES ===================== */
 /* ===================== MISIONES ===================== */
 const NIVELES = [{ n: "Base", min: true }, { n: "Plata" }, { n: "Oro" }, { n: "Secreto" }];
 const h0 = () => H0();
@@ -1644,21 +1744,20 @@ const FILAS = [2, 3, 4, 5, 6, 7, 8, 9];
 /* compara textos sin importar mayúsculas, tildes ni espacios de más */
 const norm = s => toStr(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 const num0 = a => { const v = v0(a); return isNum(v) ? v : NaN; };
+const nums0 = (L) => FILAS.map(r => v0(L + r)).filter(isNum);
 /* lo que debería salir en cada fila, calculado con los datos actuales de la hoja */
 const ESP = {
   E: r => num0("B" + r) >= 38 ? "Fiebre" : "Normal",
   F: r => num0("D" + r) < 95 ? "Oxígeno" : "OK",
-  G: r => num0("B" + r) >= 38 ? "Fiebre" : num0("B" + r) < 36 ? "Hipotermia" : "Normal",
-  H: r => num0("B" + r) >= 38 && num0("C" + r) > 100 ? "Llamar al médico" : "Vigilar",
-  I: r => num0("B" + r) >= 39 || num0("D" + r) < 90 ? "URGENTE" : "Estable"
+  G: r => num0("B" + r) >= 38 ? "Fiebre" : num0("B" + r) < 36 ? "Hipotermia" : "Normal"
 };
 function errTxt(a) {
   const v = v0(a); if (!(v instanceof FErr)) return "";
   let x = "La celda " + a + " muestra <b>" + esc(v.code) + "</b>: " + esc(v.msg);
-  if (v.code === "#¿NOMBRE?" && /"/.test(raw0(a)) === false && /SI\s*\(/i.test(raw0(a))) x += " 👉 ¿Pusiste las palabras entre comillas?";
+  if (v.code === "#¿NOMBRE?" && !/"/.test(raw0(a)) && /SI\s*\(/i.test(raw0(a))) x += " ¿Pusiste las palabras entre comillas?";
   return x;
 }
-/* revisa una celda con fórmula: SI, el resultado esperado y errores comunes */
+/* revisa una celda con fórmula: la función pedida, el resultado esperado y errores comunes */
 function revisarCelda(a, rx, nombre, esperado) {
   const r = raw0(a);
   if (!r) return { ok: false, vacia: true, msg: "" };
@@ -1666,7 +1765,7 @@ function revisarCelda(a, rx, nombre, esperado) {
   const v = v0(a);
   if (v instanceof FErr) return { ok: false, msg: errTxt(a) };
   if (!rx.test(r)) return { ok: false, msg: "La fórmula de " + a + " funciona, pero aquí hay que usar <b>" + nombre + "</b>." };
-  if (norm(v) !== norm(esperado)) return { ok: false, msg: "En " + a + " sale «" + esc(fmt(v)) + "», pero debería decir «" + esc(esperado) + "». Revisa la condición y el orden: primero lo que va si se cumple, después lo que va si no." };
+  if (isNum(esperado) ? !casi(v, esperado) : norm(v) !== norm(esperado)) return { ok: false, msg: "En " + a + " sale «" + esc(fmt(v)) + "», pero debería dar «" + esc(fmt(esperado)) + "». Léela en voz alta y revisa la prueba lógica, el rango o el orden de los argumentos." };
   return { ok: true };
 }
 /* revisa toda una columna (filas 2 a 9) */
@@ -1678,40 +1777,64 @@ function revisarCol(L, rx, nombre) {
   }
   return { ok, msg: primero };
 }
+/* revisa una referencia simple, como =A6 */
+function revisarRef(a, ref) {
+  const r = raw0(a); if (!r) return { ok: false, msg: "" };
+  const s = r.replace(/\s/g, "").toUpperCase().replace(/\$/g, "");
+  if (s === "=" + ref) return { ok: true };
+  if (r[0] !== "=") return { ok: false, msg: norm(r) === norm(fmt(v0(ref))) ? "En " + a + " copiaste el dato a mano. Usa una <b>referencia</b>: <code>=" + ref + "</code>. Así, si el dato cambia, la ficha también." : "En " + a + " va una referencia: el signo <b>=</b> y la dirección de la celda." };
+  const m = /^=([A-Z]{1,2}\d+)$/.exec(s);
+  if (m) return { ok: false, msg: "En " + a + " la referencia apunta a <b>" + m[1] + "</b> (" + esc(fmt(v0(m[1]))) + "). La cama 5 es Ana Flores, en la <b>fila 6</b>." };
+  return { ok: false, msg: "En " + a + " no hace falta ninguna cuenta: solo el <b>=</b> y la dirección, por ejemplo <code>=" + ref + "</code>." };
+}
 const sinEsp = a => raw0(a).replace(/\s/g, "").toUpperCase();
+const RX_SI = /\b(SI|IF)\s*\(/i, RX_CSI = /CONTAR\.SI|COUNTIF/i, RX_CONTAR = /CONTAR\s*\(|COUNT\s*\(/i, RX_CONTARA = /CONTARA|COUNTA/i;
+function dosCeldas(a, b, ra, rb) {
+  if (ra.ok && rb.ok) return true;
+  if (ra.ok) return a + " lista ✓. " + (rb.msg || "Falta " + b + ".");
+  return ra.msg || (rb.ok ? b + " lista ✓. Falta " + a + "." : rb.msg);
+}
 let fb = { msg: "", bien: false };
 const MIS = [
   {
-    id: "comparar", nivel: 0, t: "La primera pregunta",
+    id: "ficha", nivel: 0, t: "La ficha de observación",
+    html: () => `<p>La paciente de la <b>cama 5</b> (Ana Flores, fila 6) queda en observación. Abajo hay una ficha para ella. Llénala <b>sin copiar los datos a mano</b>: con referencias.</p>
+      <ul><li>En <b>B18</b>: <code>=A6</code> (su nombre)</li><li>En <b>B19</b>: <code>=B6</code> (su temperatura)</li></ul>`,
+    pistas: ["Una referencia es solo el signo <b>=</b> y la dirección de la celda. No lleva ninguna cuenta.", "Escribe <code>=</code> y luego <b>haz clic en la celda A6</b>: la hoja escribe la dirección por ti. Enter."],
+    saber: "Es lo mismo que <code>=B2*B3</code> de la clase anterior, pero sin la cuenta: la fórmula solo va a buscar el dato. Si mañana cambia la temperatura de Ana, la ficha se actualiza sola.",
+    check() { return dosCeldas("B18", "B19", revisarRef("B18", "A6"), revisarRef("B19", "B6")); },
+    ok: () => "¡Ficha lista! " + fmt(v0("B18")) + ", " + fmt(v0("B19")) + " °C, y sin escribir un solo dato a mano."
+  },
+  {
+    id: "comparar", nivel: 0, t: "La prueba lógica",
     html: () => `<p>Antes de decidir, la hoja tiene que <b>preguntar</b>. ¿La temperatura de Rosa (B2) es de <b>38 o más</b>?</p>
       <p>En <b>E2</b> escribe:</p><p style="text-align:center"><code style="font-size:1.1rem">=B2&gt;=38</code></p><p>y presiona <kbd>Enter</kbd>.</p>`,
-    pistas: ["El signo <code>&gt;=</code> se escribe con dos teclas: primero <kbd>&gt;</kbd> y luego <kbd>=</kbd>, sin espacio.", "Puedes escribir <code>=</code> y luego <b>hacer clic en B2</b>: la hoja pone la referencia por ti. Después escribe <code>&gt;=38</code>."],
-    saber: "La celda muestra <b>FALSO</b> centrado: es un valor <b>lógico</b>. Rosa tiene 36.5, que no es mayor ni igual a 38. Esta pregunta será la <b>condición</b> de la función SI.",
+    pistas: ["El signo <code>&gt;=</code> se escribe con dos teclas: primero <kbd>&gt;</kbd> y luego <kbd>=</kbd>, sin espacio.", "Puedes escribir <code>=</code> y luego <b>hacer clic en B2</b>. Después escribe <code>&gt;=38</code>."],
+    saber: "La celda muestra <b>FALSO</b> centrado: es un valor <b>lógico</b>. Rosa tiene 36.5, que no es mayor ni igual a 38. Esta pregunta será la <b>prueba lógica</b> de la función SI.",
     check() {
       const r = raw0("E2"); if (!r) return "";
       if (r[0] !== "=") return "Empieza con <b>=</b>: así la hoja sabe que tiene que calcular la comparación.";
       const v = v0("E2"); if (v instanceof FErr) return errTxt("E2");
-      if (typeof v !== "boolean") return /SI\s*\(/i.test(r) ? "¡Vas adelantado! 😄 Por ahora, solo la comparación: <code>=B2&gt;=38</code>." : "La celda debe mostrar VERDADERO o FALSO. Escribe una comparación: <code>=B2&gt;=38</code>.";
+      if (typeof v !== "boolean") return RX_SI.test(r) ? "¡Vas adelantado! Por ahora, solo la prueba lógica: <code>=B2&gt;=38</code>." : "La celda debe mostrar VERDADERO o FALSO. Escribe una comparación: <code>=B2&gt;=38</code>.";
       const s = sinEsp("E2");
       if (!/B2/.test(s)) return "Compara la temperatura de <b>B2</b>.";
       if (!/>=38|38<=/.test(s)) return /[^<>]>38|38</.test(s) ? "Casi: con <b>&gt;</b> solo, el 38 no contaría como fiebre. Usa <b>&gt;=</b> (mayor o igual)." : "La comparación debe ser <b>B2&gt;=38</b>.";
       return true;
     },
-    ok: () => "¡Primera pregunta lista! La respuesta fue " + fmt(v0("E2")) + ": Rosa no tiene fiebre."
+    ok: () => "¡Prueba lógica lista! La respuesta fue " + fmt(v0("E2")) + ": Rosa no tiene fiebre."
   },
   {
     id: "si", nivel: 0, t: "Que la hoja responda con palabras",
-    html: () => `<p>«FALSO» no le dice mucho a nadie. Mejor que diga <b>«Fiebre»</b> o <b>«Normal»</b>.</p>
-      <p>Reemplaza lo que hay en <b>E2</b> por:</p><p style="text-align:center"><code style="font-size:1rem">=SI(B2&gt;=38,"Fiebre","Normal")</code></p>
-      <ol><li><b>Condición:</b> B2&gt;=38</li><li><b>Si se cumple:</b> "Fiebre"</li><li><b>Si no:</b> "Normal"</li></ol>`,
+    html: () => `<p>«FALSO» no le dice mucho a nadie. Mejor que diga <b>«Fiebre»</b> o <b>«Normal»</b>. Reemplaza lo que hay en <b>E2</b> por:</p>
+      <p style="text-align:center"><code style="font-size:1rem">=SI(B2&gt;=38,"Fiebre","Normal")</code></p>
+      <p><b>Léela antes de escribirla:</b> SI B2 es mayor o igual a 38, <b>entonces</b> «Fiebre», <b>si no</b> «Normal».</p>`,
     pistas: ["Selecciona E2 y escribe encima: lo nuevo reemplaza a lo de antes.", "Las palabras van <b>entre comillas</b>. Si sale <b>#¿NOMBRE?</b>, te faltaron.", "Mira la ayuda mientras escribes: después de cada coma te dice qué argumento sigue."],
     saber: "Selecciona E2 y mira la barra <b>fx</b>: la celda muestra «Normal», pero por dentro guarda la pregunta y las dos respuestas posibles.",
     check() {
       const r = raw0("E2"); if (!r || (r[0] === "=" && typeof v0("E2") === "boolean")) return "";
-      const x = revisarCelda("E2", /\b(SI|IF)\s*\(/i, "SI", ESP.E(2));
+      const x = revisarCelda("E2", RX_SI, "SI", ESP.E(2));
       if (!x.ok) return x.msg;
-      const s = sinEsp("E2");
-      if (!/>=38|38<=/.test(s)) return "Da «Normal», pero revisa la condición: debe ser <b>B2&gt;=38</b> para que el 38 también cuente como fiebre.";
+      if (!/>=38|38<=/.test(sinEsp("E2"))) return "Da «Normal», pero revisa la prueba lógica: debe ser <b>B2&gt;=38</b> para que el 38 también cuente como fiebre.";
       return true;
     },
     ok: () => "¡La hoja ya decide! Rosa: «" + fmt(v0("E2")) + "»."
@@ -1720,113 +1843,104 @@ const MIS = [
     id: "copiarSi", nivel: 0, t: "Revisar a todos los pacientes",
     html: () => `<p>Ahora la misma pregunta para los <b>8 pacientes</b>, sin escribir la fórmula 8 veces.</p>
       <ol><li>Selecciona <b>E2</b>.</li><li>Agarra el <b>cuadradito azul</b> de su esquina inferior derecha.</li><li>Arrástralo hacia abajo hasta <b>E9</b>.</li></ol>`,
-    pistas: ["El cursor cambia a una cruz ✚ cuando estás sobre el cuadradito.", "Otra forma: selecciona E2, <kbd>Ctrl</kbd>+<kbd>C</kbd>, selecciona E3:E9 y <kbd>Ctrl</kbd>+<kbd>V</kbd>."],
-    saber: "Selecciona E8 (Elena, 38 °C) y mira la fórmula: dice <code>B8</code>, no B2. La referencia se ajustó sola. Y como usaste <b>&gt;=</b>, sus 38 °C cuentan como fiebre.",
-    check() { const x = revisarCol("E", /\b(SI|IF)\s*\(/i, "SI"); return x.ok === 8 || (x.ok > 1 ? "Llevas " + x.ok + " de 8. " + x.msg : ""); },
+    pistas: ["El cursor cambia a una cruz cuando estás sobre el cuadradito.", "Otra forma: selecciona E2, <kbd>Ctrl</kbd>+<kbd>C</kbd>, selecciona E3:E9 y <kbd>Ctrl</kbd>+<kbd>V</kbd>."],
+    saber: "Selecciona E8 (Elena, 38 °C) y mira la fórmula: dice <code>B8</code>, no B2. La referencia se ajustó sola, como en la clase anterior. Y como usaste <b>&gt;=</b>, sus 38 °C cuentan como fiebre.",
+    check() { const x = revisarCol("E", RX_SI, "SI"); return x.ok === 8 || (x.ok > 1 ? "Llevas " + x.ok + " de 8. " + x.msg : ""); },
     ok: () => "¡8 pacientes revisados en un segundo! " + FILAS.filter(r => norm(v0("E" + r)) === "fiebre").length + " tienen fiebre."
-  },
-  {
-    id: "pintar", nivel: 0, t: "Que la fiebre salte a la vista",
-    html: () => `<p>Haz que las celdas que dicen «Fiebre» <b>se pinten de rojo solas</b>.</p>
-      <ol><li>Selecciona <b>E2:E9</b>.</li><li>Menú <b>Formato → Formato condicional</b>.</li><li>En «Dar formato a las celdas si…» elige <b>El texto es exactamente</b>.</li><li>En «Valor» escribe <code>Fiebre</code>, elige el estilo <b>rojo</b> y presiona <b>Listo</b>.</li></ol>`,
-    pistas: ["Formato está en la barra de menús de arriba, entre Insertar y Datos.", "En la casilla «Valor» del formato condicional no hacen falta comillas: escribe solo Fiebre."],
-    saber: "Ahora cambia la temperatura de un paciente a 39 y mira: su estado cambia a «Fiebre» <b>y</b> se pinta de rojo, todo solo. La fórmula decide qué escribir; el formato condicional decide de qué color.",
-    check() {
-      const rs = h0().rules; if (!rs.length) return "";
-      const cubre = g => g && g.c1 <= 4 && g.c2 >= 4 && g.r1 <= 1 && g.r2 >= 8;
-      const cubreB = g => g && g.c1 <= 1 && g.c2 >= 1 && g.r1 <= 1 && g.r2 >= 8;
-      for (const x of rs) {
-        const g = parseRange(x.range);
-        if (x.op === "teq" && norm(x.val) === "fiebre" && cubre(g)) return true;
-        if (cubreB(g) && x.op === "gte" && x.val === 38) return true;
-      }
-      const x = rs[rs.length - 1];
-      if (x.op === "teq" && norm(x.val) !== "fiebre") return "La regla busca el texto «" + esc(x.val) + "». Debe ser exactamente <b>Fiebre</b>.";
-      if (x.op !== "teq") return "Esa regla compara números, pero en la columna E hay palabras. Elige <b>El texto es exactamente</b>.";
-      return "La regla está bien, pero el rango no cubre <b>E2:E9</b> completo.";
-    },
-    ok: () => "¡Listo! Las fiebres se ven de lejos 🔴"
   },
   {
     id: "comillas", nivel: 1, t: "El error de las comillas",
     html: () => `<p>Un compañero escribió en <b>F2</b> una fórmula para saber quién necesita oxígeno, pero sale <b>#¿NOMBRE?</b>.</p>
-      <ol><li>Selecciona <b>F2</b> y mira su fórmula en la barra <b>fx</b>.</li><li>Corrígela para que funcione.</li><li>Cópiala hasta <b>F9</b>.</li></ol>`,
+      <ol><li>Selecciona <b>F2</b> y mira su fórmula en la barra <b>fx</b>.</li><li>Léela en voz alta y corrígela.</li><li>Cópiala hasta <b>F9</b>.</li></ol>`,
     pistas: ["Haz clic en la barra fx para editar la fórmula sin borrarla toda.", "Oxígeno y OK son palabras… ¿cómo deben ir las palabras dentro de una fórmula?", "Debe quedar: <code>=SI(D2&lt;95,\"Oxígeno\",\"OK\")</code>"],
-    saber: "<b>#¿NOMBRE?</b> significa «no reconozco esta palabra». Sin comillas, la hoja pensó que Oxígeno era el nombre de una función o de algo guardado, y no lo encontró.",
+    saber: "<b>#¿NOMBRE?</b> significa «no reconozco esta palabra». Sin comillas, la hoja pensó que Oxígeno era el nombre de una función y no la encontró.",
     check() {
-      const a = revisarCelda("F2", /\b(SI|IF)\s*\(/i, "SI", ESP.F(2));
-      const v = v0("F2");
-      if (!a.ok) return v instanceof FErr && raw0("F2") === "=SI(D2<95,Oxígeno,OK)" ? "" : a.msg;
-      const x = revisarCol("F", /\b(SI|IF)\s*\(/i, "SI");
+      const a = revisarCelda("F2", RX_SI, "SI", ESP.F(2));
+      if (!a.ok) return v0("F2") instanceof FErr && raw0("F2") === "=SI(D2<95,Oxígeno,OK)" ? "" : a.msg;
+      const x = revisarCol("F", RX_SI, "SI");
       if (x.ok === 8) return true;
       return x.ok === 1 ? "¡F2 arreglada! ✓ Ahora cópiala hasta <b>F9</b> con el cuadradito azul." : "Llevas " + x.ok + " de 8. " + x.msg;
     },
     ok: () => "¡Arreglado! " + FILAS.filter(r => norm(v0("F" + r)) === "oxigeno").length + " pacientes necesitan oxígeno."
   },
   {
-    id: "contar", nivel: 1, t: "¿Cuántos son?",
+    id: "contarsi", nivel: 1, t: "Contar con condición",
     html: () => `<p>La jefa de enfermería pregunta: ¿cuántos pacientes tienen fiebre? ¿Cuántos tienen la saturación baja?</p>
       <ul><li>En <b>B11</b>: <code>=CONTAR.SI(E2:E9,"Fiebre")</code></li><li>En <b>B12</b>: <code>=CONTAR.SI(D2:D9,"&lt;95")</code></li></ul>`,
-    pistas: ["CONTAR.SI tiene dos argumentos: <b>dónde</b> contar y <b>qué</b> contar.", "La condición va entre comillas, también cuando es un número con signo: <code>\"&lt;95\"</code>."],
-    saber: "Fíjate que B12 cuenta directamente las saturaciones (columna D), sin necesitar la columna F. CONTAR.SI puede contar palabras <code>\"Fiebre\"</code> o comparar números <code>\"&lt;95\"</code>, <code>\"&gt;=38\"</code>.",
+    pistas: ["CONTAR.SI tiene dos argumentos: <b>dónde</b> contar (intervalo) y <b>qué</b> contar (criterio).", "El criterio va entre comillas, también cuando es un número con signo: <code>\"&lt;95\"</code>.", "En la barra, el botón <b>Σ</b> (Funciones) también tiene CONTAR.SI, en el grupo Matemáticas."],
+    saber: "B12 cuenta directamente las saturaciones (columna D), sin necesitar la columna F. CONTAR.SI puede contar palabras <code>\"Fiebre\"</code> o comparar números <code>\"&lt;95\"</code>, <code>\"&gt;=38\"</code>.",
     check() {
       const fie = FILAS.filter(r => num0("B" + r) >= 38).length, sat = FILAS.filter(r => num0("D" + r) < 95).length;
-      const rx = /CONTAR\.SI|COUNTIF/i;
-      const chk = (a, esp) => {
-        const r = raw0(a); if (!r) return { ok: false, msg: "" };
-        if (r[0] !== "=") return { ok: false, msg: "En " + a + " escribiste el número a mano. Que lo cuente la hoja con <b>CONTAR.SI</b>." };
-        const v = v0(a); if (v instanceof FErr) return { ok: false, msg: errTxt(a) };
-        if (!rx.test(r)) return { ok: false, msg: "En " + a + " usa <b>CONTAR.SI</b>." };
-        if (!casi(v, esp)) return { ok: false, msg: "En " + a + " sale " + fmt(v) + ". Revisa el rango (filas 2 a 9) y la condición entre comillas." };
-        return { ok: true };
-      };
-      const a = chk("B11", fie), b = chk("B12", sat);
-      if (a.ok && b.ok) return true;
-      if (a.ok) return "B11 listo ✓. " + (b.msg || "Falta B12.");
-      return a.msg || (b.ok ? "B12 listo ✓. Falta B11." : b.msg);
+      return dosCeldas("B11", "B12", revisarCelda("B11", RX_CSI, "CONTAR.SI", fie), revisarCelda("B12", RX_CSI, "CONTAR.SI", sat));
     },
     ok: () => fmt(v0("B11")) + " con fiebre y " + fmt(v0("B12")) + " con saturación baja. ¡Reporte listo!"
   },
   {
-    id: "anidado", nivel: 2, t: "Tres respuestas: SI anidado",
-    html: () => `<p>Pedro tiene 35.4 °C: eso no es «Normal», es <b>hipotermia</b>. En <b>G2</b> haz una clasificación con tres respuestas y cópiala hasta <b>G9</b>:</p>
-      <p style="text-align:center"><code style="font-size:.88rem;white-space:normal">=SI(B2&gt;=38,"Fiebre",SI(B2&lt;36,"Hipotermia","Normal"))</code></p>`,
-    pistas: ["El segundo SI va en el lugar del «si no» del primero.", "Al final van <b>dos</b> paréntesis de cierre: uno por cada SI. Si te olvidas, la hoja los cierra al presionar Enter."],
-    saber: "Puedes anidar varios SI para más respuestas, pero si son muchas la fórmula se vuelve difícil de leer. Para eso Google Sheets tiene <code>SI.CONJUNTO</code> (IFS), que hace varias preguntas seguidas sin anidar.",
+    id: "pintar", nivel: 1, t: "Que la fiebre salte a la vista",
+    html: () => `<p>Haz que las celdas que dicen «Fiebre» <b>se pinten de rojo solas</b>.</p>
+      <ol><li>Selecciona <b>E2:E9</b>.</li><li>Menú <b>Formato → Formato condicional</b>.</li><li>En «Dar formato a las celdas si…» elige <b>El texto es exactamente</b>.</li><li>En «Valor» escribe <code>Fiebre</code>, elige el estilo <b>rojo</b> y presiona <b>Listo</b>.</li></ol>`,
+    pistas: ["Formato está en la barra de menús de arriba, entre Insertar y Datos.", "En la casilla «Valor» del formato condicional no hacen falta comillas: escribe solo Fiebre."],
+    saber: "Ahora cambia la temperatura de un paciente a 39 y mira: su estado cambia a «Fiebre», se pinta de rojo y el conteo de B11 sube. Todo solo.",
     check() {
-      const x = revisarCol("G", /\b(SI|IF)\s*\(.*\b(SI|IF)\s*\(/i, "dos SI (uno dentro del otro)");
-      if (x.ok === 8) return true;
-      if (x.ok === 0 && raw0("G2") && !/\b(SI|IF)\s*\(.*\b(SI|IF)\s*\(/i.test(raw0("G2")) && raw0("G2")[0] === "=") return "Aquí hacen falta <b>dos SI</b>, uno dentro del otro, para tener tres respuestas.";
-      return x.ok ? "Llevas " + x.ok + " de 8. " + x.msg : x.msg;
+      const rs = h0().rules; if (!rs.length) return "";
+      const cubre = (g, c) => g && g.c1 <= c && g.c2 >= c && g.r1 <= 1 && g.r2 >= 8;
+      for (const x of rs) {
+        const g = parseRange(x.range);
+        if (x.op === "teq" && norm(x.val) === "fiebre" && cubre(g, 4)) return true;
+        if (cubre(g, 1) && x.op === "gte" && x.val === 38) return true;
+      }
+      const x = rs[rs.length - 1];
+      if (x.op === "teq" && norm(x.val) !== "fiebre") return "La regla busca el texto «" + esc(x.val) + "». Debe ser exactamente <b>Fiebre</b>.";
+      if (x.op !== "teq") return "Esa regla compara números, pero en la columna E hay palabras. Elige <b>El texto es exactamente</b>.";
+      return "La regla está bien, pero el intervalo no cubre <b>E2:E9</b> completo.";
     },
-    ok: () => "¡Tres caminos! Pedro ahora dice «" + fmt(v0("G5")) + "»."
+    ok: () => "¡Listo! Las fiebres se ven de lejos."
   },
   {
-    id: "y", nivel: 2, t: "Dos condiciones: Y",
-    html: () => `<p>El protocolo dice: <b>llamar al médico</b> si el paciente tiene fiebre (38 o más) <b>y además</b> taquicardia (FC mayor de 100). Si no, <b>vigilar</b>.</p>
-      <p>En <b>H2</b>, y luego cópiala hasta <b>H9</b>:</p>
-      <p style="text-align:center"><code style="font-size:.85rem;white-space:normal">=SI(Y(B2&gt;=38,C2&gt;100),"Llamar al médico","Vigilar")</code></p>`,
-    pistas: ["Y va dentro de SI, en el lugar de la condición. Sus dos condiciones van separadas por coma.", "Mira a Miguel (fila 9): tiene FC 104 pero 37.8 °C. Con Y debe salir «Vigilar»."],
-    saber: "Si usaras <code>O</code> en vez de <code>Y</code>, avisarías al médico con solo una de las dos. Con Y solo se avisa cuando se cumplen <b>las dos</b>.",
+    id: "contar", nivel: 2, t: "¿Cuántos datos hay?",
+    html: () => `<p>¿Cuántos pacientes hay registrados? ¿A cuántos ya se les tomó la frecuencia cardiaca? (A Miguel todavía no: dice «pendiente».)</p>
+      <ul><li>En <b>B13</b>: <code>=CONTARA(A2:A9)</code></li><li>En <b>B14</b>: <code>=CONTAR(C2:C9)</code></li></ul>`,
+    pistas: ["CONTARA cuenta todo lo que no esté vacío (también texto, como los nombres).", "CONTAR solo cuenta números: «pendiente» es texto, así que no lo cuenta."],
+    saber: "Si en B13 usaras CONTAR daría 0: los nombres son texto. Y si en B14 usaras CONTARA daría 8, contando «pendiente» como si ya se hubiera tomado la FC. Elegir bien la función cambia el reporte.",
     check() {
-      const x = revisarCol("H", /\b(Y|AND)\s*\(/i, "Y dentro de SI");
-      if (x.ok === 8) return true;
-      return x.ok ? "Llevas " + x.ok + " de 8. " + x.msg : x.msg;
+      const reg = FILAS.filter(r => raw0("A" + r)).length, fc = nums0("C").length;
+      return dosCeldas("B13", "B14", revisarCelda("B13", RX_CONTARA, "CONTARA", reg), revisarCelda("B14", RX_CONTAR, "CONTAR (sin la A)", fc));
     },
-    ok: () => "¡Bien! Hay que llamar al médico por " + FILAS.filter(r => norm(v0("H" + r)) === "llamar al medico").length + " pacientes."
+    ok: () => fmt(v0("B13")) + " pacientes registrados y " + fmt(v0("B14")) + " frecuencias tomadas: falta una."
   },
   {
-    id: "o", nivel: 3, t: "Alerta de urgencia",
-    html: () => `<p>Reto final: en <b>I2:I9</b> marca <b>«URGENTE»</b> si el paciente tiene temperatura de <b>39 o más</b> <b>o</b> saturación <b>menor de 90</b>. Si no, <b>«Estable»</b>.</p>
-      <p>Esta vez no te damos la fórmula. Basta con que se cumpla <b>una</b> de las dos condiciones…</p>`,
-    pistas: ["«Basta con una» → la función es <code>O</code>.", "Se parece a la de la columna H: cambia Y por O y ajusta las dos condiciones.", "<code>=SI(O(B2&gt;=39,D2&lt;90),\"URGENTE\",\"Estable\")</code>"],
-    saber: "Carlos (fila 7) tiene temperatura normal, pero su saturación es 88: con <b>O</b> igual sale URGENTE. Con <b>Y</b> se te habría pasado.",
+    id: "repaso", nivel: 2, t: "Repaso de la clase anterior",
+    html: () => `<p>Completa el resumen con las funciones que ya conoces:</p>
+      <ul><li>En <b>B15</b>: la temperatura <b>promedio</b> del piso (B2:B9)</li><li>En <b>B16</b>: la temperatura <b>más alta</b></li></ul>`,
+    pistas: ["Son <code>PROMEDIO</code> y <code>MAX</code>, con el rango de las temperaturas.", "<code>=PROMEDIO(B2:B9)</code> y <code>=MAX(B2:B9)</code>"],
+    saber: "Si quieres, redondea el promedio a un decimal: <code>=REDONDEAR(B15,1)</code> en otra celda. Las funciones de la clase anterior y las de hoy se usan juntas en el mismo reporte.",
     check() {
-      const x = revisarCol("I", /\b(O|OR)\s*\(/i, "O dentro de SI");
-      if (x.ok === 8) return true;
-      return x.ok ? "Llevas " + x.ok + " de 8. " + x.msg : x.msg;
+      const t = nums0("B"); if (!t.length) return "";
+      return dosCeldas("B15", "B16", revisarCelda("B15", /PROMEDIO|AVERAGE/i, "PROMEDIO", t.reduce((s, x) => s + x, 0) / t.length), revisarCelda("B16", /MAX/i, "MAX", Math.max(...t)));
     },
-    ok: () => "¡Reto secreto superado! 🕵️ " + FILAS.filter(r => norm(v0("I" + r)) === "urgente").length + " pacientes urgentes detectados."
+    ok: () => "Promedio " + fmt(v0("B15")) + " °C, máxima " + fmt(v0("B16")) + " °C."
+  },
+  {
+    id: "fichaSi", nivel: 2, t: "La ficha completa",
+    html: () => `<p>Vuelve a la ficha de observación. En <b>B20</b> haz que diga si Ana tiene fiebre, <b>sin escribir otro SI</b>: la respuesta ya está calculada en la columna E.</p>`,
+    pistas: ["Ana está en la fila 6. ¿En qué celda de la columna E está su estado?", "Una referencia simple: <code>=E6</code>"],
+    saber: "Ahora cambia la temperatura de Ana (B6) a 37.5 y mira: cambian B19, E6, B20, el color de E6 y el conteo de B11. Una sola corrección y todo el reporte se actualiza.",
+    check() { const x = revisarRef("B20", "E6"); return x.ok || x.msg; },
+    ok: () => "¡Ficha completa! Ana: «" + fmt(v0("B20")) + "». La práctica de hoy termina aquí."
+  },
+  {
+    id: "pensar", nivel: 3, t: "Pregunta para pensar (opcional)",
+    html: () => `<p>La práctica de hoy <b>ya terminó</b>: esto es solo un reto para pensar.</p>
+      <p>Pedro tiene <b>35.4 °C</b> y la hoja dice «Normal». Pero eso no es normal: es <b>hipotermia</b>.</p>
+      <p><b>¿Cómo harías para que la hoja diga tres cosas</b> (Fiebre, Hipotermia o Normal) en <b>G2:G9</b>? Un SI solo tiene dos caminos…</p>`,
+    pistas: ["Lee tu SI de la columna E: «SI es 38 o más, entonces Fiebre, <b>si no</b>…». ¿Y si en el «si no», en vez de una palabra, hicieras otra pregunta?"],
+    saber: "Si no te sale, no te preocupes: es justamente lo que veremos más adelante.",
+    check() {
+      const x = revisarCol("G", /\b(SI|IF)\s*\(.*\b(SI|IF)\s*\(/i, "SI");
+      if (x.ok === 8) return true;
+      return x.ok ? "Llevas " + x.ok + " de 8. " + x.msg : (raw0("G2") ? x.msg : "");
+    },
+    ok: () => "¡Lo resolviste! Pedro ahora dice «" + fmt(v0("G5")) + "». Eso que hiciste se llama SI anidado."
   }
 ];
 const ultimoDe = n => MIS.reduce((m, x, i) => x.nivel === n ? i : m, -1);
@@ -1847,7 +1961,7 @@ function revisar() {
     bloqueo = true;
     const msg = m.ok();
     S.mis++; vista = null; pistasVistas = 0;
-    fb = { msg: "✅ " + msg, bien: true, de: m.t };
+    fb = { msg: msg, bien: true, de: m.t };
     confeti(); guardar(); panel();
     setTimeout(() => { bloqueo = false; fb = { msg: "", bien: false }; panel(); revisar(); }, 3200);
   } else if (!m.alSel) {
@@ -1856,35 +1970,34 @@ function revisar() {
   }
 }
 function panel() {
-  // niveles
   const nv = $("niveles"); nv.innerHTML = "";
   NIVELES.forEach((N, n) => {
     const idx = MIS.map((m, i) => m.nivel === n ? i : -1).filter(i => i >= 0);
     const abierto = idx[0] <= S.mis;
     const d = document.createElement("div"); d.className = "nivel" + (abierto ? "" : " lock");
-    d.innerHTML = '<span class="nom">' + (abierto || n < 3 ? N.n : "???") + (abierto ? "" : " 🔒") + '</span><span class="pts"></span>' + (N.min ? '<span class="min">mínimo de hoy</span>' : "");
+    d.innerHTML = '<span class="nom">' + (abierto || n < 3 ? N.n : "???") + (abierto ? "" : " " + ico("candado")) + '</span><span class="pts"></span>' + (N.min ? '<span class="min">mínimo de hoy</span>' : n === 3 ? '<span class="min" style="background:#d9d2e9">opcional</span>' : "");
     const pts = d.querySelector(".pts");
-    idx.forEach(i => { const b = document.createElement("button"); b.title = i < S.mis ? MIS[i].t + " ✓" : i === S.mis ? MIS[i].t : "Bloqueada"; b.className = i < S.mis ? "hecho" : i === S.mis ? "actual" : ""; b.disabled = i > S.mis; b.onclick = () => { vista = i < S.mis ? i : null; panel(); }; pts.appendChild(b); });
+    idx.forEach(i => { const b = document.createElement("button"); b.title = i < S.mis ? MIS[i].t + " (hecha)" : i === S.mis ? MIS[i].t : "Bloqueada"; b.className = i < S.mis ? "hecho" : i === S.mis ? "actual" : ""; b.disabled = i > S.mis; b.onclick = () => { vista = i < S.mis ? i : null; panel(); }; pts.appendChild(b); });
     nv.appendChild(d);
   });
-  // cuerpo
   const cu = $("cuerpo"); let h = "";
-  if (S.cur !== 0) h += '<div class="banner libre"><b>Estás en la hoja «Libre» 🧪</b>Aquí puedes experimentar lo que quieras: fórmulas, colores, lo que se te ocurra. Las misiones se revisan en la pestaña <b>«Pacientes»</b>.</div>';
-  if (S.mis > ultimoDe(0) && S.mis <= ultimoDe(1) && vista === null) h += '<div class="banner base"><b>✅ ¡Mínimo de hoy cumplido!</b>Si te queda tiempo, sigue con el nivel Plata. Si un compañero está atascado, ¡dale una mano!</div>';
+  if (S.cur !== 0) h += '<div class="banner libre"><b>Estás en la hoja «Libre»</b>Aquí puedes experimentar lo que quieras: fórmulas, colores, lo que se te ocurra. Las misiones se revisan en la pestaña <b>«Pacientes»</b>.</div>';
+  if (S.mis > ultimoDe(0) && S.mis <= ultimoDe(1) && vista === null) h += '<div class="banner base"><b>' + ico("ok") + ' ¡Mínimo de hoy cumplido!</b>Si te queda tiempo, sigue con el nivel Plata. Si un compañero está atascado, ¡dale una mano!</div>';
+  if (S.mis > ultimoDe(2) && vista === null) h += '<div class="banner base"><b>' + ico("medalla") + ' ¡Práctica completa!</b>Aquí termina la práctica de hoy. El nivel secreto es <b>opcional</b>: solo un reto para pensar.</div>';
   const i = vista !== null ? vista : S.mis;
   const m = MIS[i];
   if (!m) {
-    h += '<div class="tarjeta final"><div class="medalla">🏅</div><h2>¡Turno completado!</h2><p>Superaste los cuatro niveles, incluido el secreto. Ya sabes hacer que la hoja decida: comparaciones, SI, SI anidado, Y, O, CONTAR.SI y formato condicional.</p><p>Ve a la pestaña <b>«Libre»</b> y arma tu propio control: por ejemplo, glucosa de varios pacientes con una columna que diga «Hipoglucemia», «Normal» o «Hiperglucemia», y que se pinte sola.</p></div>';
+    h += '<div class="tarjeta final"><div class="medalla" style="color:#b3752c">' + ico("medalla") + '</div><h2>¡Turno completado!</h2><p>Superaste los cuatro niveles, incluido el secreto. Ya sabes hacer que la hoja decida y cuente: referencias, prueba lógica, SI, CONTAR, CONTARA, CONTAR.SI y formato condicional.</p><p>Ve a la pestaña <b>«Libre»</b> y arma tu propio control: por ejemplo, la glucosa de varios pacientes con una columna que diga «Alta» o «Normal», que se pinte sola y que cuente cuántos están altos.</p></div>';
     if (fb.msg) h = '<div class="fb bien" style="margin:0 0 12px">' + fb.msg + "</div>" + h;
   } else {
     h += '<div class="tarjeta"><span class="chip n' + m.nivel + '">Nivel ' + NIVELES[m.nivel].n + " · misión " + (MIS.filter((x, j) => x.nivel === m.nivel && j <= i).length) + " de " + MIS.filter(x => x.nivel === m.nivel).length + "</span>";
     h += "<h2>" + m.t + "</h2>" + m.html();
-    if (vista !== null) h += '<p class="hecha">✓ Misión completada</p><button class="volver" id="bVolver">← Volver a la misión actual</button>';
+    if (vista !== null) h += '<p class="hecha">' + ico("ok") + ' Misión completada</p><button class="volver" id="bVolver">← Volver a la misión actual</button>';
     else {
-      if (fb.msg) h += '<div class="fb' + (fb.bien ? " bien" : "") + '">' + fb.msg + "</div>";
+      if (fb.msg) h += '<div class="fb' + (fb.bien ? " bien" : "") + '">' + (fb.bien ? ico("ok") + " " : "") + fb.msg + "</div>";
       h += '<div class="pistas">';
-      for (let p = 0; p < pistasVistas && p < m.pistas.length; p++) h += '<div class="pista">' + m.pistas[p] + "</div>";
-      if (pistasVistas < m.pistas.length) h += '<button id="bPista" style="margin-top:8px">💡 ' + (pistasVistas ? "Otra pista" : "Necesito una pista") + "</button>";
+      for (let p = 0; p < pistasVistas && p < m.pistas.length; p++) h += '<div class="pista"><b>Pista:</b> ' + m.pistas[p] + "</div>";
+      if (pistasVistas < m.pistas.length) h += '<button id="bPista" style="margin-top:8px">' + ico("foco") + " " + (pistasVistas ? "Otra pista" : "Necesito una pista") + "</button>";
       h += "</div>";
     }
     if (m.saber) h += "<details><summary>Saber más</summary><p>" + m.saber + "</p></details>";
@@ -1894,6 +2007,55 @@ function panel() {
   const bp = $("bPista"); if (bp) bp.onclick = () => { pistasVistas++; panel(); };
   const bv = $("bVolver"); if (bv) bv.onclick = () => { vista = null; panel(); };
 }
+
+/* ===================== ÍCONOS (como los de Google Sheets; SVG para que se vean en Windows 10) ===================== */
+const ICO = {
+  deshacer: "M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z",
+  rehacer: "M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z",
+  imprimir: "M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z",
+  brocha: "M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v4H9v11c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-9h8V4h-3z",
+  negrita: "M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z",
+  cursiva: "M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z",
+  tachado: "M10 19h4v-3h-4v3zM5 4v3h5v3h4V7h5V4H5zM3 14h18v-2H3v2z",
+  colorTexto: "M11 3L5.5 17h2.25l1.12-3h6.25l1.12 3h2.25L13 3h-2zm-1.38 9L12 5.67 14.38 12H9.62z",
+  relleno: "M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z",
+  bordes: "M3 3v18h18V3H3zm8 16H5v-6h6v6zm0-8H5V5h6v6zm8 8h-6v-6h6v6zm0-8h-6V5h6v6z",
+  combinar: "M17 20.41L18.41 19 15 15.59 13.59 17 17 20.41zM7.5 8H11v5.59L5.59 19 7 20.41l6-6V8h3.5L12 3.5 7.5 8z",
+  izq: "M15 15H3v2h12v-2zm0-8H3v2h12V7zM3 13h18v-2H3v2zm0 8h18v-2H3v2zM3 3v2h18V3H3z",
+  centro: "M7 15v2h10v-2H7zm-4 6h18v-2H3v2zm0-8h18v-2H3v2zm4-6v2h10V7H7zM3 3v2h18V3H3z",
+  der: "M3 21h18v-2H3v2zm6-4h12v-2H9v2zm-6-4h18v-2H3v2zm6-4h12V7H9v2zM3 3v2h18V3H3z",
+  vertical: "M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z",
+  ajuste: "M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z",
+  rotar: "M18 4l-3 3h2v13h2V7h2l-3-3zm-6.2 11.5v-5l2.2-.9V7.5L3 12.25v1.5l11 4.75v-2.1l-2.2-.9zM4.98 13L10 11.13v3.74L4.98 13z",
+  enlace: "M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z",
+  comentario: "M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z",
+  grafico: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z",
+  filtro: "M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z",
+  funciones: "M18 4H6v2l6.5 6L6 18v2h12v-3h-7l5-5-5-5h7z",
+  flecha: "M7 10l5 5 5-5z",
+  buscar: "M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z",
+  pantalla: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z",
+  foco: "M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z",
+  ok: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z",
+  libro: "M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z",
+  reiniciar: "M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z",
+  mas: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z",
+  lista: "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z",
+  play: "M8 5v14l11-7z",
+  replay: "M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z",
+  lapiz: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z",
+  termo: "M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-8c0-.55.45-1 1-1s1 .45 1 1h-1v1h1v2h-1v1h1v2h-2V5z",
+  basura: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
+  cerrar: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z",
+  alerta: "M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z",
+  paleta: "M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z",
+  voz: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z",
+  candado: "M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z",
+  medalla: "M17 10.43V2H7v8.43c0 .35.18.68.49.86l4.18 2.51-.99 2.34-3.41.29 2.59 2.24L9.07 22 12 20.23 14.93 22l-.78-3.33 2.59-2.24-3.41-.29-.99-2.34 4.18-2.51c.3-.18.48-.5.48-.86zm-4 1.8l-1 .6-1-.6V3h2v9.23z"
+};
+const ico = n => '<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICO[n] + '"/></svg></i>';
+function pintarIconos(raiz) { (raiz || document).querySelectorAll("i[data-ic]").forEach(el => { const n = el.dataset.ic; el.removeAttribute("data-ic"); el.className = "ic"; el.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICO[n] + '"/></svg>'; }); }
+pintarIconos();
 
 /* ===================== INTRODUCCIÓN ===================== */
 const PAC = [["Rosa Quispe", 36.5], ["Juan Mamani", 38.6], ["Lucía Torres", 37.2], ["Ana Flores", 39.1], ["Carlos Ramos", 36.9], ["Elena Castro", 38]];
@@ -1921,7 +2083,7 @@ async function revisarGancho(id) {
   }
   dibujarIntro();
   f.innerHTML = 'C2 → =SI(<em>B2</em>&gt;=38,"Fiebre","Normal")';
-  explicar($("gFb"), "✅ Una sola fórmula, copiada hacia abajo, revisó a todos. Elena tiene <b>justo 38</b> y también cuenta como fiebre: la pregunta era «38 <b>o más</b>». Ahora mira qué pasa si llega una nueva toma…");
+  explicar($("gFb"), "Una sola fórmula, copiada hacia abajo, revisó a todos. Elena tiene <b>justo 38</b> y también cuenta como fiebre: la pregunta era «38 <b>o más</b>». Ahora mira qué pasa si llega una nueva toma…");
   $("bToma").hidden = false;
 }
 /* ---------- motor de diapositivas ---------- */
@@ -1947,7 +2109,7 @@ function irSlide(n) {
 }
 function abrirIntro(n) {
   n = n || 0;
-  gTemps = PAC.map(p => p[1]); $("bToma").hidden = true; $("bToma").textContent = "📥 Nueva toma: Rosa tiene 38.5 °C"; $("gFormula").hidden = true;
+  gTemps = PAC.map(p => p[1]); $("bToma").hidden = true; $("bToma").textContent = "Nueva toma: Rosa tiene 38.5 °C"; $("gFormula").hidden = true;
   if (n === 0) { llego = false; gHechos = 0; $("bRevisar").disabled = false; $("pIntro").textContent = "Presiona el botón amarillo primero."; }
   else { llego = true; gHechos = PAC.length; $("bRevisar").disabled = true; $("pIntro").textContent = ""; }
   $("intro").hidden = false; document.documentElement.style.fontSize = ""; slide = n; irSlide(n);
@@ -2003,10 +2165,45 @@ function destello(td, cls) { td.classList.remove("ok", "mal", "flash"); void td.
 function explicar(el, html) { el.innerHTML = html; el.classList.remove("cambia"); void el.offsetWidth; el.classList.add("cambia"); }
 function marcarBtn(cont, attr, v) { cont.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.getAttribute(attr) === String(v))); }
 
+/* ---------- herramientas para escribir fórmulas dentro de la teoría ---------- */
+let miniN = 0;
+/* calcula una fórmula con el mismo motor del simulador, sobre una mini hoja */
+function evalMini(datos, dest, f) {
+  const cells = {}; for (const k in datos) if (datos[k] !== "" && datos[k] != null) cells[k] = { v: String(datos[k]) };
+  cells[dest] = { v: f };
+  cache.clear();
+  const v = val({ id: "mini" + (++miniN), cells }, dest);
+  cache.clear();
+  return v;
+}
+const outHtml = v => v instanceof FErr ? '<span class="out e">' + esc(v.code) + "</span>" : typeof v === "boolean" ? '<span class="out ' + (v ? "v" : "f") + '">' + fmt(v) + "</span>" : '<span class="out">' + (v === null || v === "" ? "(vacía)" : esc(fmt(v))) + "</span>";
+function conEnter(inp, btn, fn) { btn.onclick = fn; inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); fn(); } }); }
+function sinIgual(f, el) {
+  if (!f.trim()) { el.innerHTML = "Escribe algo primero."; return true; }
+  if (f.trim()[0] !== "=") { explicar(el, '<span class="out">' + esc(f) + "</span> Sin el <b>=</b> al inicio, la hoja lo guarda como <b>texto</b> y no calcula nada."); return true; }
+  return false;
+}
+/* revisa si una fórmula escrita da lo mismo que una frase, probando varios datos */
+function revisarFrase(f, pruebas, el) {
+  if (sinIgual(f, el)) return false;
+  if (!/\b(SI|IF)\s*\(/i.test(f)) { explicar(el, "La frase empieza con <b>SI</b>: usa la función <code>SI</code>."); return false; }
+  for (const p of pruebas) {
+    const v = evalMini(p.datos, "Z1", f);
+    if (v instanceof FErr) { explicar(el, outHtml(v) + " " + esc(v.msg) + (v.code === "#¿NOMBRE?" ? " ¿Pusiste las palabras entre comillas?" : "")); return false; }
+    if (norm(v) !== norm(p.esp)) {
+      const [c] = Object.keys(p.datos);
+      explicar(el, "Con " + c + " = <b>" + p.datos[c] + "</b> tu fórmula muestra " + outHtml(v) + " pero la frase dice <b>«" + esc(p.esp) + "»</b>. Léela de nuevo: ¿la celda, el signo y el número son los de la frase? ¿Va primero lo del «entonces»?");
+      return false;
+    }
+  }
+  explicar(el, '<span class="out v">Correcto</span> Tu fórmula se lee igual que la frase. La probé con ' + pruebas.map(p => { const [c] = Object.keys(p.datos); return c + " = " + p.datos[c] + " → «" + p.esp + "»"; }).join(" · ") + ".");
+  return true;
+}
+
 /* ---------- 0 · gancho ---------- */
 $("bRevisar").onclick = () => {
   llego = true; $("bRevisar").disabled = true; $("bSig").disabled = false;
-  $("pIntro").textContent = "Eso hace la función SI. Antes de usarla, veamos cómo piensa.";
+  $("pIntro").textContent = "Eso hace la función SI. Antes de usarla, repasemos y veamos cómo piensa.";
   revisarGancho(++animId);
 };
 $("bToma").onclick = () => {
@@ -2014,19 +2211,48 @@ $("bToma").onclick = () => {
   gTemps[0] = gTemps[0] === 36.5 ? 38.5 : 36.5;
   dibujarIntro();
   ["gT0", "gE0"].forEach(id => { const td = $(id); td.style.background = "#fff3c4"; setTimeout(() => td.style.background = "", 900); });
-  $("bToma").textContent = gTemps[0] === 36.5 ? "📥 Nueva toma: Rosa tiene 38.5 °C" : "📥 Rosa vuelve a 36.5 °C";
-  explicar($("gFb"), gTemps[0] === 38.5 ? "⚡ Cambió <b>solo la temperatura</b> de Rosa y su estado pasó a <b>Fiebre</b> al instante. Nadie tuvo que volver a revisar la lista." : "Y si baja, vuelve a «Normal» sola. La fórmula siempre mira el dato <b>actual</b>.");
+  $("bToma").textContent = gTemps[0] === 36.5 ? "Nueva toma: Rosa tiene 38.5 °C" : "Rosa vuelve a 36.5 °C";
+  explicar($("gFb"), gTemps[0] === 38.5 ? "Cambió <b>solo la temperatura</b> de Rosa y su estado pasó a <b>Fiebre</b> al instante. Nadie tuvo que volver a revisar la lista." : "Y si baja, vuelve a «Normal» sola. La fórmula siempre mira el dato <b>actual</b>.");
 };
 
-/* ---------- 1 · comparaciones ---------- */
+/* ---------- 1 · repaso: referencias simples ---------- */
+const RFD = { A1: "Paciente", B1: "Temp", C1: "FC", D1: "Ficha", A2: "Rosa", B2: 36.5, C2: 72, A3: "Juan", B3: 38.6, C3: 110, A4: "Ana", B4: 39.1, C4: 118, A5: "Carlos", B5: 36.9, C5: 95 };
+let rfF = "=A4";
+INIT.refs = () => { RFD.B4 = 39.1; $("bRefCambia").textContent = "Cambiar la temperatura de Ana"; $("inRef").value = rfF; probarRef(false); };
+function probarRef(cambio) {
+  const f = $("inRef").value.trim(); rfF = f;
+  const m = mini($("msRefs"), [72, 60, 50, 110], 5, RFD), td = m.td(3, 2);
+  selMini(m, 3, 2); m.nm.textContent = "D2";
+  td.style.fontWeight = "700";
+  const el = $("resRef");
+  if (!f) { el.innerHTML = "Escribe algo primero."; return; }
+  if (f[0] !== "=") { td.textContent = f; m.fx.textContent = f; destello(td, "mal"); explicar(el, '<span class="out">' + esc(f) + "</span> Sin el <b>=</b>, D2 guarda el texto «" + esc(f) + "» tal cual. No va a buscar nada."); return; }
+  const v = evalMini(RFD, "D2", f), p = pintarRefs(f);
+  m.fx.innerHTML = p.html; cajasRef(m, p.lista);
+  td.textContent = fmt(v); td.style.textAlign = isNum(v) ? "right" : v instanceof FErr ? "center" : "left";
+  destello(td, v instanceof FErr ? "mal" : cambio ? "flash" : "ok");
+  if (v instanceof FErr) { explicar(el, outHtml(v) + " " + esc(v.msg)); return; }
+  const una = p.lista.length === 1 && !p.lista[0].k.includes(":") && /^=\s*\$?[A-Za-z]{1,2}\$?\d+\s*$/.test(f);
+  if (una) explicar(el, outHtml(v) + (cambio ? " <b>D2 cambió sola</b> porque apunta a " + p.lista[0].k + ", no a un número fijo." : " D2 trae <b>lo que hay en " + p.lista[0].k + "</b>. No hay ninguna cuenta: solo una dirección."));
+  else explicar(el, outHtml(v) + " También funciona, pero aquí practicamos la referencia sola: <code>=</code> y la dirección de una celda, por ejemplo <code>=B4</code>.");
+}
+conEnter($("inRef"), $("okRef"), () => probarRef(false));
+document.querySelector('[data-s="refs"] .ej').addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; $("inRef").value = b.textContent; probarRef(false); });
+$("bRefCambia").onclick = () => {
+  RFD.B4 = RFD.B4 === 39.1 ? 37.4 : 39.1;
+  $("bRefCambia").textContent = RFD.B4 === 39.1 ? "Cambiar la temperatura de Ana" : "Volver a 39.1";
+  probarRef(true);
+  setTimeout(() => { const m = $("msRefs"); const td = m.querySelector('td[data-c="1"][data-r="4"]'); if (td) destello(td, "flash"); }, 30);
+};
+
+/* ---------- 2 · prueba lógica ---------- */
 const COMP = [["Rosa", 36.5], ["Juan", 38], ["Ana", 39.4], ["Lucía", 37.5], ["Elena", 38.6], ["Pedro", 35.9]];
 const OPN = { ">": "mayor que", "<": "menor que", "=": "igual a", ">=": "mayor o igual a", "<=": "menor o igual a", "<>": "distinto de" };
 let CP = { op: ">=", n: 38 };
+const datosComp = () => { const d = { A1: "Paciente", B1: "Temp", C1: "¿Cumple?" }; COMP.forEach(([n, t], i) => { d["A" + (i + 2)] = n; d["B" + (i + 2)] = t; }); return d; };
 INIT.comparar = id => animarComp(id);
 async function animarComp(id) {
-  const datos = { A1: "Paciente", B1: "Temp", C1: "¿Cumple?" };
-  COMP.forEach(([n, t], i) => { datos["A" + (i + 2)] = n; datos["B" + (i + 2)] = t; });
-  const m = mini($("msComp"), [80, 70, 120], 7, datos);
+  const m = mini($("msComp"), [80, 70, 120], 7, datosComp());
   marcarBtn($("ctOp"), "data-op", CP.op); marcarBtn($("ctNum"), "data-n", CP.n);
   $("compPreg").innerHTML = "¿La temperatura es <em>" + OPN[CP.op] + " " + CP.n + "</em>?";
   explicar($("compFb"), "Mira cómo la hoja responde la pregunta para cada paciente…");
@@ -2044,8 +2270,8 @@ async function animarComp(id) {
     td.innerHTML = ""; td.textContent = ok ? "VERDADERO" : "FALSO"; td.className = ok ? "vv" : "ff"; destello(td, ok ? "ok" : "mal");
   }
   cajasRef(m, []);
-  let x = "<b>" + si + " de " + COMP.length + "</b> cumplen la condición <code>" + esc(CP.op) + " " + CP.n + "</code>.";
-  if (CP.n === 38 && CP.op === ">") x += " ⚠ Juan tiene <b>justo 38</b> y salió FALSO: 38 no es <i>mayor</i> que 38. Para incluirlo, usa <b>&gt;=</b>.";
+  let x = "<b>" + si + " de " + COMP.length + "</b> cumplen la prueba <code>" + esc(CP.op) + " " + CP.n + "</code>.";
+  if (CP.n === 38 && CP.op === ">") x += " Ojo: Juan tiene <b>justo 38</b> y salió FALSO: 38 no es <i>mayor</i> que 38. Para incluirlo, usa <b>&gt;=</b>.";
   else if (CP.n === 38 && CP.op === ">=") x += " Juan, con <b>justo 38</b>, sí entra: <b>&gt;=</b> incluye el número.";
   else if (CP.op === "=") x += " Con <b>=</b> solo cumple quien tiene exactamente ese número.";
   else if (CP.op === "<>") x += " <b>&lt;&gt;</b> es lo contrario de =: todos menos el que es igual.";
@@ -2053,77 +2279,112 @@ async function animarComp(id) {
 }
 $("ctOp").addEventListener("click", e => { const b = e.target.closest("button[data-op]"); if (!b) return; CP.op = b.dataset.op; animarComp(++animId); });
 $("ctNum").addEventListener("click", e => { const b = e.target.closest("button[data-n]"); if (!b) return; CP.n = +b.dataset.n; animarComp(++animId); });
+conEnter($("inComp"), $("okComp"), () => {
+  const f = $("inComp").value, el = $("resComp");
+  if (sinIgual(f, el)) return;
+  const d = datosComp(), v = evalMini(d, "D9", f);
+  const vals = pintarRefs(f).lista.filter(x => !x.k.includes(":")).map(x => x.k + " = " + (d[x.k] != null ? d[x.k] : "(vacía)")).join(" · ");
+  if (v instanceof FErr) explicar(el, outHtml(v) + " " + esc(v.msg));
+  else if (typeof v === "boolean") explicar(el, outHtml(v) + (vals ? " (" + esc(vals) + ")" : "") + (v ? " Sí se cumple." : " No se cumple.") + " ¡Eso es una prueba lógica!");
+  else explicar(el, outHtml(v) + " Eso no es VERDADERO ni FALSO: a una prueba lógica le falta un <b>signo de comparación</b> (&gt; &lt; = &gt;= &lt;= &lt;&gt;).");
+});
 
-/* ---------- diagramas de decisión (SVG) ---------- */
+/* ---------- 3 · leer la función SI ---------- */
+const VERDE = "#188038", ROJO = "#d93025", AZUL = "#1a73e8", MORADO = "#9334e6", GRIS = "#80868b";
+const LCOL = { nombre: AZUL, c: MORADO, s1: VERDE, v: VERDE, s2: ROJO, f: ROJO, cierra: GRIS };
+const LEE = [
+  { f: [["=SI(", "nombre"], ["B2>=38", "c"], [",", "s1"], ['"Fiebre"', "v"], [",", "s2"], ['"Normal"', "f"], [")", "cierra"]],
+    l: [["SI", "nombre"], ["B2 es mayor o igual a 38", "c"], ["entonces", "s1"], ["«Fiebre»", "v"], ["si no", "s2"], ["«Normal»", "f"]],
+    voz: "Si B2 es mayor o igual a 38, entonces Fiebre. Si no, Normal.",
+    reto: "SI la temperatura de <b>B2</b> es <b>menor que 36</b>, entonces <b>«Hipotermia»</b>, si no <b>«Normal»</b>.",
+    pr: [{ datos: { B2: 35.2 }, esp: "Hipotermia" }, { datos: { B2: 36.8 }, esp: "Normal" }, { datos: { B2: 36 }, esp: "Normal" }] },
+  { f: [["=SI(", "nombre"], ["D2<95", "c"], [",", "s1"], ['"Oxígeno"', "v"], [",", "s2"], ['"OK"', "f"], [")", "cierra"]],
+    l: [["SI", "nombre"], ["D2 es menor que 95", "c"], ["entonces", "s1"], ["«Oxígeno»", "v"], ["si no", "s2"], ["«OK»", "f"]],
+    voz: "Si D2 es menor que 95, entonces Oxígeno. Si no, OK.",
+    reto: "SI la saturación de <b>D2</b> es <b>mayor o igual a 95</b>, entonces <b>«Bien»</b>, si no <b>«Revisar»</b>.",
+    pr: [{ datos: { D2: 97 }, esp: "Bien" }, { datos: { D2: 93 }, esp: "Revisar" }, { datos: { D2: 95 }, esp: "Bien" }] },
+  { f: [["=SI(", "nombre"], ["C2>100", "c"], [",", "s1"], ['"Taquicardia"', "v"], [",", "s2"], ['"Normal"', "f"], [")", "cierra"]],
+    l: [["SI", "nombre"], ["C2 es mayor que 100", "c"], ["entonces", "s1"], ["«Taquicardia»", "v"], ["si no", "s2"], ["«Normal»", "f"]],
+    voz: "Si C2 es mayor que 100, entonces Taquicardia. Si no, Normal.",
+    reto: "SI la frecuencia cardiaca de <b>C2</b> es <b>menor que 60</b>, entonces <b>«Bradicardia»</b>, si no <b>«Normal»</b>.",
+    pr: [{ datos: { C2: 55 }, esp: "Bradicardia" }, { datos: { C2: 72 }, esp: "Normal" }, { datos: { C2: 60 }, esp: "Normal" }] }
+];
+let leeI = 0;
+INIT.leer = id => leerSi(leeI, id);
+async function leerSi(i, id) {
+  leeI = i; const L = LEE[i];
+  marcarBtn($("ctLee"), "data-l", i);
+  $("leeBig").innerHTML = L.f.map(([t, k]) => '<span data-k="' + k + '" style="--pc:' + LCOL[k] + '">' + esc(t) + "</span>").join("");
+  $("leeTxt").innerHTML = L.l.map(([t, k]) => '<span data-k="' + k + '" style="--pc:' + LCOL[k] + '">' + (k === "nombre" || k === "s1" || k === "s2" ? "<b>" + esc(t) + "</b>" : esc(t)) + "</span>").join(" ");
+  $("retoLee").innerHTML = "Ahora al revés: escribe la fórmula de esta frase.<br>" + L.reto;
+  $("inLee").value = ""; $("resLee").innerHTML = "";
+  const big = $("leeBig").querySelectorAll("span"), txt = $("leeTxt").querySelectorAll("span");
+  await sleep(500);
+  for (const [, k] of L.l) {
+    if (!vivo(id)) return;
+    big.forEach(s => { if (s.dataset.k === k) s.classList.add("lit"); s.classList.toggle("foco", s.dataset.k === k); });
+    txt.forEach(s => { if (s.dataset.k === k) s.classList.add("on"); s.classList.toggle("foco", s.dataset.k === k); });
+    await sleep(k === "c" ? 1500 : 1000);
+  }
+  if (!vivo(id)) return;
+  big.forEach(s => { s.classList.add("lit"); s.classList.remove("foco"); }); txt.forEach(s => s.classList.remove("foco"));
+}
+function hablar(t) {
+  if (!("speechSynthesis" in window)) { toast("Este navegador no puede leer en voz alta. Léela tú: ¡en voz alta!"); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t); u.lang = "es-ES"; u.rate = .9;
+  const v = speechSynthesis.getVoices().find(x => /^es/i.test(x.lang)); if (v) u.voice = v;
+  speechSynthesis.speak(u);
+}
+$("ctLee").addEventListener("click", e => { const b = e.target.closest("button[data-l]"); if (b) leerSi(+b.dataset.l, ++animId); });
+$("bLeer").onclick = () => leerSi(leeI, ++animId);
+$("bOir").onclick = () => { leerSi(leeI, ++animId); hablar(LEE[leeI].voz); };
+conEnter($("inLee"), $("okLee"), () => revisarFrase($("inLee").value, LEE[leeI].pr, $("resLee")));
+
+/* ---------- diagrama de decisión (SVG) ---------- */
 const NS = "http://www.w3.org/2000/svg";
 function svgEl(tag, at, txt) { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (txt != null) e.textContent = txt; return e; }
-function rombo(svg, cx, cy, hw, hh, id) {
-  const g = svgEl("g", {});
-  g.appendChild(svgEl("polygon", { points: [cx, cy - hh, cx + hw, cy, cx, cy + hh, cx - hw, cy].join(" "), class: "rombo", id: id }));
-  g.appendChild(svgEl("text", { x: cx, y: cy - 9, id: id + "q" }));
-  g.appendChild(svgEl("text", { x: cx, y: cy + 13, class: "mono", id: id + "v" }));
-  svg.appendChild(g);
-}
-function cajaR(svg, cx, y, w, txt, col, id) {
-  svg.appendChild(svgEl("rect", { x: cx - w / 2, y, width: w, height: 44, rx: 10, class: "caja-r", id, style: "--pc:" + col }));
-  svg.appendChild(svgEl("text", { x: cx, y: y + 23, id: id + "t" }, txt));
-}
-function linea(svg, d, id) { svg.appendChild(svgEl("path", { d, class: "lin", id })); }
-function etiq(svg, x, y, si) { svg.appendChild(svgEl("text", { x, y, class: si ? "eti-si" : "eti-no" }, si ? "Sí ✓" : "No ✗")); }
-const VERDE = "#188038", ROJO = "#d93025", AZUL = "#1a73e8";
 function flujoSimple(el) {
   const svg = svgEl("svg", { viewBox: "0 0 400 222" });
-  linea(svg, "M95,55 H60 V168", "fS"); linea(svg, "M305,55 H340 V168", "fN");
-  rombo(svg, 200, 55, 105, 44, "fR");
-  cajaR(svg, 60, 170, 116, "\"Fiebre\"", VERDE, "fA"); cajaR(svg, 340, 170, 116, "\"Normal\"", ROJO, "fB");
-  etiq(svg, 38, 120, true); etiq(svg, 362, 120, false);
-  el.innerHTML = ""; el.appendChild(svg);
-}
-function flujoDoble(el) {
-  const svg = svgEl("svg", { viewBox: "-5 0 465 318" });
-  linea(svg, "M70,50 H55 V268", "aS1"); linea(svg, "M270,50 H330 V120", "aN1");
-  linea(svg, "M230,158 H195 V268", "aS2"); linea(svg, "M330,196 V268", "aN2");
-  rombo(svg, 170, 50, 100, 40, "aR1"); rombo(svg, 330, 158, 100, 38, "aR2");
-  cajaR(svg, 55, 270, 112, "\"Fiebre\"", VERDE, "aA"); cajaR(svg, 195, 270, 120, "\"Hipotermia\"", AZUL, "aB"); cajaR(svg, 335, 270, 112, "\"Normal\"", "#e37400", "aC");
-  etiq(svg, 32, 160, true); etiq(svg, 302, 90, false); etiq(svg, 172, 225, true); etiq(svg, 360, 235, false);
+  svg.appendChild(svgEl("path", { d: "M95,55 H60 V168", class: "lin", id: "fS" }));
+  svg.appendChild(svgEl("path", { d: "M305,55 H340 V168", class: "lin", id: "fN" }));
+  svg.appendChild(svgEl("polygon", { points: "200,11 305,55 200,99 95,55", class: "rombo", id: "fR" }));
+  svg.appendChild(svgEl("text", { x: 200, y: 46, id: "fRq" }, "¿B2 >= 38?"));
+  svg.appendChild(svgEl("text", { x: 200, y: 68, class: "mono", id: "fRv" }));
+  [[60, '"Fiebre"', VERDE, "fA"], [340, '"Normal"', ROJO, "fB"]].forEach(([cx, t, col, id]) => {
+    svg.appendChild(svgEl("rect", { x: cx - 58, y: 170, width: 116, height: 44, rx: 10, class: "caja-r", id, style: "--pc:" + col }));
+    svg.appendChild(svgEl("text", { x: cx, y: 193 }, t));
+  });
+  svg.appendChild(svgEl("text", { x: 34, y: 120, class: "eti-si" }, "Sí → entonces"));
+  svg.appendChild(svgEl("text", { x: 368, y: 120, class: "eti-no" }, "No → si no"));
   el.innerHTML = ""; el.appendChild(svg);
 }
 const q = id => document.getElementById(id);
-function limpiarFlujo(el) { el.querySelectorAll(".lin").forEach(x => x.setAttribute("class", "lin")); el.querySelectorAll(".rombo").forEach(x => x.setAttribute("class", "rombo")); el.querySelectorAll(".caja-r").forEach(x => x.setAttribute("class", "caja-r")); }
 const prender = (id, cls) => q(id).setAttribute("class", cls);
 
-/* ---------- 2 · la función SI ---------- */
-const SIP = [["=", "#b3752c"], ["SI", "#5f6368"], ["(", "#9334e6"], ["B2>=38", AZUL, "c"], [",", "#9aa0a6"], ["\"Fiebre\"", VERDE, "v"], [",", "#9aa0a6"], ["\"Normal\"", ROJO, "f"], [")", "#9334e6"]];
+/* ---------- 4 · SI, visual ---------- */
 let siT = 36.5;
-function cartasSi() {
-  const c = [["c", AZUL, "① condición", "B2>=38", "La <b>pregunta</b> de sí o no. Siempre es una comparación."], ["v", VERDE, "② valor si verdadero", "\"Fiebre\"", "Lo que se muestra si la respuesta es <b>sí</b>."], ["f", ROJO, "③ valor si falso", "\"Normal\"", "Lo que se muestra si la respuesta es <b>no</b>."]];
-  $("siCards").innerHTML = c.map(([k, col, t, s, d]) => '<div class="card show" data-k="' + k + '" style="--pc:' + col + '"><div class="sim">' + esc(s) + "</div><h4>" + t + "</h4><div>" + d + "</div></div>").join("");
-}
-INIT.si = id => {
-  $("siBig").innerHTML = SIP.map(([t, col, k]) => '<span style="--pc:' + col + '"' + (k ? ' data-k="' + k + '"' : "") + ">" + esc(t) + "</span>").join("");
-  cartasSi(); flujoSimple($("siFlujo")); animarSi(siT, id);
-};
+INIT.si = id => { flujoSimple($("siFlujo")); animarSi(siT, id); };
 async function animarSi(t, id) {
   siT = t; marcarBtn($("ctSi"), "data-t", t);
-  const big = $("siBig").querySelectorAll("span"), cards = $("siCards").querySelectorAll(".card");
-  const luz = k => { big.forEach(s => { s.classList.toggle("lit", !s.dataset.k || s.dataset.k === k || k === "*"); s.classList.toggle("foco", s.dataset.k === k); }); cards.forEach(c => c.classList.toggle("foco", c.dataset.k === k)); };
-  const el = $("siFlujo"); limpiarFlujo(el);
-  q("fRq").textContent = "¿B2 >= 38?"; q("fRv").textContent = "";
-  luz("c"); prender("fR", "rombo on");
-  explicar($("siFb"), "Primero, la <b style=\"color:" + AZUL + "\">condición</b>: ¿" + t + " es mayor o igual a 38?");
+  ["fS", "fN"].forEach(x => prender(x, "lin")); ["fA", "fB"].forEach(x => prender(x, "caja-r"));
+  prender("fR", "rombo on"); q("fRv").textContent = "";
+  $("siCelda").innerHTML = "B2 = <em>" + t + "</em>";
+  explicar($("siFb"), "Primero, la <b style=\"color:" + MORADO + "\">prueba lógica</b>: ¿" + t + " es mayor o igual a 38?");
   await sleep(900); if (!vivo(id)) return;
   const ok = t >= 38;
   q("fRv").textContent = t + " >= 38 → " + (ok ? "VERDADERO" : "FALSO");
   await sleep(900); if (!vivo(id)) return;
   prender(ok ? "fS" : "fN", "lin " + (ok ? "si" : "no") + " va");
-  luz(ok ? "v" : "f");
   await sleep(800); if (!vivo(id)) return;
   prender(ok ? "fA" : "fB", "caja-r on"); prender(ok ? "fS" : "fN", "lin " + (ok ? "si" : "no"));
-  explicar($("siFb"), ok ? "Es <b>VERDADERO</b> → la hoja toma el <b style=\"color:" + VERDE + "\">segundo argumento</b> y la celda muestra <b>Fiebre</b>." : "Es <b>FALSO</b> → la hoja salta al <b style=\"color:" + ROJO + "\">tercer argumento</b> y la celda muestra <b>Normal</b>.");
+  $("siCelda").innerHTML = "B2 = " + t + " → la celda muestra <em>" + (ok ? "Fiebre" : "Normal") + "</em>";
+  explicar($("siFb"), ok ? "Es <b>VERDADERO</b> → la hoja sigue el camino del <b style=\"color:" + VERDE + "\">«entonces»</b>: muestra <b>Fiebre</b>." : "Es <b>FALSO</b> → la hoja sigue el camino del <b style=\"color:" + ROJO + "\">«si no»</b>: muestra <b>Normal</b>.");
 }
 $("ctSi").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (b) animarSi(+b.dataset.t, ++animId); });
+$("inSiT").addEventListener("keydown", e => { if (e.key !== "Enter") return; e.preventDefault(); const t = parseFloat($("inSiT").value.replace(",", ".")); if (isFinite(t)) animarSi(t, ++animId); else toast("Escribe un número, por ejemplo 37.8"); });
 
-/* ---------- 3 · comillas ---------- */
+/* ---------- 5 · comillas ---------- */
 INIT.comillas = async id => { if (!await demoComillas(0, id)) return; await sleep(1600); if (vivo(id)) demoComillas(1, id); };
 async function demoComillas(con, id) {
   const m = mini($("msCom"), [80, 56, 250], 2, { A1: "Paciente", B1: "Temp", C1: "Estado", A2: "Juan", B2: 38.6 });
@@ -2138,118 +2399,156 @@ async function demoComillas(con, id) {
   sp.classList.remove("esc"); cajasRef(m, []); td.style.overflow = "";
   if (con) {
     sp.textContent = "Fiebre"; destello(td, "ok");
-    explicar($("comFb"), "✅ <b>Con comillas</b>, la hoja sabe que <span style=\"color:#188038\">\"Fiebre\"</span> es una palabra que debe escribir tal cual. Mira en la barra fx: el texto entre comillas sale en verde.");
+    explicar($("comFb"), "<b>Con comillas</b>, la hoja sabe que <span style=\"color:#188038\">\"Fiebre\"</span> es una palabra que debe escribir tal cual. En la barra fx, el texto entre comillas sale en verde.");
   } else {
     sp.textContent = "#¿NOMBRE?"; sp.style.color = "#a50e0e"; alinear(td, sp, "centro"); destello(td, "mal");
-    explicar($("comFb"), "❌ <b>Sin comillas</b> sale <b>#¿NOMBRE?</b>: la hoja buscó algo llamado «Fiebre» (como si fuera una función o una celda) y no lo encontró.");
+    explicar($("comFb"), "<b>Sin comillas</b> sale <b>#¿NOMBRE?</b>: la hoja buscó algo llamado «Fiebre» (como si fuera una función) y no lo encontró.");
   }
   return true;
 }
 document.querySelector('[data-s="comillas"] .btns').addEventListener("click", e => { const b = e.target.closest("button[data-cm]"); if (b) demoComillas(+b.dataset.cm, ++animId); });
+conEnter($("inCom"), $("okCom"), () => {
+  const f = $("inCom").value, el = $("resCom");
+  if (sinIgual(f, el)) return;
+  const v = evalMini({ A2: "Juan", B2: 38.6 }, "C2", f);
+  if (v instanceof FErr) explicar(el, outHtml(v) + " " + esc(v.msg) + (v.code === "#¿NOMBRE?" ? " Revisa las comillas." : ""));
+  else if (/\b(SI|IF)\s*\(/i.test(f) && typeof v === "string" && v) explicar(el, outHtml(v) + " ¡Funciona! Como Juan tiene 38.6, la prueba es VERDADERO y sale lo del «entonces».");
+  else explicar(el, outHtml(v) + " Funciona, pero prueba con SI: <code>=SI(B2&gt;=38,\"Fiebre\",\"Normal\")</code>.");
+});
 
-/* ---------- 4 · SI anidado ---------- */
-const ANP = [["=", "#b3752c"], ["SI(", AZUL], ["B2>=38", AZUL], [",", "#9aa0a6"], ["\"Fiebre\"", VERDE], [",", "#9aa0a6"], ["SI(", "#c2185b"], ["B2<36", "#c2185b"], [",", "#9aa0a6"], ["\"Hipotermia\"", "#c2185b"], [",", "#9aa0a6"], ["\"Normal\"", "#c2185b"], [")", "#c2185b"], [")", AZUL]];
-let anT = 35.2;
-INIT.anidado = id => {
-  $("anBig").innerHTML = ANP.map(([t, col]) => '<span class="lit" style="--pc:' + col + '">' + esc(t) + "</span>").join("");
-  flujoDoble($("anFlujo")); animarAn(anT, id);
-};
-async function animarAn(t, id) {
-  anT = t; marcarBtn($("ctAn2"), "data-t", t);
-  const el = $("anFlujo"); limpiarFlujo(el);
-  q("aR1q").textContent = "¿B2 >= 38?"; q("aR1v").textContent = ""; q("aR2q").textContent = "¿B2 < 36?"; q("aR2v").textContent = "";
-  prender("aR1", "rombo on");
-  explicar($("anFb"), "Primera pregunta: ¿" + t + " es mayor o igual a 38?");
-  await sleep(900); if (!vivo(id)) return;
-  const a = t >= 38; q("aR1v").textContent = t + " → " + (a ? "VERDADERO" : "FALSO");
-  await sleep(800); if (!vivo(id)) return;
-  if (a) {
-    prender("aS1", "lin si va"); await sleep(700); if (!vivo(id)) return;
-    prender("aA", "caja-r on"); prender("aS1", "lin si");
-    explicar($("anFb"), "✅ VERDADERO a la primera: sale <b>Fiebre</b> y la hoja <b>ya no hace</b> la segunda pregunta.");
-    return;
-  }
-  prender("aN1", "lin no va"); await sleep(700); if (!vivo(id)) return;
-  prender("aN1", "lin no"); prender("aR2", "rombo on");
-  explicar($("anFb"), "FALSO → en vez de una respuesta, el «si no» tiene <b style=\"color:#c2185b\">otro SI</b>. Segunda pregunta: ¿" + t + " es menor que 36?");
-  await sleep(1000); if (!vivo(id)) return;
-  const b = t < 36; q("aR2v").textContent = t + " → " + (b ? "VERDADERO" : "FALSO");
-  await sleep(800); if (!vivo(id)) return;
-  prender(b ? "aS2" : "aN2", "lin " + (b ? "si" : "no") + " va"); await sleep(700); if (!vivo(id)) return;
-  prender(b ? "aB" : "aC", "caja-r on"); prender(b ? "aS2" : "aN2", "lin " + (b ? "si" : "no"));
-  explicar($("anFb"), b ? "✅ Sale <b>Hipotermia</b>: no tenía fiebre, pero sí está por debajo de 36." : "✅ Ninguna de las dos preguntas fue VERDADERO: sale <b>Normal</b>.");
-}
-$("ctAn2").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (b) animarAn(+b.dataset.t, ++animId); });
-
-/* ---------- 5 · Y / O ---------- */
-let SW = [false, false];
-function palanca(svg, x, y, on, id) {
-  svg.appendChild(svgEl("circle", { cx: x, cy: y, r: 4, fill: "#5f6368" }));
-  svg.appendChild(svgEl("circle", { cx: x + 40, cy: y, r: 4, fill: "#5f6368" }));
-  svg.appendChild(svgEl("line", { x1: x, y1: y, x2: x + 40, y2: y, stroke: on ? "#2f7d4a" : "#5f6368", "stroke-width": 5, "stroke-linecap": "round", id, style: "transform-origin:" + x + "px " + y + "px;transform:rotate(" + (on ? 0 : -32) + "deg);transition:transform .3s" }));
-}
-function dibujarYO() {
-  const [a, b] = SW;
-  // Y: en serie
-  let s = svgEl("svg", { viewBox: "0 0 300 100" });
-  s.appendChild(svgEl("path", { d: "M30,50 H80", class: "cable vivo" }));
-  s.appendChild(svgEl("path", { d: "M120,50 H170", class: "cable" + (a ? " vivo" : "") }));
-  s.appendChild(svgEl("path", { d: "M210,50 H252", class: "cable" + (a && b ? " vivo" : "") }));
-  s.appendChild(svgEl("text", { x: 18, y: 55, style: "font-size:20px" }, "⚡"));
-  palanca(s, 80, 50, a); palanca(s, 170, 50, b);
-  s.appendChild(svgEl("text", { x: 100, y: 82 }, "Temp ≥ 38")); s.appendChild(svgEl("text", { x: 190, y: 82 }, "FC > 100"));
-  s.appendChild(svgEl("circle", { cx: 270, cy: 50, r: 17, class: "foco" + (a && b ? " on" : "") }));
-  $("cirY").innerHTML = ""; $("cirY").appendChild(s);
-  // O: en paralelo
-  s = svgEl("svg", { viewBox: "0 0 300 120" });
-  s.appendChild(svgEl("path", { d: "M30,60 H70 M70,25 V95 M70,25 H110 M70,95 H110", class: "cable vivo" }));
-  s.appendChild(svgEl("path", { d: "M150,25 H220", class: "cable" + (a ? " vivo" : "") }));
-  s.appendChild(svgEl("path", { d: "M150,95 H220", class: "cable" + (b ? " vivo" : "") }));
-  s.appendChild(svgEl("path", { d: "M220,25 V95 M220,60 H252", class: "cable" + (a || b ? " vivo" : "") }));
-  s.appendChild(svgEl("text", { x: 18, y: 65, style: "font-size:20px" }, "⚡"));
-  palanca(s, 110, 25, a); palanca(s, 110, 95, b);
-  s.appendChild(svgEl("text", { x: 130, y: 50 }, "Temp ≥ 38")); s.appendChild(svgEl("text", { x: 130, y: 118 }, "FC > 100"));
-  s.appendChild(svgEl("circle", { cx: 270, cy: 60, r: 17, class: "foco" + (a || b ? " on" : "") }));
-  $("cirO").innerHTML = ""; $("cirO").appendChild(s);
-  const ry = a && b, ro = a || b;
-  $("resY").className = "res " + (ry ? "v" : "f"); $("resY").textContent = (ry ? "VERDADERO" : "FALSO") + (ry ? " · las dos se cumplen" : a || b ? " · falta una" : " · ninguna se cumple");
-  $("resO").className = "res " + (ro ? "v" : "f"); $("resO").textContent = (ro ? "VERDADERO" : "FALSO") + (ro ? (ry ? " · se cumplen las dos" : " · basta con una") : " · ninguna se cumple");
-  document.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", SW[+x.dataset.sw]));
-}
-INIT.yo = async id => {
-  SW = [false, false]; dibujarYO();
-  // pequeña demostración automática
-  for (const p of [[true, false], [true, true], [false, true]]) { await sleep(1300); if (!vivo(id)) return; SW = p; dibujarYO(); }
-};
-document.querySelector(".swt").addEventListener("click", e => { const b = e.target.closest(".sw"); if (!b) return; animId++; SW[+b.dataset.sw] = !SW[+b.dataset.sw]; dibujarYO(); });
-
-/* ---------- 6 · CONTAR.SI y formato condicional ---------- */
-const CONT = [["Rosa", 98, "Normal"], ["Juan", 93, "Fiebre"], ["Lucía", 97, "Normal"], ["Pedro", 96, "Normal"], ["Ana", 89, "Fiebre"], ["Elena", 96, "Fiebre"]];
-let mC = null;
-INIT.contar = id => animarCont("fiebre", id);
-async function animarCont(k, id) {
-  marcarBtn($("ctCont"), "data-ct", k);
-  const d = { A1: "Paciente", B1: "SatO₂", C1: "Estado", A8: k === "pinta" ? "" : "Total" };
-  CONT.forEach(([n, s, e], i) => { d["A" + (i + 2)] = n; d["B" + (i + 2)] = s; d["C" + (i + 2)] = e; });
-  mC = mini($("msCont"), [80, 70, 90], 8, d);
-  const col = k === "sat" ? 1 : 2, prueba = k === "sat" ? (v => v < 95) : (v => v === "Fiebre");
-  const f = k === "sat" ? '=CONTAR.SI(B2:B7,"<95")' : k === "fiebre" ? '=CONTAR.SI(C2:C7,"Fiebre")' : "Formato condicional · C2:C7";
-  const big = $("contBig"); let n = 0;
-  big.innerHTML = "0<small>" + (k === "pinta" ? "celdas pintadas" : "celdas que cumplen") + "</small>";
-  if (k === "pinta") { mC.fx.textContent = "El texto es exactamente: Fiebre"; explicar($("contFb"), "<b>Formato → Formato condicional</b> · rango <b>C2:C7</b> · «El texto es exactamente» <b>Fiebre</b> · estilo rojo."); }
-  else { const p = pintarRefs(f); mC.fx.innerHTML = p.html; explicar($("contFb"), "Revisa el rango <b>" + (k === "sat" ? "B2:B7" : "C2:C7") + "</b> celda por celda: ¿" + (k === "sat" ? "es menor que 95" : "dice «Fiebre»") + "?"); }
-  selMini(mC, col, 2, col, 7);
-  await sleep(700); if (!vivo(id)) return;
-  for (let i = 0; i < CONT.length; i++) {
-    const td = mC.td(col, i + 2), v = CONT[i][col];
-    td.classList.add("mira"); await sleep(420); if (!vivo(id)) return;
+/* ---------- conteo animado (CONTAR, CONTARA, CONTAR.SI) ---------- */
+async function animarConteo(m, g, pred, big, etiqueta, id, pinta) {
+  let n = 0;
+  big.innerHTML = "0<small>" + etiqueta + "</small>";
+  selMini(m, g.c1, g.r1 + 1, g.c2, g.r2 + 1);
+  await sleep(600); if (!vivo(id)) return null;
+  for (let r = g.r1; r <= g.r2; r++) for (let c = g.c1; c <= g.c2; c++) {
+    const td = m.td(c, r + 1); if (!td) continue;
+    td.classList.add("mira"); await sleep(330); if (!vivo(id)) return null;
     td.classList.remove("mira");
-    if (prueba(v)) { n++; td.classList.add(k === "pinta" ? "pinta" : "cuenta"); big.classList.remove("pop"); void big.offsetWidth; big.classList.add("pop"); big.innerHTML = "<span>" + n + "</span><small>" + (k === "pinta" ? "celdas pintadas" : "celdas que cumplen") + "</small>"; }
+    const raw = td.textContent;
+    if (pred(raw === "" ? null : lit(raw))) { n++; td.classList.add(pinta ? "pinta" : "cuenta"); big.classList.remove("pop"); void big.offsetWidth; big.classList.add("pop"); big.innerHTML = "<span>" + n + "</span><small>" + etiqueta + "</small>"; }
+    else td.classList.add("salta");
   }
-  if (k !== "pinta") { const td = mC.td(1, 8); td.textContent = n; td.style.textAlign = "right"; td.style.fontWeight = "700"; destello(td, "ok"); selMini(mC, 1, 8); mC.fx.innerHTML = pintarRefs(f).html; }
-  explicar($("contFb"), k === "pinta" ? "🎨 Las 3 celdas que dicen «Fiebre» se pintaron solas. Si mañana cambia un estado, el color cambia también." : "✅ Resultado: <b>" + n + "</b>. " + (k === "sat" ? "Fíjate que <code>\"&lt;95\"</code> va entre comillas aunque tenga un número." : "La palabra va entre comillas, igual que en SI."));
+  return n;
 }
+const PRED = { CONTAR: v => isNum(v), CONTARA: v => v !== null && v !== "" };
+const NOMBRE_CONTEO = { COUNT: "CONTAR", COUNTA: "CONTARA", COUNTIF: "CONTAR.SI" };
+
+/* ---------- 6 · CONTAR y CONTARA ---------- */
+const CNT = { A1: "Paciente", B1: "FC (lpm)", A2: "Rosa", B2: 72, A3: "Juan", B3: 110, A4: "Lucía", B4: 88, A5: "Pedro", B5: "", A6: "Ana", B6: 118, A7: "Carlos", B7: 95, A8: "Elena", B8: 92, A9: "Miguel", B9: "pendiente", A10: "Total" };
+INIT.contar2 = id => conteo2("=CONTAR(B2:B9)", id, $("cntFb"));
+async function conteo2(f, id, fbEl) {
+  marcarBtn($("ctCnt"), "data-f", f);
+  const m = mini($("msCnt"), [80, 90], 10, CNT);
+  m.td(1, 9).style.textAlign = "left";
+  const p = pintarRefs(f); m.fx.innerHTML = p.html;
+  const v = evalMini(CNT, "B10", f);
+  if (v instanceof FErr) { explicar(fbEl, outHtml(v) + " " + esc(v.msg)); return; }
+  const mt = /^=\s*(CONTARA|CONTAR\.SI|CONTAR|COUNTA|COUNTIF|COUNT)\s*\(\s*([A-Za-z]{1,2}\d+(?::[A-Za-z]{1,2}\d+)?)\s*(?:[,;](.+))?\)\s*$/i.exec(f.trim());
+  if (!mt) { const td = m.td(1, 10); td.textContent = fmt(v); explicar(fbEl, outHtml(v) + " Aquí practicamos <code>CONTAR</code>, <code>CONTARA</code> o <code>CONTAR.SI</code> con un rango, por ejemplo <code>=CONTAR(B2:B9)</code>."); return; }
+  const fn = NOMBRE_CONTEO[mt[1].toUpperCase()] || mt[1].toUpperCase(), g = parseRange(mt[2]);
+  let pred = PRED[fn];
+  if (fn === "CONTAR.SI") { const cv = evalMini({}, "Z1", "=" + (mt[3] || "")); pred = cv instanceof FErr ? () => false : criterio(cv); }
+  if (g.c2 > 1 || g.r2 > 9) { explicar(fbEl, outHtml(v) + " Usa un rango dentro de la tabla (columnas A y B, filas 2 a 9)."); return; }
+  explicar(fbEl, "Revisando " + rangeTxt(g) + " celda por celda…");
+  const n = await animarConteo(m, g, pred, $("cntBig"), "celdas contadas", id);
+  if (n === null) return;
+  const td = m.td(1, 10); td.textContent = fmt(v); td.style.textAlign = "right"; td.style.fontWeight = "700"; destello(td, "ok"); selMini(m, 1, 10);
+  let x = outHtml(v);
+  if (fn === "CONTAR" && g.c1 === 1) x += " CONTAR se saltó la celda <b>vacía</b> de Pedro y <b>«pendiente»</b>, porque es texto (mira: está a la izquierda).";
+  else if (fn === "CONTARA" && g.c1 === 1) x += " CONTARA también contó <b>«pendiente»</b>: no está vacía. Solo se saltó la celda de Pedro.";
+  else if (fn === "CONTARA" && g.c1 === 0) x += " Así se cuentan los <b>pacientes registrados</b>. Con CONTAR daría 0: los nombres son texto.";
+  else if (fn === "CONTAR" && g.c1 === 0) x += " ¡Da 0! Los nombres son texto y CONTAR solo cuenta números. Para contar nombres se usa CONTARA.";
+  else if (fn === "CONTAR.SI") x += " CONTAR.SI contó solo las celdas que cumplen la condición.";
+  explicar(fbEl, x);
+}
+$("ctCnt").addEventListener("click", e => { const b = e.target.closest("button[data-f]"); if (b) conteo2(b.dataset.f, ++animId, $("cntFb")); });
+conEnter($("inCnt"), $("okCnt"), () => { const f = $("inCnt").value; if (sinIgual(f, $("resCnt"))) return; $("resCnt").innerHTML = ""; conteo2(f, ++animId, $("resCnt")); });
+
+/* ---------- 7 · CONTAR.SI y formato condicional ---------- */
+const CONT = [["Rosa", 98, "Normal"], ["Juan", 93, "Fiebre"], ["Lucía", 97, "Normal"], ["Pedro", 96, "Normal"], ["Ana", 89, "Fiebre"], ["Elena", 96, "Fiebre"]];
+const datosCont = k => { const d = { A1: "Paciente", B1: "SatO₂", C1: "Estado", A8: k === "pinta" ? "" : "Total" }; CONT.forEach(([n, s, e], i) => { d["A" + (i + 2)] = n; d["B" + (i + 2)] = s; d["C" + (i + 2)] = e; }); return d; };
+INIT.contar = id => animarCont("fiebre", id);
+async function animarCont(k, id, critTxt) {
+  marcarBtn($("ctCont"), "data-ct", k);
+  const d = datosCont(k), m = mini($("msCont"), [80, 70, 90], 8, d);
+  const f = k === "crit" ? "=CONTAR.SI(B2:B7," + critTxt + ")" : k === "sat" ? '=CONTAR.SI(B2:B7,"<95")' : k === "fiebre" ? '=CONTAR.SI(C2:C7,"Fiebre")' : "";
+  const col = k === "fiebre" || k === "pinta" ? 2 : 1;
+  let pred;
+  if (k === "pinta") { pred = v => v === "Fiebre"; m.fx.textContent = "El texto es exactamente: Fiebre"; explicar($("contFb"), "<b>Formato → Formato condicional</b> · intervalo <b>C2:C7</b> · «El texto es exactamente» <b>Fiebre</b> · estilo rojo."); }
+  else {
+    m.fx.innerHTML = pintarRefs(f).html;
+    const crit = k === "crit" ? evalMini({}, "Z1", "=" + critTxt) : k === "sat" ? "<95" : "Fiebre";
+    pred = criterio(crit);
+    explicar($("contFb"), "Revisa el rango <b>" + (col === 1 ? "B2:B7" : "C2:C7") + "</b> celda por celda: ¿cumple <code>" + esc(String(crit)) + "</code>?");
+  }
+  const n = await animarConteo(m, { c1: col, r1: 1, c2: col, r2: 6 }, pred, $("contBig"), k === "pinta" ? "celdas pintadas" : "celdas que cumplen", id, k === "pinta");
+  if (n === null) return null;
+  if (k !== "pinta") { const td = mC2(m); td.textContent = n; destello(td, "ok"); selMini(m, 1, 8); m.fx.innerHTML = pintarRefs(f).html; }
+  explicar($("contFb"), k === "pinta" ? "Las 3 celdas que dicen «Fiebre» se pintaron solas. Si mañana cambia un estado, el color cambia también." : "Resultado: <b>" + n + "</b>. La condición va <b>entre comillas</b>, aunque tenga un número: <code>\"&lt;95\"</code>.");
+  return n;
+}
+function mC2(m) { const td = m.td(1, 8); td.style.textAlign = "right"; td.style.fontWeight = "700"; return td; }
 $("ctCont").addEventListener("click", e => { const b = e.target.closest("button[data-ct]"); if (b) animarCont(b.dataset.ct, ++animId); });
+conEnter($("inCrit"), $("okCrit"), async () => {
+  const t = $("inCrit").value.trim(), el = $("resCrit");
+  if (!t) { el.innerHTML = "Escribe una condición, por ejemplo <code>\"&gt;=96\"</code>."; return; }
+  const cv = evalMini({}, "Z1", "=" + t);
+  if (cv instanceof FErr) { explicar(el, outHtml(cv) + " " + esc(cv.msg) + " La condición va <b>entre comillas</b>: <code>\"&lt;95\"</code>, <code>\"&gt;=96\"</code>."); return; }
+  el.innerHTML = "";
+  const n = await animarCont("crit", ++animId, t);
+  if (n === null) return;
+  const v = evalMini(datosCont("crit"), "Z9", "=CONTAR.SI(B2:B7," + t + ")");
+  explicar(el, outHtml(v) + (typeof cv === "string" && /[a-z]/i.test(cv) ? " En B2:B7 hay saturaciones (números). Para contar «" + esc(cv) + "» habría que mirar la columna C: <code>=CONTAR.SI(C2:C7,\"" + esc(cv) + "\")</code>." : " saturaciones cumplen <code>" + esc(String(cv)) + "</code>."));
+});
+
+/* ---------- 8 · partes de SI (como en la clase anterior: 6 partes) ---------- */
+const PC = { igual: "#b3752c", nombre: "#1a73e8", abre: "#9334e6", arg: "#188038", sep: "#d93025", cierra: "#c2185b" };
+const ORDEN_P = ["igual", "nombre", "abre", "arg", "sep", "cierra"];
+const PX = {
+  si: { n: "SI", hace: "elige qué mostrar según una prueba lógica", args: [["B2>=38", "<b>expresión lógica</b> (la prueba)"], ['"Fiebre"', "<b>valor si verdadero</b> («entonces»)"], ['"Normal"', "<b>valor si falso</b> («si no»)"]], res: "SI tiene <b>tres argumentos</b> y cada uno cumple un papel distinto: la prueba, el «entonces» y el «si no»." },
+  csi: { n: "CONTAR.SI", hace: "cuenta las celdas que cumplen una condición", args: [["E2:E9", "<b>intervalo</b>: dónde contar"], ['"Fiebre"', "<b>criterio</b>: qué contar (entre comillas)"]], res: "CONTAR.SI tiene <b>dos argumentos</b>: dónde contar y qué contar." },
+  cnt: { n: "CONTAR", hace: "cuenta las celdas que tienen números", args: [["C2:C9", "<b>valor</b>: el rango donde contar"]], res: "CONTAR tiene <b>un argumento</b>: el rango. No necesita condición." }
+};
+let pxCur = "si";
+const NUM = ["①", "②", "③", "④", "⑤"];
+function partesDe(ex) {
+  const p = [["=", "igual"], [ex.n, "nombre"], ["(", "abre"]];
+  ex.args.forEach(([a], i) => { if (i) p.push([",", "sep"]); p.push([a, "arg"]); });
+  p.push([")", "cierra"]);
+  return p;
+}
+function cardData(ex, tipo) {
+  const na = ex.args.length;
+  switch (tipo) {
+    case "igual": return ["=", "Símbolo igual", "Avisa que viene un cálculo. Sin él, todo sería solo texto."];
+    case "nombre": return [ex.n, "Etiqueta (nombre)", "Dice <b>qué hacer</b>: " + ex.n + " " + ex.hace + "."];
+    case "abre": return ["(", "Símbolo de apertura", "Va pegado a la etiqueta. Desde aquí empiezan los argumentos."];
+    case "arg": return [ex.args.map(a => a[0]).join(" · "), na > 1 ? na + " argumentos" : "1 argumento", ex.args.map(([a, d], i) => (na > 1 ? NUM[i] + " " : "") + "<b>" + esc(a) + "</b>: " + d).join("<br>")];
+    case "sep": return na > 1 ? [",", "Separador", (ex.n === "SI" ? "La 1.ª coma se lee «entonces»; la 2.ª, «si no»." : "Separa un argumento del siguiente.") + " A veces es <b>;</b>."] : ["—", "Separador", "<b>Aquí no hay:</b> con un solo argumento no hace falta."];
+    case "cierra": return [")", "Símbolo de cierre", "Termina la función. Todo paréntesis que se abre, se cierra."];
+  }
+}
+function enfocar(tipo) {
+  $("fBig").querySelectorAll("span").forEach(s => { const si = s.dataset.t === tipo; if (si) s.classList.add("lit"); s.classList.toggle("foco", si); });
+  $("fCards").querySelectorAll(".card").forEach(c => { const si = c.dataset.t === tipo; if (si) c.classList.add("show"); c.classList.toggle("foco", si); });
+}
+INIT.partes = id => animarPartes(pxCur, id);
+async function animarPartes(k, id) {
+  pxCur = k; marcarBtn($("ctPx"), "data-px", k);
+  const ex = PX[k], na = ex.args.length;
+  $("fBig").innerHTML = partesDe(ex).map(([t, tipo]) => '<span data-t="' + tipo + '" style="--pc:' + PC[tipo] + '">' + esc(t) + "</span>").join("");
+  $("fCards").innerHTML = ORDEN_P.map((tipo, i) => { const [sim, tit, txt] = cardData(ex, tipo); return '<div class="card' + (tipo === "sep" && na === 1 ? " nohay" : "") + '" data-t="' + tipo + '" style="--pc:' + PC[tipo] + '"><div class="sim">' + (i + 1) + ". " + esc(sim) + "</div><h4>" + tit + "</h4><div>" + txt + "</div></div>"; }).join("");
+  explicar($("fRes"), ex.res);
+  await sleep(500);
+  for (const tipo of ORDEN_P) { if (!vivo(id)) return; enfocar(tipo); await sleep(tipo === "sep" && na === 1 ? 900 : tipo === "arg" ? 1800 : 1150); }
+  if (vivo(id)) enfocar(null);
+}
+$("ctPx").addEventListener("click", e => { const b = e.target.closest("button[data-px]"); if (b) animarPartes(b.dataset.px, ++animId); });
+["fBig", "fCards"].forEach(id => $(id).addEventListener("click", e => { const x = e.target.closest("[data-t]"); if (x) { animId++; enfocar(x.dataset.t); } }));
+conEnter($("inParte"), $("okParte"), () => revisarFrase($("inParte").value, [{ datos: { C2: 110 }, esp: "Taquicardia" }, { datos: { C2: 88 }, esp: "Normal" }, { datos: { C2: 100 }, esp: "Normal" }], $("resParte")));
+
 /* ---------- botones comunes: repetir animación y preguntas rápidas ---------- */
 $("intro").addEventListener("click", e => {
   const r = e.target.closest("[data-replay]");
@@ -2259,7 +2558,7 @@ $("intro").addEventListener("click", e => {
     const box = q.closest(".quiz"), bs = [...box.querySelectorAll(".btns button")], i = bs.indexOf(q), ok = i === +box.dataset.ok;
     bs.forEach(b => b.classList.remove("mal"));
     void q.offsetWidth; q.classList.add(ok ? "bien" : "mal");
-    explicar(box.querySelector(".qfb"), (ok ? "✅ " : "🤔 ") + (ok ? box.dataset.bien : box.dataset.mal));
+    explicar(box.querySelector(".qfb"), (ok ? "<b>¡Bien!</b> " : "<b>Piénsalo:</b> ") + (ok ? box.dataset.bien : box.dataset.mal));
   }
 });
 $("bReiniciar").onclick = () => {
