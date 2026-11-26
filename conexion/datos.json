@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-26T14:33:18.854Z",
+ "generado": "2026-11-26T14:43:17.361Z",
  "v": 1,
  "clases": [
   {
@@ -117,7 +117,7 @@
    "n": 1,
    "tema": "EC 1 Unidad 2",
    "publicada": true,
-   "conCopias": false
+   "conCopias": true
   }
  ],
  "enlaces": {
@@ -142,13 +142,6 @@
     "titulo": "SILABO HERRAMIENTAS INFORMATICAS - NOV 2026",
     "url": "https://drive.google.com/file/d/190a60HcY-iL6M5ZQPkljGII4qdou6CXx/view?usp=drivesdk",
     "tipo": "pdf"
-   }
-  ],
-  "ec1u2": [
-   {
-    "titulo": "EC 1 Unidad 2",
-    "url": "https://docs.google.com/spreadsheets/d/13DLXm4bb9IZnjoejt1UnfIlyVO1SYmk-lFh91-uYFEk/edit?usp=drivesdk",
-    "tipo": "hoja"
    }
   ]
  },
