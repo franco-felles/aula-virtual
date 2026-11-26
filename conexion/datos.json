@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-26T14:43:17.361Z",
+ "generado": "2026-11-26T18:43:20.868Z",
  "v": 1,
  "clases": [
   {
@@ -109,15 +109,6 @@
    "tema": "CONDICIONALES",
    "publicada": true,
    "conCopias": false
-  },
-  {
-   "id": "ec1u2",
-   "tipo": "EC",
-   "unidad": 2,
-   "n": 1,
-   "tema": "EC 1 Unidad 2",
-   "publicada": true,
-   "conCopias": true
   }
  ],
  "enlaces": {
