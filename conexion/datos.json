@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-27T17:13:17.071Z",
+ "generado": "2026-11-27T19:03:14.863Z",
  "v": 1,
  "clases": [
   {
@@ -151,6 +151,13 @@
     "titulo": "SILABO HERRAMIENTAS INFORMATICAS - NOV 2026",
     "url": "https://drive.google.com/file/d/190a60HcY-iL6M5ZQPkljGII4qdou6CXx/view?usp=drivesdk",
     "tipo": "pdf"
+   }
+  ],
+  "u2c4": [
+   {
+    "titulo": "Copia de SEMILLA - Tablero",
+    "url": "https://docs.google.com/spreadsheets/d/15-z8x22Za_k60MjmqSWjJAG26b8cti6ydQ8otl-dL-I/edit?usp=drivesdk",
+    "tipo": "hoja"
    }
   ]
  },
