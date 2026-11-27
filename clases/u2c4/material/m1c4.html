@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- FICHA DEL MATERIAL: esto es lo que ve el alumno en la carpeta de la clase -->
-<meta name="material-titulo" content="El tablero del turno: la hoja sin fórmulas">
+<meta name="material-titulo" content="El tablero del turno: ordenar, filtrar y graficar">
 <meta name="material-tipo" content="interactivo">
-<meta name="material-descripcion" content="Hoy no se escribe ni un signo =. Teoría animada para tocar: inmovilizar el encabezado, ordenar sin mezclar pacientes, filtrar, desplegables y casillas, y la curva térmica en un gráfico. Después, la hoja de práctica igualita a Google Sheets con la lista del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.">
+<meta name="material-descripcion" content="Tus datos, ordenados y a la vista. Teoría animada para tocar: inmovilizar el encabezado, ordenar sin mezclar pacientes, filtrar, desplegables y casillas, y la curva térmica en un gráfico. Después, la hoja de práctica igualita a Google Sheets con la lista del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.">
 <title>El tablero del turno</title>
 <script src="../../../conexion/aula.js" data-proteger data-sin-barra></script>
 <link rel="icon" type="image/png" href="../../../conexion/img/favicon.png">
@@ -345,8 +345,8 @@
     <!-- 0 · gancho -->
     <section class="slide" data-s="gancho">
       <p class="eti">Unidad 2 · Hojas de cálculo</p>
-      <h1>Hoy no escribimos ni un signo =</h1>
-      <p class="lead">Ya hiciste muchas fórmulas. Hoy toca descansar del <b>=</b>: la hoja tiene herramientas que trabajan con <b>unos cuantos clics</b>. Primero, un reto: busca con los ojos.</p>
+      <h1>Encontrarlo en un segundo</h1>
+      <p class="lead">Con las fórmulas ya sabes calcular. Ahora toca <b>organizar y mostrar</b>: la hoja tiene herramientas de menú que ordenan, filtran y dibujan tus datos con <b>unos cuantos clics</b>. Primero, un reto: busca con los ojos.</p>
       <div class="dos">
         <div><table class="mt" id="tGancho"></table></div>
         <div>
@@ -368,7 +368,7 @@
     <!-- 1 · el mapa de hoy -->
     <section class="slide" data-s="mapa">
       <p class="eti">Teoría · 1 de 6</p>
-      <h1>Cuatro herramientas, cero fórmulas</h1>
+      <h1>Cinco herramientas para el tablero</h1>
       <p class="lead">Imagina la lista del piso en la estación de enfermería. Lo que haces con lápiz y vista, la hoja lo hace con un menú. Toca cada tarjeta:</p>
       <div class="ceros" id="ceros">
         <button class="cero" data-ir="2"><i data-ic="candado"></i><b>Inmovilizar</b><span>Que los títulos no se escapen al bajar por la lista.</span></button>
@@ -376,7 +376,7 @@
         <button class="cero" data-ir="4"><i data-ic="filtro"></i><b>Filtrar</b><span>Ver solo a los de un servicio, sin borrar a nadie.</span></button>
         <button class="cero" data-ir="5"><i data-ic="casilla"></i><b>Desplegables y casillas</b><span>Elegir en vez de escribir: nadie se equivoca al tipear.</span></button>
         <button class="cero" data-ir="6"><i data-ic="linea"></i><b>Gráficos</b><span>La curva térmica de la historia clínica, hecha sola.</span></button>
-        <div class="cero" style="background:var(--ink);color:#fff;border-color:var(--ink)"><i data-ic="mouse" style="color:#f0c27b"></i><b>¿Y las fórmulas?</b><span style="color:#cfe3d3">Hoy no. Todo se hace con los menús de arriba.</span></div>
+        <div class="cero" style="background:var(--ink);color:#fff;border-color:var(--ink)"><i data-ic="mouse" style="color:#f0c27b"></i><b>Desde los menús</b><span style="color:#cfe3d3">Todas están arriba, en Ver, Datos, Insertar y Formato. Y conviven con tus fórmulas.</span></div>
       </div>
     </section>
 
@@ -580,7 +580,7 @@
 
   <aside class="panel">
     <header>
-      <p class="eti">Unidad 2 · Práctica sin fórmulas</p>
+      <p class="eti">Unidad 2 · Práctica con menús</p>
       <h1>El tablero del turno</h1>
       <div class="niveles" id="niveles"></div>
     </header>
@@ -915,7 +915,7 @@ function iniciarEdicion(texto) {
 editor.addEventListener("input", () => { editor.style.width = Math.max(parseFloat(editor.style.minWidth), editor.value.length * 8 + 14) + "px"; $("fbar").value = editor.value; });
 function guardarValor(c, r, texto) {
   const h = H(); const t = String(texto);
-  if (t.trim().startsWith("=")) toast("Hoy la hoja trabaja sin fórmulas: escribe solo datos. Lo guardé como texto.");
+  if (t.trim().startsWith("=")) toast("Este simulador es para practicar los menús y no calcula: lo guardé como texto.");
   snap();
   const x = celda(h, c, r, true);
   let v = t.trim().startsWith("=") ? t : parseEntrada(t);
@@ -1139,7 +1139,7 @@ function abrirFC() {
     const g = parseRange($("fcRango").value), val = $("fcVal").value.trim();
     if (!g) { $("fcMal").textContent = "Escribe un intervalo válido, por ejemplo E2:E25."; return; }
     if (val === "") { $("fcMal").textContent = "Falta el valor: ¿con qué número o texto comparas?"; return; }
-    if (val.startsWith("=")) { $("fcMal").textContent = "Hoy no usamos fórmulas: escribe solo el número, por ejemplo 38."; return; }
+    if (val.startsWith("=")) { $("fcMal").textContent = "Aquí va solo el número, por ejemplo 38."; return; }
     snap(); h.fc.push({ rango: rangoTxt(g), op: $("fcOp").value, val, est: estiloFC }); $("fcVal").value = ""; $("fcMal").textContent = ""; reglas(); cambio();
   };
 }
@@ -1363,7 +1363,7 @@ const MENUS = {
   ver: () => {
     const h = H();
     return [
-      { t: "Mostrar", hijos: () => [{ t: (S.lineas ? "✓ " : "") + "Líneas de cuadrícula", f: () => { S.lineas = !S.lineas; guardar(); render(); } }, { t: "Fórmulas", dis: NO("Hoy no hay fórmulas que mostrar.") }] },
+      { t: "Mostrar", hijos: () => [{ t: (S.lineas ? "✓ " : "") + "Líneas de cuadrícula", f: () => { S.lineas = !S.lineas; guardar(); render(); } }, { t: "Fórmulas", dis: NO("Esta hoja solo tiene datos: no hay fórmulas que mostrar.") }] },
       { t: "Inmovilizar", hijos: () => [
         { t: (h.frozen === 0 ? "✓ " : "") + "Sin filas", f: () => fijar(0) },
         { t: (h.frozen === 1 ? "✓ " : "") + "1 fila", f: () => fijar(1) },
@@ -1456,7 +1456,7 @@ function accion(acc, boton) {
     case "alinH": { cerrarMenus(); const r = boton.getBoundingClientRect(), hr = $("hoja").getBoundingClientRect(); construirMenu([{ t: "Izquierda", f: () => alinear("left") }, { t: "Centro", f: () => alinear("center") }, { t: "Derecha", f: () => alinear("right") }], 0, (r.left - hr.left) / ZOOM, (r.bottom - hr.top + 2) / ZOOM); return; }
     case "grafico": return insertarGrafico();
     case "filtro": return crearFiltro();
-    case "funciones": return toast("Hoy no usamos funciones: todo se hace con los menús.");
+    case "funciones": return toast("En esta práctica no hace falta: todo se hace con los menús.");
     default: toast("Ese botón existe en Google Sheets, pero hoy no lo necesitas.");
   }
 }
@@ -1499,7 +1499,7 @@ const MISIONES = [
     pasos: ["Haz clic en una celda de la tabla.", "Menú <span class='ruta-t'>Datos → Crear un filtro</span> (o el embudo de la barra).", "En el título <b>Servicio</b>, haz clic en el ícono de filtro.", "Pulsa <b>Borrar</b>, marca solo <b>Cirugía</b> y pulsa <b>Aceptar</b>."],
     pistas: ["El ícono de filtro aparece a la derecha de cada título, en la fila 1.", "«Borrar» quita todas las marcas de un solo clic; después marcas solo la que quieres."],
     check() { const h = P(), f = filtroDe(h); if (!f) return { ok: false, msg: "Todavía no hay filtro en la hoja Pacientes." }; if (f.r1 !== 0 || f.c1 > 2 || f.c2 < 2) return { ok: false, msg: "El filtro no empieza en la fila de títulos. Quítalo (Datos → Quitar filtro), haz clic en una celda de la tabla y créalo de nuevo." }; const vis = filasVisibles(h); const cir = filasPac(h).filter(r => vDe(h.rows[r][2]) === "Cirugía"); if (vis.length === cir.length && vis.every(r => vDe(h.rows[r][2]) === "Cirugía")) return { ok: true, msg: "Son <b>" + cir.length + " pacientes</b> de Cirugía. Los demás siguen ahí: mira cómo saltan los números de fila." }; return { ok: false, msg: "Se ven " + vis.length + " pacientes. Deja visibles solo los de <b>Cirugía</b>." }; } },
-  { n: 1, tit: "La fiebre se pinta sola", intro: "Repaso de la clase de condicionales, pero sin fórmulas: que las temperaturas de 38 °C o más se pinten de rojo.",
+  { n: 1, tit: "La fiebre se pinta sola", intro: "Como en la clase de condicionales, pero ahora desde un menú: que las temperaturas de 38 °C o más se pinten de rojo.",
     pasos: ["Selecciona <b>E2:E25</b> (arrastra desde E2 hasta E25).", "Menú <span class='ruta-t'>Formato → Formato condicional</span>.", "«Dar formato a las celdas si…» <b>Mayor o igual que</b>, valor <b>38</b>, estilo rojo. Pulsa <b>Listo</b>."],
     pistas: ["Si tienes el filtro de Cirugía puesto, no importa: escribe el intervalo E2:E25 en «Aplicar al intervalo».", "En el valor va solo el número: <b>38</b>, sin el signo = ni °C."],
     check() { const h = P(); const ok = h.fc.some(q => { const g = parseRange(q.rango); const v = parseEntrada(q.val); return g && g.c1 <= 4 && g.c2 >= 4 && g.r1 <= 1 && g.r2 >= 24 && q.est === 0 && ((q.op === "gte" && v === 38) || (q.op === "gt" && v >= 37.9 && v < 38)); }); if (ok) return { ok: true, msg: "Las temperaturas de 38 o más se pintan solas. Y si alguien anota una nueva, también se pintará." }; if (h.fc.length) return { ok: false, msg: "Ya hay una regla, pero revisa: intervalo <b>E2:E25</b>, <b>Mayor o igual que 38</b> y estilo <b>rojo</b>." }; return { ok: false, msg: "Todavía no hay reglas de formato condicional en la hoja Pacientes." }; } },
@@ -1527,7 +1527,7 @@ function panel() {
   $("niveles").innerHTML = NIVELES.map((nom, n) => '<div class="nivel"><span class="nom">' + nom + '</span><span class="pts">' + MISIONES.map((m, i) => m.n === n ? '<button data-m="' + i + '" class="' + (S.hechas[i] ? "hecho" : "") + (i === mi ? " actual" : "") + '" title="' + esc(m.tit) + '"></button>' : "").join("") + "</span>" + (n === 0 ? '<span class="min">mínimo</span>' : "") + "</div>").join("");
   const m = MISIONES[mi], hecha = S.hechas[mi], res = m.check();
   let html = "";
-  if (mi === 0 && !hecha) html += '<div class="banner"><b>Hoy no hay fórmulas</b>Todo se hace con los menús de arriba y unos clics. <b style="display:inline;font-size:inherit">Base</b> es el mínimo del día; Plata y Oro, para ir más allá.</div>';
+  if (mi === 0 && !hecha) html += '<div class="banner"><b>Todo con los menús</b>Cada misión se hace con los menús de arriba y unos clics. <b style="display:inline;font-size:inherit">Base</b> es el mínimo del día; Plata y Oro, para ir más allá.</div>';
   const todasOro = MISIONES.every((x, i) => x.n === 3 || S.hechas[i]);
   html += '<div class="tarjeta"><span class="chip n' + m.n + '">' + NIVELES[m.n] + " · Misión " + (mi + 1) + " de " + MISIONES.length + "</span><h2>" + esc(m.tit) + "</h2><p>" + m.intro + "</p>";
   if (m.pasos.length) html += "<ol>" + m.pasos.map(p => "<li>" + p + "</li>").join("") + "</ol>";
@@ -1636,7 +1636,7 @@ $("bGancho").onclick = async () => {
   const rojas = rows.filter(tr => tr.style.display !== "none" && parseFloat(tr.cells[3].textContent) >= 38);
   for (const tr of rojas) { await sleep(380); if (!vivo(id)) return; tr.cells[3].classList.add("fiebre"); }
   await sleep(500); if (!vivo(id)) return;
-  explicar($("gFb"), "Resultado: <b>2 pacientes</b> (Juan y Elena), en un segundo y <b>sin escribir ni una fórmula</b>. Eso es lo que aprenderás hoy.");
+  explicar($("gFb"), "Resultado: <b>2 pacientes</b> (Juan y Elena), en un segundo y <b>con un par de clics</b>. Eso es lo que aprenderás hoy.");
   $("gReloj").innerHTML = "1 s<small>la hoja</small>";
   llego = true; $("bSig").disabled = false; $("bGanchoOtra").hidden = false;
 };
