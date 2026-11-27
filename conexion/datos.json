@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-26T19:03:24.699Z",
+ "generado": "2026-11-27T17:13:17.071Z",
  "v": 1,
  "clases": [
   {
@@ -116,6 +116,15 @@
    "unidad": 2,
    "n": 1,
    "tema": "EC 1 Unidad 2",
+   "publicada": true,
+   "conCopias": true
+  },
+  {
+   "id": "u2c4",
+   "tipo": "Clase",
+   "unidad": 2,
+   "n": 4,
+   "tema": "Ordenamiento",
    "publicada": true,
    "conCopias": true
   }
