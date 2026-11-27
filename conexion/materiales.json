@@ -112,5 +112,15 @@
       "descripcion": "Teoría animada para escribir y probar: repaso de referencias (=C4), la prueba lógica, cómo leer la función SI, SI por dentro, las comillas, CONTAR y CONTARA, CONTAR.SI con formato condicional y, al final, las partes de SI. Después, la hoja de práctica igualita a Google Sheets con el control del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.",
       "orden": 1
     }
+  ],
+  "u2c4": [
+    {
+      "archivo": "m1c4.html",
+      "ruta": "clases/u2c4/material/m1c4.html",
+      "titulo": "El tablero del turno: la hoja sin fórmulas",
+      "tipo": "interactivo",
+      "descripcion": "Hoy no se escribe ni un signo =. Teoría animada para tocar: inmovilizar el encabezado, ordenar sin mezclar pacientes, filtrar, desplegables y casillas, y la curva térmica en un gráfico. Después, la hoja de práctica igualita a Google Sheets con la lista del piso 3, por misiones (Base es el mínimo del día). Se guarda tu avance.",
+      "orden": 1
+    }
   ]
 }
